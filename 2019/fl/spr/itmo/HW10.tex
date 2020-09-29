@@ -1,0 +1,96 @@
+\documentclass[12pt]{article}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\usepackage{proof}
+
+\setdefaultlanguage{russian}
+\setmainfont[Mapping=tex-text]{CMU Serif}
+
+\begin{document}
+\begin{center}
+\LARGE {Формальные языки}
+
+\Large {домашнее задание до 23:59 24.04}
+\end{center} 
+
+\bigskip
+
+Ветку завела: 
+
+\url{https://github.com/kajigor/fl\_ifmo\_2019\_spr/tree/HW10}
+
+\begin{enumerate}
+  \item Добавить в спецификацию языка шаблоны и сопоставления с ними. Должна быть возможность специфицировать алгебраические типы данных по типу хаскельной data, а также возможность осуществлять сопоставление с шаблоном как в аргументе функции, так и при помощи специальной конструкции. В отчете привести абстрактный и конкретный синтаксис получившегося языка. 
+  \item Реализовать парсер для языка с выражениями, условным оператором, определениями функций и шаблонами. Реализация должна быть в соответствии с вашей спецификацией конкретного и абстрактного синтаксиса. 
+  \item Реализовать проверку типов для нашего языка: вплоть до шаблонов и унарных операций. Правила типизации шаблонов прислать в отчете. Проверку типов не обязательно совмещать с синтаксическим анализом, это может быть отдельная функция над вашими абстрактными синтаксическими деревьями. 
+\end{enumerate}
+
+\infer[, v \in Int]{v : Int}{}
+
+\bigskip
+
+\infer[, v \in Bool]{v : Bool}{}
+
+\bigskip
+
+\infer[, \oplus - \textrm{ arithmetic binop}]{e_1 \oplus e_2 : Int}{
+  e_1 : Int &
+  e_2 : Int
+}
+
+\bigskip
+
+\infer[, = - \textrm{ comparison binop}]{e_1 = e_2 : Bool}{
+  e_1 : A &
+  e_2 : A
+}
+
+\bigskip
+
+\infer[, \otimes - \textrm{ logical binop}]{e_1 \otimes e_2 : Bool}{
+  e_1 : Bool &
+  e_2 : Bool
+}
+
+\bigskip
+
+\infer{\textrm{if } c \textrm{ then } t \textrm{ else } r : A}{
+  c : Bool &
+  t : A &
+  r : A
+}
+
+\bigskip 
+
+\infer{\Gamma \vdash x : A}{
+  x : A \in \Gamma
+}
+
+\bigskip 
+
+\infer{\Gamma \vdash \textrm{let } x = e_1 \textrm{ in } e_2 : B }{
+  \Gamma \vdash e_1 : A & 
+  \Gamma, x : A \vdash e_2 : B
+}
+
+\bigskip
+
+\infer{\Delta; \Gamma \vdash f(e) : B}{
+  \langle f(x : A) = b : B \rangle \in \Delta & 
+  \Delta; \Gamma \vdash e : A & 
+  \Delta; \Gamma, x : A \vdash b : B
+}
+
+\bigskip 
+
+\infer[, p = e]{\Delta; \Gamma \vdash p : A}{
+  \Delta; \Gamma \vdash e : A
+}
+
+\bigskip
+
+\infer[, p = \langle f(x : t) = b : t_1 \rangle ; p_1]{\Delta; \Gamma \vdash p_1 : A}{
+  \Delta, \langle f(x : t) = b : t_1 \rangle; \Gamma \vdash p_1 : A
+} 
+\end{document}

@@ -1,0 +1,32 @@
+\documentclass[12pt]{article}
+\usepackage[left=1cm,right=1.5cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage{hyperref}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\usepackage{amssymb}
+\setdefaultlanguage{russian}
+\pagestyle{empty}
+\setmainfont[Mapping=tex-text]{CMU Serif}
+
+\begin{document}
+\begin{center}
+{\LARGE Формальные языки}
+
+\bigskip
+
+{\Large Иван Пости}
+\end{center} 
+
+\bigskip
+
+\begin{enumerate}
+  \item Привести в нормальную форму Хомского следующую грамматику.
+
+  \begin{align*}
+      S &\to a X b X \\
+      X &\to a Y \mid b Y \mid \varepsilon \\
+      Y &\to X \mid c 
+  \end{align*}
+  
+\end{enumerate}
+\end{document}

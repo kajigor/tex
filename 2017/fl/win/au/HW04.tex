@@ -1,0 +1,121 @@
+\documentclass{article}
+
+\usepackage[left=1cm,right=1cm,top=1cm,bottom=1cm,bindingoffset=0cm]{geometry}
+\usepackage{listings}
+\usepackage{indentfirst}
+\usepackage{verbatim}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{stmaryrd}
+\usepackage{graphicx}
+\usepackage{euscript}
+\usepackage{hyperref}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage[T2A]{fontenc}
+
+\lstdefinelanguage{llang}{
+keywords={skip, do, while, read, write, if, then, else, begin, end},
+sensitive=true,
+%%basicstyle=\small,
+commentstyle=\scriptsize\rmfamily,
+keywordstyle=\ttfamily\underbar,
+identifierstyle=\ttfamily,
+basewidth={0.5em,0.5em},
+columns=fixed,
+fontadjust=true,
+literate={->}{{$\to$}}1
+}
+
+\lstset{
+language=llang
+}
+
+\newcommand{\aset}[1]{\left\{{#1}\right\}}
+\newcommand{\term}[1]{\mbox{\texttt{\bf{#1}}}}
+\newcommand{\cd}[1]{\mbox{\texttt{#1}}}
+\newcommand{\sembr}[1]{\llbracket{#1}\rrbracket}
+\newcommand{\conf}[1]{\left<{#1}\right>}
+\newcommand{\fancy}[1]{{\cal{#1}}}
+
+\newcommand{\trule}[2]{\frac{#1}{#2}}
+\newcommand{\crule}[3]{\frac{#1}{#2},\;{#3}}
+\newcommand{\withenv}[2]{{#1}\vdash{#2}}
+\newcommand{\trans}[3]{{#1}\xrightarrow{#2}{#3}}
+\newcommand{\ctrans}[4]{{#1}\xrightarrow{#2}{#3},\;{#4}}
+\newcommand{\llang}[1]{\mbox{\lstinline[mathescape]|#1|}}
+\newcommand{\pair}[2]{\inbr{{#1}\mid{#2}}}
+\newcommand{\inbr}[1]{\left<{#1}\right>}
+\newcommand{\highlight}[1]{\color{red}{#1}}
+\newcommand{\ruleno}[1]{\eqno[\textsc{#1}]}
+\newcommand{\inmath}[1]{\mbox{$#1$}}
+\newcommand{\lfp}[1]{fix_{#1}}
+\newcommand{\gfp}[1]{Fix_{#1}}
+
+\newcommand{\NN}{\mathbb N}
+\newcommand{\ZZ}{\mathbb Z}
+
+\begin{document}
+
+%% Весь этот текст можно удалить
+%% ====== от сих =====
+\begin{center} {\LARGE Формальные языки} \end{center}
+
+\begin{center} {\Large домашнее задание до 23:59 08.10} \end{center}
+\bigskip
+
+\begin{enumerate}
+  \item Написать лексер для языка L (спецификация ниже), используя любимый генератор лексеров из семейства Lex (или любой другой понравившийся инструмент, только не парсер-комбинаторы, и не пишите лексер вручную). (8 баллов за полностью выполненное задание)
+    \begin{itemize}
+        \item Структуры данных для лексем должны однозначно их идентифицировать, а также содержать привязку к коду (в какой строке исходного кода и с какого по какой символ располагается лексема). 
+        \item Составить набор тестов, демонстрирующий правильность работы полученного лексера (качество тестового покрытия важно!).
+        \item Сделать консольное  приложение, принимающее на вход путь к файлу, содержащему программу на языке L, производящее лексический анализ и печатающее полученный поток лексем.
+        \begin{itemize}
+            \item Результатом работы лексического анализатора должен быть поток лексем, который печатается при помощи \emph{отдельной} процедуры печати. 
+        \end{itemize}
+        \item Код должен быть размещен на гитхабе, собираться одним скриптом, содержать инструкцию по сборке и запуску собранного приложения, собираться на чистой Ubuntu 16.04 или Windows 10. Все зависимости, в случае их отсутствия в системе, должны доставляться скриптом.
+        \begin{itemize}
+            \item Инструкция по запуску должна содержать информацию о том, где находится бинарник, как именно его полагается запускать, какой формат аргументов командной строки, куда пишется результат.
+        \end{itemize} 
+     \end{itemize}
+\end{enumerate}
+
+\bigskip
+
+\begin{center} {\Large Лексическая спецификация языка L } \end{center}
+
+\medskip
+
+Программы на языке L записываются символами ASCII. Ограничителями строк являются ASCII-символы CR, LF или 2 подряд идущих символа: CR LF. Пробельными символами являются символы-ограничители строк и символы пробела (SP), табуляции (HT) и перевода страницы (FF). Пробельные символы не имеют значения, для них не должно генерироваться лексем. Все буквы строчные. Программы могут быть многострочными. 
+
+Комментарии только однострочные. Комментарием считается суффикс строки до символа-ограничителя строк, начинающийся с "//".
+
+Идентификаторы в языке --- произвольная последовательность символов (до первого пробельного символа), начинающаяся либо с буквы, либо символа подчеркивания (\_), которая не является ключевым словом. 
+
+Ключевые слова языка: $\llang{if}, \llang{then}, \llang{else}, \llang{while}, \llang{do}, \llang{read}, \llang{write}, \llang{begin}, \llang{end}$
+
+Литералы языка: числа с плавающей точкой, \llang{true}, \llang{false}. 
+
+Числа с плавающей точкой должны соответствовать спецификации языка Java (\href{https://docs.oracle.com/javase/specs/jls/se7/html/jls-3.html#jls-3.10}{по ссылке}): обратите внимание на подчеркивания. В лексеме для числа должно присутствовать его значение --- численного типа, не строковое представление.
+
+Операторы языка: $ \llang{+}, \llang{-}, \llang{*}, \llang{/}, \llang{\%}, \llang{==}, \llang{!=}, 
+\llang{>}, \llang{>=}, \llang{<}, \llang{<=}, \llang{\&\&}, \llang{||}
+$
+
+Разделители языка: $(, \, ), \, ; $ 
+
+Пример программы: 
+$$
+\llang{read}\; x \llang{;} \; \llang{if} \; y + 1 == x  \; \llang{then} \; \llang{write} \; y \; \llang{else} \; \llang{write} \; x \;  
+$$
+
+Результат лексического анализа должен быть в духе: 
+
+\begin{verbatim}
+KW_Read(0, 0, 3); Ident("x", 0, 5, 5); Colon(0, 6, 6); KW_If(0, 8, 9); Ident("y", 0, 11, 11);
+Op(Plus, 0, 13, 13); Num(1, 0, 15, 15); Op(Eq, 0, 17, 18); Ident("x", 0, 20, 20); KW_Then(0, 22, 25); 
+KW_Write(0, 27, 31); Ident("y", 0, 33, 33); KW_Else(0, 35, 38); KW_Write(0, 40, 44); Ident("x", 0, 46, 47);
+\end{verbatim}
+
+\end{document}
+

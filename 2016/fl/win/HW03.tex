@@ -1,0 +1,78 @@
+\documentclass[12pt]{article}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage{hyperref}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{russian}
+\setmainfont[Mapping=tex-text]{CMU Serif}
+
+\begin{document}
+%% Весь этот текст можно удалить
+%% ====== от сих =====
+\centering {\LARGE Формальные языки}
+
+{\Large домашнее задание до 23:59 26.09}
+\bigskip
+
+\begin{enumerate}
+  \item
+  { Докажите следующие классические свойства регулярных выражений ($e, f$ --- произвольные регулярные выражения): 
+    \begin{enumerate}
+      \item { $  \forall n \geq 1 $ верно $ (\varepsilon | e | ee | \dots | e^{n−1})(e^{n})^{*} = e^{*} $ }
+      \item { $ (e^{∗} f)^{∗} e^{∗} = (e | f)^{*} $ }
+      \item { $ \varepsilon | e (fe)^{∗} f = (ef)^{∗} $ }
+    \end{enumerate}
+  }
+  
+  \item 
+  { Упростите следующие регулярные выражения: 
+    \begin{enumerate} 
+      \item { $ (a | b)^{∗} ab (a | b)^{∗} | (a | b)^{∗} a | b^{∗} $ }
+      \item { $ (a | b)^{*} (ab | ba) (a | b)^{∗} | a^{∗} | b^{∗} $ }
+    \end{enumerate}
+  }
+  
+  \item
+  { Составьте регулярные выражения для следующих языков: 
+    \begin{enumerate}
+      \item 
+      { Идентификаторы (алфавит: цифры, буквы английского алфавита в верхнем и нижнем регистре, нижнее подчеркивание)
+        \begin{itemize}
+          \item \verb;a, _a, A, a_b, iDeNt, _i_D_, __agent007__, _13, e2_e4; --- идентификаторы
+          \item $\varepsilon$\verb;, 1, 1st, !myVar!; --- не идентификаторы
+        \end{itemize}
+      }
+      \item 
+      { Рациональные числа
+        \begin{itemize} 
+          \item \verb;0, +0, -0, 10, 0.0, 0.1e0, 0.10010e+1, 10e-123, .1, 2.; --- числа
+          \item \verb;01, +.2, e, e., .,; $\varepsilon$ --- не числа
+        \end{itemize}
+      }
+      \item
+      { Списки целых чисел, разделенных точкой с запятой. Между скобками и числами, числами и разделителями может быть произвольное число пробелов (символ пробела обозначайте как $\backslash s$). 
+        \begin{itemize} 
+          \item \verb![], [1], [1;1;2;3;5;8], [  ], [ 4; 8;   15; 16   ; 23; 42]! --- корректные списки
+          \item \verb!][, [[]], [1;2;3, [a], [1,2,3], [1;2;], [1; 23  4; 5]! --- некорректные списки
+        \end{itemize}
+      }
+    \end{enumerate}
+  }
+  \item 
+  {
+    Докажите или опровергнете регулярность следующих языков:
+    \begin{itemize}
+        \item $\{ \omega \in \{ 0 \}^* \,|  \,|\omega| = n^2, n > 0\}$
+        \item $\{ \omega \omega^R \, | \, \omega \in \{ 0, 1\}^*; \omega^R = \omega$, записанная в обратном порядке $\}$
+    \end{itemize} 
+  }
+  \item 
+  { \begin{itemize}
+      \item Найдите библиотеку для работы с конечными автоматами, написанную на вашем любимом языке программирования. В отчете приведите ссылку на нее. 
+      \item Для каждого из регулярных выражений из заданий 2 и 3 постройте НКА c $\varepsilon$-переходами, с помощью избранной библиотеки избавьтесь от $\varepsilon$-переходов, детерминизируйте автомат, минимизируйте его. На каждом из шагов визуализируйте автомат. Убедитесь, что полученный минимальный ДКА распознает требуемый язык. В отчет включите визуализированные автоматы.
+    \end{itemize}
+  }
+\end{enumerate}
+
+%% ===== и до сих =====
+\end{document}

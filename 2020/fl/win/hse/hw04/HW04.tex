@@ -1,0 +1,89 @@
+\documentclass[12pt]{article}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage[utf8x]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{cmap}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{url}
+\usepackage{pifont}
+\usepackage{tikz}
+\usepackage{verbatim}
+\usepackage{hyperref}
+
+\usetikzlibrary{shapes,arrows}
+\usetikzlibrary{positioning,automata}
+\tikzset{every state/.style={minimum size=0.2cm},
+initial text={}
+}
+
+\begin{document}
+\begin{center} {\LARGE Формальные языки} \end{center}
+
+\begin{center} \Large домашнее задание до 23:59 01.10 \end{center}
+\bigskip
+
+\begin{enumerate}
+  \item
+  {
+    Существует ли такой регулярный язык $L$, что язык всех его подстрок не является регулярным? Обосновать.
+  }
+  \item
+  {
+    Является ли язык, задаваемый следующей грамматикой регулярным? Если является, привести регулярное выражение или конечный автомат. Если нет --- обосновать.
+    \begin{align*}
+      S &\to T U \\
+      U &\to T U \mid b \\
+      T &\to U U \mid a
+    \end{align*}
+  }
+  \item
+  {
+    Равны ли регулярные выражения $b^* a ((a \mid b) \ b^* a)^*$ и $((a \mid b)^* \ b a \mid a)(aa)^*$ над алфавитом $\{a, b\}$? Обосновать.
+  }
+  \item
+  {
+    Изучить спецификации синтаксиса бинарных операторов трех языков программирования, на которых вы никогда не писали. В отчете привести ссылки на спецификации, а также указать, что было в них для вас неожиданным.
+  }
+  \item
+  {
+    Релизовать синтаксический анализатор методом рекурсивного спуска для упрощенного донельзя подмножества пролога (оставим только определения отношений, лишим отношения аргументов).
+    \begin{itemize}
+      \item Описание синтаксиса
+      \begin{itemize}
+        \item Программа на прологе --- последовательность \emph{определений отношений}.
+        \item Определение отношений состоит из \emph{головы} и \emph{тела}, разделенных штопором (\verb!:-!), в конце стоит точка (\verb!.!).
+        \item Голова --- идентификатор.
+        \item Тело --- выражение с правоассоциативными бинарными операторами конъюнкции (\verb!,!) и дизъюнкции (\verb!;!) над идентификаторами. Конъюнкция имеет более высокий приоритет, чем дизъюнкция. Возможно использование скобок (\verb!(!, \verb!)!) для управления порядком вычислений.
+        \item Тело и штопор могут отсутствовать.
+        \item Где угодно могут встречаться пробельные символы: советую использовать лексер.
+      \end{itemize}
+      \item Примеры корректных определений отношений.
+      \begin{itemize}
+        \item \verb!f.!
+        \item \verb!f :- g.!
+        \item \verb!f :- g, h; t.!
+        \item \verb!f :- g, (h; t).!
+      \end{itemize}
+      \item Примеры некорректных определений отношений.
+      \begin{itemize}
+        \item \verb!f! --- нет точки.
+        \item \verb!:- f.! --- нет головы.
+        \item \verb!f :- .! --- нет тела.
+        \item \verb!f :- g; h, .! --- нет правого подвыражения у конъюнкции.
+        \item \verb!f :- (g; (f).! --- несбалансированные скобки.
+      \end{itemize}
+      \item Код должен быть сопровожден инструкцией по сборке и запуску. Желательно выложить его на гитхаб и сопроводить тестами.
+      \item Примеры простых реализаций парсеров методом рекурсивного спуска:
+      \begin{itemize}
+        \item \url{https://vey.ie/2018/10/04/RecursiveDescent.html}
+        \item \url{http://www.cs.utsa.edu/~wagner/CS3723/rdparse/rdparser6.html}
+        \item \url{https://prgwonders.blogspot.com/2017/10/recursive-descent-parser-in-c-for.html}
+        \item \url{https://craftinginterpreters.com/parsing-expressions.html}
+      \end{itemize}
+    \end{itemize}
+  }
+\end{enumerate}
+
+
+\end{document}

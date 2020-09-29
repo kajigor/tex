@@ -1,0 +1,36 @@
+\documentclass[12pt]{article}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{russian}
+\setmainfont[Mapping=tex-text]{CMU Serif}
+
+\begin{document}
+\centering {\LARGE Формальные языки}
+
+{\Large домашнее задание до 23:59 14.09}
+\bigskip
+
+\enumerate
+{
+  \item 
+  { Доказать или опровергнуть следующее свойство строк и операций над ними: \\ $(a \cdot b)^R = b^R \cdot a^R$ для произвольных строк $a$ и $b$
+  }
+
+  \item 
+  { Описать язык $L$, порождаемый грамматикой $<\{0, 1\}, \{S\}, \{S \to 0 1 \, | \, 0 S 1\}, S>$, 
+    \begin{itemize}
+        \item на естественном языке;
+        \item как множество.
+    \end{itemize}
+
+  }
+
+  \item
+  {
+    Описать язык $L' = \{ \omega \cdot 1^{|\omega|} \cdot \omega^R \, | \, \omega \in L \}$, где $L$ из второго задания, как множество, не используя никаких знаний о языке $L$.
+  }
+  
+  \item {Привести три различных дерева вывода для трех цепочек языка $L$ из второго задания.}
+}
+\end{document}

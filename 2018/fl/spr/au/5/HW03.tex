@@ -1,0 +1,32 @@
+\documentclass[12pt]{article}
+\usepackage[left=1cm,right=1.5cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage{hyperref}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\usepackage{amssymb}
+\setdefaultlanguage{russian}
+\pagestyle{empty}
+\setmainfont[Mapping=tex-text]{CMU Serif}
+
+\begin{document}
+\centering {\LARGE Формальные языки}
+
+{\Large домашнее задание до 23:59 15.04}
+\bigskip
+
+\begin{enumerate}
+  \item Доказать или опровергнуть регулярность языка натуральных чисел в десятичной системе без лидирующих нулей, деляющихся на $4$ и имеющих сумму цифр, равную $2$.
+  \item Построить регулярную грамматику, задающую язык \\ $ L = \{ \alpha \cdot a b a \cdot \beta \mid \alpha, \beta \in \{ a, b \}^* \} \cup \{ \alpha \cdot b a b \cdot \beta \mid \alpha, \beta \in \{ a, b \}^* \} $
+  \item Проверить регулярность языка $\{ 0^{|\omega|} \cdot \omega \mid \omega \in \{ 0, 1, \dots, 9 \}^* \} $
+  \item {Построить недетерминированный автомат по регулярному выражению $ a|(ba|bb)* $, построить эпсилон-замыкание автомата }
+  \item {Построить недетерминированный автомат по регулярному выражению $ (a|ab)^* | b $, построить эпсилон-замыкание автомата }
+  \item Расширить язык L следующими конструкциями, модифицировать лексер и описание конкретного синтаксиса 
+  \begin{itemize}
+      \item \verb!**! --- возведение в степень. Убедитесь, что токенизация умножения все еще работает.
+      \item Многострочные комментарии. Выбрать стратегию обработки вложенных многострочных комментариев.
+  \end{itemize}
+\end{enumerate}
+
+\end{document}
+%% It is just an empty TeX file.
+%% Write your code here.

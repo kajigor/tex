@@ -1,0 +1,27 @@
+\documentclass[12pt]{article}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage{hyperref}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{russian}
+\pagestyle{empty}
+\setmainfont[Mapping=tex-text]{CMU Serif}
+
+\begin{document}
+%% Весь этот текст можно удалить
+%% ====== от сих =====
+\centering {\LARGE Формальные языки}
+
+{\Large Контрольная работа 1, попытка 2, вариант 2}
+\bigskip
+
+\begin{enumerate}
+  \item Построить минимальный детерминированный конечный автомат для языка \\ $L = \{ \alpha \omega \beta \, | \, \alpha, \beta \in \{ 0, 1, \dots, 9 \}^*; \omega \in \{ 0, 1 \}; |\omega| = 3, \omega$ --- двоичная запись целого числа, не являющегося простым$\}$
+  \item { 
+         Построить автомат, распознающий числа, кратные 15}
+    \item Построить регулярную грамматику, задающую язык \\ $L = \{ \alpha a \beta b \gamma \, | \, \alpha, \beta, \gamma \in \{ 0, 1 \}^*; |\beta| = 3; a, b \in \{ 0, 1 \}; a \, or \, b = 1 \} $
+    \item Проверить регулярность языка $\{ \omega \omega \, | \, \omega \in \{0, 1\}^* \}$. Если язык регулярный --- привести грамматику, автомат или регулярное выражение, его задающее. Если нет --- привести доказательство
+    \item {Построить недетерминированный автомат по регулярному выражению $ (ab)b^*(ba)^*  $, построить эпсилон-замыкание автомата }
+\end{enumerate}
+%% ===== и до сих =====
+\end{document}

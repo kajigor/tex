@@ -1,0 +1,29 @@
+\documentclass[12pt]{article}
+\usepackage[left=1cm,right=1.5cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage{hyperref}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\usepackage{amssymb}
+\setdefaultlanguage{russian}
+\pagestyle{empty}
+\setmainfont[Mapping=tex-text]{CMU Serif}
+
+\begin{document}
+\begin{center}
+{\LARGE Формальные языки}
+
+\bigskip
+
+{\Large Никита Босов}
+\end{center} 
+
+\bigskip
+
+
+
+\begin{enumerate}
+  \item Построить грамматику для языка $\{ a^n b c^n \mid n \geq 1 \} \cup \{ a^n d c^{2n} \mid n \geq 1 \}$.
+  \item Проверить, является ли построенная грамматика LL(1). Если является, привести таблицу анализатора и продемонстрировать успешный и неуспешный вывод на 2 цепочках длины не меньше 7. Если нет, обосновать. 
+  \item Привести грамматику в нормальную форму Хомского. Привести два дерева вывода двух разных строк длины не меньше 7 из языка в нормализованной граммтике. 
+\end{enumerate}
+\end{document}

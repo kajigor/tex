@@ -1,0 +1,36 @@
+\documentclass[12pt]{article}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{russian}
+\setmainfont[Mapping=tex-text]{CMU Serif}
+
+\begin{document}
+\centering {\LARGE Формальные языки}
+
+{\Large домашнее задание до 23:59 20.05}
+\bigskip
+
+\begin{enumerate}
+{
+  \item Докажите или опровергните, что данный язык не является контекстно-свободным $\{ a^{n+m} b^m c^n d^m \, | \, n, m \geq 0 \}$ (2 балла)
+  \item {Напишите L-атрибутную грамматику для языка арифметических выражений в инфиксной записи над натуральными числами с операциями $+, -$, скобками и перемеными с $let$-присваиваниями (4 балла)
+  \begin{itemize}
+      \item Результат --- целое число
+      \item Законы арифметики должны быть соблюдены
+      \item Только последнее присваивание в переменную учитывается
+      \item На всякий случай примеры
+      \begin{itemize}
+          \item ``$1-(2+3)$''$ \rightarrow -4$
+          \item ``$let \ x = 13 \ in \ x + x - 24$''$ \rightarrow 2$
+          \item ``$let \ x = 1 \ in \ let \ y = 3 \ in \ let \ x = 7 \ in \ x - y$''$ \rightarrow 4$
+          \item ``$let \ x = 1 \ in \ y $''$ \rightarrow Error $
+      \end{itemize}
+      \item Промоделировать вычисления на примерах из задания
+  \end{itemize}
+  }
+}
+\end{enumerate}
+
+ 
+\end{document}

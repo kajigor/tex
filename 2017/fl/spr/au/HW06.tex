@@ -1,0 +1,160 @@
+\documentclass{article}
+
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage{listings}
+\usepackage{indentfirst}
+\usepackage{verbatim}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{stmaryrd}
+\usepackage{graphicx}
+\usepackage{euscript}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage[T2A]{fontenc}
+
+\lstdefinelanguage{llang}{
+keywords={skip, do, while, read, write, if, then, else, true, false, begin, end},
+sensitive=true,
+%%basicstyle=\small,
+commentstyle=\scriptsize\rmfamily,
+keywordstyle=\ttfamily\underbar,
+identifierstyle=\ttfamily,
+basewidth={0.5em,0.5em},
+columns=fixed,
+fontadjust=true,
+literate={->}{{$\to$}}1
+}
+
+\lstset{
+language=llang
+}
+
+\newcommand{\aset}[1]{\left\{{#1}\right\}}
+\newcommand{\term}[1]{\mbox{\texttt{\bf{#1}}}}
+\newcommand{\cd}[1]{\mbox{\texttt{#1}}}
+\newcommand{\sembr}[1]{\llbracket{#1}\rrbracket}
+\newcommand{\conf}[1]{\left<{#1}\right>}
+\newcommand{\fancy}[1]{{\cal{#1}}}
+
+\newcommand{\trule}[2]{\frac{#1}{#2}}
+\newcommand{\crule}[3]{\frac{#1}{#2},\;{#3}}
+\newcommand{\withenv}[2]{{#1}\vdash{#2}}
+\newcommand{\trans}[3]{{#1}\xrightarrow{#2}{#3}}
+\newcommand{\ctrans}[4]{{#1}\xrightarrow{#2}{#3},\;{#4}}
+\newcommand{\llang}[1]{\mbox{\lstinline[mathescape]|#1|}}
+\newcommand{\pair}[2]{\inbr{{#1}\mid{#2}}}
+\newcommand{\inbr}[1]{\left<{#1}\right>}
+\newcommand{\highlight}[1]{\color{red}{#1}}
+\newcommand{\ruleno}[1]{\eqno[\textsc{#1}]}
+\newcommand{\inmath}[1]{\mbox{$#1$}}
+\newcommand{\lfp}[1]{fix_{#1}}
+\newcommand{\gfp}[1]{Fix_{#1}}
+
+\newcommand{\NN}{\mathbb N}
+\newcommand{\ZZ}{\mathbb Z}
+
+\begin{document}
+
+%% Весь этот текст можно удалить
+%% ====== от сих =====
+\begin{center} {\LARGE Формальные языки}
+
+{\Large домашнее задание до 23:59 06.04}
+\end{center}
+\bigskip
+
+\begin{enumerate}
+  \item Написать парсер для языка L (описание языка ниже), используя любимый способ писать парсеры. Не забыть про тесты (8 баллов).
+    \begin{itemize}
+        \item Можно использовать генераторы синтаксических анализаторов (yacc, bison, antlr, любой другой), лучше не использовать библиотеки парсер-комбинаторов (впрочем, это не возбраняется). 
+        \item Ваш синтаксический анализатор должен принимать на вход то, что выдает ваш лексер --- те самые токены с позициями во входной строке; если для этого нужно править лексер --- правьте.
+        \item Создайте консольное приложение для запуска синтаксического анализа.
+        \begin{itemize}
+            \item Консольное приложение обязательно должно принимать адрес файла со входной программой.
+            \item Программа может быть многострочной.
+            \item Консольное приложение должно запускать сначала лексер, потом парсер.
+            \item Результатом синтаксического анализа должно быть абстрактное синтаксическое дерево --- напечатанное в человекочитаемом формате; можно в файл, но название файла должно быть связано с названием входного файла (можно использовать dot, можно написать свою функцию печати, можно воспользоваться другими подходами).
+            \item Лексемы в дереве вывода должны отображаться со всей необходимой информацией.
+            \item Парсеру на вход подается поток лексем с отфильтрованными комментариями.
+            \item Парсер принимает программы в конкретном синтаксисе, описанном ниже, дерево строит соответствующее абстрактному синтаксису.
+        \end{itemize}
+     \end{itemize}
+\end{enumerate}
+
+\bigskip
+
+\begin{center} {\Large Абстрактный синтаксис языка L } \end{center}
+$$
+X \mbox{ --- счетно-бесконечное множество переменных (идентификаторов)}
+$$
+$$
+\otimes=\{\llang{+}, \llang{-}, \llang{*}, \llang{/}, \llang{\%}, \llang{==}, \llang{!=}, 
+\llang{>}, \llang{>=}, \llang{<}, \llang{<=}, \llang{\&\&}, \llang{||}\}
+$$
+
+\begin{itemize}
+\item Выражения: $\fancy{E}=X\cup\NN\cup(\fancy{E}\otimes\fancy{E})$. В выражениях могут использоваться круглые скобки.
+\item Операторы: 
+
+$$
+\begin{array}{rll}
+  \fancy{S}=&\llang{skip}&\cup\\
+            &X\;\llang{:=}\;\fancy{E}&\cup\\
+            &\fancy{S}\;\llang{;}\;\fancy{S}&\cup\\
+            &\llang{write}\;\fancy{E}&\cup\\
+            &\llang{read}\;\fancy{X}&\cup\\
+            &\llang{while}\;\fancy{E}\;\llang{do}\;\fancy{S}&\cup\\
+            &\llang{if}\;\fancy{E}\;\llang{then}\;\fancy{S}\;\llang{else}\;\fancy{S}
+\end{array}
+$$
+\item Программы: $\fancy{P}=\fancy{S}$
+\end{itemize}
+
+\begin{center} {\Large Конкретный синтаксис языка L } \end{center}
+
+Переменные $X$ являются идентификаторами.
+
+
+Приоритет операторов (от высшего к низшему) представлен в таблице. Круглые скобки могут использоваться для задания приоритета. 
+
+\begin{tabular}{ c | c | c | c }
+  \multicolumn{4}{c}{Высший приоритет} \\ \hline
+  \llang{*}    & \llang{/}  & \llang{\%} &            \\
+  \llang{+}    & \llang{-}  &            &            \\
+  \llang{>}    & \llang{>=} & \llang{<}  & \llang{<=} \\
+  \llang{==}   & \llang{!=} &            &            \\
+  \llang{\&\&} &            &            &            \\
+  \llang{||}   &            &            &            \\ \hline
+  \multicolumn{4}{c}{Низший приоритет} \\
+\end{tabular}
+
+
+\begin{itemize}
+    \item Простые операторы выглядят согласно абстрактному синтаксису.
+    \begin{itemize}
+        \item $\llang{skip}$
+        \item $\llang{:=}$
+    \end{itemize}
+    \item Чтение из входного потока и вывод в выходной требуют взятия аргументов в круглые скобки.
+    \begin{itemize}
+      \item $\llang{write} (\llang{1})$
+      \item $\llang{read} (\llang{ident})$
+    \end{itemize}
+    \item {Условия для условного оператора и цикла берутся в круглые скобки. Тела могут быть многострочными, тогда они берутся в $\llang{begin}, \llang{end}$ скобки; если однострочные --- скобки не обязательны. }
+    \begin{itemize}
+        \item $\llang{if}\;(\llang{true})\;\llang{then}\;\llang{skip}\;\llang{else}\;\llang{begin}\;\llang{write} (\llang{x})\;\llang{;}\;\llang{z}\;\llang{:=}\;\llang{13}\;\llang{end}$
+        \item  $\llang{while}\;(\llang{false})\;\llang{do}\;\llang{begin} \;\llang{skip}\;\llang{;}\;\llang{write} (\llang{x})\;\llang{;}\;\llang{z}\;\llang{:=}\;\llang{13}\;\llang{end}$
+    \end{itemize}
+\end{itemize}
+
+В конце программы точка с запятой не ставится. 
+
+Пример программы: 
+$$
+\llang{read}\; (x) \llang{;} \; \llang{if} \; (y + 1 == x)  \; \llang{then} \; \llang{write} \; (y) \; \llang{else} \; (* nothing \, to \, do \, here *) \, \llang{skip} 
+$$
+
+
+\end{document}
+

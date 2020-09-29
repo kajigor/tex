@@ -1,0 +1,47 @@
+\documentclass{article}
+
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage{listings}
+\usepackage{indentfirst}
+\usepackage{verbatim}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{stmaryrd}
+\usepackage{graphicx}
+\usepackage{euscript}
+\usepackage{hyperref}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage[T2A]{fontenc}
+
+\begin{document}
+
+\begin{center} {\LARGE Формальные языки} \end{center}
+
+\begin{center} {\Large домашнее задание до 23:59 13.02} \end{center}
+\bigskip
+
+\begin{enumerate}
+  \item 
+  { 
+    Найти описание лексической структуры вашего второго самого любимого языка программирования. Составить регулярные выражения для трех языков: языка идентификаторов, языка ключевых слов (можно какого-нибудь их конечного подмножества) и языка каких-нибудь чисел (целых в десятичной счисления, с плавающей точкой, любых других). В отчете указать, где и какую спецификацию читали и привести регулярные выражения (их должно быть три). 
+  }
+  \item 
+  {
+    Реализовать функцию токенизации \verb!tokenize :: String -> [Token]!
+    \begin{itemize}
+        \item Предполагайте, что все токены разделены пробелами.
+        \item Пока в случае ошибки токенизации допустимо ругаться \verb!error!-ом.
+        \item Не забудьте написать тесты.
+        \item Репозиторий с шаблоном живет тут: \href{https://github.com/kajigor/fl_ifmo_2019_spr/tree/HW01}{https://github.com/kajigor/fl\_ifmo\_2019\_spr/tree/HW01}
+        \item Если вы не хотите писать на Haskell, пожалуйста. Тогда: 
+        \begin{itemize}
+            \item Сделать консольное  приложение, принимающее на вход путь к файлу, содержащему строку, производящее токенизацию и печатающее ее результат в файл.
+            \item Код должен быть размещен на гитхабе, собираться одним скриптом, содержать инструкцию по сборке и запуску собранного приложения, собираться на чистой Ubuntu 18.04 или Windows 10. Все зависимости, в случае их отсутствия в системе, должны доставляться скриптом.
+            \item Инструкция по запуску должна содержать информацию о том, где находится бинарник, как именно его полагается запускать, какой формат входных данных, куда пишется результат.
+        \end{itemize}
+    \end{itemize}
+  }
+\end{enumerate}
+\end{document}
+

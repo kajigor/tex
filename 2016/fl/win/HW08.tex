@@ -1,0 +1,40 @@
+\documentclass[12pt]{article}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{russian}
+\setmainfont[Mapping=tex-text]{CMU Serif}
+
+\begin{document}
+\centering {\LARGE Формальные языки}
+
+{\Large домашнее задание до 23:59 31.10}
+\bigskip
+
+\enumerate
+{
+  \item
+  
+    Построить LL(1) таблицу для следующей грамматики:
+    
+    $$
+    \begin{array}{cccccccc}
+       &E  & \rightarrow & v & \, | \, &  F &  \, | \, &  A \\
+       &F  & \rightarrow & \lambda V . E \\
+       &V & \rightarrow & v &  \, | \, & V v \\
+       &A  & \rightarrow & (E E)   
+    \end{array}
+    $$
+    
+    \begin{enumerate}
+        \item Избавиться от левой рекурсии, если необходимо
+        \item Факторизовать, если необходимо 
+        \item Вычислить множества FIRST
+        \item Вычислить множества FOLLOW
+        \item Построить таблицу LL(1)
+        \item Промоделировать вывод (привести историю изменения стека и дерево вывода) на строке $(\lambda f x. (f x) \lambda v.v)$. Трактовать $f,x,v$ как терминал $v$
+        \item Промоделировать вывод (привести историю изменения стека и дерево вывода) на строке $\lambda zwy. ((\lambda x.  (x z) y) w)$. Трактовать $x,y,z,w$ как терминал $v$
+        \item Убедиться, что строка $(\lambda f x. f x \lambda v.v)$ языку не принадлежит (привести историю изменения стека до момента, когда возникает ошибка)
+    \end{enumerate} 
+}
+\end{document}

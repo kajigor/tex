@@ -1,0 +1,121 @@
+\documentclass{article}
+
+\usepackage[left=1cm,right=1cm,top=1cm,bottom=1cm,bindingoffset=0cm]{geometry}
+\usepackage{listings}
+\usepackage{indentfirst}
+\usepackage{verbatim}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{stmaryrd}
+\usepackage{graphicx}
+\usepackage{euscript}
+\usepackage{hyperref}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage[T2A]{fontenc}
+
+\lstdefinelanguage{llang}{
+keywords={skip, do, while, read, write, if, then, else, begin, end},
+sensitive=true,
+%%basicstyle=\small,
+commentstyle=\scriptsize\rmfamily,
+keywordstyle=\ttfamily\underbar,
+identifierstyle=\ttfamily,
+basewidth={0.5em,0.5em},
+columns=fixed,
+fontadjust=true,
+literate={->}{{$\to$}}1
+}
+
+\lstset{
+language=llang
+}
+
+\newcommand{\aset}[1]{\left\{{#1}\right\}}
+\newcommand{\term}[1]{\mbox{\texttt{\bf{#1}}}}
+\newcommand{\cd}[1]{\mbox{\texttt{#1}}}
+\newcommand{\sembr}[1]{\llbracket{#1}\rrbracket}
+\newcommand{\conf}[1]{\left<{#1}\right>}
+\newcommand{\fancy}[1]{{\cal{#1}}}
+
+\newcommand{\trule}[2]{\frac{#1}{#2}}
+\newcommand{\crule}[3]{\frac{#1}{#2},\;{#3}}
+\newcommand{\withenv}[2]{{#1}\vdash{#2}}
+\newcommand{\trans}[3]{{#1}\xrightarrow{#2}{#3}}
+\newcommand{\ctrans}[4]{{#1}\xrightarrow{#2}{#3},\;{#4}}
+\newcommand{\llang}[1]{\mbox{\lstinline[mathescape]|#1|}}
+\newcommand{\pair}[2]{\inbr{{#1}\mid{#2}}}
+\newcommand{\inbr}[1]{\left<{#1}\right>}
+\newcommand{\highlight}[1]{\color{red}{#1}}
+\newcommand{\ruleno}[1]{\eqno[\textsc{#1}]}
+\newcommand{\inmath}[1]{\mbox{$#1$}}
+\newcommand{\lfp}[1]{fix_{#1}}
+\newcommand{\gfp}[1]{Fix_{#1}}
+
+\newcommand{\NN}{\mathbb N}
+\newcommand{\ZZ}{\mathbb Z}
+
+\begin{document}
+
+%% Весь этот текст можно удалить
+%% ====== от сих =====
+\begin{center} {\LARGE Формальные языки} \end{center}
+
+\begin{center} {\Large домашнее задание до 23:59 06.05} \end{center}
+\bigskip
+
+\begin{enumerate}
+  \item Предложить удобный конкретный синтаксис для языка L (абстрактный синтаксис приведен ниже) --- описать текстом, привести примеры кода, описание поместить в репозиторий с парсером. (2 балла)
+  \begin{itemize}
+    \item Удобность тут понятие относительное --- какой вам синтаксис нравится, такой и используйте.
+    \item Какие есть варианты. Разделять ли операторы языка разделителями или сделать значимыми переносы строк и отсупы? Использовать скобки для группировки блоков кода, ключевые слова begin/end или маркеры конца блока, зависящие от того, в контексте какого оператора мы находимся? Использовать ли скобки для аргументов функций? Может вы хотите предоставить синтаксический сахар для облегчения синтаксиса? 
+  \end{itemize}
+  \item Реализовать парсер для предложенного вами конкретного синтаксиса языка L, если получится --- простым рекурсивным спуском. Целесообразно расширить ваш парсер выражений. Не забыть про тесты (8 баллов)
+    \begin{itemize}
+        \item Желательно, чтобы ваш синтаксический анализатор принимал на вход то, что выдает ваш лексер --- те самые токены с позициями во входной строке; если для этого нужно править лексер --- правьте. Если технологии не сочетаются, реализовать функциональность лексического анализа, как требуется в вашем случае. Комментарии перед синтаксическим анализом имеет смысл отфильтровать.
+        \item Создайте консольное приложение для запуска синтаксического анализа.
+        \begin{itemize}
+            \item Консольное приложение обязательно должно принимать адрес файла со входной программой.
+            \item Программа может быть многострочной.
+            \item Результатом синтаксического анализа должно быть \emph{абстрактное синтаксическое дерево}, напечатанное в человекочитаемом формате; можно в файл, но название файла должно быть связано с названием входного файла (можно в dot).
+            \item Лексемы в дереве вывода должны отображаться со всей необходимой информацией (тип лексемы, значение и привязка к коду).
+            \item Код должен быть размещен на гитхабе, собираться одним скриптом, содержать инструкцию по сборке и запуску собранного приложения, собираться на чистой Ubuntu 16.04 или Windows 10. Все зависимости, в случае их отсутствия в системе, должны доставляться скриптом.
+        \end{itemize}
+     \end{itemize}
+     \item Реализовать восстановление после ошибок. Поэкспериментировать с разными подходами, выбрать дающий наилучшие результаты. В README указать, какой стратегии придерживались (4 балла). Можно почитать 16 главу книги про синтаксический анализ Grune-а (\href{https://drive.google.com/open?id=0B1qy19bcYcDGdXgzaEZrMlNLSms}{ссылка}) --- это вообще очень хороший источник знаний про парсеры.
+\end{enumerate}
+
+\centering {\Large Абстрактный синтаксис языка L }
+$$
+X \mbox{ --- счетно-бесконечное множество идентификаторов}
+$$
+$$
+\otimes=\{\llang{+}, \llang{-}, \llang{*}, \llang{/}, \llang{\%}, \llang{==}, \llang{!=}, 
+\llang{>}, \llang{>=}, \llang{<}, \llang{<=}, \llang{\&\&}, \llang{||}\}
+$$
+
+\begin{itemize}
+\item Определения (функций): $\fancy{D}=\fancy{X}_{name} \; \fancy{X}_0 \dots \fancy{X}_k \leftarrow \fancy{S}$. $\fancy{X}_{name}$ --- имя функции;  $\fancy{X}_0 \dots \fancy{X}_k$ --- ее аргументы; $\fancy{S}$~--- тело.
+\item Вызовы функций: $\fancy{C} = \fancy{X}_{name} \; \fancy{E}_0 \dots \fancy{E}_k$. \emph{Аргументами могут быть произвольные выражения.}
+\item Выражения: $\fancy{E}=\fancy{C} \cup X\cup\NN\cup(\fancy{E}\otimes\fancy{E})$. \emph{Вызовы функций могут быть использованы в выражениях.} В выражениях могут использоваться круглые скобки.
+
+
+\item Операторы: 
+
+$$
+\begin{array}{rll}
+  \fancy{S}=
+            &\fancy{X}\;\llang{:=}\;\fancy{E}&\cup\\
+            &\fancy{C}&\cup\\
+            &\llang{write}\;\fancy{E}&\cup\\
+            &\llang{read}\;\fancy{X}&\cup\\
+            &\llang{while}\;\fancy{E}\;\llang{do}\;\fancy{S}&\cup\\
+            &\llang{if}\;\fancy{E}\;\llang{then}\;\fancy{S}\;\llang{else}\;\fancy{S}&\cup\\
+            &\fancy{S}^* \, \emph{(Последовательность операторов)}
+            
+\end{array}
+$$
+\item Программы: $\fancy{P}=(\fancy{D}^*, \fancy{S})$ --- несколько определений, за которыми следует текст самой программы
+\end{itemize}
+\end{document}
+

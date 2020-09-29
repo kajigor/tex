@@ -1,0 +1,130 @@
+\documentclass[12pt]{article}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage[utf8x]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{cmap}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{url}
+\usepackage{pifont}
+\usepackage{tikz}
+\usepackage{verbatim}
+
+\usetikzlibrary{shapes,arrows}
+\usetikzlibrary{positioning,automata}
+\tikzset{every state/.style={minimum size=0.2cm},
+initial text={}
+}
+
+\begin{document}
+\begin{center} {\LARGE Формальные языки} \end{center}
+
+\begin{center} \Large домашнее задание до 23:59 01.10 \end{center}
+\bigskip
+
+\begin{enumerate}
+  \item
+  {
+    Перечислить слова языка $L_1 \cap L_2,$ где $L_1 = \{ (cat)^n \mid n \geq 0 \}$ и $L_2 = \{ c^m a^m t^m \mid m \geq 0 \}$. Доказать, что других цепочек в пересечении нет.
+  }
+  \item
+  {
+    Для языка строк с подстрокой $abbab$ ($\{\alpha a b b a b \beta \mid \alpha, \beta \in \{ a, b\}^* \}$) построить:
+    \begin{itemize}
+      \item Недетерминированный автомат
+      \item Детерминированный автомат
+      \item Минимальный детерминированный автомат
+      \item Регулярную грамматику
+    \end{itemize}
+  }
+  \item
+  {
+    Построить детерминированный конечный автомат, распознающий язык строк из нулей и единиц, где количество нулей и единиц четно $\{ \omega \in \{0, 1\}^*, |\omega|_0$ и $|\omega|_1$ четно$\}$
+  }
+  \item
+  {
+    Существуют ли такие языки $L_1$ и $L_2$, что $L_1^R \cdot (L_2^R)$ и $L_1^R \cdot L_2$ неравномощны? Обосновать ответ.
+  }
+  \item
+  {
+    Определить, является ли язык $\{u a v \mid u, v \in \{a, b\}, |u| = |v| \}$ регулярным. Если язык регулярен, построить регулярное выражение или автомат. Иначе --- доказать.
+  }
+\end{enumerate}
+
+\newpage
+
+\begin{center}
+  \Large{Пример рисования автоматов при помощи \texttt{tikz}}
+\end{center}
+
+\bigskip
+
+Пример автомата:
+
+\begin{center}
+  \begin{tikzpicture}[> = stealth,node distance=3cm, on grid]
+    \node[state]           (q_2)                      {C};
+    \node[state,initial]   (q_0) [above left=of q_2]  {A};
+    \node[state]           (q_1) [below left=of q_2]  {B};
+    \node[state]           (q_3) [right=of q_2]       {D};
+    \node[state]           (q_4) [above right=of q_3] {E};
+    \node[state,accepting] (q_5) [below right=of q_3] {F};
+    \node[state,accepting] (q_6) [above right=of q_5] {G};
+
+    \path[->] (q_0) edge [bend left=15]  node [right] {$1$} (q_1)
+                    edge                 node [above] {$0$} (q_2)
+              (q_1) edge [bend left=15]  node [left]  {$1$} (q_0)
+                    edge                 node [below] {$0$} (q_2)
+              (q_2) edge [bend right=15] node [below] {$1$} (q_3)
+                    edge [bend left=15]  node [above] {$0$} (q_3)
+              (q_3) edge                 node [below] {$1$} (q_5)
+                    edge                 node [above] {$0$} (q_4)
+              (q_4) edge                 node [above] {$1$} (q_6)
+                    edge                 node [right] {$0$} (q_5)
+              (q_5) edge [loop below]    node         {$1$} ()
+                    edge [loop left]     node         {$0$} ()
+              (q_6) edge                 node [below] {$1$} (q_5)
+                    edge [loop right]    node         {$0$} ();
+  \end{tikzpicture}
+\end{center}
+
+Расположение узлов относительно друг друга:
+
+\begin{center}
+  \begin{tikzpicture}[> = stealth,node distance=3cm, on grid]
+    \node (center)                  {center};
+    \node [above=of center]         {above};
+    \node [above left=of center]    {above left};
+    \node [above right=of center]   {above right};
+    \node [below=of center]         {below};
+    \node [below left=of center]    {below left};
+    \node [below right=of center]   {below right};
+    \node [left=of center]          {left};
+    \node (right) [right=of center] {right};
+    \node [right=of right]          {right of right};
+  \end{tikzpicture}
+\end{center}
+
+Пример автомата:
+
+\begin{center}
+  \begin{tikzpicture}[> = stealth,node distance=4cm, on grid]
+    \node[state,initial,accepting] (q_0) {0};
+    \node[state] (q_1) [above right=of q_0, xshift=1.5cm] {1};
+    \node[state] (q_2) [below right=of q_0, xshift=1.5cm] {2};
+
+    \path[->] (q_0) edge [loop above]   node []             {$0,3,6,9$} ()
+                    edge [bend left=15] node [sloped,above] {$1,4,7$} (q_1)
+                    edge [bend left=15] node [sloped,above] {$2,5,8$} (q_2)
+              (q_1) edge [loop right]   node []             {$0,3,6,9$} ()
+                    edge [bend left=15] node [sloped,above] {$1,4,7$} (q_2)
+                    edge [bend left=15] node [sloped,below] {$2,5,8$} (q_0)
+              (q_2) edge [loop right]   node []             {$0,3,6,9$} ()
+                    edge [bend left=15] node [sloped,below] {$1,4,7$} (q_0)
+                    edge [bend left=15] node [sloped,above] {$2,5,8$} (q_1)
+
+                    ;
+  \end{tikzpicture}
+\end{center}
+
+\end{document}

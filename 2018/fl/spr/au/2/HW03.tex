@@ -1,0 +1,105 @@
+\documentclass{article}
+
+\usepackage[left=1cm,right=1cm,top=1cm,bottom=1cm,bindingoffset=0cm]{geometry}
+\usepackage{listings}
+\usepackage{indentfirst}
+\usepackage{verbatim}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{stmaryrd}
+\usepackage{graphicx}
+\usepackage{euscript}
+\usepackage{hyperref}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage[T2A]{fontenc}
+
+\lstdefinelanguage{llang}{
+keywords={skip, do, while, read, write, if, then, else, begin, end},
+sensitive=true,
+%%basicstyle=\small,
+commentstyle=\scriptsize\rmfamily,
+keywordstyle=\ttfamily\underbar,
+identifierstyle=\ttfamily,
+basewidth={0.5em,0.5em},
+columns=fixed,
+fontadjust=true,
+literate={->}{{$\to$}}1
+}
+
+\lstset{
+language=llang
+}
+
+\newcommand{\aset}[1]{\left\{{#1}\right\}}
+\newcommand{\term}[1]{\mbox{\texttt{\bf{#1}}}}
+\newcommand{\cd}[1]{\mbox{\texttt{#1}}}
+\newcommand{\sembr}[1]{\llbracket{#1}\rrbracket}
+\newcommand{\conf}[1]{\left<{#1}\right>}
+\newcommand{\fancy}[1]{{\cal{#1}}}
+
+\newcommand{\trule}[2]{\frac{#1}{#2}}
+\newcommand{\crule}[3]{\frac{#1}{#2},\;{#3}}
+\newcommand{\withenv}[2]{{#1}\vdash{#2}}
+\newcommand{\trans}[3]{{#1}\xrightarrow{#2}{#3}}
+\newcommand{\ctrans}[4]{{#1}\xrightarrow{#2}{#3},\;{#4}}
+\newcommand{\llang}[1]{\mbox{\lstinline[mathescape]|#1|}}
+\newcommand{\pair}[2]{\inbr{{#1}\mid{#2}}}
+\newcommand{\inbr}[1]{\left<{#1}\right>}
+\newcommand{\highlight}[1]{\color{red}{#1}}
+\newcommand{\ruleno}[1]{\eqno[\textsc{#1}]}
+\newcommand{\inmath}[1]{\mbox{$#1$}}
+\newcommand{\lfp}[1]{fix_{#1}}
+\newcommand{\gfp}[1]{Fix_{#1}}
+
+\newcommand{\NN}{\mathbb N}
+\newcommand{\ZZ}{\mathbb Z}
+
+\begin{document}
+
+%% Весь этот текст можно удалить
+%% ====== от сих =====
+\begin{center} {\LARGE Формальные языки} \end{center}
+
+\begin{center} {\Large домашнее задание до 23:59 08.04} \end{center}
+\bigskip
+
+\begin{enumerate}
+  \item Реализовать методом рекурсивного спуска синтаксический анализатор арифметических выражений. (8 баллов за полностью выполненное задание)
+    \begin{itemize}
+        \item Сделать консольное  приложение, принимающее на вход путь к файлу, содержащему арифметическое выражение, производящее синтаксический анализ и печатающее его результат в консоль.
+        \begin{itemize}
+            \item Результатом работы синтаксического анализа является, в случае успешного разбора, дерево вывода, в случае ошибки --- сообщение об ошибке. Сообщение об ошибке должно идентифицировать позицию во входном потоке, на котором она произошла.
+        \end{itemize}
+        \item Составить набор тестов, демонстрирующий правильность работы полученного лексера (качество тестового покрытия важно!).
+        \item Код должен быть размещен на гитхабе, собираться одним скриптом, содержать инструкцию по сборке и запуску собранного приложения, собираться на чистой Ubuntu 16.04 или Windows 10. Все зависимости, в случае их отсутствия в системе, должны доставляться скриптом.
+        \begin{itemize}
+            \item Инструкция по запуску должна содержать информацию о том, где находится бинарник, как именно его полагается запускать, какой формат аргументов командной строки, куда пишется результат.
+            \item Можно писать на любом языке программирования, но желательно не пользоваться готовыми решениями и библиотеками. 
+        \end{itemize} 
+     \end{itemize}
+\end{enumerate}
+
+\medskip
+
+\begin{center} {\Large Спецификация языка арифметических выражений } \end{center}
+
+\medskip
+
+Язык описывает корректные арифметические выражения над натуральными числами с естественным приоритетом операций и скобками. Допустимые операции: сложение, вычитание, умножение, деление, возведение в степень. 
+
+Примеры корректных цепочек: 
+
+\begin{itemize}
+  \item \verb!0 + 13 * 42 - 7 / 0!
+  \item \verb!(0 + 13) * ((42 - 7) / 0)!
+  \item \verb!1 - 2 - 3 - (5 - 6)!
+  \item \verb!13!
+  \item \verb!(((((13)))))!
+  \item \verb!42 ^ 24 - 156 * 123!
+  \item \verb!(42 ^ (24 - 156) * 123)!
+\end{itemize}
+
+
+\end{document}
+

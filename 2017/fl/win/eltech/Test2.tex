@@ -1,0 +1,51 @@
+\documentclass[12pt]{article}
+\usepackage[left=1cm,right=1.5cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage{hyperref}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\usepackage{amssymb}
+\setdefaultlanguage{russian}
+\pagestyle{empty}
+\setmainfont[Mapping=tex-text]{CMU Serif}
+
+\begin{document}
+\centering {\LARGE Формальные языки}
+
+{\Large Контрольная работа 2, вариант 1}
+\bigskip
+
+\begin{enumerate}
+  \item Доказать или опровергнуть следующее свойство конкатенации языков: $L \cdot L^R = \{ \omega \cdot \omega^R \mid \omega \in L \}$ для произвольного языка $L$.
+  \item Построить минимальный детерминированный конечный автомат для языка натуральных чисел в десятичной системе без лидирующих нулей, деляющихся на $4$ и имеющих сумму цифр, равную $2$.
+  \item Построить регулярную грамматику, задающую язык \\ $ L = \{ \alpha \cdot a b a \cdot \beta \mid \alpha, \beta \in \{ a, b \}^* \} \cup \{ \alpha \cdot b a b \cdot \beta \mid \alpha, \beta \in \{ a, b \}^* \} $
+  \item Проверить регулярность языка $\{ 0^{|\omega|} \cdot \omega \mid \omega \in \{ 0, 1, \dots, 9 \}^* \} $
+  \item {Построить недетерминированный автомат по регулярному выражению $ a|(ba|bb)* $, построить эпсилон-замыкание автомата }
+\end{enumerate}
+
+\bigskip
+
+~\\~
+
+\bigskip
+
+\rule{\textwidth}{1pt}
+
+\bigskip
+
+~\\~\\~
+
+\bigskip
+
+\centering {\LARGE Формальные языки}
+
+{\Large Контрольная работа 2, вариант 2}
+\bigskip
+
+\begin{enumerate}
+  \item Доказать или опровергнуть следующее свойство конкатенации языков: $L^R \cdot L = \{ \omega^R \cdot \omega \mid \omega \in L \}$ для произвольного языка $L$.
+\item Построить минимальный детерминированный конечный автомат для языка натуральных чисел в десятичной системе без лидирующих нулей, деляющихся на $5$ и имеющих сумму цифр, равную $2$.
+  \item Построить регулярную грамматику, задающую язык \\ $ L = \{ \alpha \cdot a a b \cdot \beta \mid \alpha, \beta \in \{ a, b \}^* \} \cup \{ \alpha \cdot b a a \cdot \beta \mid \alpha, \beta \in \{ a, b \}^* \} $
+  \item Проверить регулярность языка $\{ \omega \cdot 0^{|\omega|} \mid \omega \in \{ 0, 1, \dots, 9 \}^* \} $
+  \item {Построить недетерминированный автомат по регулярному выражению $ (a|ab)^* | b $, построить эпсилон-замыкание автомата }
+\end{enumerate}
+\end{document}

@@ -1,0 +1,43 @@
+\documentclass{article}
+
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage{listings}
+\usepackage{indentfirst}
+\usepackage{verbatim}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{stmaryrd}
+\usepackage{graphicx}
+\usepackage{euscript}
+\usepackage{hyperref}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage[T2A]{fontenc}
+
+\begin{document}
+
+\begin{center} {\LARGE Формальные языки} \end{center}
+
+\begin{center} {домашнее задание до 23:59 13.03} \end{center}
+\bigskip
+
+Новую ветку создала, но сигнатуры функций прописывать не стала, чтобы дать вам простор для воображения: \href{https://github.com/kajigor/fl_ifmo_2019_spr/tree/HW05}{https://github.com/kajigor/fl\_ifmo\_2019\_spr/tree/HW05}
+
+\begin{enumerate}
+  \item
+  {
+    Реализовать преобразования для автоматов: 
+    
+    \begin{enumerate} 
+      \item Преобразование неполного детерминированного в полный детерминированный. На недетерминированных пусть возвращает ошибку преобразования.
+      \item Детерминизация автомата. На детерминированных работает как \verb!id!. Если в автомате есть $\varepsilon$-переходы, пусть возвращает ошибку преобразования.
+      \item Эпсилон-замыкание автомата. На автоматах без $\varepsilon$ работает как \verb!id!
+      \item Минимизация автомата. Неполные детерминированные должна сначала дополнять и удалять недостижимые состояния. На недетерминированных пусть возвращает ошибку преобразования.
+    \end{enumerate}
+  }
+\end{enumerate}
+
+
+    Не забывайте писать свои тесты, пожалуйста. 
+\end{document}
+

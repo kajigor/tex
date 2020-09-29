@@ -1,0 +1,32 @@
+\documentclass[12pt]{article}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{russian}
+\setmainfont[Mapping=tex-text]{CMU Serif}
+
+\begin{document}
+\centering {\LARGE Формальные языки}
+
+{\Large домашнее задание до 23:59 16.05}
+\bigskip
+
+\begin{enumerate}
+  \item
+  { Показать, что каждый из следующих языков не является контекстно-свободным.
+  
+  \begin{enumerate}
+    \item $\{ a^i b^j c^k \, | \, i < j < k \}$
+    \item $\{ a^n b^n c^i \, | \, i \leq n \}$
+    \item $\{0^p \, | \, p $ --- простое$\}$
+    \item $\{0^i 1^j \, | j = i^2 \}$
+    \item $\{a^n b^n c^i \, | \, n \leq i \leq 2n\}$
+    \item $\{w w^R w \, | \, w$ --- цепочка из нулей и единиц$\}$, т.е. множество цепочек, состоящих из цепочки w, за которой записаны ее обращение и она же еще раз, 
+например 001100001
+  \end{enumerate}
+  }
+  \item 
+  { Придумать грамматики типа 1 или типа 0, задающие языки из первого задания; для каждой грамматики привести вывод какой-нибудь нитривиальной цепочки из языка.}
+\end{enumerate}
+\end{document}

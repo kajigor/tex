@@ -1,0 +1,114 @@
+\documentclass{article}
+
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage{listings}
+\usepackage{indentfirst}
+\usepackage{verbatim}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{stmaryrd}
+\usepackage{graphicx}
+\usepackage{euscript}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage[T2A]{fontenc}
+
+\lstdefinelanguage{llang}{
+keywords={skip, do, while, read, write, if, then, else},
+sensitive=true,
+%%basicstyle=\small,
+commentstyle=\scriptsize\rmfamily,
+keywordstyle=\ttfamily\underbar,
+identifierstyle=\ttfamily,
+basewidth={0.5em,0.5em},
+columns=fixed,
+fontadjust=true,
+literate={->}{{$\to$}}1
+}
+
+\lstset{
+language=llang
+}
+
+\newcommand{\aset}[1]{\left\{{#1}\right\}}
+\newcommand{\term}[1]{\mbox{\texttt{\bf{#1}}}}
+\newcommand{\cd}[1]{\mbox{\texttt{#1}}}
+\newcommand{\sembr}[1]{\llbracket{#1}\rrbracket}
+\newcommand{\conf}[1]{\left<{#1}\right>}
+\newcommand{\fancy}[1]{{\cal{#1}}}
+
+\newcommand{\trule}[2]{\frac{#1}{#2}}
+\newcommand{\crule}[3]{\frac{#1}{#2},\;{#3}}
+\newcommand{\withenv}[2]{{#1}\vdash{#2}}
+\newcommand{\trans}[3]{{#1}\xrightarrow{#2}{#3}}
+\newcommand{\ctrans}[4]{{#1}\xrightarrow{#2}{#3},\;{#4}}
+\newcommand{\llang}[1]{\mbox{\lstinline[mathescape]|#1|}}
+\newcommand{\pair}[2]{\inbr{{#1}\mid{#2}}}
+\newcommand{\inbr}[1]{\left<{#1}\right>}
+\newcommand{\highlight}[1]{\color{red}{#1}}
+\newcommand{\ruleno}[1]{\eqno[\textsc{#1}]}
+\newcommand{\inmath}[1]{\mbox{$#1$}}
+\newcommand{\lfp}[1]{fix_{#1}}
+\newcommand{\gfp}[1]{Fix_{#1}}
+
+\newcommand{\NN}{\mathbb N}
+\newcommand{\ZZ}{\mathbb Z}
+
+\begin{document}
+
+%% Весь этот текст можно удалить
+%% ====== от сих =====
+\centering {\LARGE Формальные языки}
+
+{\Large домашнее задание до 23:59 28.03}
+\bigskip
+
+\begin{enumerate}
+  \item {Задание 4 из предыдущего домашнего задания} (2 балла за полностью выполненное задание)
+  \item Написать лексер для языка L (описание языка ниже), используя любимый генератор лексеров из семейства Lex. Структуры данных для лексем должны однозначно их идентифицировать, а также содержать привязку к коду (с какого по какой символ во входной строке располагается лексема). Составить набор тестов, демонстрирующий правильность работы полученного лексера. Сделать консольное (или вебовое) приложение, принимающее на вход программу на языке L, производящее лексический анализ и печатающее полученный поток лексем. Прислать ссылку на репозиторий или код, сопровожденный инструкцией о том, как его собрать и запустить. (8 баллов за полностью выполненное задание)
+\end{enumerate}
+
+\bigskip
+
+\centering {\Large Абстрактный синтаксис языка L }
+$$
+X \mbox{ --- счетно-бесконечное множество переменных}
+$$
+$$
+\otimes=\{\llang{+}, \llang{-}, \llang{*}, \llang{/}, \llang{\%}, \llang{==}, \llang{!=}, 
+\llang{>}, \llang{>=}, \llang{<}, \llang{<=}, \llang{\&\&}, \llang{||}\}
+$$
+
+\begin{itemize}
+\item Выражения: $\fancy{E}=X\cup\NN\cup(\fancy{E}\otimes\fancy{E})$
+\item Операторы: 
+
+$$
+\begin{array}{rll}
+  \fancy{S}=&\llang{skip}&\cup\\
+            &X\;\llang{:=}\;\fancy{E}&\cup\\
+            &\fancy{S}\;\llang{;}\;\fancy{S}&\cup\\
+            &\llang{write}\;\fancy{E}&\cup\\
+            &\llang{read}\;\fancy{E}&\cup\\
+            &\llang{while}\;\fancy{E}\;\llang{do}\;\fancy{S}&\cup\\
+            &\llang{if}\;\fancy{E}\;\llang{then}\;\fancy{S}\;\llang{else}\;\fancy{S}
+\end{array}
+$$
+\item Программы: $\fancy{P}=\fancy{S}$
+\end{itemize}
+
+Пример программы: 
+$$
+\llang{read}\; x \llang{;} \; \llang{if} \; y + 1 == x  \; \llang{then} \; \llang{write} \; y \; \llang{else} \; \llang{skip} 
+$$
+
+Результат лексического анализа должен быть в духе: 
+
+\begin{verbatim}
+KW_Read(0, 3); Var("x", 5, 5); Colon(6, 6); KW_If(8, 9); Var("y", 11, 11); Op(Plus, 13, 13);
+Num(1, 15, 15); Op(Eq, 17, 18); Var("x", 20, 20); KW_Then(22, 25); KW_Write(27, 31); 
+Var("y", 33, 33); KW_Else(35, 38); KW_Skip(40, 43)
+\end{verbatim}
+
+\end{document}
+

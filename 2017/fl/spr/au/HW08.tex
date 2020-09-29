@@ -1,0 +1,33 @@
+\documentclass[12pt]{article}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage{hyperref}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{russian}
+\setmainfont[Mapping=tex-text]{CMU Serif}
+
+\begin{document}
+%% Весь этот текст можно удалить
+%% ====== от сих =====
+\centering {\LARGE Формальные языки}
+
+{\Large домашнее задание до 23:59 20.04}
+\bigskip
+
+\begin{enumerate}
+  \item Прошлое домашнее задание.
+  \item Добавить построение дерева при синтаксическом анализе при помощи алгоритма CYK (3 балла). 
+  \begin{itemize}
+      \item Используйте реализацию алгоритма из прошлого задания, изменения должны быть небольшими.
+      \item Результатом является:
+      \begin{itemize}
+        \item ответ на вопрос, принадлежит ли цепочка языку, задаваемому грамматикой;
+        \item таблица, которая строится алгоритмом (выводить в человекочитаемом виде, таблицу можно в \verb!.csv! сохранить);
+        \item дерево разбора (в человекочитаемом виде, можно в \verb!.dot!).
+      \item Входная грамматика может быть не в НФХ, тогда нужно запустить сначала процедуру нормализации из второй задачи. 
+  \end{itemize}
+  
+\end{enumerate}
+
+%% ===== и до сих =====
+\end{document}

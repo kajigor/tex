@@ -1,0 +1,40 @@
+\documentclass[12pt]{article}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\setdefaultlanguage{russian}
+\setmainfont[Mapping=tex-text]{CMU Serif}
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning}
+\usepackage{hyperref}
+
+
+\begin{document}
+\begin{center} {\LARGE Формальные языки}
+
+ {\Large домашнее задание до 23:59 04.10} \end{center} 
+\bigskip
+
+Репозиторий с парсером: \url{https://github.com/kajigor/hse-parsing}
+
+\enumerate
+{
+  \item 
+  {   
+    Модифицируйте токенизатор, чтобы допускать произвольные натуральные числа и нормальные идентификаторы (\verb!var = 13 * 42!).
+    
+  }
+  \item
+  {
+    Добавьте в язык унарный минус (\verb!var = -1!). Самый простой способ --- сделать унарный минус наиболее приоритетной операцией на уровне синтаксического анализа. Можно выбрать любой другой способ, но специфицируйте, как именно вы решили это делать.
+  }
+  \item
+  {
+    Добавьте в язык возведение в степень (\verb!2^3!). Возведение в степень правоассоциативно.
+  }
+  \item
+  {
+    Реализуйте преобразователь нашего дерева с неправильной ассоциативностью для \verb!+-*/! в дерево, где эти операции левоассоциативны.
+  }
+}
+\end{document}

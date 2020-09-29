@@ -1,0 +1,36 @@
+\documentclass[12pt]{article}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage{hyperref}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{russian}
+\pagestyle{empty}
+\setmainfont[Mapping=tex-text]{CMU Serif}
+
+\begin{document}
+%% Весь этот текст можно удалить
+%% ====== от сих =====
+\centering {\LARGE Формальные языки}
+
+{\Large Контрольная работа 1, вариант 2}
+\bigskip
+
+\begin{enumerate}
+  \item Построить минимальный детерминированный конечный автомат для языка \\ $L = \{ \omega a b \, | \, \omega \in \{ 0, 1, \dots, 9 \}^*; a, b \in \{ 0, 1, \dots, 9 \}; a + b = 5 \} $
+  \item { 
+         Построить автомат, распознающий разность языков, распознаваемых следующими автоматами
+         
+         \includegraphics[width=250pt]{../05.03/2_0.png}
+         
+~\\~
+         \includegraphics[width=150pt]{../05.03/2_1.png} 
+        }
+    \item Построить регулярную грамматику, задающую язык \\ $L = \{ a \omega b \, | \, \omega \in \{ 0, 1 \}^*; a, b \in \{ 0, 1 \}; a \, xor \, b = 0 \} $
+    \item Проверить регулярность языка арифметических выражений (операции +, *) в постфиксной записи. Если язык регулярный --- привести грамматику, автомат или регулярное выражение, его задающее. Если нет --- привести доказательство
+    \item {Построить эпсилон-замыкание автомата
+           
+           \includegraphics[width=0.9\textwidth]{test1b_ec.PNG}
+    }
+\end{enumerate}
+%% ===== и до сих =====
+\end{document}

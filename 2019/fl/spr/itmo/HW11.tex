@@ -1,0 +1,45 @@
+\documentclass[12pt]{article}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+% \usepackage{fontspec}
+\usepackage{polyglossia}
+\usepackage{proof}
+\usepackage{hyperref}
+
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\setmainfont[Mapping=tex-text]{CMU Serif}
+
+\begin{document}
+\begin{center}
+\LARGE {Формальные языки}
+
+\Large {домашнее задание до 23:59 29.04}
+\end{center} 
+
+\bigskip
+
+Ветку завела: 
+
+\url{https://github.com/kajigor/fl\_ifmo\_2019\_spr/tree/HW11}
+
+\begin{enumerate}
+  \item Добавить в язык комментарии
+  
+  \begin{enumerate}
+      \item Однострочные комментарии: от \verb!--! до конца строки все комментарий.
+  
+      \item Многострочные комментарии: между \verb!{-! и \verb!-}! все комментарий. В этой задаче подразумевается, что после \verb!{-! комментарий продолжается до первого \verb!-}!: в строке \verb!{- 13 {- 42 -} -}! комментарий это \verb!{- 13 {- 42 -}!
+  
+      \item Многострочные комментарии с честной обработкой вложенных комментариев: в строке \verb!{- 13 {- 42 -} -}! комментарий это \verb!{- 13 {- 42 -} -}!, а в строке \verb!{- 13 {- 42 -}! нет корректного комментария, начинающегося с первого символа. Такие комментарии есть в языке программирования OCaml и не существуют в Haskell.
+  \end{enumerate}
+  
+  \item Добавить поддержку параметрического полимофризма. Подразумевается, что можно писать что-то в духе \verb!data List a = Nil | Cons a (List a)!, а также \verb!f(x): a -> a = x!. 
+  
+  \begin{enumerate}
+      \item Только на уровне синтаксиса
+  
+      \item Также на уровне проверки типов
+  \end{enumerate}
+\end{enumerate}
+\end{document}

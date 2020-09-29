@@ -1,0 +1,41 @@
+\documentclass[12pt]{article}
+\usepackage[left=1.5cm,right=1.5cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage{hyperref}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\usepackage{amssymb}
+\setdefaultlanguage{russian}
+\setmainfont[Mapping=tex-text]{CMU Serif}
+
+\begin{document}
+%% Весь этот текст можно удалить
+%% ====== от сих =====
+\centering {\LARGE Формальные языки}
+
+{\Large домашнее задание до 23:59 19.10}
+\bigskip
+
+\begin{enumerate}
+  \item 
+  {
+    Как построить контекстно-свободную грамматику для произвольного конечного языка? Сколько нетерминалов для этого необходимо? Сколько необходимо нетерминалов для регулярной грамматики для конечного языка?
+  }
+  \item 
+  {  
+    Построить контекстно-свободную грамматику для языка $\{a^n b c^m \mid n, m \in \mathbb{N}\}$. Привести деревья вывода для двух нетривиальных цепочек.
+  }
+  \item 
+  { 
+    Построить контекстно-свободную грамматику для if-then-else выражений, в которых ветка else опциональна. Обозначайте условия за C, элементарный фрагмент кода в ветке --- за S. if-выражения могут быть вложенными. Постройте деревья для двух нетривиальных цепочек языка, как минимум одна из которых не из нижеперечисленных. Ниже корректные цепочки языка.
+    \begin{itemize}
+        \item if C then S else S 
+        \item if C then S 
+        \item if C then S else if C then S else if C then S else S
+    \end{itemize} 
+  }
+  \item { Построить контекстно-свободную грамматику для языка $\{ (ac)^n (cb)^n \mid n \in \mathbb{N}\}$. Привести деревья разбора для двух нетривиальных цепочек. }
+  
+\end{enumerate}
+
+%% ===== и до сих =====
+\end{document}

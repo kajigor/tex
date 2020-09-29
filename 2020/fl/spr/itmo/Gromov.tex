@@ -1,0 +1,29 @@
+\documentclass[12pt]{article}
+\usepackage[left=1cm,right=1.5cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage{hyperref}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\usepackage{amssymb}
+\setdefaultlanguage{russian}
+\pagestyle{empty}
+\setmainfont[Mapping=tex-text]{CMU Serif}
+
+\begin{document}
+\begin{center}
+{\LARGE Формальные языки}
+
+\bigskip
+
+{\Large Павел Громов}
+\end{center} 
+
+\bigskip
+
+\begin{enumerate}
+  \item Построить грамматику для языка $\{ a^n b c^n d \mid n \geq 1 \} \cup \{ a^n f c^n g \mid n \geq 1 \}$.
+  \item Проверить, относится ли построенная грамматика к классу SLR(1). Если является, привести таблицу подходящего анализатора и продемонстрировать успешный и неуспешный вывод на 2 цепочках длины не меньше 7. Если нет, обосновать.
+  \item Для языка арифметических выражений над целыми числами и переменными (обычными идентификаторами) с операциями сложения (\verb!+!) и умножения (\verb!*!) и скобками реализовать оптимизатор. Оптимизатор вычисляет все фрагменты выражений, которые можно вычислить статически. 
+  Например \verb!2*5+x*0+y! упрощается до \verb!10+y!; \verb!2*(5+x)*0+y! упрощается до \verb!y!. 
+  
+\end{enumerate}
+\end{document}

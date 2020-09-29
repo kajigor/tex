@@ -1,0 +1,115 @@
+\documentclass{article}
+
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage{listings}
+\usepackage{indentfirst}
+\usepackage{verbatim}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{stmaryrd}
+\usepackage{graphicx}
+\usepackage{euscript}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage[T2A]{fontenc}
+
+\lstdefinelanguage{llang}{
+keywords={skip, do, while, read, write, if, then, else},
+sensitive=true,
+%%basicstyle=\small,
+commentstyle=\scriptsize\rmfamily,
+keywordstyle=\ttfamily\underbar,
+identifierstyle=\ttfamily,
+basewidth={0.5em,0.5em},
+columns=fixed,
+fontadjust=true,
+literate={->}{{$\to$}}1
+}
+
+\lstset{
+language=llang
+}
+
+\newcommand{\aset}[1]{\left\{{#1}\right\}}
+\newcommand{\term}[1]{\mbox{\texttt{\bf{#1}}}}
+\newcommand{\cd}[1]{\mbox{\texttt{#1}}}
+\newcommand{\sembr}[1]{\llbracket{#1}\rrbracket}
+\newcommand{\conf}[1]{\left<{#1}\right>}
+\newcommand{\fancy}[1]{{\cal{#1}}}
+
+\newcommand{\trule}[2]{\frac{#1}{#2}}
+\newcommand{\crule}[3]{\frac{#1}{#2},\;{#3}}
+\newcommand{\withenv}[2]{{#1}\vdash{#2}}
+\newcommand{\trans}[3]{{#1}\xrightarrow{#2}{#3}}
+\newcommand{\ctrans}[4]{{#1}\xrightarrow{#2}{#3},\;{#4}}
+\newcommand{\llang}[1]{\mbox{\lstinline[mathescape]|#1|}}
+\newcommand{\pair}[2]{\inbr{{#1}\mid{#2}}}
+\newcommand{\inbr}[1]{\left<{#1}\right>}
+\newcommand{\highlight}[1]{\color{red}{#1}}
+\newcommand{\ruleno}[1]{\eqno[\textsc{#1}]}
+\newcommand{\inmath}[1]{\mbox{$#1$}}
+\newcommand{\lfp}[1]{fix_{#1}}
+\newcommand{\gfp}[1]{Fix_{#1}}
+
+\newcommand{\NN}{\mathbb N}
+\newcommand{\ZZ}{\mathbb Z}
+
+\begin{document}
+
+%% Весь этот текст можно удалить
+%% ====== от сих =====
+\centering {\LARGE Формальные языки}
+
+{\Large домашнее задание до 23:59 10.12}
+\bigskip
+\begin{enumerate}
+  \item Адаптировать конкретный синтаксис под новые возможности абстрактного синтаксиса (1 балл)
+  \begin{itemize}
+    \item Если у вас какие-то из этих фич были реализованы, ничего страшного. Убедитесь, что ваши решения не ломаются с таким конкретным синтаксисом. 
+  \end{itemize}
+  \item Адаптировать парсер для нового конкретного синтаксиса языка L. Не забыть про тесты (3 балла)
+    \begin{itemize}
+        \item Синтаксический анализатор все еще должно быть возможно запустить как консольное приложение, требования такие же, как в прошлом задании.
+     \end{itemize}
+\end{enumerate}
+
+\bigskip
+
+\centering {\Large Абстрактный синтаксис языка L }
+$$
+X \mbox{ --- счетно-бесконечное множество переменных}
+$$
+$$
+\otimes=\{\llang{+}, \llang{-}, \llang{*}, \llang{/}, \llang{\%}, \llang{==}, \llang{!=}, 
+\llang{>}, \llang{>=}, \llang{<}, \llang{<=}, \llang{\&\&}, \llang{||}\}
+$$
+
+\begin{itemize}
+
+\item Определения (функций): $\fancy{D}=\fancy{X}_{name} \; \fancy{X}_0 \dots \fancy{X}_k \leftarrow \fancy{S}$. $\fancy{X}_{name}$ --- имя функции;  $\fancy{X}_0 \dots \fancy{X}_k$ --- ее аргументы; $\fancy{S}$~--- тело.
+\item Вызовы функций: $\fancy{C} = \fancy{X}_{name} \; \fancy{E}_0 \dots \fancy{E}_k$. \emph{Аргументами могут быть произвольные выражения.}
+\item Выражения: $\fancy{E}=\fancy{C} \cup X\cup\NN\cup(\fancy{E}\otimes\fancy{E})$. \emph{Вызовы функций теперь могут быть использованы в выражениях.} В выражениях могут использоваться круглые скобки.
+
+
+\item Операторы: 
+
+$$
+\begin{array}{rll}
+  \fancy{S}=
+            &\fancy{X}\;\llang{:=}\;\fancy{E}&\cup\\
+            &\fancy{C}&\cup\\
+            &\llang{write}\;\fancy{E}&\cup\\
+            &\llang{read}\;\fancy{X}&\cup\\
+            &\llang{while}\;\fancy{E}\;\llang{do}\;\fancy{S}&\cup\\
+            &\llang{if}\;\fancy{E}\;\llang{then}\;\fancy{S}\;\llang{else}\;\fancy{S}&\cup\\
+            &\llang{if}\;\fancy{E}\;\llang{then}\;\fancy{S}&\cup\\
+            &\fancy{S}^*
+            
+\end{array}
+$$
+\item Программы: $\fancy{P}=(\fancy{D}^*, \fancy{S})$
+\end{itemize}
+
+
+\end{document}
+

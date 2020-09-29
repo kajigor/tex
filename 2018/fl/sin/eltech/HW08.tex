@@ -1,0 +1,32 @@
+\documentclass[12pt]{article}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{russian}
+\setmainfont[Mapping=tex-text]{CMU Serif}
+
+\begin{document}
+\begin{center} 
+{\LARGE Формальные языки}
+
+{\Large домашнее задание до 23:59 26.11}
+\end{center}
+
+\enumerate
+{
+   \item Построить магазинные автоматы, распознающие следующие языки: 
+   
+   \begin{itemize}
+       \item $\{ a^n b^{m+n} c^m \mid n, m \geq 1 \}$
+       \item $\{ a^n b^m c^n \mid n, m \geq 1 \}$
+       \item $\{ a^n b^{2n} \mid n \geq 1 \}$
+   \end{itemize}
+   
+   \item Доказать или опровергнуть, что следующие языки являются контекстно-свободными:
+   \begin{itemize}
+       \item $\{ a^{n+m} b^m c^n d^m \, | \, n, m \geq 0 \}$
+       \item $\{ a^n b^n a^n \mid n \geq 0 \} \cup \{ a^k b^l a^m \mid k \geq 0, l \geq 0, m \geq 20\}$
+   \end{itemize}
+}
+
+\end{document}

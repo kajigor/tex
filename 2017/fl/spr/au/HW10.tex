@@ -1,0 +1,57 @@
+\documentclass[12pt]{article}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\usepackage{amssymb}
+\usepackage[table]{xcolor}
+\setdefaultlanguage{russian}
+\setmainfont[Mapping=tex-text]{CMU Serif}
+
+\begin{document}
+%% Весь этот текст можно удалить
+%% ====== от сих =====
+\begin{center}
+  \LARGE Формальные языки 
+
+  \Large домашнее задание до 23:59 11.05
+\end{center}
+\bigskip
+
+\begin{enumerate}
+  \item ``Вручную'' запустить GLL-алгоритм на грамматике и входной строке из таблицы. 
+  
+  \begin{itemize}
+      \item Каждому --- один набор входных данных из таблички внизу.
+      \item Результатом является скан (или качественная фотография) листочка, на котором присутствуют артефакты запуска алгоритма
+      \item Артефактами являются GSS, очередь разбора и pop set
+      \item Строчные буквы --- нетерминалы. Все остальные --- терминалы. Пробелов не существует.
+  \end{itemize}
+
+\begin{centering}  
+\rowcolors{1}{white}{lightgray}
+\begin{tabular}{l|l|l}
+ФИО                 & Грамматика                                                       & Входная строка \\ \hline
+Бегунков Павел      & $s \rightarrow s + s | s - s | N                                                                          $ & $N + N + N - N$ \\
+Доронин Олег        & $s \rightarrow ( s ) | s s                                                                                $ & $(()()())     $ \\
+Ёров Собир          & $s \rightarrow s s T | U | s s                                                                            $ & $U U U U T    $ \\
+Клейман Вадим       & \begin{tabular}[c]{@{}l@{}} 
+                       $ s \rightarrow s M k $ \\ 
+                       $ k \rightarrow k k M | M | k k $ 
+                      \end{tabular}  & $M M M M M M M$ \\
+Колесниченко Лариса & \begin{tabular}[c]{@{}l@{}}
+                       $ s \rightarrow s K | K | u $ \\
+                       $ u \rightarrow u K | K K $ \end{tabular} & $K K K K K K  $ \\
+Кольцов Михаил      & $m \rightarrow m R m | m D m | P                                                                          $ & $P D P R P R P$ \\
+Кравцун Андрей      & $u \rightarrow S u D | u u                                                                                $ & $S S D S D S D$ \\
+Лапицкая Людмила    & $k \rightarrow k L k | k Z k | k P k | R                                                                  $ & $R Z R P R L R$ \\
+Малютина Екатерина  & $i \rightarrow F i i | i i | U                                                                            $ & $F U U U U    $ \\
+Чернявский Михаил   & \begin{tabular}[c]{@{}l@{}} $s \rightarrow A M s | A M k | s s | P $ \\ $k \rightarrow k P k | P $ \end{tabular} & $A M P P P $   
+  
+\end{tabular}
+\end{centering}
+  
+\end{enumerate}  
+
+
+%% ===== и до сих =====
+\end{document}

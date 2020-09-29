@@ -1,0 +1,54 @@
+\documentclass[12pt]{article}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage[utf8x]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{cmap}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{url}
+\usepackage{pifont}
+\usepackage{tikz}
+\usepackage{verbatim}
+\usepackage{hyperref}
+
+\usetikzlibrary{shapes,arrows}
+\usetikzlibrary{positioning,automata}
+\tikzset{every state/.style={minimum size=0.2cm},
+initial text={}
+}
+
+\begin{document}
+\begin{center} {\LARGE Формальные языки} \end{center}
+
+\begin{center} \Large домашнее задание до 23:59 24.09 \end{center}
+\bigskip
+
+\begin{enumerate}
+  \item
+  {
+    Определить, какие из языков являются регулярными. Если язык регулярен, то привести для него регулярное выражение, иначе --- доказать нерегулярность.
+    \begin{itemize}
+      \item $\{ u a v \mid u, v \in \{ a, b\}^*, |u| = |v| \}$.
+      \item Язык арифметических выражений над целыми числами (операции $+,*$) в префиксной записи. (\verb!"+ 1 * 2 3"!, \verb!"123"!, \verb!"* 1 * 2 3"! --- предложения языка).
+      \item $\{u u^R v \mid u \in \{a, b\}^+, v \in \{a, b\}^*\}$
+    \end{itemize}
+  }
+  \item {
+    Существует ли над двухбуквенным алфавитом такой язык $L$, что $L^*$ не является регулярным? Обосновать.
+  }
+  \item
+  {
+    Реализовать на любимом языке программирования подход parsing with derivatives для регулярных языков.
+    \begin{itemize}
+      \item Реализовать тесты.
+      \item Найти входные данные (регулярное выражение и строку), на которых распознавание занимает больше 2 секунд.
+      \item Изучить, влияет ли на время распознавания сложность регулярного выражения (например, выражение \verb!(a|a)* a (a|a)*! сложнее, чем \verb!a+!, при этом распознает тот же язык).
+      \item В отчете описать проведенные эксперименты.
+      \item Реализация с пары тут: \url{https://github.com/kajigor/fl-2020-hse-win/tree/L03}
+    \end{itemize}
+
+  }
+\end{enumerate}
+
+
+\end{document}

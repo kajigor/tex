@@ -1,0 +1,51 @@
+\documentclass[12pt]{article}
+\usepackage[left=1cm,right=1cm,top=1cm,bottom=1cm,bindingoffset=0cm]{geometry}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{russian}
+\setmainfont[Mapping=tex-text]{CMU Serif}
+
+\pagenumbering{gobble}
+
+\begin{document}
+\begin{center} 
+{\LARGE Формальные языки}
+
+{\Large домашнее задание до 23:59 17.12}
+\end{center}
+
+\begin{enumerate}
+{
+   \item { Привести полную L-атрибутную грамматику для следующего языка }
+   \begin{itemize}
+       \item Сначала идет список определенных переменных с указанием их типов. 
+       \item Дальше идет список присваиваний переменным значений.
+       \item Последней строчкой указано выражение, значение которого должна считать L-атрибутная грамматика.
+       \item В конце каждой строки стоит символ \textbf{;}.
+       \item Переменные бывают двух типов: \verb!bool! и \verb!int!.
+       \item Выражения бывают двух видов: арифметические и логические. 
+       \item Предложите свою семантику, которая предусматривает конкретную стратегию поведения в различных случаях: 
+       \begin{itemize}
+           \item Тип переменной был не указан, а присваивание в нее происходит.
+           \item Присваиваем значение, тип которого отличается от типа переменной.
+           \item Во время вычисления выражения встречаем переменную, которая не определена или тип которой не известен.
+           \item В одном выражении присутствуют как логические, так и арифметические операторы
+       \end{itemize}
+   \end{itemize} 
+}
+\end{enumerate}
+
+Пример программы: 
+
+\begin{verbatim}
+int x, y, z;
+bool u, v;
+x = 13;
+y = 42; 
+v = true;
+z = x + 3 * y - v;
+¬ v & u;
+\end{verbatim}
+
+
+\end{document}

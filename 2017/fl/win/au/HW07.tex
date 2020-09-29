@@ -1,0 +1,124 @@
+\documentclass{article}
+
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage{listings}
+\usepackage{indentfirst}
+\usepackage{verbatim}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{stmaryrd}
+\usepackage{graphicx}
+\usepackage{euscript}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage[T2A]{fontenc}
+
+\lstdefinelanguage{llang}{
+keywords={skip, do, while, read, write, if, then, else},
+sensitive=true,
+%%basicstyle=\small,
+commentstyle=\scriptsize\rmfamily,
+keywordstyle=\ttfamily\underbar,
+identifierstyle=\ttfamily,
+basewidth={0.5em,0.5em},
+columns=fixed,
+fontadjust=true,
+literate={->}{{$\to$}}1
+}
+
+\lstset{
+language=llang
+}
+
+\newcommand{\aset}[1]{\left\{{#1}\right\}}
+\newcommand{\term}[1]{\mbox{\texttt{\bf{#1}}}}
+\newcommand{\cd}[1]{\mbox{\texttt{#1}}}
+\newcommand{\sembr}[1]{\llbracket{#1}\rrbracket}
+\newcommand{\conf}[1]{\left<{#1}\right>}
+\newcommand{\fancy}[1]{{\cal{#1}}}
+
+\newcommand{\trule}[2]{\frac{#1}{#2}}
+\newcommand{\crule}[3]{\frac{#1}{#2},\;{#3}}
+\newcommand{\withenv}[2]{{#1}\vdash{#2}}
+\newcommand{\trans}[3]{{#1}\xrightarrow{#2}{#3}}
+\newcommand{\ctrans}[4]{{#1}\xrightarrow{#2}{#3},\;{#4}}
+\newcommand{\llang}[1]{\mbox{\lstinline[mathescape]|#1|}}
+\newcommand{\pair}[2]{\inbr{{#1}\mid{#2}}}
+\newcommand{\inbr}[1]{\left<{#1}\right>}
+\newcommand{\highlight}[1]{\color{red}{#1}}
+\newcommand{\ruleno}[1]{\eqno[\textsc{#1}]}
+\newcommand{\inmath}[1]{\mbox{$#1$}}
+\newcommand{\lfp}[1]{fix_{#1}}
+\newcommand{\gfp}[1]{Fix_{#1}}
+
+\newcommand{\NN}{\mathbb N}
+\newcommand{\ZZ}{\mathbb Z}
+
+\begin{document}
+
+%% Весь этот текст можно удалить
+%% ====== от сих =====
+\centering {\LARGE Формальные языки}
+
+{\Large домашнее задание до 23:59 26.11}
+\bigskip
+\begin{enumerate}
+  \item Предложить удобный конкретный синтаксис для языка L (абстрактный синтаксис приведен ниже) --- описать в pdf. (2 балла)
+  \begin{itemize}
+    \item Удобность тут понятие относительное --- какой вам синтаксис нравится, такой и используйте.
+    \item Какие есть варианты. Разделять ли операторы языка разделителями или сделать значимыми переносы строк и отсупы? Использовать скобки для группировки блоков кода, ключевые слова begin/end или маркеры конца блока, зависящие от того, в контексте какого оператора мы находимся? Использовать ли скобки для аргументов функций? Может вы хотите предоставить синтаксический сахар для облегчения синтаксиса? 
+  \end{itemize}
+  \item Написать парсер для предложенного конкретного синтаксиса языка L (описание языка ниже), используя любимый способ писать парсеры. Не забыть про тесты (8 баллов)
+    \begin{itemize}
+        \item Можно реализовать любой понравившийся вам алгоритм синтаксического анализа.
+        \item Можно пользоваться парсер-комбинаторами, можно даже реализовать свою библиотеку.
+        \item Можно использовать генераторы синтаксических анализаторов (yacc, bison, antlr, любой другой).
+        \item Желательно, чтобы ваш синтаксический анализатор принимал на вход то, что выдает ваш лексер --- те самые токены с позициями во входной строке; если для этого нужно править лексер --- правьте. Если технологии не сочетаются, реализовать функциональность лексического анализа, как требуется в вашем случае.
+        \item Создайте консольное приложение для запуска синтаксического анализа.
+        \begin{itemize}
+            \item Консольное приложение обязательно должно принимать адрес файла со входной программой
+            \item Программа может быть многострочной
+            \item Результатом синтаксического анализа должно быть \emph{абстрактное синтаксическое дерево}, напечатанное в человекочитаемом формате; можно в файл, но название файла должно быть связано с названием входного файла (можно в dot).
+            \item Лексемы в дереве вывода должны отображаться со всей необходимой информацией (тип лексемы, значение и привязка к коду).
+            \item Код должен быть размещен на гитхабе, собираться одним скриптом, содержать инструкцию по сборке и запуску собранного приложения, собираться на чистой Ubuntu 16.04 или Windows 10. Все зависимости, в случае их отсутствия в системе, должны либо доставляться скриптом, либо перечисляться в явном виде.
+        \end{itemize}
+     \end{itemize}
+\end{enumerate}
+
+\bigskip
+
+\centering {\Large Абстрактный синтаксис языка L }
+$$
+X \mbox{ --- счетно-бесконечное множество переменных}
+$$
+$$
+\otimes=\{\llang{+}, \llang{-}, \llang{*}, \llang{/}, \llang{\%}, \llang{==}, \llang{!=}, 
+\llang{>}, \llang{>=}, \llang{<}, \llang{<=}, \llang{\&\&}, \llang{||}\}
+$$
+
+\begin{itemize}
+\item Выражения: $\fancy{E}=X\cup\NN\cup(\fancy{E}\otimes\fancy{E})$. В выражениях могут использоваться круглые скобки.
+
+\item Определения (функций): $\fancy{D}=\fancy{X}_{name} \; \fancy{X}_0 \dots \fancy{X}_k \leftarrow \fancy{S}$. $\fancy{X}_{name}$ --- имя функции;  $\fancy{X}_0 \dots \fancy{X}_k$ --- ее аргументы; $\fancy{S}$~--- тело.
+\item Операторы: 
+
+$$
+\begin{array}{rll}
+  \fancy{S}=
+            &\fancy{X}\;\llang{:=}\;\fancy{E}&\cup\\
+            &\fancy{S}\;\llang{;}\;\fancy{S}&\cup\\
+            &\fancy{X}_{name} \; \fancy{X}_0 \dots \fancy{X}_k&\cup\\
+            &\llang{write}\;\fancy{E}&\cup\\
+            &\llang{read}\;\fancy{X}&\cup\\
+            &\llang{while}\;\fancy{E}\;\llang{do}\;\fancy{S}&\cup\\
+            &\llang{if}\;\fancy{E}\;\llang{then}\;\fancy{S}\;\llang{else}\;\fancy{S}&\cup\\
+            &\llang{if}\;\fancy{E}\;\llang{then}\;\fancy{S}
+            
+\end{array}
+$$
+\item Программы: $\fancy{P}=(\fancy{D}^*, \fancy{S})$
+\end{itemize}
+
+
+\end{document}
+

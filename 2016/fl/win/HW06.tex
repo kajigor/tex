@@ -1,0 +1,72 @@
+\documentclass[12pt]{article}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{russian}
+\setmainfont[Mapping=tex-text]{CMU Serif}
+
+\begin{document}
+\centering {\LARGE Формальные языки}
+
+{\Large домашнее задание до 23:59 24.10}
+\bigskip
+
+\enumerate
+{
+  \item
+  
+    Реализовать алгоритм синтаксического анализа графов: консольное приложение, принимающее 2 аргумента: пути к файлам с описанием грамматики и входным графом. Код и инструкция по запуску на гитхабе, скрипты сборки и запуска тестов. (8 баллов)
+    \begin{itemize}
+        \item \textbf{Вход:}
+        \begin{itemize}
+            \item Грамматика. Читается из файла, указанного в виде аргумента командной строки. Не обязана быть в 2NF. Для преобразования использовать результаты предыдущих домашних работ. Формат: 
+            \begin{itemize}
+                \item на строке не более одного правила
+                \item нетерминалы --- заглавные буквы латинского алфавита
+                \item терминалы --- строчные буквы латинского алфавита
+                \item специальный символ для пустой строки --- eps
+                \item разделитель левой и правой части правила --- \verb|->|
+            \end{itemize}
+            Пример:
+            \begin{verbatim}
+            S -> a S b
+            S -> eps 
+            \end{verbatim}
+            \item Граф в формате DOT. Читается из файла, указанного в виде аргумента командной строки. Граф ориентированный, на ребре лежит имя токена в виде строки. Вершины --- целые числа. Пример:
+            \begin{verbatim}
+            digraph h
+            {
+               1 -> 2[label="a"]
+               2 -> 3[label="c"]
+               3 -> 1[label="a"]
+            }
+            \end{verbatim}
+        \end{itemize}
+        \item \textbf{Выход:} 
+        \begin{itemize}
+            \item Преобразованная в 2NF входная грамматика в том же формате, что и входная грамматика
+            \item Тройки $(N_i,v_1,v_2)$, такие что во входном графе существует путь из $v_1$ в $v_2$, выводимый из $N_i$. Формат вывода: каждая тройка на новой строке, в круглых скобках, элементы разделены запятыми. Вокруг скобок пробелы не ставятся, справа от запятой 1 пробел. Вывод отсортирован в лексикографическом порядке. Пример:
+            \begin{verbatim}
+            (A, 1, 2)
+            (A, 2, 4)
+            (B, 3, 4)
+            \end{verbatim}
+        \end{itemize}
+        \item \textbf{Тесты.} Набор файлов с грамматиками и графами.
+    \end{itemize}
+  
+}
+Дополнительные материалы.
+\begin{itemize}
+    \item Статья с описанием алгоритма (без модификаций для 2NF). Hellings J. Conjunctive context-free path queries. – 2014.
+    \item Спецификация языка DOT: \url{http://www.graphviz.org/content/dot-language}
+    \item Примеры библиотек для работы с графами. 
+    \begin{itemize}
+        \item .NET: YC.QuickGraph
+        \item Java (JVM): JGraphT
+        \item C++: Boost Graph Library
+    \end{itemize}
+\end{itemize}
+\end{document}
+%% It is just an empty TeX file.
+%% Write your code here.

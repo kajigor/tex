@@ -1,0 +1,40 @@
+\documentclass[12pt]{article}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{russian}
+\setmainfont[Mapping=tex-text]{CMU Serif}
+
+\begin{document}
+\centering {\LARGE Формальные языки}
+
+{\Large домашнее задание до 23:59 10.09}
+\bigskip
+
+\enumerate
+{
+  \item
+  {
+    Перечислить слова языка $L_1 \cap L_2,$ где $L_1 = \{ (ab)^n \mid n \geq 0 \}$ и $L_2 = \{ a^m b^m \mid m \geq 0 \}$. Доказать, что других цепочек в пересечении нет. 
+  }
+  \item
+  {
+    Пусть $V_T = \{a,b,c\}$. Равны ли языки $L_1 = \{ (abc)^n a \mid n \geq 2 \}$ и $L_2 = \{ ab (cab)^n ca \mid n \geq 1 \}$? Привести аргументацию точки зрения. 
+  }
+  \item 
+  { Описать язык $L$, порождаемый грамматикой $<\{0, 1\}, \{S\}, \{S \to 0 1 \, | \, 0 S 1\}, S>$, 
+    \begin{itemize}
+        \item на естественном языке;
+        \item как множество.
+    \end{itemize}
+
+  }
+
+  \item
+  {
+    Описать язык $L' = \{ \omega \cdot 1^{|\omega|} \cdot \omega^R \, | \, \omega \in L \}$, где $L$ из третьего задания, как множество, не используя никаких знаний о языке $L$.
+  }
+  
+  \item {Привести три различных дерева вывода для трех цепочек языка $L$ из третьего задания.}
+}
+\end{document}

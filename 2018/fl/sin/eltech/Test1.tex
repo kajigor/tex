@@ -1,0 +1,63 @@
+\documentclass[12pt]{article}
+\usepackage[left=1cm,right=1.5cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage{hyperref}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\usepackage{amssymb}
+\setdefaultlanguage{russian}
+\pagestyle{empty}
+\setmainfont[Mapping=tex-text]{CMU Serif}
+
+\begin{document}
+
+\begin{center} 
+{\LARGE Формальные языки}
+
+{\Large Контрольная работа 1, вариант 1}
+
+{\large 09.10.2018}
+\end{center}
+
+\bigskip
+
+\begin{enumerate}
+  \item Доказать или опровергнуть следующее свойство конкатенации языков: $( L \cdot M ) \cdot N = L \cdot (M \cdot N) $ для произвольных языков $L, M, N$.
+  \item Построить минимальный детерминированный конечный автомат, распознающий язык \\ $L = \{\omega \in \{ a, b, c \}^* \mid | \omega |_a \geq 2, | \omega |_b \geq 2 \}$.
+
+  \item Построить регулярную грамматику, задающую язык \\ $ L = \{ \alpha \cdot baa \cdot \beta \, | \, \alpha, \beta \in \{ a, b \}^* \} \cap \{ \gamma \cdot bab \cdot \delta \, | \, \gamma, \delta \in \{ a, b \}^* \} $.
+  \item Проверить регулярность языка (если регулярный, построить автомат, регулярное выражение или регулярную грамматику, иначе --- доказать нерегулярность) \\ $\{ \alpha \cdot a \cdot \beta \mid \alpha, \beta \in \{ a, b\}^*, |\alpha| = |\beta| \} $.
+  \item {Построить недетерминированный автомат по регулярному выражению $ (a | (ba)^* | abba )^*  $, построить эпсилон-замыкание автомата }
+\end{enumerate}
+
+\bigskip
+
+~\\~
+
+\bigskip
+
+\rule{\textwidth}{1pt}
+
+\bigskip
+
+~\\~\\~
+
+\bigskip
+
+\begin{center}
+{\LARGE Формальные языки}
+
+{\Large Контрольная работа 1, вариант 2}
+
+{\large 09.10.2018}
+\end{center}
+\bigskip
+
+\begin{enumerate}
+  \item Доказать или опровергнуть следующее свойство конкатенации языков: $ L \cdot M = M \cdot L $ для произвольных языков $L, M$.
+  \item Построить минимальный детерминированный конечный автомат, распознающий язык  \\ $L = \{\omega \in \{ a, b, c \}^* \mid | \omega |_a \leq 2, | \omega |_b \geq 2 \}$.
+  
+  \item Построить регулярную грамматику, задающую язык \\ $ L = \{ \alpha \cdot aba \cdot \beta \, | \, \alpha, \beta \in \{ a, b \}^* \} \cap \{ \gamma \cdot bba \cdot \delta \, | \, \gamma, \delta \in \{ a, b \}^* \} $.
+  \item Проверить регулярность языка (если регулярный, построить автомат, регулярное выражение или регулярную грамматику, иначе --- доказать нерегулярность) \\ $\{ \alpha \cdot a \cdot \beta \mid \alpha, \beta \in \{ a, b\}^*, |\alpha|_b \geq |\beta|_a \} $.
+  \item {Построить недетерминированный автомат по регулярному выражению $ (a | (ab)^* | abba)^* $, построить эпсилон-замыкание автомата }
+\end{enumerate}
+\end{document}

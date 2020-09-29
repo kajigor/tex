@@ -1,0 +1,49 @@
+t\documentclass[12pt]{article}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{russian}
+\setmainfont[Mapping=tex-text]{CMU Serif}
+
+\begin{document}
+\centering {\LARGE Формальные языки}
+
+{\Large домашнее задание до 23:59 2.12}
+\bigskip
+
+\enumerate
+{
+  \item Докажите или опровергните, что данный язык не является контекстно-свободным $\{ a^n b^m c^n d^m \, | \, n, m \geq 0 \}$ (3 балла)
+  \item Напишите S-атрибутную грамматику для языка списков натуральных чисел (3 балла)
+  \begin{itemize}
+      \item Результат вычисления --- список, представленный в виде:
+      \begin{itemize}
+          \item $Nil$ обозначает пустой список
+          \item $Cons(head, tail)$ обозначает непустой список, начинающийся на $head$, продолжающийся списком $tail$
+      \end{itemize}
+      \item Список заключается в квадратные скобки 
+      \item Разделитель --- точка с запятой
+      \item Списки: "[1;4;5]"; "[1]"; "[]"
+      \begin{itemize}
+          \item Результаты для них: $Cons(1, Cons(4, Cons(5, Nil)))$; $Cons(5, Nil)$; $Nil$
+      \end{itemize}
+      \item Не списки: "[1,4,-5]"; "[1;]"; "[a]"; "]["
+      \item Промоделировать вычисления на примерах из задания
+  \end{itemize}
+  \item Напишите L-атрибутную грамматику для языка арифметических выражений в инфиксной записи над натуральными числами с операциями $+, -$ и скобками (3 балла)
+  \begin{itemize}
+      \item Результат --- целое число
+      \item Законы арифметики должны быть соблюдены
+      \item На всякий случай примеры
+      \begin{itemize}
+          \item $"1" \rightarrow 1$
+          \item $"1+2+3" \rightarrow 6$
+          \item $"1-2+3" \rightarrow 2$
+          \item $"1-(2+3)" \rightarrow -4$
+      \end{itemize}
+      \item Промоделировать вычисления на примерах из задания
+  \end{itemize}
+}
+
+ 
+\end{document}

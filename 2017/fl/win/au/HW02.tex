@@ -1,0 +1,53 @@
+\documentclass[12pt]{article}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\setdefaultlanguage{russian}
+\setmainfont[Mapping=tex-text]{CMU Serif}
+
+\begin{document}
+\centering {\LARGE Формальные языки}
+
+{\Large домашнее задание до 23:59 24.09}
+\bigskip
+
+\enumerate
+{
+  \item 
+  {   
+    Доказать или опровергнуть:
+    \begin{itemize}
+        \item { $( L_1 \cdot L_2 )^R = L_2^R \cdot L_1^R $ выполняется для произвольных языков $L_1, L_2$; }
+        \item { $ (L \cdot L^R)^R = L \cdot L^R $ выполняется для произвольного языка $L$; }
+        \item { $ L \cdot L^R = \{ \omega \cdot \omega^R \,|\, \omega \in L  \} $. }
+    \end{itemize}
+  }
+  \item
+  {
+    Доказать или опровергнуть: 
+    \begin{itemize}
+      \item алгоритм Томпсона детерминизации конечных автоматов работает на неполных автоматах так же, как на дополненных ``стоком'';
+      \item алгоритм минимизации конечных автоматов работает на неполных автоматах так же, как на дополненных ``стоком''.
+    \end{itemize}
+  }
+  \item
+  {
+    Составить минимальный детерминированный конечный автомат для языка идентификаторов без ключевых слов. 
+    \begin{itemize}
+        \item Идентификаторы: строки над алфавитом $\{\_,0,1,\dots,9,a,b,\dots,z\}$, не начинающиеся с цифры.
+        \begin{itemize}
+            \item \verb;a, _a, a_b, ident, _i_d_, __agent007__, _13, e2_e4; --- идентификаторы.
+            \item $\varepsilon$\verb;, 1, 1st, !myVar!, iDeNt, _I_D_; --- не идентификаторы.
+        \end{itemize}
+        \item Ключевые слова: $\{$\verb;if,then,else,let,in,true,false;$\}$ --- только в нижнем регистре.
+        \item Рекомендации:
+        \begin{itemize}
+            \item Составьте отдельно автоматы для идентификаторов и ключевых слов, детерминизируйте и минимизируйте их.
+            \item Требуемый автомат удобно строить при помощи произведения.
+            \item Включите в отчет все промежуточные автоматы
+            \item Можно делать вручную, написать код для минимизации/детерминизации или найти библиотеку, которая делает все требуемые операции за вас. Если в деле замешан код, присылайте ссылки на репозитории.
+        \end{itemize}
+    \end{itemize}
+  }
+}
+\end{document}

@@ -1,0 +1,49 @@
+\documentclass[12pt]{article}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{russian}
+\setmainfont[Mapping=tex-text]{CMU Serif}
+
+\begin{document}
+\begin{center}
+\LARGE {Формальные языки}
+
+\Large {домашнее задание до 23:59 20.03}
+\end{center} 
+
+\bigskip
+
+\begin{enumerate}
+  \item
+  {
+    Перечислить слова языка $L_1 \cap L_2,$ где $L_1 = \{ (ab)^n \mid n \geq 0 \}$ и $L_2 = \{ a^m b^m \mid m \geq 0 \}$. Доказать, что других цепочек в пересечении нет. 
+  }
+  \item 
+  { Описать язык $L$, порождаемый грамматикой $<\{0, 1\}, \{S\}, \{S \to 0 1 \, | \, 0 S 1\}, S>$, 
+    \begin{itemize}
+        \item на естественном языке;
+        \item как множество.
+    \end{itemize}
+
+  Привести три различных дерева вывода для трех цепочек языка $L$.
+  }
+  \item 
+  {
+  Привести контекстно-свободную грамматику для языка арифметических выражений с правильным приоритетом операций и ассоциативностью
+  }
+\end{enumerate}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{l|l|l}
+Приоритет & Оператор & Ассоциативность \\ \hline
+Высший & \verb!^! & Правоассоциативна \\
+       & \verb!*!, \verb!/! & Левоассоциативна  \\
+       & \verb!+!, \verb!-! & Левоассоциативна  \\
+       & \verb!==!, \verb!/=!, \verb!<=!, \verb!<!, \verb!>=!, \verb!>! & Неассоциативна \\
+       & \verb!&&! & Правоассоциативна \\
+Низший & \verb!||! & Правоассоциативна 
+\end{tabular}
+\end{table}
+\end{document}

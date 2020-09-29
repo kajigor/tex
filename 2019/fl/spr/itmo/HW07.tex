@@ -1,0 +1,40 @@
+\documentclass[12pt]{article}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{russian}
+\setmainfont[Mapping=tex-text]{CMU Serif}
+
+\begin{document}
+\begin{center}
+\LARGE {Формальные языки}
+
+\Large {домашнее задание до 23:59 03.04}
+\end{center} 
+
+\bigskip
+
+Шаблон кода для задания живет в соответсвующей ветке: 
+
+\url{https://github.com/kajigor/fl\_ifmo\_2019\_spr/tree/HW07}
+
+\begin{enumerate}
+  \item
+  Привести грамматику арифметических выражений из прошлого домашнего задания в Нормальную Форму Хомского: можно вручную или написать свой преобразователь. В отчете привести грамматику по итогу каждого шага.  
+  \item 
+  Реализовать парсер арифметических выражений из прошлой домашки, используя ваши парсер-комбинаторы. Результатом является абстрактное синтаксическое дерево (тип данных вам предоставлен). Если тип результата парсера не совпадает с тем, что указан в шаблоне, можете его изменить. Не забывайте про тесты.
+\end{enumerate}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{l|l|l}
+Приоритет & Оператор & Ассоциативность \\ \hline
+Высший & \verb!^! & Правоассоциативна \\
+       & \verb!*!, \verb!/! & Левоассоциативна  \\
+       & \verb!+!, \verb!-! & Левоассоциативна  \\
+       & \verb!==!, \verb!/=!, \verb!<=!, \verb!<!, \verb!>=!, \verb!>! & Неассоциативна \\
+       & \verb!&&! & Правоассоциативна \\
+Низший & \verb!||! & Правоассоциативна 
+\end{tabular}
+\end{table}
+\end{document}

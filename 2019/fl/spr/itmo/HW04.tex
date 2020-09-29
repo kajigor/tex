@@ -1,0 +1,59 @@
+\documentclass{article}
+
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage{listings}
+\usepackage{indentfirst}
+\usepackage{verbatim}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{stmaryrd}
+\usepackage{graphicx}
+\usepackage{euscript}
+\usepackage{hyperref}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage[T2A]{fontenc}
+
+\begin{document}
+
+\begin{center} {\LARGE Формальные языки} \end{center}
+
+\begin{center} {\Large домашнее задание до 23:59 06.03} \end{center}
+\bigskip
+
+Шаблон кода для задания живет в соответсвующей ветке: 
+
+\href{https://github.com/kajigor/fl_ifmo_2019_spr/tree/HW04}{https://github.com/kajigor/fl\_ifmo\_2019\_spr/tree/HW04}
+
+\begin{enumerate}
+  \item 
+  {
+    Модифицировать комбинаторы, чтобы они работали с новым типом парсера: 
+    
+    \verb!newtype Parser str ok err = Parser { runParser :: str -> Either err (str, ok) }!
+  }
+  
+  \item 
+  {
+  Придумать абстракцию входного потока, чтобы во время сообщения об ошибках можно было указывать координаты во входе. Поддержать в комбинаторах и парсерах.
+  }
+  
+  \item
+  {
+    Реализовать проверки для автоматов: 
+    
+    \begin{itemize} 
+      \item На детерминированность
+      \item На недетерминированность
+      \item На полноту
+      \item На минимальность
+    \end{itemize}
+    
+    Преобразовывать автоматы пока не нужно
+  }
+\end{enumerate}
+
+
+    Не забывайте писать свои тесты, пожалуйста. 
+\end{document}
+

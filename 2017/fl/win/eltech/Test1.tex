@@ -1,0 +1,59 @@
+\documentclass[12pt]{article}
+\usepackage[left=1cm,right=1.5cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage{hyperref}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\usepackage{amssymb}
+\setdefaultlanguage{russian}
+\pagestyle{empty}
+\setmainfont[Mapping=tex-text]{CMU Serif}
+
+\begin{document}
+\centering {\LARGE Формальные языки}
+
+{\Large Контрольная работа 1, вариант 1}
+\bigskip
+
+\begin{enumerate}
+  \item Доказать или опровергнуть следующее свойство конкатенации языков: $( L_1 \cdot L_2 )^R = L_2^R \cdot L_1^R $ для произвольных языков $L_1, L_2$.
+  \item Построить минимальный детерминированный конечный автомат для языка идентификаторов без ключевых слов.
+  \begin{itemize}
+      \item Идентификаторы: слова над алфавитом $\{\_, 0, \dots, 9, a, \dots, z \}$, не начинающиеся с цифры
+      \item Ключевые слова: $\{ let, in, if \}$
+  \end{itemize}
+  \item Построить регулярную грамматику, задающую язык $ L = \{ \alpha a b b a b \beta \, | \, \alpha, \beta \in \{ a, b \}^* \} $
+  \item Проверить регулярность языка $\{ 0^n \, | \, n = k^3, k \in \mathbb{N}\} $
+  \item {Построить недетерминированный автомат по регулярному выражению $ (a^*b)^*|(ab^*)^*  $, построить эпсилон-замыкание автомата }
+\end{enumerate}
+
+\bigskip
+
+~\\~
+
+\bigskip
+
+\rule{\textwidth}{1pt}
+
+\bigskip
+
+~\\~\\~
+
+\bigskip
+
+\centering {\LARGE Формальные языки}
+
+{\Large Контрольная работа 1, вариант 2}
+\bigskip
+
+\begin{enumerate}
+  \item Доказать или опровергнуть следующее свойство конкатенации языков: $ (L \cdot L^R)^R = L \cdot L^R $ для произвольного языка $L$.
+  \item Построить минимальный детерминированный конечный автомат для языка идентификаторов без ключевых слов.
+  \begin{itemize}
+      \item Идентификаторы: слова над алфавитом $\{\_, 0, \dots, 9, a, \dots, z \}$, не начинающиеся с цифры
+      \item Ключевые слова: $\{ by, val, var \}$
+  \end{itemize}
+  \item Построить регулярную грамматику, задающую язык $ L = \{ \alpha a b a a b \beta \, | \, \alpha, \beta \in \{ a, b \}^* \} $
+  \item Проверить регулярность языка $\{ 0^n \, | \, n = 2^k, k \in \mathbb{N}\} $
+  \item {Построить недетерминированный автомат по регулярному выражению $ (ab^* | b^*a)^*  $, построить эпсилон-замыкание автомата }
+\end{enumerate}
+\end{document}

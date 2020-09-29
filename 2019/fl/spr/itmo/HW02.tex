@@ -1,0 +1,50 @@
+\documentclass{article}
+
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage{listings}
+\usepackage{indentfirst}
+\usepackage{verbatim}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{stmaryrd}
+\usepackage{graphicx}
+\usepackage{euscript}
+\usepackage{hyperref}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage[T2A]{fontenc}
+
+\begin{document}
+
+\begin{center} {\LARGE Формальные языки} \end{center}
+
+\begin{center} {\Large домашнее задание до 23:59 20.02} \end{center}
+\bigskip
+
+Библиотечка парсер-комбинаторов, которую мы реализовали на паре живет в соответствующей ветке в репозитории: \href{https://github.com/kajigor/fl_ifmo_2019_spr/tree/HW02}{https://github.com/kajigor/fl\_ifmo\_2019\_spr/tree/HW02}
+
+\begin{enumerate}
+  \item 
+  {
+    Реализовать те комбинаторы, которые не реализованы (\verb! = undefined!).
+  }
+  \item
+  {
+    Реализовать парсер-комбинатор для ключевых слов, который принимает список ключевых слов и возвращает парсер, который завершается успехом, если префикс входной строки --- одно из ключевых слов. 
+    
+    \begin{itemize}
+        \item Если у нескольких ключевых слов общий префикс, то парсер при работе не должен этот общий префикс разбирать несколько раз.
+        \item Если хочется, можно еще и общие суффиксы строк не разбирать несколько раз. 
+        \item Имеет смысл сжимать список ключевых слов в бор или минимальный конечный автомат --- на ваш выбор.
+    \end{itemize}
+  }
+  \item
+  {
+    Переписать токенизацию ключевых слов, чисел и идентификаторов вашего второго самого любимого языка, используя наши парсер-комбинаторы.
+  }
+\end{enumerate}
+
+
+    Если вы не хотите писать на Haskell, реализуйте похожую на нашу библиотечку комбинаторов и используйте ее. Правила оформления работы остаются с прошлого домашнего задания.
+\end{document}
+
