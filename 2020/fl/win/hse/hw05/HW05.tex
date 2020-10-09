@@ -1,0 +1,68 @@
+\documentclass[12pt]{article}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage[utf8x]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{cmap}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{url}
+\usepackage{pifont}
+\usepackage{tikz}
+\usepackage{verbatim}
+\usepackage{hyperref}
+
+\usetikzlibrary{shapes,arrows}
+\usetikzlibrary{positioning,automata}
+\tikzset{every state/.style={minimum size=0.2cm},
+initial text={}
+}
+
+\begin{document}
+\begin{center} {\LARGE Формальные языки} \end{center}
+
+\begin{center} \Large домашнее задание до 23:59 08.10 \end{center}
+\bigskip
+
+\begin{enumerate}
+  \item
+  {
+    Релизовать синтаксический анализатор с использованием генератора парсеров из семейства yacc для упрощенного подмножества пролога.
+    \begin{itemize}
+      \item Описание синтаксиса
+      \begin{itemize}
+        \item Программа на прологе --- последовательность \emph{определений отношений}.
+        \item Определение отношений состоит из \emph{головы} и \emph{тела}, разделенных штопором (\verb!:-!), в конце стоит точка (\verb!.!).
+        \item Голова --- атом.
+        \item Тело --- выражение с правоассоциативными бинарными операторами конъюнкции (\verb!,!) и дизъюнкции (\verb!;!) над атомами. Конъюнкция имеет более высокий приоритет, чем дизъюнкция. Возможно использование скобок (\verb!(!, \verb!)!) для управления порядком вычислений.
+        \item Атом --- идентификатор, за которым идет последовательность атомов, разделенных пробельными символами. Если в каком-то из атомов есть пробельный символ, то он должен быть взят в скобки (\verb!(!, \verb!)!).
+        \item Тело и штопор могут отсутствовать.
+        \item Где угодно могут встречаться пробельные символы: советую использовать лексер.
+      \end{itemize}
+      \item Примеры корректных определений отношений.
+      \begin{itemize}
+        \item \verb!f.!
+        \item \verb!f :- g.!
+        \item \verb!f :- g, h; t.!
+        \item \verb!f :- g, (h; t).!
+        \item \verb!f a :- g, h (t c d)!
+        \item \verb!f (cons h t) :- g h, f t!
+      \end{itemize}
+      \item Примеры некорректных определений отношений.
+      \begin{itemize}
+        \item \verb!f! --- нет точки.
+        \item \verb!:- f.! --- нет головы.
+        \item \verb!f :- .! --- нет тела.
+        \item \verb!f :- g; h, .! --- нет правого подвыражения у конъюнкции.
+        \item \verb!f :- (g; (f).! --- несбалансированные скобки.
+        \item \verb!f ().! --- пустые скобки
+      \end{itemize}
+      \item Результатом должно быть консольное приложение, которое принимает на вход программу и печатает результат синтаксического анализа в файл с таким же названием и дополнительным расширением \verb!.out!.
+      \item Результатом синтаксического анализа является абстрактное синтаксическое дерево в случае успешного разбора и сообщение об ошибке иначе.
+      \item Код должен быть сопровожден инструкцией по сборке и запуску. Желательно выложить его на гитхаб и сопроводить тестами.
+      \item Пример парсера с пары выложен на гитхаб: \url{https://github.com/kajigor/fl-2020-hse-win/tree/3d6cae8eb08b862679de5e199e6ba4153d295d7e}
+    \end{itemize}
+  }
+\end{enumerate}
+
+
+\end{document}

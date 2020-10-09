@@ -1,0 +1,111 @@
+\documentclass[12pt]{article}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage[utf8x]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{cmap}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{url}
+\usepackage{pifont}
+\usepackage{tikz}
+\usepackage{verbatim}
+\usepackage{hyperref}
+
+\usetikzlibrary{shapes,arrows}
+\usetikzlibrary{positioning,automata}
+\tikzset{every state/.style={minimum size=0.2cm},
+initial text={}
+}
+
+\begin{document}
+\begin{center} {\LARGE Формальные языки} \end{center}
+
+\begin{center} \Large домашнее задание до 23:59 15.10 \end{center}
+\bigskip
+
+\begin{enumerate}
+  \item
+  {
+    Релизовать синтаксический анализатор с использованием библиотеки парсер-комбинаторов семейства parsec для упрощенного подмножества пролога.
+    \begin{itemize}
+      \item Описание синтаксиса
+      \begin{itemize}
+        \item Программа на прологе начинается с \emph{\textbf{объявления модуля}}, за которым идет последовательность \emph{\textbf{определений типов}}, за которым идет последовательность определений отношений \emph{определений отношений}.
+        \item Определение отношений состоит из \emph{головы} и \emph{тела}, разделенных штопором (\verb!:-!), в конце стоит точка (\verb!.!).
+        \item Голова --- атом.
+        \item Тело --- выражение с правоассоциативными бинарными операторами конъюнкции (\verb!,!) и дизъюнкции (\verb!;!) над атомами. Конъюнкция имеет более высокий приоритет, чем дизъюнкция. Возможно использование скобок (\verb!(!, \verb!)!) для управления порядком вычислений.
+        \item Атом --- идентификатор, за которым идет последовательность атомов, разделенных пробельными символами. Любой атом в этой последовательности может быть взять в произвольное количество скобок (\verb!(!, \verb!)!).
+        \item Тело и штопор могут отсутствовать.
+        \item Где угодно могут встречаться пробельные символы: советую использовать лексер.
+      \end{itemize}
+      \item Новый синтаксис
+        \begin{itemize}
+          \item Объявление модуля это ключевое слово \verb!module!, за которым идет идентификатор (не переменная), завершается все это точкой \verb!.!: \verb!module example.!
+          \item Определение типа это строка, начинающаяся с ключевого слова \verb!type!, за которым идет идентификатор-имя типа, за которым идет тип, в конце -- точка \verb!.!. Тип это последовательность атомов или типов, разделенных стрелкой \verb!->!.
+          \begin{itemize}
+            \item Корректные определения типов
+            \begin{itemize}
+              \item \verb!type filter (A -> o) -> list A -> list A -> o.!
+              \item \verb!type fruit string -> o.!
+            \end{itemize}
+            \item Некорректные определения типов
+            \begin{itemize}
+              \item \verb!type type type -> type.! --- ключевое слово используется как идентификатор
+              \item \verb!type x -> y -> z.! --- нет имени типа
+              \item \verb!tupe x o.! --- идентификатор вместо ключевого слова \verb!type!
+            \end{itemize}
+          \end{itemize}
+        \item Идентификатор, который начинается с большой буквы --- переменная, которая не может быть первым идентификатором в атоме, но может встречаться в аргументах.
+        \begin{itemize}
+          \item Корректные переменные: \verb!X!, \verb!XyZ!, \verb!ABC!.
+          \item Некорректные переменные: \verb!abc!, \verb!123!, \verb!X Y!.
+        \end{itemize}
+        \item Синтаксический сахар для списков:
+        \begin{itemize}
+          \item Список это возможно пустая последовательность атомов или переменных, разделенных запятой (\verb!,!), находящаяся в квадратных скобках (\verb![!, \verb!]!).
+          \begin{itemize}
+            \item Корректные списки: \verb![]!, \verb![X, Y, Z]!, \verb![a (b c), d, Z]!.
+            \item Некорректные списки: \verb![!, \verb!]a, b, c[!
+          \end{itemize}
+
+          \item Можно специфицировать список, состоящий из головы \verb!H! и хвоста \verb!T!: \verb![H|T]!. В голове может быть не только переменная, но и произвольный атом, хвост --- обязательно переменная.
+          \begin{itemize}
+            \item Корректные списки: \verb![H | T]!, \verb![a (b c) | T]!
+            \item Некорректные списки: \verb![H | abc]!, \verb![H | A b c]!
+          \end{itemize}
+          \item Список может вкладываться в другой список: \verb![[X, [H | T]] | Z]!
+          \item Список не может быть головой атома, но может быть аргументом.
+          \begin{itemize}
+            \item Некорректное использование списка: \verb![X] Y :- f X Y.!
+            \item Корректное использование списка: \verb!g [X] Y :- f X Y.!
+          \end{itemize}
+        \end{itemize}
+      \end{itemize}
+      \item Примеры корректных определений отношений.
+      \begin{itemize}
+        \item \verb!f.!
+        \item \verb!f :- g.!
+        \item \verb!f :- g, h; t.!
+        \item \verb!f :- g, (h; t).!
+        \item \verb!f a :- g, h (t c d).!
+        \item \verb!f (cons h t) :- g h, f t.!
+      \end{itemize}
+      \item Примеры некорректных определений отношений.
+      \begin{itemize}
+        \item \verb!f! --- нет точки.
+        \item \verb!:- f.! --- нет головы.
+        \item \verb!f :- .! --- нет тела.
+        \item \verb!f :- g; h, .! --- нет правого подвыражения у конъюнкции.
+        \item \verb!f :- (g; (f).! --- несбалансированные скобки.
+        \item \verb!f ().! --- пустые скобки
+      \end{itemize}
+      \item Результатом должно быть консольное приложение, которое принимает на вход программу и печатает результат синтаксического анализа в файл с таким же названием и дополнительным расширением \verb!.out!.
+      \item Результатом синтаксического анализа является абстрактное синтаксическое дерево в случае успешного разбора и сообщение об ошибке иначе.
+      \item Код должен быть сопровожден инструкцией по сборке и запуску. Желательно выложить его на гитхаб и сопроводить тестами.
+      \item Пример парсера с пары выложен на гитхаб: \url{https://github.com/kajigor/fl-2020-hse-win/tree/3d6cae8eb08b862679de5e199e6ba4153d295d7e}
+    \end{itemize}
+  }
+\end{enumerate}
+
+
+\end{document}|
