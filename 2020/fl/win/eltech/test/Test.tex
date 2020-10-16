@@ -1,0 +1,155 @@
+\documentclass[12pt]{article}
+\usepackage[left=2cm,right=2cm,top=1cm,bottom=1cm,bindingoffset=0cm]{geometry}
+\usepackage[utf8x]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{cmap}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{pifont}
+\usepackage{tikz}
+\usepackage{verbatim}
+\usepackage{enumitem}
+
+\pagenumbering{gobble}
+
+\begin{document}
+
+\begin{center}
+{\LARGE Формальные языки}
+
+{\Large Контрольная работа 1}
+
+{\large 16.10.2020}
+\end{center}
+
+\bigskip
+
+\begin{center}
+  \LARGE Порядок проведения контрольной работы
+\end{center}
+
+\begin{itemize}
+  \item Контрольная работа рассчитана на три часа: с 9 утра до 12 дня по Санкт-Петербургу.
+  \item Результаты этой и следующей контрольной работы будут учитываться при выставлении оценки за курс. Хорошо написанные контрольные будут означать автомат по курсу. Если все контрольные вами написаны плохо, вы сможете в конце семестра сдать экзамен, повышающий оценку. Переписываний контрольной не будет.
+  \item Контрольная работа должна выполняться каждым индивидуально. Если будет обнаружено списывание хотя бы одной задачи, вся контрольная работа будет не зачтена всем заподозренным в списывании вне зависимости от того, кто у кого списывал.
+  \item Контрольную работу можно писать ручкой на листе бумаги. Если есть возможность отсканировать выполненную работу --- отсканируйте, иначе достаточно качественной фотографии. Нечитаемые работы проверяться не будут. Если есть планшет, можно использовать его. Если есть навык верстки в техе --- верстайте, но учитывайте ограничения по времени.
+  \item Перед решением каждого задания обязательно укажите номер задачи и номер варианта (например, "2.3)"). Обязательно убедитесь, что решаете положенный вам вариант, иначе задача не будет зачтена, даже если решена правильно.
+  \item Контрольная работа должна быть прислана на мою электронную почту не позднее \textbf{12:10 16.10.2020}. Присланные после этого момента контрольные проверяться не будут. Можно присылать по одной задаче, присланные задачи можно исправлять в новом письме, но не позднее  \textbf{12:10 16.10.2020}.
+  \item Каждая присланная страница должна быть подписана вашими ФИО и номером группы.
+  \item Обязательно присылать контрольную в письме с темой \textbf{[FL\_ElTech] Test 1}. Письма с любой другой темой будут игнорироваться.
+  \item Любые соображения, которые привели вас к решению, целесообразно написать. Иногда студенты опечатываются в самом ответе, хотя все предыдущие шаги были выполнены правильно. Приведенные шаги помогут мне поверить, что это действительно опечатка, а не ошибка.
+  \item Проверьте, что у всех автоматов явно указаны стартовое состояние (одно) и терминальные состояния. Проверьте, что у всех грамматик явно указан стартовый нетерминал. Если вы используете лемму о накачке или любое другое утверждение, укажите это явно.
+\end{itemize}
+
+\newpage
+
+
+\begin{enumerate}
+\setlength\itemsep{1em}
+
+  \item Привести три самых коротких различных строки, принадлежащих языку, описанному регулярным выражением; принадлежат ли строки $abbab$ и $bababa$ данному языку?
+  \begin{enumerate}[label=\arabic*)]
+    \setlength\itemsep{0.8em}
+    \item $a ((a \mid b)^* b)^* $
+    \item $(a (a \mid b)^*)^* b $
+    \item $(a \mid b) (a (a \mid b))^* (a \mid b) $
+    \item $(a \mid b) ((a \mid b) b)^* (a \mid b) $
+    \item $(ba \mid b)^* \mid (bb \mid a)^*$
+    \item $(ab \mid b)^* \mid (bb \mid a)^*$
+    \item $(ba \mid a)^* \mid (bb \mid a)^*$
+    \item $(ba \mid a)^* \mid (bb \mid b)^*$
+    \item $(a \mid b)^* b (a \mid \varepsilon) b (a \mid b)^*$
+    \item $(a \mid b)^* a (a \mid \varepsilon) b (a \mid b)^*$
+    \item $(a \mid b)^* b (a \mid \varepsilon) a (a \mid b)^*$
+    \item $(a \mid b)^* a (a \mid \varepsilon) a (a \mid b)^*$
+    \item $(a \mid b)^* b (b \mid \varepsilon) b (a \mid b)^*$
+    \item $(a \mid b)^* a (b \mid \varepsilon) b (a \mid b)^*$
+    \item $(a \mid b)^* b (b \mid \varepsilon) a (a \mid b)^*$
+    \item $(a \mid b)^* a (b \mid \varepsilon) a (a \mid b)^*$
+  \end{enumerate}
+
+  \item Построить минимальный детерминированный конечный автомат, распознающий язык:
+  \begin{enumerate}[label=\arabic*)]
+    \setlength\itemsep{0.8em}
+    \item $\{ \omega \cdot a \cdot b \mid \omega \in \{0, 1\}^*, a \in \{0, 1\}, b \in \{0, 1\}, a \ or \ b = 1 \}$
+    \item $\{ \omega \cdot a \cdot b \mid \omega \in \{0, 1\}^*, a \in \{0, 1\}, b \in \{0, 1\}, a \ and \ b = 0 \}$
+    \item $\{ a \cdot \omega \cdot b \mid \omega \in \{0, 1\}^*, a \in \{0, 1\}, b \in \{0, 1\}, a \ or \ b = 1 \}$
+    \item $\{ a \cdot \omega \cdot b \mid \omega \in \{0, 1\}^*, a \in \{0, 1\}, b \in \{0, 1\}, a \ and \ b = 0 \}$
+    \item $\{ a \cdot b \cdot \omega \mid \omega \in \{0, 1\}^*, a \in \{0, 1\}, b \in \{0, 1\}, a \ or \ b = 1 \}$
+    \item $\{ a \cdot b \cdot \omega \mid \omega \in \{0, 1\}^*, a \in \{0, 1\}, b \in \{0, 1\}, a \ and \ b = 0 \}$
+
+
+    \item $\{ \omega \cdot a \cdot b \mid \omega \in \{0, 1\}^*, a \in \{0, 1\}, b \in \{0, 1\}, a = b \}$
+    \item $\{ \omega \cdot a \cdot b \mid \omega \in \{0, 1\}^*, a \in \{0, 1\}, b \in \{0, 1\}, a \neq b \}$
+    \item $\{ a \cdot \omega \cdot b \mid \omega \in \{0, 1\}^*, a \in \{0, 1\}, b \in \{0, 1\}, a = b \}$
+    \item $\{ a \cdot \omega \cdot b \mid \omega \in \{0, 1\}^*, a \in \{0, 1\}, b \in \{0, 1\}, a \neq b \}$
+    \item $\{ a \cdot b \cdot \omega \mid \omega \in \{0, 1\}^*, a \in \{0, 1\}, b \in \{0, 1\}, a = b \}$
+    \item $\{ a \cdot b \cdot \omega \mid \omega \in \{0, 1\}^*, a \in \{0, 1\}, b \in \{0, 1\}, a \neq b \}$
+
+  \end{enumerate}
+
+  \item Построить регулярную грамматику, задающую язык:
+  \begin{enumerate}[label=\arabic*)]
+    \setlength\itemsep{0.8em}
+
+    \item $\{ \alpha \cdot 100 \cdot \beta \mid \alpha, \beta \in \{0, 1\}^*\} \cap \{\gamma \cdot 000 \cdot \delta \mid \gamma, \delta \in \{0, 1\}^* \}$
+    \item $\{ \alpha \cdot 100 \cdot \beta \mid \alpha, \beta \in \{0, 1\}^*\} \cup \{\gamma \cdot 000 \cdot \delta \mid \gamma, \delta \in \{0, 1\}^* \}$
+    \item $\{ \alpha \cdot 001 \cdot \beta \mid \alpha, \beta \in \{0, 1\}^*\} \cap \{\gamma \cdot 000 \cdot \delta \mid \gamma, \delta \in \{0, 1\}^* \}$
+    \item $\{ \alpha \cdot 001 \cdot \beta \mid \alpha, \beta \in \{0, 1\}^*\} \cup \{\gamma \cdot 000 \cdot \delta \mid \gamma, \delta \in \{0, 1\}^* \}$
+    \item $\{ \alpha \cdot 010 \cdot \beta \mid \alpha, \beta \in \{0, 1\}^*\} \cap \{\gamma \cdot 000 \cdot \delta \mid \gamma, \delta \in \{0, 1\}^* \}$
+    \item $\{ \alpha \cdot 010 \cdot \beta \mid \alpha, \beta \in \{0, 1\}^*\} \cup \{\gamma \cdot 000 \cdot \delta \mid \gamma, \delta \in \{0, 1\}^* \}$
+    \item $\{ \alpha \cdot 001 \cdot \beta \mid \alpha, \beta \in \{0, 1\}^*\} \cap \{\gamma \cdot 100 \cdot \delta \mid \gamma, \delta \in \{0, 1\}^* \}$
+    \item $\{ \alpha \cdot 001 \cdot \beta \mid \alpha, \beta \in \{0, 1\}^*\} \cup \{\gamma \cdot 100 \cdot \delta \mid \gamma, \delta \in \{0, 1\}^* \}$
+    \item $\{ \alpha \cdot 101 \cdot \beta \mid \alpha, \beta \in \{0, 1\}^*\} \cap \{\gamma \cdot 010 \cdot \delta \mid \gamma, \delta \in \{0, 1\}^* \}$
+    \item $\{ \alpha \cdot 101 \cdot \beta \mid \alpha, \beta \in \{0, 1\}^*\} \cup \{\gamma \cdot 010 \cdot \delta \mid \gamma, \delta \in \{0, 1\}^* \}$
+
+    \item $\{ \alpha \cdot 011 \cdot \beta \mid \alpha, \beta \in \{0, 1\}^*\} \cap \{\gamma \cdot 111 \cdot \delta \mid \gamma, \delta \in \{0, 1\}^* \}$
+    \item $\{ \alpha \cdot 011 \cdot \beta \mid \alpha, \beta \in \{0, 1\}^*\} \cup \{\gamma \cdot 111 \cdot \delta \mid \gamma, \delta \in \{0, 1\}^* \}$
+    \item $\{ \alpha \cdot 110 \cdot \beta \mid \alpha, \beta \in \{0, 1\}^*\} \cap \{\gamma \cdot 111 \cdot \delta \mid \gamma, \delta \in \{0, 1\}^* \}$
+    \item $\{ \alpha \cdot 110 \cdot \beta \mid \alpha, \beta \in \{0, 1\}^*\} \cup \{\gamma \cdot 111 \cdot \delta \mid \gamma, \delta \in \{0, 1\}^* \}$
+    \item $\{ \alpha \cdot 101 \cdot \beta \mid \alpha, \beta \in \{0, 1\}^*\} \cap \{\gamma \cdot 111 \cdot \delta \mid \gamma, \delta \in \{0, 1\}^* \}$
+    \item $\{ \alpha \cdot 101 \cdot \beta \mid \alpha, \beta \in \{0, 1\}^*\} \cup \{\gamma \cdot 111 \cdot \delta \mid \gamma, \delta \in \{0, 1\}^* \}$
+    \item $\{ \alpha \cdot 110 \cdot \beta \mid \alpha, \beta \in \{0, 1\}^*\} \cap \{\gamma \cdot 011 \cdot \delta \mid \gamma, \delta \in \{0, 1\}^* \}$
+    \item $\{ \alpha \cdot 110 \cdot \beta \mid \alpha, \beta \in \{0, 1\}^*\} \cup \{\gamma \cdot 011 \cdot \delta \mid \gamma, \delta \in \{0, 1\}^* \}$
+    \item $\{ \alpha \cdot 010 \cdot \beta \mid \alpha, \beta \in \{0, 1\}^*\} \cap \{\gamma \cdot 101 \cdot \delta \mid \gamma, \delta \in \{0, 1\}^* \}$
+    \item $\{ \alpha \cdot 010 \cdot \beta \mid \alpha, \beta \in \{0, 1\}^*\} \cup \{\gamma \cdot 101 \cdot \delta \mid \gamma, \delta \in \{0, 1\}^* \}$
+  \end{enumerate}
+
+  \item Проверить регулярность языка (если регулярный, построить автомат, регулярное выражение или регулярную грамматику, иначе --- доказать нерегулярность)
+  \begin{enumerate}[label=\arabic*)]
+    \setlength\itemsep{0.8em}
+
+    \item $\{\omega \in \{a, b\}^* \mid |\omega|_a = |\omega|_b\}$
+    \item $\{\omega \in \{a, b\}^* \mid |\omega|_a \geq |\omega|_b\}$
+    \item $\{\omega \in \{a, b\}^* \mid |\omega|_a \leq |\omega|_b\}$
+    \item $\{\omega \in \{a, b\}^* \mid |\omega|_a \neq |\omega|_b\}$
+    \item $\{\alpha \cdot a \cdot \beta \mid \alpha, \beta \in \{a, b\}^*, |\alpha|_b \geq |\beta|_a \}$
+    \item $\{\alpha \cdot a \cdot \beta \mid \alpha, \beta \in \{a, b\}^*, |\alpha|_b > |\beta|_a \}$
+    \item $\{a^m \cdot \omega \mid 1 \leq |\omega|_b \leq m\}$
+    \item $\{\omega \cdot a^m  \mid 1 \leq |\omega|_b \leq m\}$
+  \end{enumerate}
+
+  \item По регулярному выражению построить недетерминированный конечный автомат без эпсилон-переходов
+  \begin{enumerate}[label=\arabic*)]
+    \setlength\itemsep{0.8em}
+
+    \item $a ((a \mid b)^* b)^* $
+    \item $(a (a \mid b)^*)^* b $
+    \item $(a \mid b) (a (a \mid b))^* (a \mid b) $
+    \item $(a \mid b) ((a \mid b) b)^* (a \mid b) $
+    \item $(ba \mid b)^* \mid (bb \mid a)^*$
+    \item $(ab \mid b)^* \mid (bb \mid a)^*$
+    \item $(ba \mid a)^* \mid (bb \mid a)^*$
+    \item $(ba \mid a)^* \mid (bb \mid b)^*$
+    \item $(a \mid b)^* b (a \mid \varepsilon) b (a \mid b)^*$
+    \item $(a \mid b)^* a (a \mid \varepsilon) b (a \mid b)^*$
+    \item $(a \mid b)^* b (a \mid \varepsilon) a (a \mid b)^*$
+    \item $(a \mid b)^* a (a \mid \varepsilon) a (a \mid b)^*$
+    \item $(a \mid b)^* b (b \mid \varepsilon) b (a \mid b)^*$
+    \item $(a \mid b)^* a (b \mid \varepsilon) b (a \mid b)^*$
+    \item $(a \mid b)^* b (b \mid \varepsilon) a (a \mid b)^*$
+    \item $(a \mid b)^* a (b \mid \varepsilon) a (a \mid b)^*$
+  \end{enumerate}
+\end{enumerate}
+
+\end{document}
