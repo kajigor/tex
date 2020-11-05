@@ -1,0 +1,238 @@
+\documentclass{beamer}
+\usepackage{beamerthemesplit}
+\usepackage{wrapfig}
+\usetheme{SPbGU}
+\usepackage{pdfpages}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{cmap}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{indentfirst}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usepackage{multirow}
+\usepackage[noend]{algpseudocode}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{ stmaryrd }
+\usepackage{fancyvrb}
+\usepackage{qtree}
+\usepackage{verbatim}
+\usepackage{ulem}
+\usepackage{proof}
+
+\beamertemplatenavigationsymbolsempty
+
+\setbeamertemplate{itemize item}[circle]
+\setbeamertemplate{enumerate item}[circle]
+\newcommand{\derives}[1][*]{\xRightarrow[]{#1}}
+
+\def\To{\derives[]}
+\def\iff{\Leftrightarrow}
+
+\usetikzlibrary{shapes,arrows}
+\usetikzlibrary{positioning,automata}
+\tikzset{every state/.style={minimum size=0.2cm},
+initial text={}
+}
+
+\graphicspath{
+  {pics/}
+}
+
+\newcommand{\incimage}[2][0.8]{
+  \begin{center}
+    \includegraphics[width=\textwidth, height=#1\textheight, keepaspectratio]{#2}
+  \end{center}
+  }
+
+\title[]{Унификация посредством поиска путей с контекстно-свободными ограничениями в графе \\ Source-tracking unification}
+\subtitle[]{}
+\institute[]{
+Лаборатория языковых инструментов JetBrains\\
+}
+
+\author[]{Екатерина Вербицкая}
+
+\date{6 ноября 2020}
+
+\definecolor{orange}{RGB}{179,36,31}
+
+\begin{document}
+{
+  \begin{frame}
+    \titlepage
+  \end{frame}
+}
+
+
+\begin{frame}[fragile]
+  \frametitle{TLDR}
+\begin{center}
+  Задачу унификации можно свести к \\ поиску путей с КС ограничениями в графе\footnote{Choppella, V., and Haynes, C. T. (2005). Source-tracking unification.}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{План докалада}
+\begin{itemize}
+  \item Что такое унификация
+  \item Как задача унификации представима в виде графа
+  \item Какой язык будем использовать в качестве ограничений
+  \item Почему это работает
+  \item Какую дополнительную информацию можно получить из пути
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Унификация}
+
+  \begin{center}
+    Даны два терма $t, s$
+  \end{center}
+
+  \begin{center}
+    Задача: найти подстановку на свободных переменных термов (унификатор) $\theta$, такую что
+  \end{center}
+  \[
+    t \theta = s \theta
+  \]
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Подстановка}
+  \[
+    \text{Терм: } \mathcal{T} :: \mathcal{V} \mid \mathcal{F}^n \ \mathcal{T}_1 \dots \mathcal{T}_n
+  \]
+
+  \[
+    \text{Подстановка: } \theta :: \mathcal{V} \to \mathcal{T}
+  \]
+
+
+  \begin{center}
+    Применение подстановки $t\{x_1 \mapsto t_1, \dots, x_k \mapsto t_k\}$: \\ одновременно заменить свободные переменные $x_i$ терма $t$ на $t_i$
+  \end{center}
+  \[
+     (f \ x \ a \ (g \ z) \ y)\{x \mapsto h \ a \ y, z \mapsto y\} = f \ (h \ a  \ y) \ a \ (g \ y) \ y
+  \]
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Применение унификации}
+\begin{verbatim}
+apply :: (a -> b) -> a -> b
+apply f x = f x
+
+f :: Int -> Int
+f x = x + 1
+
+apply_f :: ?
+apply_f = apply f
+\end{verbatim}
+
+\bigskip
+
+Унифицируем \verb!a -> b! и \verb!Int -> Int!, получаем \verb!a == Int!, \verb!b == Int!
+
+\bigskip
+
+\verb!apply_f :: Int -> Int!
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+  \frametitle{Простой алгоритм унификации}
+
+\begin{center}
+  Будем искать подстановку как множество уравнений $\mathcal{E} = \{ t_i = s_i \}$
+\end{center}
+
+\begin{itemize}
+  \item Упрощение термов: $(f \ t_1 \dots t_n = g \ s_1 \dots s_m) \in \mathcal{E}$
+  \begin{itemize}
+    \item Если $f, g$ --- различные константы, то $\mathcal{E} = \bot$
+    \item Иначе заменяем уравнение в $\mathcal{E}$ на множество $t_1 = s_1, \dots, t_n = s_n$
+  \end{itemize}
+  \item Переориентация: $(t = x) \in \mathcal{E}$
+  \begin{itemize}
+    \item Если $t$ --- терм, $x$ --- переменная, заменяем в $\mathcal{E}$ уравнение на $x = t$
+  \end{itemize}
+  \item Элиминация переменных: $(x = t) \in \mathcal{E}$, $x$ входит в какое-то уравнение
+  \begin{itemize}
+    \item Если $x$ входит в $t$, $t \equiv x$, то удаляем уравнение из $\mathcal{E}$
+    \item Иначе, если $x$ входит в $t$, то $\mathcal{E} = \bot$
+    \item Иначе, подставляем $t$ вместо $x$ во всех уравнениях в $\mathcal{E}$
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Унификация: пример}
+\[
+  \{ node \ El \ T \ T = node \ 1 \ (node \ 2 \ emp \ emp) \ (node \ 2 \ emp \ emp) \}
+\]
+
+\[
+  \{ El = 1, T = node \ 2 \ emp \ emp, T = node \ 2 \ emp \ emp \}
+\]
+
+\[
+  \{ El = 1, T = node \ 2 \ emp \ emp, node \ 2 \ emp \ emp = node \ 2 \ emp \ emp \}
+\]
+
+\[
+  \{ El = 1, T = node \ 2 \ emp \ emp, 2 = 2, emp = emp, emp = emp \}
+\]
+
+\[
+  \{ El = 1, T = node \ 2 \ emp \ emp \}
+\]
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Унификация: пример}
+\[
+  \{ node \ El \ T \ T = node \ 1 \ (node \ 2 \ emp \ emp) \ (node \ 3 \ emp \ emp) \}
+\]
+
+\[
+  \{ El = 1, T = node \ 2 \ emp \ emp, T = node \ 3 \ emp \ emp \}
+\]
+
+\[
+  \{ El = 1, T = node \ 2 \ emp \ emp, node \ 2 \ emp \ emp = node \ 3 \ emp \ emp \}
+\]
+
+\[
+  \{ El = 1, T = node \ 2 \ emp \ emp, 2 = 3, emp = emp, emp = emp \}
+\]
+
+\[
+  \bot
+\]
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Чем плох простой алгоритм}
+  \begin{itemize}
+    \item Не очень эффективный
+    \item Не говорит, почему унификация не завершилась успехом
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Граф унификации}
+
+\end{frame}
+
+\end{document}
