@@ -12,16 +12,17 @@
 \usepackage{indentfirst}
 \usepackage{amsmath}
 \usepackage{tikz}
+\usetikzlibrary{shapes,arrows,automata,positioning,quotes,backgrounds,decorations.text,decorations.pathmorphing,calc}
 \usepackage{multirow}
 \usepackage[noend]{algpseudocode}
 \usepackage{algorithm}
 \usepackage{algorithmicx}
 \usepackage{ stmaryrd }
 \usepackage{fancyvrb}
-\usepackage{qtree}
 \usepackage{verbatim}
 \usepackage{ulem}
 \usepackage{proof}
+\usepackage{xspace}
 
 \beamertemplatenavigationsymbolsempty
 
@@ -32,11 +33,32 @@
 \def\To{\derives[]}
 \def\iff{\Leftrightarrow}
 
-\usetikzlibrary{shapes,arrows}
-\usetikzlibrary{positioning,automata}
 \tikzset{every state/.style={minimum size=0.2cm},
 initial text={}
 }
+
+\tikzset{fnode/.style={shape=circle}}
+
+\tikzset{eqedge/.style={thick, dashed}}
+\tikzset{funedge/.style={thick}}
+\tikzset{deredge/.style={thick, dashed, teal}}
+
+
+\tikzstyle{processTree} = [
+  ->,
+  sibling distance=5em,
+  % scale=0.6,
+  every node/.style = {
+    shape=rectangle,
+    rounded corners=0.05cm,
+    draw,
+    align=center,
+    minimum size=5mm,
+    % scale=0.6,
+    },
+  ]
+
+\newcommand{\iseq}{\stackrel{?}{=}}
 
 \graphicspath{
   {pics/}
@@ -232,6 +254,58 @@ apply_f = apply f
 
 \begin{frame}[fragile]
   \frametitle{Граф унификации}
+\begin{center}
+  $a \to b \iseq Int \to Int$
+\end{center}
+
+\bigskip
+
+\begin{center}
+\input{simplegraph.tex}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Отношение эквивалентности на вершинах}
+Отношение на вершинах $R$ \textit{замкнуто вниз}, если для любой метки на ребре $\delta$ и двух вершин в отношении $uRu'$ с ребрами $u \xrightarrow{\delta} v$ и $u' \xrightarrow{\delta} v'$ верно $vRv'$
+
+\begin{center}
+  \begin{tikzpicture}[
+    processTree,
+    anchor=center]
+    \node (0) {$u$}
+      child { node (00) {$v$} };
+    \node (1) [right of=0, xshift=1.5cm] {$u'$}
+      child { node (10) {$v'$} };
+    level 1/.style={sibling distance=5em},
+    \draw [deredge] (0.east) to (1.west);
+    \path
+    (0) edge [funedge, left]  node [draw=none] {$\delta$}  (00)
+    (1) edge [funedge, right]  node [draw=none] {$\delta$}  (10);
+    \pause
+    \draw [deredge] (00.east) to (10.west);
+  \end{tikzpicture}
+\end{center}
+
+\bigskip
+
+\textit{Замыкание унификации отношения} $R$ это наименьшее замкнутое вниз отношение на вершинах, содержащее $R$
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Факторграф унификации}
+Вершины \textit{равны}, если связаны $\varepsilon$-ребром
+
+\bigskip
+
+\textit{Факторизуем} граф унификации по отношению эквивалентности на вершинах, которое построено как замыкание унификации отношения равенства вершин
+
+\pause
+
+\begin{center}
+  \input{simplefactorgraph.tex}
+\end{center}
+
 
 \end{frame}
 
