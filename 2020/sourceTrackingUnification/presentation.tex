@@ -23,6 +23,7 @@
 \usepackage{ulem}
 \usepackage{proof}
 \usepackage{xspace}
+\usepackage{bm}
 
 \beamertemplatenavigationsymbolsempty
 
@@ -42,7 +43,6 @@ initial text={}
 \tikzset{eqedge/.style={thick, dashed}}
 \tikzset{funedge/.style={thick}}
 \tikzset{deredge/.style={thick, dashed, teal}}
-
 
 \tikzstyle{processTree} = [
   ->,
@@ -306,7 +306,313 @@ apply_f = apply f
   \input{simplefactorgraph.tex}
 \end{center}
 
+Унификация невозможна, если в факторграфе есть вершина с разными функциональными символами
+\end{frame}
 
+
+\begin{frame}[fragile]
+  \frametitle{Большой пример}
+
+  \begin{columns}
+    \begin{column}{0.3\textwidth}
+      \input{equasions.tex}
+      \pause
+    \end{column}
+    \begin{column}{0.7\textwidth}
+      \begin{center}
+        \input{biggraphpause.tex}
+      \end{center}
+    \end{column}
+    \end{columns}
+
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+  \frametitle{Большой пример: $t_7 = int$}
+
+  \begin{columns}
+    \begin{column}{0.3\textwidth}
+        \input{equasions.tex}
+    \end{column}
+    \begin{column}{0.7\textwidth}
+      \begin{center}
+        \input{biggraph1.tex}
+      \end{center}
+    \end{column}
+    \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Большой пример: $t_4 = int$}
+
+  \begin{columns}
+    \begin{column}{0.3\textwidth}
+        \input{equasions.tex}
+    \end{column}
+    \begin{column}{0.7\textwidth}
+      \begin{center}
+        \input{biggraph2.tex}
+      \end{center}
+    \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Большой пример: $t_7 = bool$}
+
+  \begin{columns}
+    \begin{column}{0.3\textwidth}
+        \input{equasions.tex}
+    \end{column}
+    \begin{column}{0.7\textwidth}
+      \begin{center}
+        \input{biggraph4.tex}
+      \end{center}
+    \end{column}
+    \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Большой пример: $t_4 = bool$}
+
+  \begin{columns}
+    \begin{column}{0.3\textwidth}
+        \input{equasions.tex}
+    \end{column}
+    \begin{column}{0.7\textwidth}
+      \begin{center}
+        \input{biggraph3.tex}
+      \end{center}
+    \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Факторграф для примера: унификация невозможна}
+
+  \begin{columns}
+    \begin{column}{0.3\textwidth}
+        \input{biggraphfactor.tex}
+    \end{column}
+    \begin{column}{0.7\textwidth}
+      \begin{center}
+        \input{biggraph.tex}
+      \end{center}
+    \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Полудиков язык: соотношения отмены}
+\[
+  \Sigma = \{\delta_1, \dots, \delta_n \}
+\]
+\[
+  \Sigma^{-1} = \{\delta_1^{-1}, \dots, \delta_n^{-1} \}
+\]
+\[
+  \Sigma \cap \Sigma^{-1} = \varnothing
+\]
+
+\[
+  \bm{S}(\Sigma) = \{\delta^{-1} \delta \approx \varepsilon \mid \delta \in \Sigma \}
+\]
+\[
+  \bm{S_2}(\Sigma) = \{\delta^{-1} \delta \approx \varepsilon, \delta \delta^{-1} \approx \varepsilon \mid \delta \in \Sigma \}
+\]
+
+\[
+  u \stackrel{\bm{S}(\Sigma)}{\approx} v, \text{ если } u \text{ можно получить из } v \text{ применением равенств из } \bm{S}(\Sigma)
+\]
+\[
+  \text{ (или наоборот, } v \text{ из } u \text{; аналогично для } u \stackrel{\bm{S_2}(\Sigma)}{\approx} v)
+\]
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Полудиков\footnote{Определение полудикова языка может показаться неожиданным} язык}
+\[
+  \mu_{\bm{S}(\Sigma)}(l) \text{ --- нормальная форма } l \text{ относительно равенств из } \bm{S}(\Sigma)
+\]
+\[
+  \mu_{\bm{S_2}(\Sigma)}(l) \text{ --- нормальная форма } l \text{ относительно равенств из } \bm{S_2}(\Sigma)
+\]
+
+\[
+  S(\Sigma, L) \stackrel{def}{=} \{ l \in (\Sigma \cup \Sigma^{-1})^* \mid \mu_{\bm{S}(\Sigma)}(l) \in L\}
+\]
+\[
+  S_2(\Sigma, L) \stackrel{def}{=} \{ l \in (\Sigma \cup \Sigma^{-1})^* \mid \mu_{\bm{S_2}(\Sigma)}(l) \in L\}
+\]
+
+
+\begin{columns}
+  \begin{column}{0.5\textwidth}
+    \begin{align*}
+      S^0(\Sigma) &= S(\Sigma, {\varepsilon}) \\
+      S^+(\Sigma) &= S(\Sigma, \Sigma^+) \\
+      S^*(\Sigma) &= S(\Sigma, \Sigma^*)
+    \end{align*}
+  \end{column}
+  \begin{column}{0.5\textwidth}
+    \begin{align*}
+      S^0_2(\Sigma) &= S(\Sigma, {\varepsilon}) \\
+      S^+_2(\Sigma) &= S(\Sigma, \Sigma^+) \\
+      S^*_2(\Sigma) &= S(\Sigma, \Sigma^*)
+    \end{align*}
+  \end{column}
+  \end{columns}
+
+\bigskip
+
+  \[
+    S^0(\Sigma) \text{ --- полудиков язык (semi-Dyck set)}
+  \]
+
+  \bigskip
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Пути унификации: обращение ребер}
+
+  \begin{center}
+    \begin{tikzpicture}[
+      processTree,
+      anchor=center,
+      node distance=2cm]
+      \node (0) {$u$};
+      \node (00) [below of=0] {$v$};
+      \node (1) [right of=0] {$u$};
+      \node (10) [below of=1] {$v$};
+      \path
+      (0) edge [funedge, left]  node [draw=none] {$\delta$}  (00)
+      (10) edge [funedge, right]  node [draw=none] {$\delta^{-1}$}  (1);
+    \end{tikzpicture}
+  \end{center}
+
+\pause
+
+\bigskip
+\[
+  \varepsilon^{-1} = \varepsilon
+\]
+
+  \begin{center}
+    \begin{tikzpicture}[
+      processTree,
+      anchor=center,
+      node distance=2cm]
+      \node (0) {$u$};
+      \node (00) [below of=0] {$v$};
+      \node (1) [right of=0] {$u$};
+      \node (10) [below of=1] {$v$};
+      \path
+      (0) edge [funedge, left]  node [draw=none] {$\varepsilon$}  (00)
+      (10) edge [funedge, right]  node [draw=none] {$\varepsilon$}  (1);
+    \end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Пути унификации}
+\textit{Путь унификации} --- такой путь $p$ в графе $G \cup G^{-1}$, что нормальная форма его метки $\mu_{\bm{S}(\Sigma)}(l(p)) \in \Sigma^*$
+
+\bigskip
+
+$G$ --- граф унификации, $G^{-1}$ --- граф с обращенными ребрами
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Путь унификации: пример}
+  \vspace{-0.5cm}
+  \[
+    \mu_{\bm{S}(\Sigma)}(l(p^{-1}f^{-1}hr)) = \mu_{\bm{S}(\Sigma)}((\to_1)^{-1} \to_1) = \varepsilon \in \Sigma^*
+  \]
+  \vspace{-0.5cm}
+  \begin{columns}
+    \begin{column}{0.3\textwidth}
+      \input{equasionslabeled.tex}
+    \end{column}
+    \begin{column}{0.7\textwidth}
+      \begin{center}
+        \input{biggraphlettered.tex}
+      \end{center}
+    \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Путь унификации: пример}
+  \vspace{-0.5cm}
+  \[
+    \mu_{\bm{S}(\Sigma)}(l(s^{-1}f^{-1}hq)) = \mu_{\bm{S}(\Sigma)}((\to_2)^{-1} \to_2) = \varepsilon \in \Sigma^*
+  \]
+  \vspace{-1cm}
+  \begin{columns}
+    \begin{column}{0.3\textwidth}
+      \input{equasionslabeled.tex}
+    \end{column}
+    \begin{column}{0.7\textwidth}
+      \begin{center}
+        \input{biggraphlettered2.tex}
+      \end{center}
+    \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Путь унификации в факторграфе}
+
+\begin{theorem}
+  Если в графе унификации существует путь $p$ из вершины $u$ в вершину $v$, то в факторграфе существует путь из класса эквивалентности $[u]$ в класс эквивалентности $[v]$ с меткой $\mu_{\bm{S}(\Sigma)}(l(p))$
+\end{theorem}
+
+
+\begin{theorem}
+  Если в факторграфе унификации существует путь $p'$ из класса эквивалентности $[u]$ в класс эквивалентности $[v]$, то в графе унификации существует путь $p$ из $u$ в вершину $v$ с меткой, чья нормальная форма $\mu_{\bm{S}(\Sigma)}(l(p)) = p'$
+\end{theorem}
+
+
+\begin{center}
+  \begin{tikzpicture}[
+    processTree,
+    anchor=center,
+    ]
+    \node (0) {$u$}
+      child { node (00) {$v$} };
+    \node (1) [right of=0, xshift=1.5cm] {$u'$}
+      child { node (10) {$v'$} };
+    level 1/.style={sibling distance=5em},
+    \draw [deredge] (0.east) to (1.west);
+    \path
+    (0) edge [funedge, left]  node [draw=none] {$\delta$}  (00)
+    (1) edge [funedge, right]  node [draw=none] {$\delta$}  (10);
+    \draw [deredge] (00.east) to (10.west);
+  \end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Алгоритмы унификации через поиск путей}
+
+\begin{center}
+  Два терма унифицируются, тогда и только тогда, когда между ними есть путь унификации, нормальная форма которого --- $\varepsilon$
+\end{center}
+
+\begin{center}
+  Два терма унифицируются, тогда и только тогда, когда между ними есть путь унификации, метка которого в полудиковом языке $S^0(\Sigma)$
+\end{center}
+
+\begin{itemize}
+  \item Один алгоритм ищет кратчайшие пути, работает за $O(n^3)$
+  \item Второй алгоритм интегрируется в стандартный алгоритм унификации, работает  на константу хуже и строит не самые маленькие доказательства унифицируемости (но и не самые плохие)
+\end{itemize}
 \end{frame}
 
 \end{document}

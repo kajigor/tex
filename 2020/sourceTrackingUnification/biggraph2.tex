@@ -1,0 +1,37 @@
+\begin{tikzpicture}[
+  processTree,
+  anchor=center,
+  node distance=2cm]
+  \node (t0) {$t_0$};
+  \node (w1) [fnode, below of=t0] {$\to$};
+  \node (t5) [right of=w1] {$t_5$};
+  \node (t2) [above of=t5] {$t_2$};
+  \node (t1) [below of=w1] {$t_1$};
+  \node (t3) [below of=t1] {$t_3$};
+  \node (w5) [fnode, right of=t3] {bool};
+  \node (w2) [fnode, right of=t5] {$\to$};
+  \node (t7) [below of=w2] {$t_7$};
+  \node (t4) [above of=w2] {$t_4$};
+  \node (t6) [right of=w2] {$t_6$};
+  \node (w3) [fnode, below of=t6] {$\to$};
+  \node (w4) [fnode, below of=w3] {int};
+
+  \path
+    (t0) edge [eqedge]  node[left,  draw=none] {$\varepsilon$} (w1)
+    (w1) edge [funedge] node[left,  draw=none] {$\to_1$}           (t1)
+         edge [funedge] node[left,  draw=none] {$\to_2$}           (t2)
+    (t3) edge [eqedge]  node[below, draw=none] {$\varepsilon$} (w5)
+         edge [eqedge]  node[left,  draw=none] {$\varepsilon$} (t1)
+    (w3) edge [funedge, bend left, purple]  node[right, draw=none] {$\to_2$} (w4.north east)
+         edge [funedge, bend right] node[left,  draw=none] {$\to_1$} (w4.north west)
+    (t2) edge [eqedge]  node[above, draw=none] {$\varepsilon$} (t4.west)
+    (t4) edge [eqedge]  node[above, draw=none] {$\varepsilon$} (t5)
+    (t5) edge [eqedge]  node[above, draw=none] {$\varepsilon$} (t1)
+    (w2) edge [funedge, purple] node[right, draw=none] {$\to_2$}           (t4)
+         edge [funedge] node[right, draw=none] {$\to_1$}           (t7)
+    (t7) edge [eqedge]  node[above, draw=none] {$\varepsilon$} (t1)
+    (t6) edge [eqedge, purple]  node[above, draw=none] {$\varepsilon$} (w2)
+         edge [eqedge, purple]  node[right, draw=none] {$\varepsilon$} (w3)
+         ;
+  \draw [deredge] (t4.east) [out=0, in=0] to (w4.east);
+\end{tikzpicture}

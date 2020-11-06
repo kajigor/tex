@@ -15,13 +15,20 @@
   level 1/.style={sibling distance=5em},
   \draw [eqedge] (0.east) to node[above, draw=none, black] {$\varepsilon$} (1.west);
   \path
-  (0) edge [funedge, left]  node [draw=none] {$1$}  (00)
-      edge [funedge, right] node [draw=none] {$2$}  (01)
-  (1) edge [funedge, left]  node [draw=none] {$1$}  (10)
-      edge [funedge, right] node [draw=none] {$2$}  (11);
+  (0) edge [funedge, left]  node [draw=none] {$\to_1$}  (00)
+      edge [funedge, right] node [draw=none] {$\to_2$}  (01)
+  (1) edge [funedge, left]  node [draw=none] {$\to_1$}  (10)
+      edge [funedge, right] node [draw=none] {$\to_2$}  (11);
   \draw [deredge] (00.south east) [out=315,in=225] to (10.south west);
   \draw [deredge] (01.south east) [out=315,in=225] to (11.south west);
 
-  \node (12) [fnode, right of=11, xshift=3cm, yshift=1cm] {$a \ b \ int$};
-  \draw [decorate] ($(1.east)+(1,-0.5)$) to node [draw=none,above] {факторизация} ($(12.west)+(-0.5,0)$);
+  \node (2) [fnode, right of=11, xshift=3cm, yshift=1.5cm] {$\to \ \to$};
+  \node (12) [fnode, below left of=2, yshift=-1cm] {$a \ Int$};
+  \node (22) [fnode, below right of=2, yshift=-1cm] {$b \ Int$};
+
+  \path
+    (2) edge [funedge, left]  node [draw=none] {}  (12)
+        edge [funedge, left]  node [draw=none] {}  (22);
+
+  \draw [decorate] ($(1.east)+(1,-0.5)$) to node [draw=none,above] {факторизация} ($(2.west)+(-0.5,-0.5)$);
 \end{tikzpicture}

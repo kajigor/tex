@@ -1,0 +1,12 @@
+\begin{tikzpicture}[
+  processTree,
+  anchor=center,
+  node distance=3cm]
+  \node (0) [fnode] {bool \\ int \\ $t_1 t_2 t_3$ \\ $t_4 t_5 t_7$ };
+  \node (1) [fnode, above of=0] {$\to$ \\ $t_0$};
+  \node (2) [fnode, below of=0] {$\to$ \\ $\to$ \\ $t_6$};
+
+  \path (1) edge [funedge] node[draw=none] {} (0)
+        (2) edge [funedge] node[draw=none] {} (0);
+
+\end{tikzpicture}
