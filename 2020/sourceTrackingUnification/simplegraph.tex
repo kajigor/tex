@@ -4,17 +4,15 @@
   \node (0) [fnode] {$\to$}
     child { node (00) {a} }
     child { node (01) {b} };
-  \node (1) [fnode] [right of=0, xshift=3cm] {$\to$}
-    child { node [fnode] (10) {Int} }
-    child { node [fnode] (11) {Int} };
-  level 1/.style={sibling distance=5em},
+  \node (1) [fnode] [right of=0, xshift=3cm] {$\to$};
+  \node (10) [fnode,below of=1, yshift=-0.45cm] {Int};
   \draw [eqedge] (0.east) to node[above, draw=none, black] {$\varepsilon$} (1.west);
   \path
   (0) edge [funedge, left]  node [draw=none] {$\to_1$}  (00)
       edge [funedge, right] node [draw=none] {$\to_2$}  (01)
-  (1) edge [funedge, left]  node [draw=none] {$\to_1$}  (10)
-      edge [funedge, right] node [draw=none] {$\to_2$}  (11);
+  (1) edge [funedge, bend right,  left]  node [draw=none] {$\to_1$}  (10)
+      edge [funedge, bend left, right] node [draw=none] {$\to_2$}  (10);
   \pause
-  \draw [deredge] (00.south east) [out=315,in=225] to (10.south west);
-  \draw [deredge] (01.south east) [out=315,in=225] to (11.south west);
+  \draw [deredge] (00.south east) [out=315,in=225] to (10.south);
+  \draw [deredge] (01.south east) [out=315,in=225] to (10.south west);
 \end{tikzpicture}

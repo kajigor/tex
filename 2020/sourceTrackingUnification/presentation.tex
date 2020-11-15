@@ -24,12 +24,18 @@
 \usepackage{proof}
 \usepackage{xspace}
 \usepackage{bm}
+\usepackage{proof}
+\usepackage{extarrows}
 
 \beamertemplatenavigationsymbolsempty
 
 \setbeamertemplate{itemize item}[circle]
 \setbeamertemplate{enumerate item}[circle]
 \newcommand{\derives}[1][*]{\xRightarrow[]{#1}}
+\newcommand{\gEdge}[3]{#1 \xlongrightarrow{#2} #3}
+\newcommand{\pu}[4]{G \vdash #1 : \gEdge{#2}{#3}{#4}}
+
+\setlength{\inferLineSkip}{3pt}
 
 \def\To{\derives[]}
 \def\iff{\Leftrightarrow}
@@ -78,7 +84,7 @@ initial text={}
 
 \author[]{Екатерина Вербицкая}
 
-\date{6 ноября 2020}
+\date{15 ноября 2020}
 
 \definecolor{orange}{RGB}{179,36,31}
 
@@ -94,6 +100,10 @@ initial text={}
   \frametitle{TLDR}
 \begin{center}
   Задачу унификации можно свести к \\ поиску путей с КС ограничениями в графе\footnote{Choppella, V., and Haynes, C. T. (2005). Source-tracking unification.}
+
+  \bigskip
+
+  Путь --- доказательство унифицируемости термов
 \end{center}
 \end{frame}
 
@@ -277,13 +287,14 @@ apply_f = apply f
       child { node (00) {$v$} };
     \node (1) [right of=0, xshift=1.5cm] {$u'$}
       child { node (10) {$v'$} };
-    level 1/.style={sibling distance=5em},
-    \draw [deredge] (0.east) to (1.west);
     \path
+    (0) edge [deredge, above] node [draw=none] {$R$} (1)
     (0) edge [funedge, left]  node [draw=none] {$\delta$}  (00)
     (1) edge [funedge, right]  node [draw=none] {$\delta$}  (10);
     \pause
-    \draw [deredge] (00.east) to (10.west);
+    \path
+    (00) edge [deredge, above] node [draw=none] {$R$} (10);
+    % \draw [deredge] (00.east) to (10.west);
   \end{tikzpicture}
 \end{center}
 
@@ -306,7 +317,7 @@ apply_f = apply f
   \input{simplefactorgraph.tex}
 \end{center}
 
-Унификация невозможна, если в факторграфе есть вершина с разными функциональными символами
+Унификация невозможна, тогда и только тогда, когда в факторграфе есть цикл или вершина с разными функциональными символами
 \end{frame}
 
 
@@ -421,16 +432,16 @@ apply_f = apply f
 \[
   \bm{S}(\Sigma) = \{\delta^{-1} \delta \approx \varepsilon \mid \delta \in \Sigma \}
 \]
-\[
-  \bm{S_2}(\Sigma) = \{\delta^{-1} \delta \approx \varepsilon, \delta \delta^{-1} \approx \varepsilon \mid \delta \in \Sigma \}
-\]
+% \[
+%   \bm{S_2}(\Sigma) = \{\delta^{-1} \delta \approx \varepsilon, \delta \delta^{-1} \approx \varepsilon \mid \delta \in \Sigma \}
+% \]
 
 \[
   u \stackrel{\bm{S}(\Sigma)}{\approx} v, \text{ если } u \text{ можно получить из } v \text{ применением равенств из } \bm{S}(\Sigma)
 \]
-\[
-  \text{ (или наоборот, } v \text{ из } u \text{; аналогично для } u \stackrel{\bm{S_2}(\Sigma)}{\approx} v)
-\]
+% \[
+%   \text{ (или наоборот, } v \text{ из } u \text{; аналогично для } u \stackrel{\bm{S_2}(\Sigma)}{\approx} v)
+% \]
 \end{frame}
 
 \begin{frame}[fragile]
@@ -438,35 +449,24 @@ apply_f = apply f
 \[
   \mu_{\bm{S}(\Sigma)}(l) \text{ --- нормальная форма } l \text{ относительно равенств из } \bm{S}(\Sigma)
 \]
-\[
-  \mu_{\bm{S_2}(\Sigma)}(l) \text{ --- нормальная форма } l \text{ относительно равенств из } \bm{S_2}(\Sigma)
-\]
+% \[
+%   \mu_{\bm{S_2}(\Sigma)}(l) \text{ --- нормальная форма } l \text{ относительно равенств из } \bm{S_2}(\Sigma)
+% \]
 
 \[
   S(\Sigma, L) \stackrel{def}{=} \{ l \in (\Sigma \cup \Sigma^{-1})^* \mid \mu_{\bm{S}(\Sigma)}(l) \in L\}
 \]
-\[
-  S_2(\Sigma, L) \stackrel{def}{=} \{ l \in (\Sigma \cup \Sigma^{-1})^* \mid \mu_{\bm{S_2}(\Sigma)}(l) \in L\}
-\]
+% \[
+%   S_2(\Sigma, L) \stackrel{def}{=} \{ l \in (\Sigma \cup \Sigma^{-1})^* \mid \mu_{\bm{S_2}(\Sigma)}(l) \in L\}
+% \]
 
+\begin{align*}
+  S^0(\Sigma) &= S(\Sigma, {\varepsilon}) \\
+  S^+(\Sigma) &= S(\Sigma, \Sigma^+) \\
+  S^*(\Sigma) &= S(\Sigma, \Sigma^*)
+\end{align*}
 
-\begin{columns}
-  \begin{column}{0.5\textwidth}
-    \begin{align*}
-      S^0(\Sigma) &= S(\Sigma, {\varepsilon}) \\
-      S^+(\Sigma) &= S(\Sigma, \Sigma^+) \\
-      S^*(\Sigma) &= S(\Sigma, \Sigma^*)
-    \end{align*}
-  \end{column}
-  \begin{column}{0.5\textwidth}
-    \begin{align*}
-      S^0_2(\Sigma) &= S(\Sigma, {\varepsilon}) \\
-      S^+_2(\Sigma) &= S(\Sigma, \Sigma^+) \\
-      S^*_2(\Sigma) &= S(\Sigma, \Sigma^*)
-    \end{align*}
-  \end{column}
-  \end{columns}
-
+% \begin{columns}ё
 \bigskip
 
   \[
@@ -599,16 +599,123 @@ $G$ --- граф унификации, $G^{-1}$ --- граф с обращенн
 \end{frame}
 
 \begin{frame}[fragile]
+  \frametitle{Критерий унифицируемости термов}
+
+\begin{center}
+  Два терма унифицируются тогда и только тогда, когда между ними есть путь унификации, нормальная форма которого --- $\varepsilon$
+\end{center}
+
+\begin{center}
+  Два терма унифицируются тогда и только тогда, когда между ними есть путь унификации, метка которого в полудиковом языке $S^0(\Sigma)$
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Логика над путями}
+\begin{columns}
+  \begin{column}{0.55\textwidth}
+    \begin{center}
+      \begin{minipage}{\textwidth}
+        \infer[, c : \gEdge{u}{\eta}{v} \in G]{\pu{c}{u}{\eta}{v}}{}
+      \end{minipage}
+    \end{center}
+  \end{column}
+  \begin{column}{0.45\textwidth}
+    \begin{center}
+      \begin{minipage}{\textwidth}
+        \infer[, u \in G]{\pu{\varepsilon}{u}{\varepsilon}{v}}{}
+      \end{minipage}
+    \end{center}
+  \end{column}
+\end{columns}
+
+\bigskip
+
+\begin{columns}
+  \begin{column}{0.45\textwidth}
+    \begin{center}
+      \begin{minipage}{\textwidth}
+        \infer[]{\pu{p^{-1}}{u}{\varepsilon}{v}}{\pu{p}{v}{\varepsilon}{u}}
+      \end{minipage}
+    \end{center}
+  \end{column}
+  \begin{column}{0.55\textwidth}
+    \begin{center}
+      \begin{minipage}{\textwidth}
+        \infer[]{\pu{pq}{u}{ll'}{v}}{\pu{p}{u}{l}{v'} \ \ \ \ \pu{q}{v'}{l'}{u}}
+      \end{minipage}
+    \end{center}
+  \end{column}
+\end{columns}
+
+\bigskip
+
+\begin{center}
+  \begin{minipage}{\textwidth}
+    \infer[, b : \gEdge{u'}{\delta}{u} \in G, b' : \gEdge{v'}{\delta}{v} \in G]{\pu{b^{-1} p b'}{u}{\varepsilon}{v}}{\pu{p}{u'}{\varepsilon}{v'}}
+  \end{minipage}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Вывод успешного пути}
+
+  \begin{center}
+    \begin{minipage}{\textwidth}
+      \infer[]
+      {\pu{p^{-1}f^{-1}hr}{t_7}{\varepsilon}{w_4}}
+      {\infer[]
+        {\pu{f^{-1}h}{w_2}{\varepsilon}{w_3}}
+        {
+          \infer[]{\pu{f^{-1}}{w_2}{\varepsilon}{t_6}}{\pu{f}{t_6}{\varepsilon}{w_2}} \ \ \ \ \pu{h}{t_6}{\varepsilon}{w_3}
+        }
+      }
+    \end{minipage}
+  \end{center}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Вывод успешного пути}
+
+  \begin{center}
+    \begin{minipage}{\textwidth}
+      \infer[]
+      {\pu{fqb^{-1}}{t_6}{\to_2}{t_2}}
+      {
+        \pu{f}{t_6}{\varepsilon}{w_2} \ \ \ \
+        \infer[]
+          {\pu{qb^{-1}}{w_2}{\to_2}{t_4}}
+          {\pu{q}{w_2}{\to_2}{t_4} \ \ \ \
+           \infer[]{\pu{b^{-1}}{t_4}{\varepsilon}{t_2}}{\pu{b}{t_2}{\varepsilon}{t_4}}
+          }
+      }
+    \end{minipage}
+  \end{center}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Вывод неуспешного пути}
+
+  \begin{center}
+    \begin{minipage}{\textwidth}
+      \infer[]
+      {\pu{mm^{-1}}{w_1}{\to_1 \to_{1}^{-1}}{w_1}}
+      {
+        \pu{m}{w_1}{\to_1}{t_1} \ \ \ \
+        \infer[]
+          {\pu{m^{-1}}{t_1}{\to_1^{-1}}{w_1}}
+          {\pu{m}{w_1}{\to_1 }{t_1}}
+      }
+    \end{minipage}
+  \end{center}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
   \frametitle{Алгоритмы унификации через поиск путей}
-
-\begin{center}
-  Два терма унифицируются, тогда и только тогда, когда между ними есть путь унификации, нормальная форма которого --- $\varepsilon$
-\end{center}
-
-\begin{center}
-  Два терма унифицируются, тогда и только тогда, когда между ними есть путь унификации, метка которого в полудиковом языке $S^0(\Sigma)$
-\end{center}
-
 \begin{itemize}
   \item Один алгоритм ищет кратчайшие пути, работает за $O(n^3)$
   \item Второй алгоритм интегрируется в стандартный алгоритм унификации, работает  на константу хуже и строит не самые маленькие доказательства унифицируемости (но и не самые плохие)
