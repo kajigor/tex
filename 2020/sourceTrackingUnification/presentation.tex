@@ -648,14 +648,14 @@ $G$ --- граф унификации, $G^{-1}$ --- граф с обращенн
   \begin{column}{0.55\textwidth}
     \begin{center}
       \begin{minipage}{\textwidth}
-        \infer[, c : \gEdge{u}{\eta}{v} \in G]{\pu{c}{u}{\eta}{v}}{}
+        \infer[, c : \gEdge{u}{\eta}{v} \in E(G)]{\pu{c}{u}{\eta}{v}}{}
       \end{minipage}
     \end{center}
   \end{column}
   \begin{column}{0.45\textwidth}
     \begin{center}
       \begin{minipage}{\textwidth}
-        \infer[, u \in G]{\pu{\varepsilon}{u}{\varepsilon}{v}}{}
+        \infer[, u \in V(G)]{\pu{\varepsilon}{u}{\varepsilon}{u}}{}
       \end{minipage}
     \end{center}
   \end{column}
@@ -674,7 +674,7 @@ $G$ --- граф унификации, $G^{-1}$ --- граф с обращенн
   \begin{column}{0.55\textwidth}
     \begin{center}
       \begin{minipage}{\textwidth}
-        \infer[]{\pu{pq}{u}{ll'}{v}}{\pu{p}{u}{l}{v'} \ \ \ \ \pu{q}{v'}{l'}{u}}
+        \infer[]{\pu{pq}{u}{ll'}{v}}{\pu{p}{u}{l}{v'} \ \ \ \ \pu{q}{v'}{l'}{v}}
       \end{minipage}
     \end{center}
   \end{column}
