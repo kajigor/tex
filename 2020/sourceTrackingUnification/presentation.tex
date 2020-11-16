@@ -1,4 +1,4 @@
-\documentclass{beamer}
+\documentclass[aspectratio=169]{beamer}
 \usepackage{beamerthemesplit}
 \usepackage{wrapfig}
 \usetheme{SPbGU}
@@ -34,6 +34,8 @@
 \newcommand{\derives}[1][*]{\xRightarrow[]{#1}}
 \newcommand{\gEdge}[3]{#1 \xlongrightarrow{#2} #3}
 \newcommand{\pu}[4]{G \vdash #1 : \gEdge{#2}{#3}{#4}}
+\newcommand{\ok}[1]{\textcolor{teal}{#1}}
+\newcommand{\notok}[1]{\textcolor{magenta}{#1}}
 
 \setlength{\inferLineSkip}{3pt}
 
@@ -53,14 +55,14 @@ initial text={}
 \tikzstyle{processTree} = [
   ->,
   sibling distance=5em,
-  % scale=0.6,
+  scale=0.9,
   every node/.style = {
     shape=rectangle,
     rounded corners=0.05cm,
     draw,
     align=center,
     minimum size=5mm,
-    % scale=0.6,
+    scale=0.9,
     },
   ]
 
@@ -84,7 +86,7 @@ initial text={}
 
 \author[]{Екатерина Вербицкая}
 
-\date{15 ноября 2020}
+\date{16 ноября 2020}
 
 \definecolor{orange}{RGB}{179,36,31}
 
@@ -103,7 +105,7 @@ initial text={}
 
   \bigskip
 
-  Путь --- доказательство унифицируемости термов
+  Путь --- доказательство (не)унифицируемости термов
 \end{center}
 \end{frame}
 
@@ -407,7 +409,9 @@ apply_f = apply f
 
   \begin{columns}
     \begin{column}{0.3\textwidth}
+      \begin{center}
         \input{biggraphfactor.tex}
+      \end{center}
     \end{column}
     \begin{column}{0.7\textwidth}
       \begin{center}
@@ -478,6 +482,31 @@ apply_f = apply f
 \end{frame}
 
 \begin{frame}[fragile]
+  \frametitle{Примеры строк полудикова языка}
+\[
+  \Sigma = \{ (, [ \}
+\]
+\[
+  \Sigma^{-1} = \{ ), ] \}
+\]
+
+\[
+  \ok{\varepsilon}, \ \ok{))((}, \ \ok{][][}, \ \ok{)][()(} \in S^0(\Sigma)
+\]
+\[
+  \notok{()}, \ \notok{))(}, \ \notok{])[(} \notin S^0{\Sigma}
+\]
+
+\[
+  \ok{(}, \ \ok{)[(}, \ \ok{)(()[(} \in S^*(\Sigma) \setminus S^0(\Sigma)
+\]
+\[
+  \notok{)}, \ \notok{)()} \notin S^*(\Sigma)
+\]
+\end{frame}
+
+
+\begin{frame}[fragile]
   \frametitle{Пути унификации: обращение ребер}
 
   \begin{center}
@@ -520,11 +549,14 @@ apply_f = apply f
 
 \begin{frame}[fragile]
   \frametitle{Пути унификации}
-\textit{Путь унификации} --- такой путь $p$ в графе $G \cup G^{-1}$, что нормальная форма его метки $\mu_{\bm{S}(\Sigma)}(l(p)) \in \Sigma^*$
+  \begin{center}
+    \textit{Путь унификации} --- такой путь $p$ в графе $G \cup G^{-1}$, что нормальная форма его метки $\mu_{\bm{S}(\Sigma)}(l(p)) \in \Sigma^*$
 
 \bigskip
 
 $G$ --- граф унификации, $G^{-1}$ --- граф с обращенными ребрами
+  \end{center}
+
 \end{frame}
 
 \begin{frame}[fragile]
@@ -660,57 +692,85 @@ $G$ --- граф унификации, $G^{-1}$ --- граф с обращенн
 \begin{frame}[fragile]
   \frametitle{Вывод успешного пути}
 
-  \begin{center}
-    \begin{minipage}{\textwidth}
-      \infer[]
-      {\pu{p^{-1}f^{-1}hr}{t_7}{\varepsilon}{w_4}}
-      {\infer[]
-        {\pu{f^{-1}h}{w_2}{\varepsilon}{w_3}}
-        {
-          \infer[]{\pu{f^{-1}}{w_2}{\varepsilon}{t_6}}{\pu{f}{t_6}{\varepsilon}{w_2}} \ \ \ \ \pu{h}{t_6}{\varepsilon}{w_3}
-        }
-      }
-    \end{minipage}
-  \end{center}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{center}
+        \begin{minipage}{\textwidth}
+          \infer[]
+          {\pu{p^{-1}f^{-1}hr}{t_7}{\varepsilon}{w_4}}
+          {\infer[]
+            {\pu{f^{-1}h}{w_2}{\varepsilon}{w_3}}
+            {
+              \infer[]{\pu{f^{-1}}{w_2}{\varepsilon}{t_6}}{\pu{f}{t_6}{\varepsilon}{w_2}} \ \ \ \ \pu{h}{t_6}{\varepsilon}{w_3}
+            }
+          }
+        \end{minipage}
+      \end{center}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{center}
+        \input{biggraphlettered.tex}
+      \end{center}
+    \end{column}
+    \end{columns}
+
+
 
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Вывод успешного пути}
 
-  \begin{center}
-    \begin{minipage}{\textwidth}
-      \infer[]
-      {\pu{fqb^{-1}}{t_6}{\to_2}{t_2}}
-      {
-        \pu{f}{t_6}{\varepsilon}{w_2} \ \ \ \
-        \infer[]
-          {\pu{qb^{-1}}{w_2}{\to_2}{t_4}}
-          {\pu{q}{w_2}{\to_2}{t_4} \ \ \ \
-           \infer[]{\pu{b^{-1}}{t_4}{\varepsilon}{t_2}}{\pu{b}{t_2}{\varepsilon}{t_4}}
+  \begin{columns}
+    \begin{column}{0.55\textwidth}
+      \begin{center}
+        \footnotesize
+        \begin{minipage}{\textwidth}
+          \infer[]
+          {\pu{fqb^{-1}}{t_6}{\to_2}{t_2}}
+          {
+            \pu{f}{t_6}{\varepsilon}{w_2} \ \
+            \infer[]
+              {\pu{qb^{-1}}{w_2}{\to_2}{t_2}}
+              {\pu{q}{w_2}{\to_2}{t_4} \ \
+               \infer[]{\pu{b^{-1}}{t_4}{\varepsilon}{t_2}}{\pu{b}{t_2}{\varepsilon}{t_4}}
+              }
           }
-      }
-    \end{minipage}
-  \end{center}
-
+        \end{minipage}
+      \end{center}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      \begin{center}
+        \input{biggraphlettered3.tex}
+      \end{center}
+    \end{column}
+    \end{columns}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Вывод неуспешного пути}
 
-  \begin{center}
-    \begin{minipage}{\textwidth}
-      \infer[]
-      {\pu{mm^{-1}}{w_1}{\to_1 \to_{1}^{-1}}{w_1}}
-      {
-        \pu{m}{w_1}{\to_1}{t_1} \ \ \ \
-        \infer[]
-          {\pu{m^{-1}}{t_1}{\to_1^{-1}}{w_1}}
-          {\pu{m}{w_1}{\to_1 }{t_1}}
-      }
-    \end{minipage}
-  \end{center}
-
+  \begin{columns}
+    \begin{column}{0.48\textwidth}
+      \begin{center}
+        \begin{minipage}{\textwidth}
+          \infer[]
+          {\pu{mm^{-1}}{w_1}{\to_1 \to_{1}^{-1}}{w_1}}
+          {
+            \pu{m}{w_1}{\to_1}{t_1} \ \ \ \
+            \infer[]
+              {\pu{m^{-1}}{t_1}{\to_1^{-1}}{w_1}}
+              {\pu{m}{w_1}{\to_1 }{t_1}}
+          }
+        \end{minipage}
+      \end{center}
+    \end{column}
+    \begin{column}{0.52\textwidth}
+      \begin{center}
+        \input{biggraphlettered4.tex}
+      \end{center}
+    \end{column}
+    \end{columns}
 \end{frame}
 
 
@@ -718,7 +778,7 @@ $G$ --- граф унификации, $G^{-1}$ --- граф с обращенн
   \frametitle{Алгоритмы унификации через поиск путей}
 \begin{itemize}
   \item Один алгоритм ищет кратчайшие пути, работает за $O(n^3)$
-  \item Второй алгоритм интегрируется в стандартный алгоритм унификации, работает  на константу хуже и строит не самые маленькие доказательства унифицируемости (но и не самые плохие)
+  \item Второй алгоритм интегрируется в стандартный алгоритм унификации, работает  на константу хуже и строит не самые маленькие доказательства унифицируемости \\ (но и не самые плохие)
 \end{itemize}
 \end{frame}
 
