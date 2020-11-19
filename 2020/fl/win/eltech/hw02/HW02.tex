@@ -1,0 +1,78 @@
+\documentclass[12pt]{article}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage[utf8x]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{cmap}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{url}
+\usepackage{pifont}
+\usepackage{tikz}
+\usepackage{verbatim}
+
+\usetikzlibrary{shapes,arrows}
+\usetikzlibrary{positioning,automata}
+\tikzset{every state/.style={minimum size=0.2cm},
+initial text={}
+}
+
+\begin{document}
+\begin{center} {\LARGE Формальные языки} \end{center}
+
+\begin{center} \Large домашнее задание до 23:59 29.10 \end{center}
+\bigskip
+
+\begin{enumerate}
+  \item
+  {
+    Привести однозначную контекстно-свободную грамматику для языка арифметических выражений над положительными целыми \emph{числами} с операциями \verb!+!, \verb!-!, \verb!*!, \verb!/!, \verb!^!, \verb!==!,\verb!<>!, \verb!<!, \verb!<=!, \verb!>!, \verb!>=! со следующими приоритетами и ассоциативностью:
+
+  \begin{center}
+    \begin{tabular}{ c | c }
+      Наибольший приоритет & Ассоциативность  \\ \hline \hline
+      \verb!^! & Правоассоциативна \\
+     \verb!*!,\verb!/! & Левоассоциативна \\
+     \verb!+!,\verb!-! & Левоассоциативна \\
+     \verb!==!,\verb!<>!, \verb!<!,\verb!<=!, \verb!>!,\verb!>=! & Неассоциативна \\ \hline \hline
+     Наименьший приоритет & Ассоциативность
+    \end{tabular}
+    \end{center}
+
+
+    Неассоциативные операции встречаются только один раз: \verb!1 == 2! -- корректная строка, \verb!1 == 2 == 3!, \verb!(1 == 2) == 3!, \verb!1 < 2 > 3! --- некорректные строки
+  }
+  \item Привести грамматику из 1 задания в нормальную форму Хомского.
+  \item Промоделировать работу алгоритма CYK на грамматике из 2 задания на трех корректных строках не короче 7 символов и на трех некорректных строках. (Привести таблицы и деревья вывода)
+\end{enumerate}
+
+\bigskip
+
+\begin{center}
+  \Large{Примеры оформления грамматик и таблиц}
+\end{center}
+
+\begin{center}
+  \begin{align*}
+    S' &\to A B \mid \varepsilon \\
+    S  &\to A B \\
+    A  &\to L S \mid ( \\
+    B  &\to R S \mid \ ) \\
+    L  &\to ( \\
+    R  &\to \ )
+  \end{align*}
+\end{center}
+
+
+\begin{center}
+  \begin{tabular}{ c || c | c | c | c | c | c | }
+      &  1  &  2  &  3  &  4  &  5  &  6   \\ \hline \hline
+    1 & A L &     &  A  &     &  A  & S S' \\ \hline
+    2 &     & A L &  S  &     &  S  &      \\ \hline
+    3 &     &     & B R &     &  B  &      \\ \hline
+    4 &     &     &     & A L &  S  &      \\ \hline
+    5 &     &     &     &     & B R &      \\ \hline
+    6 &     &     &     &     &     & B R  \\ \hline
+  \end{tabular}
+  \end{center}
+
+\end{document}
