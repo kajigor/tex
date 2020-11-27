@@ -77,7 +77,7 @@
 
 \author[]{Екатерина Вербицкая}
 
-\date{21 ноября 2019}
+\date{27 ноября 2020}
 
 \definecolor{orange}{RGB}{179,36,31}
 
@@ -236,15 +236,17 @@
   \end{itemize}
   \item Отношение $\vdash$ на мгновенных описаниях (шаг)
   \begin{itemize}
-  	\item Для каждого $(\state{q}, \stack{a}) \in \trans{p}{a}{A}$, верно $\conf{p}{a x}{A \gamma} \vdash \conf{q}{x}{\alpha \gamma}$ для произвольных $x \in \Sigma^*, \gamma \in \Gamma^*$
+  	\item Для каждого $(\state{q}, \stack{\alpha}) \in \trans{p}{a}{A}$, верно $\conf{p}{a x}{A \gamma} \vdash \conf{q}{x}{\alpha \gamma}$ для произвольных $x \in \Sigma^*, \gamma \in \Gamma^*$
   \end{itemize}
-  % \item В недетерминированных магазинных автоматах может существовать несколько шагов
-  % \begin{itemize}
-  %   \item Можно выбрать любой
-  %   \item Если какой-нибудь выбор приведет к успеху, значит, строка распознается
-  % \end{itemize}
   \item Шаг не определен, если стек пуст
 \end{itemize}
+
+\begin{myauto}
+  \node[state]   (q_1)                 {$\state{p}$};
+  \node[state]   (q_2)  [right=of q_1] {$\state{q}$};
+
+  \path[->] (q_1) edge node [above] {$\symbl{a}; \stack{A / \alpha}$} (q_2);
+\end{myauto}
 
 \end{frame}
 
@@ -322,7 +324,7 @@
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Пример: язык $\{ 0^n 1^m \mid 0 \leq m \leq n \}$ (опустошение стека)}
+  \frametitle{Пример: язык $\{ 0^n 1^m \mid 1 \leq m \leq n \}$ (опустошение стека)}
   \begin{myauto}
     \node[state,initial]   (p)              {$\state{p}$};
     \node[state]           (q) [right=of p] {$\state{q}$};
@@ -344,7 +346,7 @@
 
 Вычисление на строке $001$:
 \begin{itemize}
-  \item $\conf{p}{001}{\bot} \vdash \conf{p}{01}{A\bot} \vdash \conf{p}{1}{AA\bot} \vdash \conf{q}{\varepsilon}{A\bot} \vdash \conf{q}{\varepsilon}{\bot} \vdash \conf{q}{\varepsilon}{\varepsilon}  $ --- успех
+  \item $\conf{p}{001}{\bot} \vdash \conf{p}{01}{A\bot} \vdash \conf{p}{1}{AA\bot} \vdash \conf{q}{\varepsilon}{A\bot} \vdash \conf{q}{\varepsilon}{\bot} \vdash \conf{q}{\varepsilon}{\varepsilon}$ --- успех
 \end{itemize}
 \end{frame}
 
@@ -367,7 +369,7 @@
 
   Вычисление на строке $110c011$:
   \begin{itemize}
-    \item $\conf{p}{110c011}{\bot} \vdash \conf{p}{10c011}{G\bot} \vdash \conf{p}{0c011}{GG\bot} \vdash \conf{p}{c011}{BGG\bot} \vdash \conf{q}{011}{BGG\bot} \vdash \conf{q}{11}{GG\bot} \vdash \conf{q}{1}{G\bot} \vdash \conf{q}{\varepsilon}{\bot} \vdash  \conf{q}{\varepsilon}{\varepsilon}$ --- успех
+    \item $\conf{p}{110c011}{\bot} \vdash \conf{p}{10c011}{G\bot} \vdash \conf{p}{0c011}{GG\bot} \vdash \conf{p}{c011}{BGG\bot} \vdash \conf{q}{011}{BGG\bot} \vdash \conf{q}{11}{GG\bot} \vdash \conf{q}{1}{G\bot} \vdash \conf{q}{\varepsilon}{\bot} \vdash \conf{q}{\varepsilon}{\varepsilon}$ --- успех
   \end{itemize}
 
 \end{frame}
@@ -383,7 +385,7 @@
     \item $\Gamma$ --- конечное множество символов, стековый алфавит
     \item $\delta: Q \times (\Sigma \cup \varepsilon) \times \Gamma \to Q \times \Gamma^*$ --- функция переходов
     \begin{itemize}
-      \item $\forall q \in Q, \bot \in \Gamma:$ если есть эпсилон-переход $\delta(q, \varepsilon, \bot)$ то нет переходов по терминалам $\delta(q, a, \bot)$
+      \item $\forall q \in Q, Z \in \Gamma:$ если есть эпсилон-переход $\delta(q, \varepsilon, Z)$ то нет переходов по терминалам $\delta(q, a, Z)$
     \end{itemize}
     \item $q_0 \in Q$ --- стартовое состояние
     \item $\bot \in \Gamma$ --- начальный элемент стека
@@ -457,7 +459,7 @@
 
   Вычисление на строке $(())()$:
   \begin{itemize}
-    \item $\conf{q}{(())()}{S} \vdash \conf{q}{(())()}{(S)S} \vdash \conf{q}{())()}{S)S} \vdash \conf{q}{())()}{(S)S)S} \vdash \conf{q}{))()}{S)S)S} \vdash \conf{q}{))()}{)S)S} \vdash \conf{q}{)()}{S)S} \vdash \conf{q}{)()}{)S} \vdash \conf{q}{()}{S} \vdash \conf{q}{()}{(S)S} \vdash \conf{q}{)}{S)S} \vdash \conf{q}{)}{)S} \vdash \conf{q}{\varepsilon}{S} \vdash \conf{q}{\varepsilon}{\varepsilon} \vdash $--- успех
+    \item $\conf{q}{(())()}{S} \vdash \conf{q}{(())()}{(S)S} \vdash \conf{q}{())()}{S)S} \vdash \conf{q}{())()}{(S)S)S} \vdash \conf{q}{))()}{S)S)S} \vdash \conf{q}{))()}{)S)S} \vdash \conf{q}{)()}{S)S} \vdash \conf{q}{)()}{)S} \vdash \conf{q}{()}{S} \vdash \conf{q}{()}{(S)S} \vdash \conf{q}{)}{S)S} \vdash \conf{q}{)}{)S} \vdash \conf{q}{\varepsilon}{S} \vdash \conf{q}{\varepsilon}{\varepsilon}$ --- успех
   \end{itemize}
 \end{frame}
 
@@ -496,7 +498,7 @@
 
   Вычисление на строке $(())()$:
   \begin{itemize}
-    \item $\conf{q}{(())()}{S} \vdash \conf{q}{())()}{SRS} \vdash \conf{q}{))()}{RRS} \vdash \conf{q}{)()}{RS} \vdash \conf{q}{()}{S} \vdash \conf{q}{)}{R} \vdash \conf{q}{\varepsilon}{\varepsilon} \vdash  $--- успех
+    \item $\conf{q}{(())()}{S} \vdash \conf{q}{())()}{SRS} \vdash \conf{q}{))()}{RRS} \vdash \conf{q}{)()}{RS} \vdash \conf{q}{()}{S} \vdash \conf{q}{)}{R} \vdash \conf{q}{\varepsilon}{\varepsilon}$ --- успех
   \end{itemize}
 \end{frame}
 
@@ -506,7 +508,7 @@
     \item По магазинному автомату $(Q, \Sigma, \Gamma, \delta, q_0, \bot, F)$ строим грамматику $(V_N, V_T, P, S)$
     \item $V_N = \{S\} \cup \{[\state{q}\stack{A}\state{p}] \mid p, q \in Q, A \in \Gamma\}$
     \item $V_T = \Sigma$
-    \item $P = \{S \to [\state{q_0} \stack{\bot} \state{q}] \mid \state{q} \in Q\} \cup $ \\ $\ \ \ \ \ \ \{[\state{q}\stack{A}\state{q_{m+1}}] \to \symbl{a} [\state{q_1} \stack{B_1} \state{q_2}] [\state{q_2} \stack{B_2} \state{q_3}] \dots [\state{q_m} \stack{B_m} \state{q_{m+1}}] \mid $ \\ $\ \ \ \ \ \ \ \ \ \ \ \ \ \ \state{q_i} \in Q; \symbl{a} \in \Sigma \cup \{\varepsilon\}; \stack{A}, \stack{B_j} \in \Gamma; (\state{q_1}, \stack{B_1} \stack{B_2} \dots \stack{B_m}) \in \delta(\state{q}, \symbl{a}, \stack{A})\} \cup $ \\ $\ \ \ \ \ \ \{[\state{q} \stack{A} \state{p}] \to a \mid (\state{p}, \stack{\varepsilon}) \in \delta(\state{q}, \symbl{a}, \stack{A})\}$
+    \item $P = \{S \to [\state{q_0} \stack{\bot} \state{q}] \mid \state{q} \in Q\} \ \cup $ \\ $\ \ \ \ \ \ \{[\state{q}\stack{A}\state{q_{m+1}}] \to \symbl{a} [\state{q_1} \stack{B_1} \state{q_2}] [\state{q_2} \stack{B_2} \state{q_3}] \dots [\state{q_m} \stack{B_m} \state{q_{m+1}}] \mid $ \\ $\ \ \ \ \ \ \ \ \ \ \ \ \ \ \state{q_i} \in Q; \symbl{a} \in \Sigma \cup \{\varepsilon\}; \stack{A}, \stack{B_j} \in \Gamma; (\state{q_1}, \stack{B_1} \stack{B_2} \dots \stack{B_m}) \in \delta(\state{q}, \symbl{a}, \stack{A})\} \cup $ \\ $\ \ \ \ \ \ \{[\state{q} \stack{A} \state{p}] \to a \mid (\state{p}, \stack{\varepsilon}) \in \delta(\state{q}, \symbl{a}, \stack{A})\}$
   \end{itemize}
 \end{frame}
 
