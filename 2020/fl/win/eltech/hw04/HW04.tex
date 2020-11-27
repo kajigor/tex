@@ -1,0 +1,80 @@
+\documentclass[12pt]{article}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage[utf8x]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{cmap}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{url}
+\usepackage{pifont}
+\usepackage{tikz}
+\usepackage{verbatim}
+\usepackage{xcolor}
+
+\usetikzlibrary{shapes,arrows}
+\usetikzlibrary{positioning,automata}
+\tikzset{every state/.style={minimum size=0.2cm},
+initial text={}
+}
+
+
+\newcommand{\state}[1]{{\color{red}{#1}}}
+\newcommand{\stack}[1]{{\color{blue}{#1}}}
+\newcommand{\symbl}[1]{{\color{teal}{#1}}}
+\newcommand{\conf}[3]{( \state{#1},\symbl{#2},\stack{#3} )}
+\newcommand{\trans}[3]{\delta ( \state{#1},\symbl{#2},\stack{#3} )}
+
+\newenvironment{myauto}[1][3]
+{
+  \begin{center}
+    \begin{tikzpicture}[> = stealth,node distance=#1cm, on grid, very thick]
+}
+{
+    \end{tikzpicture}
+  \end{center}
+}
+
+\begin{document}
+\begin{center} {\LARGE Формальные языки} \end{center}
+
+\begin{center} \Large домашнее задание до 23:59 03.12 \end{center}
+\bigskip
+
+\begin{enumerate}
+  \item
+  {
+    Построить магазинный автомат, распознающий язык $\{\omega \omega^R \mid \omega \in \{0,1\}^*\}$
+  }
+  \item
+  {
+    Построить контекстно-свободную грамматику по магазинному автомату для языка \[\{0^n 1^m \mid 1 \leq m \leq n \}\]
+
+    \begin{myauto}
+      \node[state,initial]   (p)              {$\state{p}$};
+      \node[state]           (q) [right=of p] {$\state{q}$};
+
+      \path[->] (p) edge [loop above]    node [left] {$\symbl{0}; \stack{\bot / A\bot}$} ()
+                    edge [loop below]    node [left] {$\symbl{0}; \stack{A / AA}$} ()
+                    edge node [below] {$\symbl{1}; \stack{A / \varepsilon}$} (q)
+                (q) edge [loop above]    node [above] {$\symbl{1}; \stack{A / \varepsilon}$} ()
+                    edge [loop below]    node [below] {$\symbl{\varepsilon}; \stack{\bot / \varepsilon}$} ()
+                    edge [loop right]    node [right] {$\symbl{\varepsilon}; \stack{A / \varepsilon}$} ()
+                ;
+    \end{myauto}
+  }
+  \item
+  {
+    Построить магазинный автомат для языка арифметических выражений в префиксной нотации с операциями $+$ и $*$ над числами $0$ и $1$.
+  }
+
+  \item
+  {
+    Определить, являются ли следующие языки контекстно свободными. Если являются, привести КС грамматику, иначе --- доказать.
+    \begin{itemize}
+      \item $\{\omega \omega \omega \mid \omega \in \{0, 1\}^*\}$
+      \item $\{a^k b^m b^n a^m \mid n \geq k \geq 0, m \geq 0\}$
+      \item $\{a^{n^2} \mid n > 0 \}$
+    \end{itemize}
+  }
+\end{enumerate}
+\end{document}
