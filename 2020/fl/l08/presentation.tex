@@ -386,7 +386,7 @@ $$
 
 &E  & \rightarrow & T       &                                & E.val = T.val \\~\\
 
-&T_0& \rightarrow & T_1 + F & \{ MUL.res = op_1 * op_2 \} & MUL.op_1 = T_1.val \\
+&T_0& \rightarrow & T_1 * F & \{ MUL.res = op_1 * op_2 \} & MUL.op_1 = T_1.val \\
 &   &             &         &                                & MUL.op_2 = F.val \\
 &   &             &         &                                & T_0.val = MUL.res \\~\\
 
