@@ -1,0 +1,53 @@
+\documentclass[12pt]{article}
+\usepackage[left=2cm,right=2cm,top=1cm,bottom=1cm,bindingoffset=0cm]{geometry}
+\usepackage[utf8x]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{cmap}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{pifont}
+\usepackage{tikz}
+\usepackage{verbatim}
+
+\pagenumbering{gobble}
+
+\begin{document}
+
+\begin{center}
+{\LARGE Формальные языки}
+
+{\Large Проект для Овчинникова Сергея}
+
+\end{center}
+
+\bigskip
+
+\begin{enumerate}
+  \item {Реализовать синтаксический анализатор для языка с базовым синтаксисом и поддержкой многострочных комментариев с контролем вложенности. }
+  \begin{itemize}
+    \item Корректные многострочные комментарии могут содержать любой код внутри, но должны контролировать правильную вложенность других многострочных комментариев :
+    \begin{itemize}
+      \item \verb!/* this is a comment */ !
+      \item  \verb!/* /* /* this */ comment is \n */ /* also correct */ */ !
+    \end{itemize}
+    \item Некорректные многостроные комментарии:
+    \begin{itemize}
+      \item \verb!/* */ */!
+      \item \verb!/* * /!
+    \end{itemize}
+    \item Можно использовать любой способ писать парсер.
+    \item Для языка предложить свой конкретный синтаксис. Описание конкретного синтаксиса прислать не позднее 20 декабря.
+    \item Реализацию парсера прислать не позднее 23:59 9 января.
+    \item Не позднее дня перед экзаменом надо будет созвониться, чтобы вы мне рассказали, что как работает. Созваниваться будем после того, как будет зачтен код.
+    \item Скорее всего потребуется несколько итераций проверки, не затягивайте.
+    \item В конце файла требования к оформлению, их надо соблюдать.
+  \end{itemize}
+
+\end{enumerate}
+
+\input{basicSyntax.tex}
+
+\bigskip
+
+\input{rules.tex}
+\end{document}

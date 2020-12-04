@@ -1,0 +1,49 @@
+\documentclass[12pt]{article}
+\usepackage[left=2cm,right=2cm,top=1cm,bottom=1cm,bindingoffset=0cm]{geometry}
+\usepackage[utf8x]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{cmap}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{pifont}
+\usepackage{tikz}
+\usepackage{verbatim}
+
+\pagenumbering{gobble}
+
+\begin{document}
+
+\begin{center}
+{\LARGE Формальные языки}
+
+{\Large Проект для Чигалейчик Александра}
+
+\end{center}
+
+\bigskip
+
+\begin{enumerate}
+  \item {Реализовать синтаксический анализатор для языка с базовым синтаксисом и оптимизацией арифметических выражений. }
+  \begin{itemize}
+    \item Чем больше правил оптимизации арифметических выражений предложите, тем лучше. Примеры оптимизаций:
+    \begin{itemize}
+      \item \verb!x * 0! $\to$ \verb!0!.
+      \item \verb!1 * y + z! $\to$ \verb!y + z!.
+      \item \verb!1*2+3*4-5! $\to$ \verb!9!.
+    \end{itemize}
+    \item Можно использовать любой способ писать парсер.
+    \item Для языка предложить свой конкретный синтаксис. Описание конкретного синтаксиса прислать не позднее 20 декабря.
+    \item Реализацию парсера прислать не позднее 23:59 9 января.
+    \item Не позднее дня перед экзаменом надо будет созвониться, чтобы вы мне рассказали, что как работает. Созваниваться будем после того, как будет зачтен код.
+    \item Скорее всего потребуется несколько итераций проверки, не затягивайте.
+    \item В конце файла требования к оформлению, их надо соблюдать.
+  \end{itemize}
+
+\end{enumerate}
+
+\input{basicSyntax.tex}
+
+\bigskip
+
+\input{rules.tex}
+\end{document}

@@ -1,0 +1,49 @@
+\documentclass[12pt]{article}
+\usepackage[left=2cm,right=2cm,top=1cm,bottom=1cm,bindingoffset=0cm]{geometry}
+\usepackage[utf8x]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{cmap}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{pifont}
+\usepackage{tikz}
+\usepackage{verbatim}
+
+\pagenumbering{gobble}
+
+\begin{document}
+
+\begin{center}
+{\LARGE Формальные языки}
+
+{\Large Проект для Дерябиной Полины}
+
+\end{center}
+
+\bigskip
+
+\begin{enumerate}
+  \item {Реализовать синтаксический анализатор для языка с базовым синтаксисом и простой оптимизацией условных выражений. }
+  \begin{itemize}
+    \item Если в условии находится арифметическое выражение, значение которого однозначно можно вычислить к некоторому числу, то избавиться от if-выражения, заменив на подходящую ветвь вычислений. Иначе ничего не изменять. Не нужно делать сложный анализ, достаточно ограничиться ситуациями, когда значение выражения посчитать легко.
+    \begin{itemize}
+      \item \verb!if 0 then x := 13 else x := 42! $\to$ \verb!x := 13!.
+      \item \verb!if --(x == x) then x := 13 else {}! $\to$ пустая последовательность инструкций (ветка \verb!else! пуста).
+      \item \verb!if x == y then x := 13 else {}! $\to$ \verb!if x == y then x := 13 else {}! (при условии, что значения переменных неизвестны)
+    \end{itemize}
+    \item Можно использовать любой способ писать парсер.
+    \item Для языка предложить свой конкретный синтаксис. Описание конкретного синтаксиса прислать не позднее 20 декабря.
+    \item Реализацию парсера прислать не позднее 23:59 9 января.
+    \item Не позднее дня перед экзаменом надо будет созвониться, чтобы вы мне рассказали, что как работает. Созваниваться будем после того, как будет зачтен код.
+    \item Скорее всего потребуется несколько итераций проверки, не затягивайте.
+    \item В конце файла требования к оформлению, их надо соблюдать.
+  \end{itemize}
+
+\end{enumerate}
+
+\input{basicSyntax.tex}
+
+\bigskip
+
+\input{rules.tex}
+\end{document}
