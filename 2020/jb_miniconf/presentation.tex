@@ -21,6 +21,7 @@
 \usepackage{mdframed}
 \usepackage{multicol}
 \usepackage{graphicx}
+\usepackage{xspace}
 \newcommand{\cmark}{\ding{51}}%
 \newcommand{\xmark}{\ding{55}}%
 
@@ -75,7 +76,7 @@ moredelim=[is][\bfseries]{[*}{*]}
 
 \newmdenv[backgroundcolor=HappyGreen, innertopmargin=8,innerbottommargin=1, linecolor=HappyGreen]{goodcode}
 
-\newcommand{\miniKanren}{\texttt{miniKanren}}
+\newcommand{\miniKanren}{\texttt{miniKanren}\xspace}
 
 \title[]{Специализация \miniKanren: почему так сложно}
 \institute[]{
@@ -84,7 +85,7 @@ moredelim=[is][\bfseries]{[*}{*]}
 
 \author[Екатерина Вербицкая]{Екатерина Вербицкая}
 
-\date{18 декабря 2020}
+\date{19 декабря 2020}
 
 \definecolor{orange}{RGB}{179,36,31}
 
@@ -172,7 +173,7 @@ eval$^o$ p 5 5 &&&  eval$^o$ p 6 8
   интерпретаторов}
   \begin{itemize}
     \item Реализовать функциональный интерпретатор
-    \item Транслировать функциональный интерпрератор на \miniKanren
+    \item Транслировать функциональный интерпретатор на \miniKanren
     \item Запустить реляционный интерпретатор в обратном направлении
   \end{itemize}
 
@@ -202,7 +203,7 @@ eval$^o$ p 5 5 &&&  eval$^o$ p 6 8
 
 \begin{itemize}
   \item Реализовать консервативную частичную дедукцию для \miniKanren
-  \item Поэкспериментировать с суперкмопиляцией для \miniKanren
+  \item Поэкспериментировать с суперкомпиляцией для \miniKanren
   \item Реализовать трансляцию реляционных программ в функциональные
   \item Сравнить и выбрать самую адекватную стратегию
 \end{itemize}
@@ -213,9 +214,19 @@ eval$^o$ p 5 5 &&&  eval$^o$ p 6 8
 
     \begin{center}
     \begin{minipage}[h]{0.85\textwidth}
-      \begin{tikzpicture}[->,node distance=1cm, sibling distance=4cm, scale=0.8, every node/.style={scale=0.8}]
+      \begin{tikzpicture}[remember picture,overlay,->,node distance=1cm, sibling distance=4cm, scale=0.8, every node/.style={scale=0.8}]
         \tikzstyle{conf}=[rectangle,draw, rounded corners=.8ex,align=center]
-          \node[conf] (0) {\textit{Unfolding} \\ \lstinline{len$^o$ x n $\wedge$ len$^o$ y n}};
+        \node[rectangle, draw, anchor=north west, xshift=0.6cm, yshift=-1.7cm] (code) at (current page.north west) {
+          \begin{lstlisting}
+len$^o$ l n =
+  (l === [] &&& n === 0)
+  ||| (fresh h t m
+        ( l === h : t
+        &&& n === 1 + m
+        &&& len$^o$ t m))
+          \end{lstlisting}
+      };
+          \node[conf, right=of code, yshift=-2.5cm, xshift=-0.3cm] (0) {\textit{Unfolding} \\ \lstinline{len$^o$ x n $\wedge$ len$^o$ y n}};
           \node[conf,below left=of 0, xshift=-1.5cm] (10) {\textit{Success} \\ $x \mapsto [],$ \\ $y \mapsto [],$ \\ $n \mapsto 0$};
           \node[conf,right=of 10] (11) {\textit{Fail} \\ $x \mapsto [],$ \\ $y \mapsto (h:t)$, \\ $\dots$};
           \node[conf,right=of 11] (12) {\textit{Fail} \\ $x \mapsto (h:t),$ \\ $y \mapsto [],$ \\ $\dots$};
@@ -237,9 +248,19 @@ eval$^o$ p 5 5 &&&  eval$^o$ p 6 8
 
     \begin{center}
     \begin{minipage}[h]{0.7\textwidth}
-      \begin{tikzpicture}[->,node distance=1cm, sibling distance=4cm, scale=0.8, every node/.style={scale=0.8}, tips=proper]
+      \begin{tikzpicture}[remember picture,overlay,->,node distance=1cm, sibling distance=4cm, scale=0.8, every node/.style={scale=0.8}, tips=proper]
         \tikzstyle{conf}=[rectangle,draw, rounded corners=.8ex,align=center]
-        \node[conf] (0) {\textit{Split} \\ \lstinline{len$^o$ x n $\wedge$ len$^o$ y n}};
+        \node[rectangle, draw, anchor=north west, xshift=0.6cm, yshift=-1.7cm] (code) at (current page.north west) {
+          \begin{lstlisting}
+len$^o$ l n =
+  (l === [] &&& n === 0)
+  ||| (fresh h t m
+        ( l === h : t
+        &&& n === 1 + m
+        &&& len$^o$ t m))
+          \end{lstlisting}
+      };
+        \node[conf, right=of code, yshift=-1cm] (0) {\textit{Split} \\ \lstinline{len$^o$ x n $\wedge$ len$^o$ y n}};
         \node[conf, below=of 0, xshift=-3cm] (10) {\textit{Unfolding} \\ \lstinline{len$^o$ x n}};
         \node[conf, below=of 10, xshift=-1.5cm] (20) {\textit{Success} \\ $x \mapsto []$ \\ $n \mapsto 0$};
         \node[conf, below=of 10, xshift=1.5cm] (21) {\textit{Renaming} \\ $x \mapsto (h:t)$ \\ $n \mapsto 1+m$ \\ \lstinline{len$^o$ t m}};
@@ -313,28 +334,68 @@ eval$^o$ p 5 5 &&&  eval$^o$ p 6 8
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Причина непредсказуемой производительности}
-  \begin{itemize}
-    \item Производительность измеряется как время, необходимое для получения первых $n$ ответов
-    \item При трансляции порядок ответов изменяется
-    \item Когда первыми начинают вычисляться более ``сложные'' ответы, на их вычисление требуется больше времени
-  \end{itemize}
-
-  \begin{itemize}
-    \item Но! Специализация уменьшает количество элементарных операций, выполняемых при поиске отдельных ответов
-  \end{itemize}
+  \frametitle{Главная причина непредсказуемой производительности}
+  \begin{center}
+    \miniKanren \textbf{очень} чувствителен к порядку дизъюнктов и конъюнктов
+  \end{center}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Что делать?}
-  \begin{itemize}
-    \item Гарантировать тот же порядок ответов \pause (сложно) \pause
-    \item Измерять производительность только на программах, возвращающих конечное множество ответов \pause (бесполезно) \pause
-    \item Замерять время, необходимое на каждый ответ \pause (нереалистично) \pause
-    \item Подсчитывать количество элементарных операций, выполненных для получения каждого ответа \pause (показательно)
-  \end{itemize}
-\end{frame}
+  \frametitle{Влияние порядка дизъюнктов на производительность}
+\begin{columns}
+  \begin{column}[]{0.5\textwidth}
+    \begin{center}
+      \begin{minipage}{4.3cm}
+      \begin{lstlisting}[frame=single,backgroundcolor = \color{HappyGreen}]
+  eval$^o$ p s r =
+    (p === Var v    &&&
+     lookup$^o$ s v r)
+    |||
+    (p === Neg x    &&&
+     eval$^o$ x s rx &&&
+     not$^o$ rx r)
+    |||
+    (p === Conj x y &&&
+     eval$^o$ x s rx &&&
+     eval$^o$ y s ry &&&
+     and$^o$ rx ry r)
+    |||
+    (p === Disj x y &&&
+     eval$^o$ x s rx &&&
+     eval$^o$ y s ry &&&
+     or$^o$ rx ry r)
+      \end{lstlisting}
+      \end{minipage}
+  \end{center}
+  \end{column}
+  \begin{column}[]{0.5\textwidth}
+    \begin{center}
+      \begin{minipage}{4.3cm}
+      \begin{lstlisting}[frame=single,backgroundcolor = \color{SadRed}]
+  eval$^o$ p s r =
+    (p === Disj x y &&&
+     eval$^o$ x s rx &&&
+     eval$^o$ y s ry &&&
+     or$^o$ rx ry r)
+    |||
+    (p === Conj x y &&&
+     eval$^o$ x s rx &&&
+     eval$^o$ y s ry &&&
+     and$^o$ rx ry r)
+    |||
+    (p === Neg x    &&&
+     eval$^o$ x s rx &&&
+     not$^o$ rx r)
+    |||
+    (p === Var v    &&&
+     lookup$^o$ s v r)
+      \end{lstlisting}
+      \end{minipage}
+  \end{center}
 
+  \end{column}
+\end{columns}
+\end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Влияние порядка конъюнктов на производительность}
@@ -373,7 +434,38 @@ eval$^o$ p 5 5 &&&  eval$^o$ p 6 8
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Суперкомпиляция для \miniKanren \ (Мария Куклина)}
+  \frametitle{Причина непредсказуемой производительности}
+  \begin{center}
+    \miniKanren \textbf{очень} чувствителен к порядку дизъюнктов и конъюнктов
+  \end{center}
+
+  \vfill
+
+  \begin{itemize}
+    \item Производительность измеряется как время, необходимое для получения первых $n$ ответов
+    \item При трансляции порядок ответов изменяется
+    \item Когда первыми начинают вычисляться более ``сложные'' ответы, на их вычисление требуется больше времени
+  \end{itemize}
+
+  \vfill
+
+  \begin{center}
+    Но! Специализация уменьшает количество элементарных операций, выполняемых при поиске отдельных ответов
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Что делать?}
+  \begin{itemize}
+    \item Гарантировать тот же порядок ответов \pause (сложно) \pause
+    \item Измерять производительность только на программах, возвращающих конечное множество ответов \pause (бесполезно) \pause
+    \item Замерять время, необходимое на каждый ответ \pause (нереалистично) \pause
+    \item Подсчитывать количество элементарных операций, выполненных для получения каждого ответа \pause (показательно)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Суперкомпиляция для \miniKanren (Мария Куклина)}
   \begin{center}
     Разработаны и реализованы несколько модификаций суперкомпиляторов для \miniKanren
   \end{center}
@@ -424,7 +516,7 @@ eval$^o$ p 5 5 &&&  eval$^o$ p 6 8
   \begin{itemize}
     \item Публикации
     \begin{itemize}
-      \item Verbitskaia E, Berezun D, Boulytchev D. An Empirical Study of Partial Deduction for miniKanren. (\miniKanren \ workshop при ICFP)
+      \item Verbitskaia E, Berezun D, Boulytchev D. An Empirical Study of Partial Deduction for miniKanren. (\miniKanren workshop при ICFP)
       \item Артемьева И, Вербицкая Е. Анализ времени связывания для реляционных программ. (SEIM)
       \item Kuklina M, and Verbitskaia E: Supercompilation Strategies of Relational Programs. (TEASE-LP)
       \item Verbitskaia E, Artemeva I and Berezun D: Binding-Time Analysis for miniKanren. (TEASE-LP)
