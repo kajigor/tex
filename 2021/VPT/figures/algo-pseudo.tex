@@ -24,7 +24,7 @@
     keywordstyle = [2]{\textit},
     morekeywords = [2]{lookup,initial_code,extend,reduce,eval,rest,first_command,first_instruction,new_tail,first_symbol},
     showspaces=false,
-    showstringspaces=false, 
+    showstringspaces=false,
     stringstyle=\color{blue},
     identifierstyle=,
     escapechar=@*,
@@ -39,8 +39,8 @@
 \begin{PseudoCode}[moredelim={[is][stringstyle]{@@}{@@}},
   moredelim={[is][\color{dkgreen}\bfseries]{@!}{@!}},
   moredelim={[is][\color{red}\bfseries]{!!}{!!}}]
-ncpd goal = residualize @*$\circ$@* drive @*$\circ$@* normalize (goal)
-drive     = drive_disj @*$\cup$@* drive_conj
+conspd goal = residualize @*$\circ$@* drive @*$\circ$@* normalize (goal)
+drive       = drive_disj @*$\cup$@* drive_conj
 
 drive_disj :: Disjunction @*$\to$@* Process_Tree
 drive_disj D@(c@*$_1$@*, @*$\dots$@*, c@*$_n$@*) = @*$\bigvee_{i=1}^n$@* t@*$_i$@* @*$\leftarrow$@* drive_conj (c@*$_i$@*)

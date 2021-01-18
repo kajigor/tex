@@ -9,7 +9,7 @@ The coversion to \pro is a simple syntactic conversion. In the conversion from \
 
 The set of benchmarks consist of both examples from the literature on partial deduction and programs of our own creation.
 The first two programs are well-known in conjunctive partial deduction literature~\cite{de1999conjunctive}.
-The second two are introduced in the paper on relational interpreters~\cite{lozov2019relational}.
+% The second two are introduced in the paper on relational interpreters~\cite{lozov2019relational}.
 The last two are examples of non-trivial relational interpreters which at the same time are observable.
 In the last two examples we explore how different implementations of the same relation affect the quality of specialization.
 
@@ -25,10 +25,10 @@ This sharing leads to the list being traversed twice during execution.
 This example is used to demonstrate \emph{tupling}: the transformation in which multiple traversals of the same data structure are replaced with a single traversal which
 computes all the necessary results simultaneously. CPD performes tupling more often than our approach, and we explore how it affects the performance of the specialized program.
 
-The \lstinline{isPath$^o$} and \lstinline{unify$^o$} relations demonstrate the relational interpretation approach in which a relation is generated from a functional program.
-Partial deduction is capable of improving the execution time of the generated relations in the given direction.
-These two relations are described in~\cite{lozov2019relational}, thus we will only briefly describe them in this paper.
-Here the aim is to study if our approach can help to achieve comparable performance improvement as \ecce.
+% The \lstinline{isPath$^o$} and \lstinline{unify$^o$} relations demonstrate the relational interpretation approach in which a relation is generated from a functional program.
+% Partial deduction is capable of improving the execution time of the generated relations in the given direction.
+% These two relations are described in~\cite{lozov2019relational}, thus we will only briefly describe them in this paper.
+% Here the aim is to study if our approach can help to achieve comparable performance improvement as \ecce.
 
 The \lstinline{eval$^o$} relation implements an evaluator of a subset of propositional formulas.
 We consider four different implementations of this relation to explore how the way program is implemented can affect the quality of specialization.
@@ -154,25 +154,46 @@ The reason behind the slowdown is the premature introduction of fresh variables 
 \end{minipage}
 \end{figure*}
 
-\begin{figure}[!h]
-  \begin{subfigure}[c]{0.4\textwidth}
-    \centering
-    \begin{tabular}{c||c}
-      & [1..100] \\ \hline\hline
-      Original         & 48.5ms  \\ \hline
-      Ideal            & 32.2ms  \\ \hline
-      Ideal removed    & 19.6ms  \\ \hline
-      \ecce            & 23.7ms  \\ \hline
-      ConsPD          & 35.7ms
-    \end{tabular}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[c]{0.45\textwidth}
-    \includegraphics[width=\textwidth]{data/maxLengtho/max.pdf}
-  \end{subfigure}
+
+\begin{wrapfigure}{r}{0.4\textwidth}
+  % \begin{subfigure}[c]{0.4\textwidth}
+  %   \centering
+  %   \begin{tabular}{c||c}
+  %     & [1..100] \\ \hline\hline
+  %     Original         & 48.5ms  \\ \hline
+  %     Ideal            & 32.2ms  \\ \hline
+  %     Ideal removed    & 19.6ms  \\ \hline
+  %     \ecce            & 23.7ms  \\ \hline
+  %     ConsPD          & 35.7ms
+  %   \end{tabular}
+  % \end{subfigure}
+  % \hfill
+  % \begin{subfigure}[c]{0.45\textwidth}
+    \includegraphics[width=0.4\textwidth]{data/maxLengtho/max.pdf}
+  % \end{subfigure}
   \caption{Execution time of maxlengtho}
   \label{tbl:maxlen}
-\end{figure}
+\end{wrapfigure}
+
+% \begin{figure}[!h]
+%   \begin{subfigure}[c]{0.4\textwidth}
+%     \centering
+%     \begin{tabular}{c||c}
+%       & [1..100] \\ \hline\hline
+%       Original         & 48.5ms  \\ \hline
+%       Ideal            & 32.2ms  \\ \hline
+%       Ideal removed    & 19.6ms  \\ \hline
+%       \ecce            & 23.7ms  \\ \hline
+%       ConsPD          & 35.7ms
+%     \end{tabular}
+%   \end{subfigure}
+%   \hfill
+%   \begin{subfigure}[c]{0.45\textwidth}
+%     \includegraphics[width=\textwidth]{data/maxLengtho/max.pdf}
+%   \end{subfigure}
+%   \caption{Execution time of maxlengtho}
+%   \label{tbl:maxlen}
+% \end{figure}
 
 The relation \lstinline{maxLenght$^o$} computes the maximal element of the input list and its length (see Listing~\ref{cpd:maxandlength}) by conjunction of two relation calls.
 The list \lstinline{xs} is traversed twice: first to compute the maximum in the relation \lstinline{max$^o$} and then to compute the length in the relation \lstinline{length$^o$}.
@@ -286,14 +307,29 @@ be \lstinline{^true} when considering a call \lstinline{and$^o$ v w ^true} imple
 Conservative partial deduction drives the selected call until it derives useful substitutions for the variables involved while CPD with deterministic unfolding may fail to do so.
 
 \subsubsection{Evaluation Results.}
-In our study we considered 4 implementations of \lstinline{eval$^o$}:
-\begin{itemize}
-  \item \emph{FirstPlain} in which the implementations of boolean connectives are \textbf{table-based} and are placed \textbf{before} the recursive calls to \lstinline{eval$^o$}
-  \item \emph{LastPlain} in which the implementations of boolean connectives are \textbf{table-based} and are placed \textbf{after} the recursive calls to \lstinline{eval$^o$}
-  \item \emph{FirstNando} in which boolean connectives are implemented via \lstinline{nand$^o$} and are placed \textbf{before} the recursive calls to \lstinline{eval$^o$}
-  \item \emph{LastNando} in which boolean connectives are implemented via \lstinline{nand$^o$} and are placed \textbf{after} the recursive calls to \lstinline{eval$^o$}
+% In our study we considered 4 implementations of \lstinline{eval$^o$}:
+% \begin{itemize}
+%   \item \emph{FirstPlain} in which the implementations of boolean connectives are \textbf{table-based} and are placed \textbf{before} the recursive calls to \lstinline{eval$^o$}
+%   \item \emph{LastPlain} in which the implementations of boolean connectives are \textbf{table-based} and are placed \textbf{after} the recursive calls to \lstinline{eval$^o$}
+%   \item \emph{FirstNando} in which boolean connectives are implemented via \lstinline{nand$^o$} and are placed \textbf{before} the recursive calls to \lstinline{eval$^o$}
+%   \item \emph{LastNando} in which boolean connectives are implemented via \lstinline{nand$^o$} and are placed \textbf{after} the recursive calls to \lstinline{eval$^o$}
+% \end{itemize}
+In our study we considered 4 implementations of \lstinline{eval$^o$} summed up in the table~\ref{tbl:eval}. They differ in the way the boolean connectives are implemented (see column \emph{implementation}) and wether they are placed before or after the recursive calls to \lstinline{eval$^o$} (see column \emph{placement}).
 
-\end{itemize}
+\begin{wraptable}{r}{0.5\textwidth}
+    \centering
+    \begin{tabular}{c||c||c}
+                      & implementation & placement \\ \hline\hline
+    \emph{FirstPlain} & table-based    & before \\ \hline
+    \emph{LastPlain}  & table-based    & after  \\ \hline
+    \emph{FirstNando} & via nand$^o$   & before \\ \hline
+    \emph{LastNando}  & via nand$^o$   & after  \\
+    \end{tabular}
+
+  \caption{Different implementations of eval$^o$}
+  \label{tbl:eval}
+\end{wraptable}
+
 
 These four implementations are very different from \ecce standpoint.
 We measured the time necessary to generate $1000$ formulas over two variables which evaluate to \lstinline{^true} (averaged over 10 runs).
@@ -434,32 +470,32 @@ We believe that this difference can be explained by too much unfolding.
 At the same time ConsPD specializes both implementations to comparable programs performing average amount of unfolding.
 This shows that the heuristics we presented gives more stable, although not the best, results.
 
-\subsection{Unification and Path Search}
+% \subsection{Unification and Path Search}
 
-Besides evaluator of logic formulas we also run the specializers on the relation \lstinline{unify$^o$}, which searches for a unifier of two terms, and a relation \lstinline{isPath$^o$},
-used to search for paths in the graph.
-Both relations were generated from functional programs by unnesting.
-These two relations are described in paper~\cite{lozov2019relational} so we will not go into too many details here.
+% Besides evaluator of logic formulas we also run the specializers on the relation \lstinline{unify$^o$}, which searches for a unifier of two terms, and a relation \lstinline{isPath$^o$},
+% used to search for paths in the graph.
+% Both relations were generated from functional programs by unnesting.
+% These two relations are described in paper~\cite{lozov2019relational} so we will not go into too many details here.
 
-The \lstinline{unify$^o$} relation was executed to find a unifier of three pairs of terms (see table~\ref{tbl:unify}) which vary in their complexity.
-The original program failed to terminate on two last unification problems in under 30 seconds, while both ConsPD and \ecce generate programs which are able to find the unifiers.
+% The \lstinline{unify$^o$} relation was executed to find a unifier of three pairs of terms (see table~\ref{tbl:unify}) which vary in their complexity.
+% The original program failed to terminate on two last unification problems in under 30 seconds, while both ConsPD and \ecce generate programs which are able to find the unifiers.
 
-\begin{table}
-  \centering
-  \begin{tabular}{c||c|c|c||c}
-    & \multicolumn{3}{c||}{unify$^o$} & \\
-    \multirow{2}{*}{Terms} & f(X, a) & f(a \% b \% nil, c \% d \% nil, L) & f(X, X, g(Z, t)) & \multirow{2}{*}{isPath$^o$}  \\
-    \cline{2-4} &
-    f(a, X) & f(X \% XS, YS, X \% ZS) & f(g(p, L), Y, Y)  \\
-    \hline\hline
-  Original          & 0.23ms &  ---   &  ---    & 24.9ms \\ \hline
-  ConsPD            & 0.07ms & 16.5ms & 397.6ms & 1.6ms  \\ \hline
-  \ecce             & 0.12ms & 18.8ms & 352.0ms & 1.1ms  \\ \hline
-  \end{tabular}
+% \begin{table}
+%   \centering
+%   \begin{tabular}{c||c|c|c||c}
+%     & \multicolumn{3}{c||}{unify$^o$} & \\
+%     \multirow{2}{*}{Terms} & f(X, a) & f(a \% b \% nil, c \% d \% nil, L) & f(X, X, g(Z, t)) & \multirow{2}{*}{isPath$^o$}  \\
+%     \cline{2-4} &
+%     f(a, X) & f(X \% XS, YS, X \% ZS) & f(g(p, L), Y, Y)  \\
+%     \hline\hline
+%   Original          & 0.23ms &  ---   &  ---    & 24.9ms \\ \hline
+%   ConsPD            & 0.07ms & 16.5ms & 397.6ms & 1.6ms  \\ \hline
+%   \ecce             & 0.12ms & 18.8ms & 352.0ms & 1.1ms  \\ \hline
+%   \end{tabular}
 
-  \caption{Evaluation results of unification and path search}
-  \label{tbl:unify}
-\end{table}
+%   \caption{Evaluation results of unification and path search}
+%   \label{tbl:unify}
+% \end{table}
 
-The relation \lstinline{isPath$^o$} was executed to search for 3 paths of length 7 in the graph with 20 vertices and 30 edges (see Table~\ref{tbl:unify}).
-Both specializers significantly improve the performance as compared to the original program, although ConsPD is about 30\% worse than \ecce.
+% The relation \lstinline{isPath$^o$} was executed to search for 3 paths of length 7 in the graph with 20 vertices and 30 edges (see Table~\ref{tbl:unify}).
+% Both specializers significantly improve the performance as compared to the original program, although ConsPD is about 30\% worse than \ecce.
