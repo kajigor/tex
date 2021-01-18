@@ -1,0 +1,40 @@
+\documentclass[submission,copyright,creativecommons]{eptcs}
+\providecommand{\event}{VPT 2021} % Name of the event you are submitting to
+\usepackage{breakurl}             % Not needed if you use pdflatex only.
+\usepackage{underscore}           % Only needed if you use pdflatex.
+
+\input{packages.tex}
+\input{defs.tex}
+
+\title{An Empirical Study of Partial Deduction for \mk}
+
+\author{Ekaterina Verbitskaia
+\institute{JetBrains Research\\
+Saint Petersburg, Russia}
+\email{kajigor@gmail.com}
+\and
+Daniil Berezun \qquad\qquad Dmitry Boulytchev
+\institute{Saint Petersburg State University}
+\institute{JetBrains Research\\
+Saint Petersburg, Russia}
+\email{daniil.berezun@jetbrains.com \quad\qquad dboulytchev@math.spbu.ru}
+}
+\def\titlerunning{An Empirical Study of Partial Deduction for \mk}
+\def\authorrunning{E. Verbitskaia, D. Berezun \& D. Boulytchev}
+\begin{document}
+
+\maketitle
+
+\input{abstract.tex}
+
+\input{intro.tex}
+\input{related.tex}
+\input{conspd.tex}
+\input{evaluation.tex}
+\input{conclusion.tex}
+
+
+\nocite{*}
+\bibliographystyle{eptcs}
+\bibliography{bibl.bib}
+\end{document}
