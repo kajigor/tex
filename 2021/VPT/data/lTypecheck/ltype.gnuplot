@@ -1,16 +1,16 @@
 set datafile separator ','
 
-set terminal pdf 
+set terminal pdf
 set output 'ltype.pdf'
 
 set size ratio 0.8
 
-set terminal pdf size 3, 2.4 
+set terminal pdf size 3, 2.4
 
-set style data histogram  
+set style data histogram
 set style fill solid
 
-set ylabel 'Time (ms)' # label for the Y axis
+set ylabel 'Time (s)' # label for the Y axis
 set xlabel 'Direction' # label for the X axis
 
 set xrange [0.5:2.5]
