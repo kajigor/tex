@@ -5,25 +5,28 @@ We implemented the conservative partial deduction for \mk and compared it with t
 To be able to compare our approach with \ecce, we converted each input program first to the pure subset of \pro, then spelialized it with \ecce, and then we converted the result back to \mk.
 The coversion to \pro is a simple syntactic conversion. In the conversion from \pro to \mk, for each Horn clause a conjunction is generated in which unifications are placed before any relation call.
 
+We chose two problems for our study: evaluation of a subset of propositional formulas and typechecking for a simple language.
+For both these problems we considered several possible implementations in \mk which highlight different aspects relevant in specialization.
+
 %This mimics in \mk the execution order of \pro program within conjunction.
+% \change{
+% The set of benchmarks consist of both examples from the literature on partial deduction and programs of our own creation.
+% The first two programs are well-known in conjunctive partial deduction literature~\cite{de1999conjunctive}.
+% % The second two are introduced in the paper on relational interpreters~\cite{lozov2019relational}.
+% The last two are examples of non-trivial relational interpreters which at the same time are observable.
+% In the last two examples we explore how different implementations of the same relation affect the quality of specialization.
+%}
+% The \lstinline{doubleAppend$^o$} program concatenates three lists of numbers by computing a conjunction of two calls of a relation which concatenates two lists.
+% This example is prominent in CPD literature, since it demonstrates \emph{deforestation}~--- a transformation which gets rid of intermidiate data structures.
+% This transformation cannot be done with earlier partial deduction approaches, since the relation uses a variable shared between two relation calls within a
+% conjunction which requires the transformation to treat conjunctions as a whole.
+% We explore how the fact that our approach sometimes splits conjunctions ignoring the variable sharing affects the quality of transformation.
 
-The set of benchmarks consist of both examples from the literature on partial deduction and programs of our own creation.
-The first two programs are well-known in conjunctive partial deduction literature~\cite{de1999conjunctive}.
-% The second two are introduced in the paper on relational interpreters~\cite{lozov2019relational}.
-The last two are examples of non-trivial relational interpreters which at the same time are observable.
-In the last two examples we explore how different implementations of the same relation affect the quality of specialization.
-
-The \lstinline{doubleAppend$^o$} program concatenates three lists of numbers by computing a conjunction of two calls of a relation which concatenates two lists.
-This example is prominent in CPD literature, since it demonstrates \emph{deforestation}~--- a transformation which gets rid of intermidiate data structures.
-This transformation cannot be done with earlier partial deduction approaches, since the relation uses a variable shared between two relation calls within a
-conjunction which requires the transformation to treat conjunctions as a whole.
-We explore how the fact that our approach sometimes splits conjunctions ignoring the variable sharing affects the quality of transformation.
-
-The \lstinline{maxLength$^o$} program computes the maximal element of a list as well as this list length.
-In this program an input list is shared between the call of the relation to compute the maximal element and the relation to compute the length of the list.
-This sharing leads to the list being traversed twice during execution.
-This example is used to demonstrate \emph{tupling}: the transformation in which multiple traversals of the same data structure are replaced with a single traversal which
-computes all the necessary results simultaneously. CPD performes tupling more often than our approach, and we explore how it affects the performance of the specialized program.
+% The \lstinline{maxLength$^o$} program computes the maximal element of a list as well as this list length.
+% In this program an input list is shared between the call of the relation to compute the maximal element and the relation to compute the length of the list.
+% This sharing leads to the list being traversed twice during execution.
+% This example is used to demonstrate \emph{tupling}: the transformation in which multiple traversals of the same data structure are replaced with a single traversal which
+% computes all the necessary results simultaneously. CPD performes tupling more often than our approach, and we explore how it affects the performance of the specialized program.
 
 % The \lstinline{isPath$^o$} and \lstinline{unify$^o$} relations demonstrate the relational interpretation approach in which a relation is generated from a functional program.
 % Partial deduction is capable of improving the execution time of the generated relations in the given direction.
@@ -38,179 +41,180 @@ The \lstinline{typecheck$^o$} relation implements a typechecker for a tiny expre
 We consider two different implementations of this relation: one written by hand and the other generated from the functional program.
 We demonstrate how much these implementations differ in terms of performance before and after specialization.
 
-In this study we only measured the execution time for the sample queries, averaging them over multiple runs.
+In this study we measured the execution time for the sample queries, averaging them over multiple runs.
+We also measured the number of unifications done in search of each individual answer.
 All examples of \mk relations in this paper are written in \oc\footnote{\oc: statically typed \mk embedding in \ocaml. The repository of the project: \url{https://github.com/JetBrains-Research/OCanren}}.
 The queries were run on a laptop running Ubuntu 18.04 with quad core Intel Core i5 2.30GHz CPU and 8 GB of RAM.
 
 The tables and graphs use the following denotations.
 \emph{Original} represents the execution time of a program before any transformations were applied; \emph{ECCE}~--- of the program specialized by \ecce with default conjunctive control setting; \emph{ConsPD}~--- of the program specialized by our approach.
-The first two examples also contain \emph{Ideal} row which contains the execution time of the ideal implementations of the relations presented in the paper~\cite{de1999conjunctive}.
+% The first two examples also contain \emph{Ideal} row which contains the execution time of the ideal implementations of the relations presented in the paper~\cite{de1999conjunctive}.
 
-\subsection{Concatenation of Three Lists}
+% \subsection{Concatenation of Three Lists}
 
-\begin{figure*}[!t]
-  \centering
-  \begin{minipage}{\textwidth}
-    \begin{lstlisting}[label={doubleApp}, caption={Concatenation of three lists}, captionpos=b, frame=tb]
-  let doubleAppend$^o$ xs ys zs res =
-    fresh (ts) (append$^o$ xs ys ts /\ append$^o$ ts zs res)
+% \begin{figure*}[!t]
+%   \centering
+%   \begin{minipage}{\textwidth}
+%     \begin{lstlisting}[label={doubleApp}, caption={Concatenation of three lists}, captionpos=b, frame=tb]
+%   let doubleAppend$^o$ xs ys zs res =
+%     fresh (ts) (append$^o$ xs ys ts /\ append$^o$ ts zs res)
 
-  let rec append$^o$ xs ys zs = conde [
-    (xs === [] /\ ys === zs);
-    fresh (h t r) (xs === (h % t) /\ zs === (h % r) /\ append$^o$ t ys r)]
-    \end{lstlisting}
-  \end{minipage}
+%   let rec append$^o$ xs ys zs = conde [
+%     (xs === [] /\ ys === zs);
+%     fresh (h t r) (xs === (h % t) /\ zs === (h % r) /\ append$^o$ t ys r)]
+%     \end{lstlisting}
+%   \end{minipage}
 
-  \begin{minipage}{\textwidth}
-\begin{lstlisting}[label={doubleApp:ideal}, caption={Ideal implementation of concatenation of three lists}, captionpos=b, frame=tb]
-  let doubleAppend$^o$ xs ys zs res = conde [
-    (xs === [] /\ append$^o$ ys zs res);
-    fresh (h t r) (xs === h % t /\ res === h % r /\ doubleAppend$^o$ t ys zs r)]
-\end{lstlisting}
-  \end{minipage}
-\end{figure*}
+%   \begin{minipage}{\textwidth}
+% \begin{lstlisting}[label={doubleApp:ideal}, caption={Ideal implementation of concatenation of three lists}, captionpos=b, frame=tb]
+%   let doubleAppend$^o$ xs ys zs res = conde [
+%     (xs === [] /\ append$^o$ ys zs res);
+%     fresh (h t r) (xs === h % t /\ res === h % r /\ doubleAppend$^o$ t ys zs r)]
+% \end{lstlisting}
+%   \end{minipage}
+% \end{figure*}
 
-The relation \lstinline{doubleAppend$^o$} concatenates three lists by a conjunction of two calls of the \lstinline{append$^o$} relation (see Listing~\ref{doubleApp}).
-These two calls share a variable~--- an intermediate list \lstinline{ts}.
-The list \lstinline{xs} is traversed twice to construct the result: first when \lstinline{ts} is constructed and then when \lstinline{ts} is traversed during the second call.
-This double traversal negatively impacts the execution time, but it can be removed by deforestation.
+% The relation \lstinline{doubleAppend$^o$} concatenates three lists by a conjunction of two calls of the \lstinline{append$^o$} relation (see Listing~\ref{doubleApp}).
+% These two calls share a variable~--- an intermediate list \lstinline{ts}.
+% The list \lstinline{xs} is traversed twice to construct the result: first when \lstinline{ts} is constructed and then when \lstinline{ts} is traversed during the second call.
+% This double traversal negatively impacts the execution time, but it can be removed by deforestation.
 
-The better implementation of this relation (see Listing~\ref{doubleApp:ideal}) does not traverse the first list twice.
-It first recursively copies \lstinline{xs} into the beginning of \lstinline{res}, and only when \lstinline{xs} is fully consumed, it calls the \lstinline{append$^o$} to concatenate \lstinline{ys} and \lstinline{zs}.
-This implementation is provided as the ideal implementation of \lstinline{doubleAppend$^o$} in~\cite{de1999conjunctive}.
+% The better implementation of this relation (see Listing~\ref{doubleApp:ideal}) does not traverse the first list twice.
+% It first recursively copies \lstinline{xs} into the beginning of \lstinline{res}, and only when \lstinline{xs} is fully consumed, it calls the \lstinline{append$^o$} to concatenate \lstinline{ys} and \lstinline{zs}.
+% This implementation is provided as the ideal implementation of \lstinline{doubleAppend$^o$} in~\cite{de1999conjunctive}.
 
-To automatically transform the initial program into the ideal implementation, the transformer should treat the conjuncts which share variables with care.
-Partial deduction splits any conjunction into its subconjunctions, regardless variable sharing, while CPD only splits conjunctions when potential non-termination is detected.
-Conservative partial deduction processes subconjunctions in isolation and then joins them back together, if it can help to restrict the search space.
-In this example, ConsPD fails to perform deforestation: ConsPD first splits the conjunction \lstinline{append$^o$ xs ys ts /\ append$^o$ ts zs rs} into two relation calls of \lstinline{append$^o$}, then unfolds the first call, but since the second call is a renaming of the first one, it is not unfolded.
-The generated program is almost the same as the original: the only difference is that the fresh variables are introduced on the toplevel.
-
-
-We run all programs in the forward and the backward direction.
-The forward direction \lstinline{doubleAppend$^o$ x y z ?} concatenates three given lists: the first one of length 700, the second and the third~--- of length 1.
-The backward direction \lstinline{doubleAppend$^o$ ? ? ? r} searches for the first 100 list triples whose concatenation gives the given list of length 700.
-
-There is no significant difference in the execution time in the backward direction between different specialized versions (see Fig.~\ref{tbl:doubleApp}).
-However the execution time in the forward direction differs: the program generated by \ecce shows the same speedup as the ideal program, while conservative partial deduction slows the program down.
-The reason behind the slowdown is the premature introduction of fresh variables which is significant for the input data of this size.
-
-\begin{figure}[!t]
-  \begin{subfigure}[c]{0.35\textwidth}
-    \centering
-    \begin{tabular}{c||c||c}
-      & forward & backward \\
-      \hline\hline
-      Original       & 34.8ms & 1.6ms \\ \hline
-      \ecce          & 26.7ms & 1.7ms \\ \hline
-      Ideal          & 26.9ms & 1.7ms \\ \hline
-      ConsPD         & 47.6ms & 1.7ms
-    \end{tabular}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[c]{0.6\textwidth}
-    \includegraphics[width=\textwidth]{data/doubleAppendo/da700log.pdf}
-  \end{subfigure}
-    \caption{Evaluation results for doubleAppendo}
-    \label{tbl:doubleApp}
-\end{figure}
-
-\subsection{Maximal Element and Length of a List}
-
-\begin{figure*}[!t]
-  \centering
-  \begin{minipage}{0.85\textwidth}
-\begin{lstlisting}[label={cpd:maxandlength}, caption={Maximum element and length of the list}, captionpos=b, frame=tb]
-  let maxLength$^o$ xs m l = max$^o$ xs m /\ length$^o$ xs l
-  let rec length$^o$ xs l = fresh (h t m) ( conde [
-      (xs === []    /\ l === zero);
-      (xs === h % t /\ l === succ m /\  length$^o$ t m)])
-
-  let max$^o$ xs m = max$_1^o$ xs zero m
-  let rec max$_1^o$ xs n m = fresh (h t) ( conde [
-      (xs === []     /\  m === n);
-      (xs === h % t) /\ (conde [
-        (le$^o$ h n ^true /\  max$_1^o$ t n m);
-        (gt$^o$ h n ^true /\  max$_1^o$ t h m)])])
-
-  let rec le$^o$ x y b = fresh (x$_1$ y$_1$) ( conde [
-      (x === zero    /\ b === ^true);
-      (x === succ x$_1$ /\  y === zero    /\ b === ^false);
-      (x === succ x$_1$ /\  y === succ y$_1$ /\  le$^o$ x$_1$ y$_1$ b)])
-  let rec gt$^o$ x y b = fresh (x$_1$ y$_1$) ( conde [
-      (x === zero    /\ b === ^false);
-      (x === succ x$_1$ /\  y === zero    /\ b === ^true);
-      (x === succ x$_1$ /\  y === succ y$_1$ /\  gt$^o$ x$_1$ y$_1$ b)])
-  \end{lstlisting}
-\end{minipage}
-  \begin{minipage}{0.8\textwidth}
-\begin{lstlisting}[label={ideal:maxandlength},  caption={Ideal implementation of maxlengtho}, captionpos=b, frame=tb]
-  let maxLength$^o$ xs m l = maxLength$_1^o$ xs m zero l
-  let rec maxLength$_1^o$ xs m n l = fresh (h t l$_1$) ( conde [
-      ( xs === []     /\  m === n        /\ l === zero);
-      ((xs === h % t) /\ (l === succ l$_1$) /\  (conde [
-         (le$^o$ h n ^true /\  maxLength$_1^o$ t m n l);
-         (gt$^o$ h n ^true /\  maxLength$_1^o$ t m h l)]))])
-  \end{lstlisting}
-\end{minipage}
-\end{figure*}
+% To automatically transform the initial program into the ideal implementation, the transformer should treat the conjuncts which share variables with care.
+% Partial deduction splits any conjunction into its subconjunctions, regardless variable sharing, while CPD only splits conjunctions when potential non-termination is detected.
+% Conservative partial deduction processes subconjunctions in isolation and then joins them back together, if it can help to restrict the search space.
+% In this example, ConsPD fails to perform deforestation: ConsPD first splits the conjunction \lstinline{append$^o$ xs ys ts /\ append$^o$ ts zs rs} into two relation calls of \lstinline{append$^o$}, then unfolds the first call, but since the second call is a renaming of the first one, it is not unfolded.
+% The generated program is almost the same as the original: the only difference is that the fresh variables are introduced on the toplevel.
 
 
-\begin{wrapfigure}{r}{0.4\textwidth}
-  % \begin{subfigure}[c]{0.4\textwidth}
-  %   \centering
-  %   \begin{tabular}{c||c}
-  %     & [1..100] \\ \hline\hline
-  %     Original         & 48.5ms  \\ \hline
-  %     Ideal            & 32.2ms  \\ \hline
-  %     Ideal removed    & 19.6ms  \\ \hline
-  %     \ecce            & 23.7ms  \\ \hline
-  %     ConsPD          & 35.7ms
-  %   \end{tabular}
-  % \end{subfigure}
-  % \hfill
-  % \begin{subfigure}[c]{0.45\textwidth}
-    \includegraphics[width=0.4\textwidth]{data/maxLengtho/max.pdf}
-  % \end{subfigure}
-  \caption{Execution time of maxlengtho}
-  \label{tbl:maxlen}
-\end{wrapfigure}
+% We run all programs in the forward and the backward direction.
+% The forward direction \lstinline{doubleAppend$^o$ x y z ?} concatenates three given lists: the first one of length 700, the second and the third~--- of length 1.
+% The backward direction \lstinline{doubleAppend$^o$ ? ? ? r} searches for the first 100 list triples whose concatenation gives the given list of length 700.
 
-% \begin{figure}[!h]
-%   \begin{subfigure}[c]{0.4\textwidth}
+% There is no significant difference in the execution time in the backward direction between different specialized versions (see Fig.~\ref{tbl:doubleApp}).
+% However the execution time in the forward direction differs: the program generated by \ecce shows the same speedup as the ideal program, while conservative partial deduction slows the program down.
+% The reason behind the slowdown is the premature introduction of fresh variables which is significant for the input data of this size.
+
+% \begin{figure}[!t]
+%   \begin{subfigure}[c]{0.35\textwidth}
 %     \centering
-%     \begin{tabular}{c||c}
-%       & [1..100] \\ \hline\hline
-%       Original         & 48.5ms  \\ \hline
-%       Ideal            & 32.2ms  \\ \hline
-%       Ideal removed    & 19.6ms  \\ \hline
-%       \ecce            & 23.7ms  \\ \hline
-%       ConsPD          & 35.7ms
+%     \begin{tabular}{c||c||c}
+%       & forward & backward \\
+%       \hline\hline
+%       Original       & 34.8ms & 1.6ms \\ \hline
+%       \ecce          & 26.7ms & 1.7ms \\ \hline
+%       Ideal          & 26.9ms & 1.7ms \\ \hline
+%       ConsPD         & 47.6ms & 1.7ms
 %     \end{tabular}
 %   \end{subfigure}
 %   \hfill
-%   \begin{subfigure}[c]{0.45\textwidth}
-%     \includegraphics[width=\textwidth]{data/maxLengtho/max.pdf}
+%   \begin{subfigure}[c]{0.6\textwidth}
+%     \includegraphics[width=\textwidth]{data/doubleAppendo/da700log.pdf}
 %   \end{subfigure}
-%   \caption{Execution time of maxlengtho}
-%   \label{tbl:maxlen}
+%     \caption{Evaluation results for doubleAppendo}
+%     \label{tbl:doubleApp}
 % \end{figure}
 
-The relation \lstinline{maxLenght$^o$} computes the maximal element of the input list and its length (see Listing~\ref{cpd:maxandlength}) by conjunction of two relation calls.
-The list \lstinline{xs} is traversed twice: first to compute the maximum in the relation \lstinline{max$^o$} and then to compute the length in the relation \lstinline{length$^o$}.
-The input list contain Peano numbers which are compared by relations less-or-equal (\lstinline{le$^o$}) and greater-than (\lstinline{gt$^o$}).
-Note that the comparison relations have three arguments with the last one representing the result of comparison.
+% \subsection{Maximal Element and Length of a List}
 
-The ideal implementation provided in the CPD literature~\cite{de1999conjunctive} is shown on Listing~\ref{ideal:maxandlength}.
-This implementation traverses the input list \lstinline{xs} only once and can be generated by tupling.
-Note, the disjunct which unifies the third argument with \lstinline{^false}\footnote{An arrow lifts ordinary values to the logic domain} in the implementation of both \lstinline{le$^o$} and \lstinline{gt$^o$} can never contribute into the result of \lstinline{maxLength$^o$} execution.
-Such disjuncts are removed by both \ecce and conservative partial deduction, thus we consider two ideal implementions: one with the original comparison relations (\emph{Ideal}) and another in which these disjuncts are deleted (\emph{Ideal removed}).
+% \begin{figure*}[!t]
+%   \centering
+%   \begin{minipage}{0.85\textwidth}
+% \begin{lstlisting}[label={cpd:maxandlength}, caption={Maximum element and length of the list}, captionpos=b, frame=tb]
+%   let maxLength$^o$ xs m l = max$^o$ xs m /\ length$^o$ xs l
+%   let rec length$^o$ xs l = fresh (h t m) ( conde [
+%       (xs === []    /\ l === zero);
+%       (xs === h % t /\ l === succ m /\  length$^o$ t m)])
 
-We measured the execution time of \lstinline{maxLength$^o$ lst m l}, where \lstinline{lst} is a list of Peano numbers from $1$ to $100$.
-The results are presented in Fig.~\ref{tbl:maxlen}.
+%   let max$^o$ xs m = max$_1^o$ xs zero m
+%   let rec max$_1^o$ xs n m = fresh (h t) ( conde [
+%       (xs === []     /\  m === n);
+%       (xs === h % t) /\ (conde [
+%         (le$^o$ h n ^true /\  max$_1^o$ t n m);
+%         (gt$^o$ h n ^true /\  max$_1^o$ t h m)])])
 
-Both \ecce and ConsPD improve the performance of \lstinline{maxLength$^o$} as compared to the original program.
-Removing the disjuncts with the result unified with \lstinline{^false} in the comparison relations improves the ideal program by about 40\%.
-ConsPD removes disjuncts which never succeed, but does not perform tupling, thus its result is not as performant as the ideal program.
+%   let rec le$^o$ x y b = fresh (x$_1$ y$_1$) ( conde [
+%       (x === zero    /\ b === ^true);
+%       (x === succ x$_1$ /\  y === zero    /\ b === ^false);
+%       (x === succ x$_1$ /\  y === succ y$_1$ /\  le$^o$ x$_1$ y$_1$ b)])
+%   let rec gt$^o$ x y b = fresh (x$_1$ y$_1$) ( conde [
+%       (x === zero    /\ b === ^false);
+%       (x === succ x$_1$ /\  y === zero    /\ b === ^true);
+%       (x === succ x$_1$ /\  y === succ y$_1$ /\  gt$^o$ x$_1$ y$_1$ b)])
+%   \end{lstlisting}
+% \end{minipage}
+%   \begin{minipage}{0.8\textwidth}
+% \begin{lstlisting}[label={ideal:maxandlength},  caption={Ideal implementation of maxlengtho}, captionpos=b, frame=tb]
+%   let maxLength$^o$ xs m l = maxLength$_1^o$ xs m zero l
+%   let rec maxLength$_1^o$ xs m n l = fresh (h t l$_1$) ( conde [
+%       ( xs === []     /\  m === n        /\ l === zero);
+%       ((xs === h % t) /\ (l === succ l$_1$) /\  (conde [
+%          (le$^o$ h n ^true /\  maxLength$_1^o$ t m n l);
+%          (gt$^o$ h n ^true /\  maxLength$_1^o$ t m h l)]))])
+%   \end{lstlisting}
+% \end{minipage}
+% \end{figure*}
+
+
+% \begin{wrapfigure}{r}{0.4\textwidth}
+%   % \begin{subfigure}[c]{0.4\textwidth}
+%   %   \centering
+%   %   \begin{tabular}{c||c}
+%   %     & [1..100] \\ \hline\hline
+%   %     Original         & 48.5ms  \\ \hline
+%   %     Ideal            & 32.2ms  \\ \hline
+%   %     Ideal removed    & 19.6ms  \\ \hline
+%   %     \ecce            & 23.7ms  \\ \hline
+%   %     ConsPD          & 35.7ms
+%   %   \end{tabular}
+%   % \end{subfigure}
+%   % \hfill
+%   % \begin{subfigure}[c]{0.45\textwidth}
+%     \includegraphics[width=0.4\textwidth]{data/maxLengtho/max.pdf}
+%   % \end{subfigure}
+%   \caption{Execution time of maxlengtho}
+%   \label{tbl:maxlen}
+% \end{wrapfigure}
+
+% % \begin{figure}[!h]
+% %   \begin{subfigure}[c]{0.4\textwidth}
+% %     \centering
+% %     \begin{tabular}{c||c}
+% %       & [1..100] \\ \hline\hline
+% %       Original         & 48.5ms  \\ \hline
+% %       Ideal            & 32.2ms  \\ \hline
+% %       Ideal removed    & 19.6ms  \\ \hline
+% %       \ecce            & 23.7ms  \\ \hline
+% %       ConsPD          & 35.7ms
+% %     \end{tabular}
+% %   \end{subfigure}
+% %   \hfill
+% %   \begin{subfigure}[c]{0.45\textwidth}
+% %     \includegraphics[width=\textwidth]{data/maxLengtho/max.pdf}
+% %   \end{subfigure}
+% %   \caption{Execution time of maxlengtho}
+% %   \label{tbl:maxlen}
+% % \end{figure}
+
+% The relation \lstinline{maxLenght$^o$} computes the maximal element of the input list and its length (see Listing~\ref{cpd:maxandlength}) by conjunction of two relation calls.
+% The list \lstinline{xs} is traversed twice: first to compute the maximum in the relation \lstinline{max$^o$} and then to compute the length in the relation \lstinline{length$^o$}.
+% The input list contain Peano numbers which are compared by relations less-or-equal (\lstinline{le$^o$}) and greater-than (\lstinline{gt$^o$}).
+% Note that the comparison relations have three arguments with the last one representing the result of comparison.
+
+% The ideal implementation provided in the CPD literature~\cite{de1999conjunctive} is shown on Listing~\ref{ideal:maxandlength}.
+% This implementation traverses the input list \lstinline{xs} only once and can be generated by tupling.
+% Note, the disjunct which unifies the third argument with \lstinline{^false}\footnote{An arrow lifts ordinary values to the logic domain} in the implementation of both \lstinline{le$^o$} and \lstinline{gt$^o$} can never contribute into the result of \lstinline{maxLength$^o$} execution.
+% Such disjuncts are removed by both \ecce and conservative partial deduction, thus we consider two ideal implementions: one with the original comparison relations (\emph{Ideal}) and another in which these disjuncts are deleted (\emph{Ideal removed}).
+
+% We measured the execution time of \lstinline{maxLength$^o$ lst m l}, where \lstinline{lst} is a list of Peano numbers from $1$ to $100$.
+% The results are presented in Fig.~\ref{tbl:maxlen}.
+
+% Both \ecce and ConsPD improve the performance of \lstinline{maxLength$^o$} as compared to the original program.
+% Removing the disjuncts with the result unified with \lstinline{^false} in the comparison relations improves the ideal program by about 40\%.
+% ConsPD removes disjuncts which never succeed, but does not perform tupling, thus its result is not as performant as the ideal program.
 
 
 \subsection{Evaluator of Logic Formulas}
@@ -237,19 +241,19 @@ The relations \lstinline{and$^o$}, \lstinline{or$^o$}, and \lstinline{not$^o$} e
   \begin{minipage}{0.95\textwidth}
     \begin{lstlisting}[label={eval:last}, caption={Evaluator of formulas with boolean operation last}, captionpos=b, frame=tb]
   let rec eval$^o$ subst fm res = conde [fresh (x y z v w) (
-      (fm === var v    /\ elem$^o$ subst v res);
       (fm === conj x y /\ eval$^o$ st x v /\  eval$^o$ st y w /\  and$^o$ v w res);
       (fm === disj x y /\ eval$^o$ st x v /\  eval$^o$ st y w /\  or$^o$   v w res);
-      (fm === neg x    /\ eval$^o$ st x v /\  not$^o$ v res))]
+      (fm === neg x    /\ eval$^o$ st x v /\  not$^o$ v res));
+      (fm === var v    /\ elem$^o$ subst v res)]
     \end{lstlisting}
   \end{minipage}
   \begin{minipage}{0.95\textwidth}
     \begin{lstlisting}[label={eval:fst}, caption={Evaluator of formulas with boolean operation second}, captionpos=b, frame=tb]
   let rec eval$^o$ subst fm res = conde [fresh (x y z v w) (
-      (fm === var v    /\ elem$^o$ subst v res);
       (fm === conj x y /\ and$^o$ v w res /\  eval$^o$ st x v /\  eval$^o$ st y w);
       (fm === disj x y /\ or$^o$   v w res /\ eval$^o$ st x v /\  eval$^o$ st y w);
-      (fm === neg x    /\ not$^o$ v res   /\ eval$^o$ st x v))]
+      (fm === neg x    /\ not$^o$ v res   /\ eval$^o$ st x v);
+      (fm === var v    /\ elem$^o$ subst v res))]
     \end{lstlisting}
   \end{minipage}
 \end{figure*}
@@ -280,14 +284,14 @@ It is enough to unfold such relation calls once to derive useful information abo
 
 \begin{figure*}[!t]
   \centering
-  \begin{minipage}{0.7\textwidth}
+  \begin{minipage}{0.5\textwidth}
     \begin{lstlisting}[label={not:table}, caption={Implementation of boolean \lstinline{not} as a table}, captionpos=b, frame=tb]
   let not$^o$ x y = conde [
      (x === ^true /\ y === ^false;
       x === ^false /\ y === ^true)]
     \end{lstlisting}
   \end{minipage}
-  \begin{minipage}{0.9\textwidth}
+  \begin{minipage}{0.8\textwidth}
     \begin{lstlisting}[label={not:nando}, caption={Implementation of boolean operation via \lstinline{nand}}, captionpos=b, frame=tb]
   let not$^o$   x y = nand$^o$ x x y
   let or$^o$   x y z = nand$^o$ x x xx /\  nand$^o$ y y yy /\ nand$^o$ xx yy z
@@ -306,6 +310,7 @@ implementation (see Listing~\ref{not:nando}). It will take several sequential un
 be \lstinline{^true} when considering a call \lstinline{and$^o$ v w ^true} implemented via a basic relation.
 Conservative partial deduction drives the selected call until it derives useful substitutions for the variables involved while CPD with deterministic unfolding may fail to do so.
 
+
 \subsubsection{Evaluation Results.}
 % In our study we considered 4 implementations of \lstinline{eval$^o$}:
 % \begin{itemize}
@@ -314,12 +319,13 @@ Conservative partial deduction drives the selected call until it derives useful 
 %   \item \emph{FirstNando} in which boolean connectives are implemented via \lstinline{nand$^o$} and are placed \textbf{before} the recursive calls to \lstinline{eval$^o$}
 %   \item \emph{LastNando} in which boolean connectives are implemented via \lstinline{nand$^o$} and are placed \textbf{after} the recursive calls to \lstinline{eval$^o$}
 % \end{itemize}
-In our study we considered 4 implementations of \lstinline{eval$^o$} summed up in the table~\ref{tbl:eval}. They differ in the way the boolean connectives are implemented (see column \emph{implementation}) and wether they are placed before or after the recursive calls to \lstinline{eval$^o$} (see column \emph{placement}).
+In our study we considered 4 implementations of \lstinline{eval$^o$} summed up in the table~\ref{tbl:eval}. They differ in the way the boolean connectives are implemented (see column \emph{Implementation}) and wether they are placed before or after the recursive calls to \lstinline{eval$^o$} (see column \emph{Placement}).
+These four implementations are very different from the  standpoint of \ecce.
 
 \begin{wraptable}{r}{0.5\textwidth}
     \centering
     \begin{tabular}{c||c||c}
-                      & implementation & placement \\ \hline\hline
+                      & Implementation & Placement \\ \hline\hline
     \emph{FirstPlain} & table-based    & before \\ \hline
     \emph{LastPlain}  & table-based    & after  \\ \hline
     \emph{FirstNando} & via nand$^o$   & before \\ \hline
@@ -330,40 +336,57 @@ In our study we considered 4 implementations of \lstinline{eval$^o$} summed up i
   \label{tbl:eval}
 \end{wraptable}
 
-
-These four implementations are very different from \ecce standpoint.
 We measured the time necessary to generate $1000$ formulas over two variables which evaluate to \lstinline{^true} (averaged over 10 runs).
-The results are presented in Fig.~\ref{tbl:eval}.
+The results are presented in Fig.~\ref{fig:eval}.
 
 \begin{figure}[!t]
   \centering
   \begin{subfigure}[c]{0.35\textwidth}
     \centering
-    %% \begin{tabular}{c||c|c|c|c}
-    %%   & FirstPlain & FirstNando & LastPlain & LastNando \\ \hline\hline
-    %%   Original         & 14.8ms     & 14.5ms     & 7.4ms     & 10.1ms    \\ \hline
-    %%   \ecce            & 16.0ms     & 22.3ms     & 14.0ms    & 14.9ms    \\ \hline
-    %%   ConsPD          & 9.1ms      & 9.7ms      & 9.1ms     & 9.9ms     \\
-    %% \end{tabular}
     \begin{tabular}{e{1cm}||c|c|c}
-      & Original & \ecce  & ConsPD \\ \hline\hline
-      FirstPlain & 14.8ms & 16.0ms & 9.1ms \\ \hline
-      FirstNando & 14.5ms & 22.3ms & 9.7ms \\ \hline
-      LastPlain  & 7.4ms  & 14.0ms & 9.1ms \\ \hline
-      LastNando  & 10.1ms & 14.9ms & 9.9ms
+               & Original & \ecce & ConsPD \\ \hline\hline
+      \emph{FirstPlain} & 1.59s & 1.61s & 0.92s \\ \hline
+      \emph{FirstNando} & 1.43s & 2.24s & 0.96s \\ \hline
+      \emph{LastPlain}  & 0.98s & 1.43s & 0.97s \\ \hline
+      \emph{LastNando}  & 1.09s & 1.54s & 0.91s
     \end{tabular}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[c]{0.6\textwidth}
+  \begin{subfigure}[c]{0.58\textwidth}
     \includegraphics[width=\textwidth]{data/propEval/prop.pdf}
   \end{subfigure}
   \caption{Execution time of evalo}
-  \label{tbl:eval}
+  \label{fig:eval}
 \end{figure}
 
-ConsPD generates programs with comparable performance for all four implementations, while the quality of \ecce specialization differs significantly.
+Conservative partial deduction generates  programs with comparable performance for all four implementations, while the quality of \ecce specialization differs significantly.
 \ecce worsens performance for every implementation as compared to the original program.
-ConsPD worsens performance of only the fastest implementation \emph{LastPlain}, while improving it for others.
+ConsPD do not worsen performance for any implementation.
+Its effect is most significant for the implementations in which the boolean connectives are placed first within conjunctions.
+
+\subsubsection{The Order of Answers}
+
+It is important to note that different implementations of the same \mk relation produce answers in different orders.
+Nevertheless, since \mk search is complete, all answers will be found eventually.
+Unfortunately, it is not guaranteed that the first 1000 formulas generated with different implementations of \lstinline{eval$^o$} will be the same.
+For example, $983$ formulas are the same among the first $1000$ formulas generated by the Original \emph{FirstPlain} relation and the same relation after the ConsPD transformation.
+At the same time, only $405$ formulas are the same between the Original and \ecce \emph{LastNando} relations.
+
+The reason why implementations differ so much in the order of the answers stems from the canonical search strategy employed in \mk.
+Most \mk implementations employ \emph{interleaving} search~\cite{10.1145/1090189.1086390} which is left-biased.
+It means that the leftmost disjunct in a relation is being executed longer than the disjunct on the right.
+This property is not local which makes it very hard to estimate the performance of a given relation.
+
+In practice it means that if a specializer reorders disjuncts, then the performace of relations after specialization may be unpredictable.
+For example, by putting the disjuncts of the \lstinline{eval$^o$} relation in the opposite order, one produces a relation which runs much faster than the original, but it generates completely different formulas at the same time.
+Most of the first 1000 formulas in this case are multiple negations of a variable, while the original relation produces more diverse set of answers.
+Computing a negation of a formula only takes one recursive \lstinline{eval$^o$} call thus finding such answers is faster than conjunctions and disjunctions.
+Meanwhile, the formulas generated by the reordered relation are less diverse and may be of less interest.
+
+Although neither \ecce nor ConsPD reorder disjuncts, they remove disjuncts which cannot succeed.
+Thus they influence the order of answers and performance of relations.
+We believe that, in general, it is not possible to guarantee the same order of answers after specialization.
+Exploring how different specializations influence the execution order is a fascinating direction for future research.
 
 
 \subsection{Typechecker-Term Generator}
@@ -390,12 +413,10 @@ An environment $\Gamma$ is an ordered list, in which the $i$-th element is the t
 To typecheck a let-binding, first, the term being bound is typechecked and is added in the beginning of the environment $\Gamma$, and then the body is typechecked in the context of the new environment.
 Typechecking a variable with the index $i$ boils down to getting an $i$-th element of the list.
 
-\vspace{-15pt}
 \begin{figure*}[!h]
   \centering
   \includegraphics[width=\textwidth]{figures/typechecker-crop.pdf}
 \end{figure*}
-\vspace{-15pt}
 
 
 We compared two implementations of these typing rules.
