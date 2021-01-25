@@ -121,7 +121,7 @@ Conservative partial deduction drives the selected call until it derives useful 
 
 \subsubsection{Evaluation Results}
 
-In our study we considered 4 implementations of \lstinline{eval$^o$} summed up in the table~\ref{tbl:eval}. They differ in the way the boolean connectives are implemented (see column \emph{Implementation}) and whether they are placed before or after the recursive calls to \lstinline{eval$^o$} (see column \emph{Placement}).
+In our study we considered 4 implementations of \lstinline{eval$^o$} summed up in the Table~\ref{tbl:eval}. They differ in the way the boolean connectives are implemented (see column \emph{Implementation}) and whether they are placed before or after the recursive calls to \lstinline{eval$^o$} (see column \emph{Placement}).
 These four implementations are very different from the  standpoint of \ecce.
 
 \begin{table}[!h]
@@ -206,7 +206,7 @@ The variables are represented with de Bruijn indices, thus let-binding does not 
   &\multicolumn{2}{l}{| \ \underline{if} \ term \ \underline{then} \ term \ \underline{else} \ term} &
 \end{array}\]
 
-The typing rules are straightforward and are presented below.
+The typing rules are straightforward and are presented in Fig.~\ref{fig:typing}.
 Boolean and integer constants have the corresponding types regardless of the environment.
 Only terms of type integer can be summed up, multiplied or compared by less-than operator.
 Any terms of the same type can be checked for equality.
@@ -216,7 +216,7 @@ An environment $\Gamma$ is an ordered list, in which the $i$-th element is the t
 To typecheck a let-binding, first, the term being bound is typechecked and is added in the beginning of the environment $\Gamma$, and then the body is typechecked in the context of the new environment.
 Typechecking a variable with the index $i$ boils down to getting an $i$-th element of the list.
 
-\begin{table}[!h]
+\begin{figure}[!h]
   \setlength{\tabcolsep}{0.4cm}
   \centering
   \begin{tabular}{c c c}
@@ -233,7 +233,10 @@ Typechecking a variable with the index $i$ boils down to getting an $i$-th eleme
     \infer[]{\Gamma \vdash t < s : Bool}{\Gamma \vdash t : Int, \Gamma \vdash  s : Int} \vspace{0.5cm} &
       \infer[]{\Gamma \vdash \underline{if} \ c \ \underline{then} \ t \ \underline{else} \ s : \tau}{\Gamma \vdash c : Bool, \Gamma \vdash t : \tau, \Gamma \vdash s : \tau}
   \end{tabular}
-\end{table}
+  \vspace{-0.3cm}
+  \caption{Typing rules implemented in typecheck$^o$ relation}
+  \label{fig:typing}
+\end{figure}
 
 
 We compared two implementations of these typing rules.
