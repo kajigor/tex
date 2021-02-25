@@ -1,7 +1,12 @@
 \section{Introduction}
 
 A family of embedded domain-specific languages \mk\footnote{\mk language web site: \url{http://minikanren.org}} impelement relational programming~---~a paradigm closely related to the pure logic programming.
-The main primitive in \mk is \emph{term unification}.
+The minimal core of the language, also known as \muk, can be implemented in as little as 39 lines of \scheme~\cite{friedmanmukanren}.
+An introduction to the language and some of its extensions in a series of examples can be found in the book The Reasoned Schemer~\cite{TheReasonedSchemer}.
+The formal certified semantics for \mk is described in~\cite{rozplokhas2020certified}.
+
+This paper considers the minimal core language.
+The main primitive in the language is \emph{term unification}.
 Unifications are combined into \emph{conjunctions} and \emph{disjunctions} which form \emph{relations}.
 Relations can call other relations and be recursive.
 A program in \mk consists of a set of relations.
@@ -27,7 +32,7 @@ Depending on the particular \emph{control} decisions, it may also not affect the
 
 Control issues in partial deduction of logic programming language \pro have been studied before~\cite{leuschel2002logic}.
 Unlike Prolog, where atoms in the right-hand side of a clause cannot be arbitrarily reordered without changing the semantics of a program, in \mk the subgoals of conjunction/disjunction can be freely switched.
-This opens a yet another possibility for optimization, not taken into account by approaches initially developed in the context of conventional logic programming.
+This opens yet another possibility for optimization, not taken into account by approaches initially developed in the context of conventional logic programming.
 % The ideas described there make use of the deterministic search strategy of \pro.
 % However in \mk it is allowed to reorder some relation calls within the goal for better performance.
 % While sometimes conjunctive partial deduction gives great performance boost, sometimes it does not behave as well as it could have.

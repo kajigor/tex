@@ -1,14 +1,14 @@
 \section{Conclusion}
 
 In this paper we discussed some issues which arise in the area of partial deduction techniques for relational programming language \mk.
-We presented a novel approach to partial deduction --- conservative partial deduction --- which uses a heuristics to select a suitable relation call to unfold at each step of driving.
+We presented a novel approach to partial deduction --- conservative partial deduction --- which uses a heuristic to select a suitable relation call to unfold at each step of driving.
 We compared this approach with the most sophisticated implementation of conjunctive partial deduction --- \ecce partial deduction system --- on 6 relations which solve 2 different problems.
 
 Our specializer improved the execution time of all queries.
 \ecce worsened the performance of all 4 implementations of the propositional evaluator relation, while improving the other queries.
-Conservative PD is more stable with regrads to the order of relation calls than \ecce which is demonstrated by the similar performance of all 4 implementations of the evaluator of logic formulas.
+Conservative PD is more stable with regards to the order of relation calls than \ecce which is demonstrated by the similar performance of all 4 implementations of the evaluator of logic formulas.
 
-Some queries to the same relation were improved better by ConsPD, while others --- by \ecce.
+Some queries to the same relation were improved more by ConsPD, while others --- by \ecce.
 We conclude that there is still no one good technique which definitively speeds up every relational program.
 More research is needed to develop models capable of predicting the performance of a relation which can be used in specialization.
 Another direction for future research is exploring how specialization influences the execution order of a \mk program.

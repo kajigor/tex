@@ -35,12 +35,12 @@ The code is omitted for brevity.
 
 There are several core ideas behind this algorithm.
 The first is to select an arbitrary relation to unfold, not necessarily the leftmost which is safe.
-The second idea is to use a heuristics which decides if unfolding a relation call can lead to discovery of contradictions between conjuncts which in turn leads to restriction of the answer set at specialization-time (line 14; \code{heuristically\_select\_a\_call} stands for heuristics combination, see section~\ref{sec:heurictic} for details).
+The second idea is to use a heuristic which decides if unfolding a relation call can lead to discovery of contradictions between conjuncts which in turn leads to restriction of the answer set at specialization-time (line 14; \code{heuristically\_select\_a\_call} stands for heuristic combination, see section~\ref{sec:heurictic} for details).
 If those contradictions are found, then they are exposed by considering the conjunction as a whole and replacing the selected relation call with the result of its unfolding thus \emph{joining} the conjunction back together instead of using \emph{split} as in CPD (lines 15--22).
 Joining instead of splitting is why we call our transformer \emph{conservative} partial deduction.
-Finally, if the heuristics fails to select a potentially good call, then the conjunction is split into individual calls which are driven in isolation and are never joined (line 23).
+Finally, if the heuristic fails to select a potentially good call, then the conjunction is split into individual calls which are driven in isolation and are never joined (line 23).
 
-When the heuristics selects a call to unfold (line 15), a process tree is constructed for the selected call \emph{in isolation} (line 16).
+When the heuristic selects a call to unfold (line 15), a process tree is constructed for the selected call \emph{in isolation} (line 16).
 The leaves of the computed tree are examined.
 If all leaves are either computed substitutions or are instances of some relations accompanied with non-empty substitutions, then the leaves are collected and each of them replaces the considered call in the root conjunction (lines 19--20).
 If the selected call does not suit the criteria, the results of its unfolding are not propagated onto other relation calls within the conjunction, instead, the next suitable call is selected (line 22).
@@ -94,38 +94,38 @@ Unfolding too much may create extra unifications, which is by itself a costly op
 
 There is a fine edge between too much unfolding and not enough unfolding.
 The former is maybe even worse than the latter.
-We believe that the following heuristics provides a reasonable approach to unfolding control.
+We believe that the following heuristic provides a reasonable approach to unfolding control.
 
-\subsection{Less Branching Heuristics}
+\subsection{Less Branching Heuristic}
 \label{sec:heurictic}
 
-This heuristics is aimed at selecting a relation call within a conjunction which is both safe to unfold and may lead to discovering contradictions within the conjunction.
+This heuristic is aimed at selecting a relation call within a conjunction which is both safe to unfold and may lead to discovering contradictions within the conjunction.
 An unsafe unfolding leads to an uncontrollable increase of the number of relation calls in a conjunction.
 It is best to first unfold those relation calls which can be fully computed up to substitutions.
 
 We deem every static (non-recursive) conjunct to be safe because they never lead to growth in the number of conjunctions.
 Those calls which unfold deterministically, meaning there is only one disjunct in the unfolded relation, are also considered to be safe.
 
-Those relation calls which are neither static nor deterministic are examined with what we call the \emph{less-branching} heuristics.
+Those relation calls which are neither static nor deterministic are examined with what we call the \emph{less-branching} heuristic.
 It identifies the case when the unfolded relation contains fewer disjuncts than it could possibly have.
 This means that we found some contradiction, some computations were gotten rid of, and thus the answer set was restricted, which is desirable when unfolding.
-To compute this heuristics we precompute the maximum possible number of disjuncts in each relation and compare this number with the number of disjuncts when unfolding a concrete relation call.
+To compute this heuristic we precompute the maximum possible number of disjuncts in each relation and compare this number with the number of disjuncts when unfolding a concrete relation call.
 The maximum number of disjuncts is computed by unfolding the body of the relation in which all relation calls were replaced by a unification which always succeeds.
 
 \begin{figure}[!t]
   \centering
   \includegraphics[width=0.85\textwidth]{figures/heuristic-crop.pdf}
-  \caption{Heuristics selection pseudocode}
+  \caption{Heuristic selection pseudocode}
   \label{fig:heu-pseudo}
 \end{figure}
 
 %  more complicated case is when there are less disjuncts than there can possibly be.
 % This signifies that at least one branch of computations is gotten rid of.
 
-The pseudocode describing our heuristics is shown in Fig.~\ref{fig:heu-pseudo}.
+The pseudocode describing our heuristic is shown in Fig.~\ref{fig:heu-pseudo}.
 Selecting a good relation call can fail (line 1).
 The implementation works such that we first select those relation calls which are static, and only if there are none, we proceed to consider deterministic unfoldings and then we search for those which are less branching.
-We believe this heuristics provides a good balance in unfolding.
+We believe this heuristic provides a good balance in unfolding.
 % The final heuristic selects the first conjunct which suites either of the following cases.
 % First we unfold those conjuncts which are static.
 % Then --- deterministic.
