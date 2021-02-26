@@ -5,10 +5,12 @@ The minimal core of the language, also known as \muk, can be implemented in as l
 An introduction to the language and some of its extensions in a series of examples can be found in the book The Reasoned Schemer~\cite{TheReasonedSchemer}.
 The formal certified semantics for \mk is described in~\cite{rozplokhas2020certified}.
 
+Relational programming is a paradigm which describes programs as relations.
 The core feature of relational programming is the ability to run a program in various directions by executing goals with free variables.
 The distribution of free variable occurrences determines the direction of relational search.
 For example, having specified a relation for adding two numbers, one can also compute the subtraction of two numbers or find all pairs of numbers which can be summed up to get the given one.
-Program synthesis can be done by running a relational interpreter for some language \emph{backwards}.
+One of the most prominent applications of relational programming amounts to implementing interpreters as relations.
+By running a relational interpreter for some language \emph{backwards} one can do programs synthesis.
 In general, it is possible to create a solver from a recognizer by translating it into \mk and running in the appropriate direction~\cite{lozov2019relational}.
 
 The search employed in \mk is complete which means that every answer will be found, although it may take a long time.
