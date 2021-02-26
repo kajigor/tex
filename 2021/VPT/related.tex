@@ -1,11 +1,11 @@
 \section{Related Work}
 
-Specialization is an attractive technique aimed to improve the performance of a program if some of its arguments are known statically.
+Specialization is an attractive technique aimed to improve the performance of a program if some of its arguments are known statically or there are some other static properties of a program.
 Specialization is studied for functional, imperative, and logic programing and comes in different forms: partial evaluation~\cite{jonesbook} and partial deduction~\cite{lloyd1991partial}, supercompilation~\cite{soerensen1996positive}, distillation~\cite{hamilton2007distillation}, and many others.
 
 
 The heart of supercompilation-based techniques is \emph{driving}~---~a symbolic execution of a program through all possible execution paths.
-The result of driving is a so-called \emph{process tree} where nodes correspond to \emph{configurations} which represent computation state.
+The result of driving is a possibly infinite \emph{process tree} where nodes correspond to \emph{configurations} which represent computation state.
 For example, in the case of pure functional programming languages, the computational state might be a term.
 Each path in the tree corresponds to some concrete program execution.
 The two main sources for supercompilation optimizations are aggressive information propagation about variables' values, equalities and disequalities, and precomputing of all possible semantic evaluation steps.
@@ -60,5 +60,5 @@ This means that if a non-deterministic atom is the leftmost one within a conjunc
 We believe this is the core problem of CPD which limits its power when applied to \mk.
 The strategy of unfolding atoms from left to right is reasonable in the context of \pro because it mimics the way programs in \pro execute.
 But in \mk it often leads to larger global control trees and, as a result, bigger, less efficient programs.
-On the contrary, the results of evaluation of a \mk program do not depend on the order of atoms (relation calls) within conjunctions, thus we believe a better result can be achieved by selecting a relation call which can restrict the number of branches in the tree.
+On the contrary, according to the denotational semantics, the results of evaluation of a \mk program do not depend on the order of atoms (relation calls) within conjunctions, thus we believe a better result can be achieved by selecting a relation call which can restrict the number of branches in the tree.
 We describe our approach, which implements this idea, in the next section.

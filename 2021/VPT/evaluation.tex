@@ -1,9 +1,11 @@
 \section{Evaluation}
 
-We implemented the conservative partial deduction for \mk and compared it with the \ecce partial deduction system.
+We implemented~\footnote{The repository of the project: \url{https://github.com/kajigor/uKanren_transformations/}} the conservative partial deduction for \mk and compared it with the \ecce partial deduction system.
 \ecce is designed for \pro programming language and cannot be directly applied for programs, written in \mk.
+Nevertheless, the languages show resemblance, and it is valuable to check if the existing methods for \pro can be used directly in the context of relational programming.
 To be able to compare our approach with \ecce, we converted each input program first to the pure subset of \pro, then specialized it with \ecce, and then we converted the result back to \mk.
 The conversion to \pro is a simple syntactic conversion. In the conversion from \pro to \mk, for each Horn clause a conjunction is generated in which unifications are placed before any relation call.
+All programs are run as \mk programs in our experiments.
 
 We chose two problems for our study: evaluation of a subset of propositional formulas and typechecking for a simple language.
 The problems illustrate the approach of using relational interpreters to solve search problems~\cite{lozov2019relational}.
@@ -93,14 +95,14 @@ It is enough to unfold such relation calls once to derive useful information abo
 \begin{figure*}[!t]
   \centering
   \begin{minipage}{0.5\textwidth}
-    \begin{lstlisting}[label={not:table}, caption={Implementation of boolean \lstinline{not} as a table}, captionpos=b, frame=tb]
+    \begin{lstlisting}[label={not:table}, caption={Implementation of boolean not$^o$ as a table}, captionpos=b, frame=tb]
   let not$^o$ x y = conde [
      (x === ^true /\ y === ^false;
       x === ^false /\ y === ^true)]
     \end{lstlisting}
   \end{minipage}
   \begin{minipage}{0.8\textwidth}
-    \begin{lstlisting}[label={not:nando}, caption={Implementation of boolean operations via \lstinline{nand}}, captionpos=b, frame=tb]
+    \begin{lstlisting}[label={not:nando}, caption={Implementation of boolean operations via nand$^o$}, captionpos=b, frame=tb]
   let not$^o$   x y = nand$^o$ x x y
   let or$^o$   x y z = nand$^o$ x x xx /\  nand$^o$ y y yy /\ nand$^o$ xx yy z
   let and$^o$ x y z = nand$^o$ x y xy /\   nand$^o$ xy xy z
