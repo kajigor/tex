@@ -100,7 +100,7 @@ It is enough to unfold such relation calls once to derive useful information abo
     \end{lstlisting}
   \end{minipage}
   \begin{minipage}{0.8\textwidth}
-    \begin{lstlisting}[label={not:nando}, caption={Implementation of boolean operation via \lstinline{nand}}, captionpos=b, frame=tb]
+    \begin{lstlisting}[label={not:nando}, caption={Implementation of boolean operations via \lstinline{nand}}, captionpos=b, frame=tb]
   let not$^o$   x y = nand$^o$ x x y
   let or$^o$   x y z = nand$^o$ x x xx /\  nand$^o$ y y yy /\ nand$^o$ xx yy z
   let and$^o$ x y z = nand$^o$ x y xy /\   nand$^o$ xy xy z
@@ -157,7 +157,7 @@ The results are presented in Fig.~\ref{fig:eval}.
   \begin{subfigure}[c]{0.58\textwidth}
     \includegraphics[width=\textwidth]{data/propEval/prop.pdf}
   \end{subfigure}
-  \caption{Execution time of evalo}
+  \caption{Execution time of eval$^o$}
   \label{fig:eval}
 \end{figure}
 

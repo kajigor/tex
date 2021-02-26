@@ -5,14 +5,6 @@ The minimal core of the language, also known as \muk, can be implemented in as l
 An introduction to the language and some of its extensions in a series of examples can be found in the book The Reasoned Schemer~\cite{TheReasonedSchemer}.
 The formal certified semantics for \mk is described in~\cite{rozplokhas2020certified}.
 
-This paper considers the minimal core language.
-The main primitive in the language is \emph{term unification}.
-Unifications are combined into \emph{conjunctions} and \emph{disjunctions} which form \emph{relations}.
-Relations can call other relations and be recursive.
-A program in \mk consists of a set of relations.
-To run a \mk program, one specifies a \emph{goal}: a \mk expression with some free variables.
-\mk then searches for the values of the free variables which satisfy given goal.
-
 The core feature of relational programming is the ability to run a program in various directions by executing goals with free variables.
 The distribution of free variable occurrences determines the direction of relational search.
 For example, having specified a relation for adding two numbers, one can also compute the subtraction of two numbers or find all pairs of numbers which can be summed up to get the given one.
@@ -25,7 +17,7 @@ The execution time of a program in \mk is highly unpredictable and varies greatl
 What is even worse, it depends on the order of the relation calls within a program.
 One order can be good for one direction, but slow down the computation dramatically in the other direction.
 
-Specialization or partial evaluation~\cite{jonesbook} is a technique aimed at improving the performance of a program given some information about it beforehand.
+Partial evaluation~\cite{jonesbook} is a technique for specialization, i.e. improving the performance of a program given some information about it beforehand.
 It may either be a known value of some argument, its structure (i.e. the length of an input list) or, in case of a relational program, --- the direction in which it is intended to be run.
 An earlier paper~\cite{lozov2019relational} has shown that \emph{conjunctive partial deduction}~\cite{de1999conjunctive} can sometimes improve the performance of \mk programs.
 Depending on the particular \emph{control} decisions, it may also not affect the execution time of a program or even make it slower.
