@@ -1,6 +1,6 @@
 \section{Evaluation}
 
-We implemented~\footnote{The repository of the project: \url{https://github.com/kajigor/uKanren_transformations/}} the conservative partial deduction for \mk and compared it with the \ecce partial deduction system.
+We implemented\footnote{The project repository: \url{https://github.com/kajigor/uKanren_transformations/}. Access date: 28.02.2021} the conservative partial deduction for \mk and compared it with the \ecce partial deduction system.
 \ecce is designed for \pro programming language and cannot be directly applied for programs, written in \mk.
 Nevertheless, the languages show resemblance, and it is valuable to check if the existing methods for \pro can be used directly in the context of relational programming.
 To be able to compare our approach with \ecce, we converted each input program first to the pure subset of \pro, then specialized it with \ecce, and then we converted the result back to \mk.
@@ -43,7 +43,7 @@ Depending on the way the \lstinline{eval$^o$} is implemented, different speciali
 \subsubsection{The Order of Relation Calls}
 
 One possible implementation of the evaluator is presented in Listing~\ref{eval:last}.
-Here relation \lstinline{elem$^o$ subst v res} unifies \lstinline{res} with the value of the variable \lstinline{v} in the list \lstinline{subst}.
+Here the relation \lstinline{elem$^o$ subst v res} unifies \lstinline{res} with the value of the variable \lstinline{v} in the list \lstinline{subst}.
 The relations \lstinline{and$^o$}, \lstinline{or$^o$}, and \lstinline{not$^o$} encode corresponding boolean connectives.
 
 \begin{figure*}[!t]
@@ -96,9 +96,9 @@ It is enough to unfold such relation calls once to derive useful information abo
   \centering
   \begin{minipage}{0.5\textwidth}
     \begin{lstlisting}[label={not:table}, caption={Implementation of boolean not$^o$ as a table}, captionpos=b, frame=tb]
-  let not$^o$ x y = conde [
-     (x === ^true /\ y === ^false;
-      x === ^false /\ y === ^true)]
+      let not$^o$ x y = conde [
+         (x === ^true /\ y === ^false;
+          x === ^false /\ y === ^true)]
     \end{lstlisting}
   \end{minipage}
   \begin{minipage}{0.8\textwidth}

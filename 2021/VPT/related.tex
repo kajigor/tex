@@ -8,21 +8,21 @@ The heart of supercompilation-based techniques is \emph{driving}~---~a symbolic 
 The result of driving is a possibly infinite \emph{process tree} where nodes correspond to \emph{configurations} which represent computation state.
 For example, in the case of pure functional programming languages, the computational state might be a term.
 Each path in the tree corresponds to some concrete program execution.
-The two main sources for supercompilation optimizations are aggressive information propagation about variables' values, equalities and disequalities, and precomputing of all possible semantic evaluation steps.
+The two main sources for supercompilation optimizations are aggressive information propagation about variables' values, equalities and disequalities, and precomputing of deterministic semantic evaluation steps.
 The latter process, also known as \emph{deforestation}~\cite{deforestation}, means  combining of consecutive process tree nodes with no branching.
 When the tree is constructed, the resulting, or \emph{residual}, program can be extracted from the process tree by the process called \emph{residualization}.
 Of course, the process tree can contain infinite branches.
 \emph{Whistles} --- heuristics to identify possibly infinite branches --- are used to ensure supercompilation termination.
 If a whistle signals during the construction of some branch, then something should be done to ensure termination.
 The most common approaches are either to stop driving the infinite branch completely (no specialization is done in this case and the source code is blindly copied into the residual program) or to fold the process tree to a \emph{process graph}.
-The main instrument to perform such a folding is \emph{generalization}.
+The main instrument to perform such a folding is some form of \emph{generalization}.
 Generalization, abstracting away some computed data about the current term, makes folding possible.
 %  i.e. abstracting away some computed data about the current term which makes folding possible.
 One source of infinite branches is consecutive recursive calls to the same function with an accumulating parameter: by unfolding such a call further one can only increase the term size which leads to nontermination.
 The accumulating parameter can be removed by replacing the call with its generalization.
 There are several ways to ensure process correctness and termination, most-specific generalization
 (anti-unification) and \emph{homeomorphic embedding}~\cite{Higman52,Kruskal60} as a
-whistle being the most common.
+whistle being common.
 %the most common being \emph{homeomorphic embedding}~\cite{Higman52,Kruskal60} used as a whistle and most-specific generalization of terms.
 % When two dangerously similar nodes are encountered,
 % For example, two consecutive recursive calls of a function with accumulating parameter, and the first is not an instance of the second, then one may construct a new, generalized, node such that both of original nodes are instances of the last one, then one of the initial nodes is replaced with the generalized one.
@@ -37,7 +37,7 @@ The worst-case for partial evaluation is when all static variables are used in a
 There is a lack of research in determining the classes of programs which transformers would definitely speed~up.
 
 Conjunctive partial deduction~\cite{de1999conjunctive} makes an effort to provide reasonable control for the left-to-right evaluation strategy of \pro.
-CPD constructs a tree which models goal evaluation and is similar to a SLDNF tree, then a residual program is generated from the tree.
+CPD constructs a tree which models goal evaluation and is similar to an SLDNF tree, then a residual program is generated from the tree.
 Partial deduction itself resembles driving in supercompilation~\cite{gluck1994partial}.
 The specialization is done in two levels of control: the local control determines the shape of the residual programs, while the global control ensures that every relation which can be called in the residual program is defined.
 The leaves of local control trees become nodes of the global control tree.
@@ -51,7 +51,7 @@ An adaptation of CPD for the \mk programming language is described in~\cite{lozo
 
 \ecce partial deduction system~\cite{leuschel1997ecce} is the most mature implementation of CPD for \pro.
 \ecce provides various implementations of both local and global control as well as several degrees of post-processing.
-Unfortunately there is neither an automatic procedure to choose what control setting is likely to improve input programs the most nor any informal recommendations on how to choose the best settings.
+Unfortunately there is no automatic procedure to choose what control setting is likely to improve input programs the most.
 The choice of the proper control is left to the user.
 
 An empirical study has shown that the most well-behaved strategy of local control in CPD for \pro is \emph{deterministic unfolding}~\cite{leuschel1997advanced}.
@@ -60,5 +60,5 @@ This means that if a non-deterministic atom is the leftmost one within a conjunc
 We believe this is the core problem of CPD which limits its power when applied to \mk.
 The strategy of unfolding atoms from left to right is reasonable in the context of \pro because it mimics the way programs in \pro execute.
 But in \mk it often leads to larger global control trees and, as a result, bigger, less efficient programs.
-On the contrary, according to the denotational semantics, the results of evaluation of a \mk program do not depend on the order of atoms (relation calls) within conjunctions, thus we believe a better result can be achieved by selecting a relation call which can restrict the number of branches in the tree.
+On the contrary, according to the denotational semantics, the results of evaluation of a \mk program do not depend on the order of relation calls (atoms) within conjunctions, thus we believe a better result can be achieved by selecting a relation call which can restrict the number of branches in the tree.
 We describe our approach, which implements this idea, in the next section.
