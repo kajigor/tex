@@ -1,6 +1,6 @@
 \section{Background}
 
-In this section we provide some background on relational programming and using relational interpreters to solve search problems.
+In this section we provide some background on relational programming and relational interpreters.
 
 \subsection{\mk}
 
@@ -41,12 +41,37 @@ Depending on the kind of the goal, one of the following situations is possible.
   \item Disjunction $g_1 \vee g_2$ applies both goals to the current substitution and concatenates the results.
 \end{enumerate}
 
+Consider the relation \lstinline{add$^o$} in Listing~\ref{eval:arith}.
+It defines the relation between three Peano numbers $x$, $y$ and $z$, such that $x + y = z$, using the \oc language\footnote{\oc: statically typed \mk embedding in \ocaml. The repository of the project: \url{https://github.com/JetBrains-Research/OCanren}}.
+The keyword \lstinline{conde} provides syntactic sugar for a disjunction, while \lstinline{zero} and \lstinline{succ} are constructors.
+The query \lstinline{fresh (z) (add$^o$ (succ zero) (succ zero) z)} results in the only substitution \lstinline{[z $\mapsto$ succ (succ zero)]}, while the query \lstinline{fresh (x y) (add$^o$ x y (succ (succ zero)))} executes to three valid substitutions: \lstinline{[x $\mapsto$ zero, y $\mapsto$ succ (succ zero)]}, \lstinline{[x $\mapsto$ succ zero,} \lstinline{y $\mapsto$ succ zero]}, \lstinline{[x $\mapsto$ succ (succ zero), y $\mapsto$ zero]}.
+
 \emph{Interleaving} search~\cite{10.1145/1090189.1086390} is at the core of \mk.
 It evaluates disjuncts incrementally, passing control from one to the other.
 This search strategy is what makes the search in \mk complete.
 It also allows for reordering of both disjuncts and conjuncts within a goal which may improve the efficiency of a program.
 This reordering generally leads to the reordering of the answers computed by a \mk program.
 The denotational semantics of \mk ignores the order of the answers because the search is complete and thus all possible answers will be found eventually.
+
+\begin{figure*}[!t]
+  \centering
+  \begin{minipage}{0.68\textwidth}
+    \begin{lstlisting}[label={eval:arith}, caption={Evaluator of arithmetic expressions}, captionpos=b, frame=tb]
+  let rec add$^o$ x y z = conde [
+      (x === zero /\ y === z);
+      (fresh (p) (x === succ p /\ add$^o$ p (succ y) z) ) ]
+
+  let rec eval$^o$ fm res = conde [fresh (x y xr yr) (
+      (fm === num res);
+      (eval$^o$ x xr /\  eval$^o$ y yr /\
+        conde [
+          (fm === sum x y /\ add$^o$ xr yr res);
+          (fm === prod x y /\ $\dots$);
+          $\dots$ ] )
+    \end{lstlisting}
+  \end{minipage}
+\end{figure*}
+
 
 \subsection{Relational Interpreters}
 
@@ -59,5 +84,9 @@ In fact, they are much more complex than verification~---~checking that some can
 The ability of \mk programs to be evaluated in different directions along with the complete semantics of the language allows for automatic generation of a solver from a verifier using relational conversion~\cite{lozov2017typed}.
 Unfortunately, generated relational interpreters are often inefficient, since the conversion introduces a lot of extra unifications and boilerplate.
 This kind of inefficiency is a prime candidate for specialization.
+
+Consider the relation interpreter \lstinline{eval$^o$ fm res} in Listing~\ref{eval:arith}.
+It evaluates an arithmetic expression \lstinline{fm} which can take the form of a number or a binary expression such as the \lstinline{sum x y}.
+Running the interpreter backwards synthesizes expressions which evaluate to the given number. For example one possible answer to the query \lstinline{eval$^o$ fm (succ (succ zero))} is \lstinline{sum (num (succ zero)) (sum (num zero) (num (succ zero)))}.
 
 
