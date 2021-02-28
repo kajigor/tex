@@ -86,7 +86,7 @@ Unfortunately, generated relational interpreters are often inefficient, since th
 This kind of inefficiency is a prime candidate for specialization.
 
 Consider the relation interpreter \lstinline{eval$^o$ fm res} in Listing~\ref{eval:arith}.
-It evaluates an arithmetic expression \lstinline{fm} which can take the form of a number or a binary expression such as the \lstinline{sum x y}.
+It evaluates an arithmetic expression \lstinline{fm} which can take the form of a number \lstinline{num x} or a binary expression such as the \lstinline{sum x y} or \lstinline{prod x y}.
 Running the interpreter backwards synthesizes expressions which evaluate to the given number. For example one possible answer to the query \lstinline{eval$^o$ fm (succ (succ zero))} is \lstinline{sum (num (succ zero)) (sum (num zero) (num (succ zero)))}.
 
 
