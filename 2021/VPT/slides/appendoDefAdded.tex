@@ -1,0 +1,46 @@
+\begin{tikzpicture}[
+  scale=0.8,
+  every node/.style = {
+    shape=rectangle,
+    rounded corners=0.05cm,
+    draw,
+    align=center,
+    minimum size=5mm,
+    scale=0.8,},
+  node distance=1.3em,
+  anchor=center
+]
+  \node[inner sep=10pt] (code) at (0,0) {\begin{lstlisting}
+let rec append$^o$ x y r =
+  ocanren {
+    (x === [] & y === r) |
+    (fresh h x' r' in
+      x === h :: x' &
+      append$^o$ x' y r' &
+      r === h :: r')}
+    \end{lstlisting}};
+    \node (em) [draw=none, left=of code, yshift=3cm] {embedded};
+    \node (rel) [draw=none, right=of code, yshift=3cm] {relation};
+    \node (disj) [draw=none, right=of code, yshift=0.4cm] {disjunction};
+    \node (conj) [draw=none, right=of code, yshift=-1cm] {conjunction};
+    \node (uni) [draw=none, left=of code, yshift=0.4cm] {term unification};
+    \node (fresh) [draw=none, left=of code, yshift=-1cm] {variable introduction};
+    \node (call) [draw=none, below=of code] {relation call};
+
+    \draw [red,<-] ($(code.west)+(0.6,0.9)$) to [out=180,in=-90] node[below, draw=none, red] {} ($(em.south)+(0,0)$);
+
+    \draw [red,<-] ($(code.north)+(0,-0.4)$) to [out=90,in=180] node[below, draw=none, red] {} ($(rel.west)+(0,0)$);
+
+    \draw [red,<-] ($(code.south)+(-1.2,1.1)$) to [out=-180,in=135] node[below, draw=none, red] {} ($(call.north west)+(0,0)$);
+
+    \draw [red,<-] ($(code.west)+(1.6,0.55)$) to [out=150,in=0] node[below, draw=none, red] {} ($(uni.east)+(0,0)$);
+
+    \draw [red,<-] ($(code.west)+(1.4,-0.3)$) to [out=230,in=0] node[below, draw=none, red] {} ($(fresh.east)+(0,0)$);
+
+
+    \draw [red,<-] ($(code.east)+(-0.6,0.4)$) to [out=0,in=-180] node[below, draw=none, red] {} ($(disj.west)+(0,0)$);
+
+    \draw [red,<-] ($(code.east)+(-0.3,-1)$) to [out=0,in=-180] node[below, draw=none, red] {} ($(conj.west)+(0,0)$);
+    \draw [red,<-] ($(code.east)+(-1.1,-0.5)$) to [out=0,in=-190] node[below, draw=none, red] {} ($(conj.west)+(0,0)$);
+
+  \end{tikzpicture}

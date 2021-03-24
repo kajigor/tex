@@ -1,0 +1,677 @@
+\documentclass[xcolor=table]{beamer}
+\usepackage{beamerthemesplit}
+\usepackage{wrapfig}
+\usetheme{SPbGU}
+\usepackage{pdfpages}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{cmap}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{indentfirst}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,automata,positioning,quotes,backgrounds,decorations.text,decorations.pathmorphing}
+\usepackage{multirow}
+\usepackage[noend]{algpseudocode}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{fancyvrb}
+\usepackage[linguistics]{forest}
+\usepackage{listings}
+\usepackage{multicol}
+\usepackage{comment}
+\usepackage{xspace}
+\usepackage{adjustbox}
+\usepackage{makecell}
+\usepackage{proof}
+
+\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{enumerate items}[circle]
+
+\lstdefinelanguage{ocanren}{
+keywords={run, conde, fresh, let, in, match, with, when, class, type,
+object, method, of, rec, repeat, until, while, \begin{comment}not,\end{comment} do, done, as, val, inherit,
+new, module, sig, deriving, datatype, struct, if, then, else, open, private, virtual, include, success, failure,
+true, false},
+sensitive=true,
+commentstyle=\small\itshape\ttfamily,
+keywordstyle=\textbf,%\ttfamily\underline,
+identifierstyle=\ttfamily,
+basewidth={0.5em,0.5em},
+columns=fixed,
+mathescape=true,
+fontadjust=true,
+literate={fun}{{$\lambda$}}1 {function}{function}8 {->}{{$\to$}}3 {===}{{$\equiv$}}1 {=/=}{{$\not\equiv$}}1 {|>}{{$\triangleright$}}3 {\\/}{{$\vee$}}2 {/\\}{{$\wedge$}}2 {^}{{$\uparrow$}}1,
+morecomment=[s]{(*}{*)},
+ moredelim=**[is][\color{red}]{@!}{@}
+}
+
+\tikzstyle{processTree} = [
+  ->,
+  sibling distance=15em,
+  scale=0.6,
+  every node/.style = {
+    shape=rectangle,
+    rounded corners=0.05cm,
+    draw,
+    align=center,
+    minimum size=5mm,
+    scale=0.6,},
+  %level 1/.style={sibling distance=100em}
+  ]
+
+
+\tikzstyle{program} = [
+  draw=black,
+  thick,
+  rectangle,
+  rounded corners=1pt,
+  inner sep=5pt,
+  inner ysep=5pt
+  ]
+
+\tikzstyle{goal} = [
+  draw=black,
+  rectangle,
+  rounded corners=1pt,
+  inner ysep=0pt,
+  ]
+
+\tikzstyle{input} = [
+  draw=none,
+  rectangle,
+  rounded corners=1pt,
+  inner sep=2pt,
+  inner ysep=2pt,
+  fill=green!10,
+  minimum height=5mm
+  ]
+
+
+\tikzstyle{transparent} = [
+  draw=none,
+  inner ysep=3pt
+  ]
+
+\lstset{
+language=ocanren
+}
+
+\newcommand{\mk}{\textsc{miniKanren}\xspace}
+\renewcommand{\and}{$\&$\xspace}
+\newcommand{\rel}[2]{\texttt{#1}$^o$ #2}
+\newcommand{\subst}[1]{$\langle$#1$\rangle$}
+
+\beamertemplatenavigationsymbolsempty
+
+\title[Partial Deduction for \mk{}]{An Empirical Study of Partial Deduction for \mk{}}
+\institute[JetBrains Research]{
+JetBrains Research, Programming Languages and Tools Lab  \\
+Saint Petersburg State University
+}
+
+\author[Kate Verbitskaia]{\textbf{Kate Verbitskaia}, Daniil Berezun, Dmitry Boulytchev}
+
+\date{28.03.2021}
+
+\definecolor{orange}{RGB}{179,36,31}
+
+\begin{document}
+{
+\begin{frame}[fragile]
+  \begin{tabular}{p{5.5cm} p{5.5cm}}
+   \begin{center}
+      \includegraphics[height=1.5cm]{pictures/jetbrainsResearch.pdf}
+    \end{center}
+    &
+    \begin{center}
+      \includegraphics[height=1.5cm]{pictures/SPbGU_Logo.png}
+    \end{center}
+  \end{tabular}
+  \titlepage
+\end{frame}
+}
+
+\begin{frame}[fragile]
+  \frametitle{\mk: Relational Programming Language (Family)}
+  \begin{center}
+      \input{appendoDefAdded.tex}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\mk: Querying}
+  \begin{columns}
+    \begin{column}{0.4\textwidth}
+      \begin{center}
+        \input{appendoDef.tex}
+      \end{center}
+    \end{column}
+    \begin{column}{0.6\textwidth}
+      \begin{itemize}
+        \item \lstinline{fresh q in append$^o$ [1] [2] q}
+        \begin{itemize}
+          \setlength{\itemindent}{-0.6em}
+          \item \lstinline{$\langle$ q $\to$ [1,2] $\rangle$}
+        \end{itemize}
+        \item \lstinline{fresh x, y in append$^o$ x y [1,2]}
+        \begin{itemize}
+          \setlength{\itemindent}{-0.6em}
+          \item \lstinline{$\langle$ x $\to$ [], y $\to$ [1,2] $\rangle$}
+          \item \lstinline{$\langle$ x $\to$ [1], y $\to$ [2] $\rangle$}
+          \item \lstinline{$\langle$ x $\to$ [1,2], y $\to$ [] $\rangle$}
+        \end{itemize}
+        \item \lstinline{fresh x, y, z in append$^o$ x y z}
+        \begin{itemize}
+          \setlength{\itemindent}{-0.6em}
+          \item \lstinline{$\langle$ x $\to$ [], y $\to$ $\__0$, z $\to$ $\__0$ $\rangle$}
+          \item \lstinline{$\langle$ x $\to$ $[\__0]$, y $\to$ $\__1$, z $\to$ $(\__0 : \__1)$ $\rangle$}
+          \item $\dots$
+        \end{itemize}
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Relational Interpreters for Search Problems}
+  \begin{center}
+    Recognizer backwards = solver
+  \end{center}
+
+  \begin{itemize}
+    \item Write recognizer in functional language
+    \item Run relational conversion to get relational interpreter from the recognizer
+    \item Run relational interpreter backwards
+  \end{itemize}
+
+\begin{center}
+  Core issue: running relational interpreter backwards is slow
+\end{center}
+
+\begin{center}
+  Possible solution: partial deduction
+\end{center}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Partial Deduction: a Method to Improve Logic Programs}
+\begin{center}
+  \input{spec.tex}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Partial Deduction for \mk: Bird's-eye View}
+  \begin{center}
+\input{birdseye.tex}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Driving: Unfolding}
+  \begin{center}
+    \input{drivingUnfold.tex}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Partial Deduction}
+
+\begin{center}
+  \input{pd2.tex}
+\end{center}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Conjunctive Partial Deduction: Left-to-right Unfolding}
+
+\begin{center}
+  \input{cpd2.tex}
+\end{center}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{CPD: Split is Necessary}
+\begin{center}
+  \input{splitNecessary.tex}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Split: Which Way is the Right Way?}
+\input{split.tex}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Decisions in Partial Deduction}
+\begin{itemize}
+  \item What to unfold: which calls, how many calls?
+  \begin{itemize}
+    \item CPD: the leftmost call, which does not have a predecessor \emph{embedded} into it
+  \end{itemize}
+  \item How to unfold: to what depth a call should be unfolded?
+  \begin{itemize}
+    \item CPD: unfold once
+  \end{itemize}
+  \item When to stop driving?
+  \begin{itemize}
+    \item When a goal is an instance of some goal in the process tree
+  \end{itemize}
+  \item When to split?
+  \begin{itemize}
+    \item When there is a predecessor embedded into the goal
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Evaluator of Logic Formulas: Unfolding Step 1}
+
+\begin{tikzpicture}[
+  remember picture,
+  overlay
+]
+  \node (a) [
+    program,
+    anchor=north west,
+    xshift=0.4cm,
+    yshift=-1.4cm
+  ]
+  at (current page.north west)
+  {
+    \adjustbox{scale=0.6}
+    {
+      \begin{minipage}[c]{\textwidth}
+        \input{propDef.tex}
+      \end{minipage}
+    }};
+
+  \node [
+      goal,
+      anchor=north east,
+    ]
+    at (a.south east)
+    {
+      \adjustbox{scale=0.6}
+      {
+        \begin{minipage}[c]{0.25\textwidth}
+          \begin{lstlisting}
+eval$^o$ fm s true
+          \end{lstlisting}
+        \end{minipage}
+      }};
+
+  \node [
+    transparent,
+    anchor=south,
+    yshift=1cm,
+  ]
+  at (current page.south)
+  {
+      \input{propCPD.tex}
+  };
+\end{tikzpicture}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Evaluator of Logic Formulas: Unfolding Step 2}
+
+\begin{center}
+  \input{propCPDunf2.tex}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Unfolding of Boolean Connectives}
+
+  \begin{center}
+    \input{boolOr.tex}
+  \end{center}
+
+  \vspace{1cm}
+
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{center}
+        \input{boolNot.tex}
+      \end{center}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{center}
+        \input{boolAnd.tex}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Unfolding Boolean Connectives First}
+
+\begin{center}
+  \input{propCPDunf3.tex}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Evaluator of Logic Formulas: Conservative PD}
+
+\begin{center}
+  \input{propConsPD.tex}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Conservative Partial Deduction}
+\begin{itemize}
+  \item Split conjunction into individual calls
+  \item Unfold each call in isolation
+  \item Unfold until embedding is encountered
+  \item Find a call which narrows the search space (less-branching heuristics)
+  \item Join the result of unfolding the selected call with the other calls not unfolded
+  \item Continue driving the constucted conjunction
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Less-branching Heuristics}
+
+  \begin{center}
+    Less-branching heuristics is used to select a call to unfold
+
+    \vspace{0.5cm}
+
+    If a call in the context unfolds into less branches than it does in isolation, select it
+  \end{center}
+
+\vspace{0.5cm}
+
+
+  \begin{columns}
+    \begin{column}[]{0.65\textwidth}
+      \begin{center}
+        \input{boolAndIso.tex}
+      \end{center}
+    \end{column}
+    \begin{column}[]{0.35\textwidth}
+      \input{boolAnd.tex}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Evaluation}
+We implemented the Conservative Partial Deduction and compared it with CPD\footnote{ECCE partial deduction system} on the following relations
+
+\begin{itemize}
+  \item Four implementations of an evaluator of logic formulas
+  \item Two implementations of a typechecker for a simple language
+\end{itemize}
+\end{frame}
+
+%\begin{frame}[fragile]
+%  \frametitle{Evaluator of Logic Formulas}
+%    \begin{center}
+%      \adjustbox{scale=0.9}
+%      {
+%        \begin{minipage}[c]{\textwidth}
+%          \input{propDef.tex}
+%        \end{minipage}
+%      }
+%    \end{center}
+%\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Evaluator of Logic Formulas: Order of Calls}
+  \begin{tikzpicture}[remember picture, overlay]
+
+    \node (a) [
+      program,
+      anchor=north,
+      yshift=-1.8cm
+    ]
+    at (current page.north)
+    {
+      \adjustbox{scale=0.8}
+      {
+        \begin{minipage}[c]{\textwidth}
+          \input{propDef.tex}
+        \end{minipage}
+      }
+    };
+
+    \node (b) [
+      transparent,
+      anchor=south]
+      at (a.north)
+    {\footnotesize
+        boolean connective last
+    };
+
+    \node[draw=none, fill=green!50, opacity=0.2, shape=rectangle, minimum width=1.3cm,minimum height=0.45cm, anchor=west] at ($(a.south)+(0.15,1.3)$) {};
+    \node[draw=none, fill=green!50, opacity=0.2, shape=rectangle, minimum width=1.7cm,minimum height=0.9cm, anchor=west] at ($(a.south)+(2.75,0.7)$) {};
+
+
+\pause
+
+    \node (c) [
+      program,
+      anchor=south,
+      yshift=0.8cm
+    ]
+    at (current page.south)
+    {
+      \adjustbox{scale=0.8}
+      {
+        \begin{minipage}[c]{\textwidth}
+          \input{propDef1.tex}
+        \end{minipage}
+      }
+    };
+
+    \node[draw=none, fill=green!50, opacity=0.2, shape=rectangle, minimum width=1.3cm,minimum height=0.45cm, anchor=west] at ($(c.south)+(-2.05,1.35)$) {};
+    \node[draw=none, fill=green!50, opacity=0.2, shape=rectangle, minimum width=1.7cm,minimum height=0.85cm, anchor=west] at ($(c.south)+(-1.6,0.7)$) {};
+
+
+    \node (d) [
+      transparent,
+      anchor=south]
+      at (c.north)
+    {\footnotesize
+      boolean connective first
+    };
+    \onslide<1->
+  \end{tikzpicture}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Evaluator of Logic Formulas: Compexity of Relations}
+
+
+  \begin{tikzpicture}[remember picture, overlay]
+
+    \node (a) [
+      program,
+      anchor=north west,
+      xshift=0.4cm,
+      yshift=-1.8cm
+    ]
+    at (current page.north west)
+    {
+      \adjustbox{scale=0.65}
+      {
+        \begin{minipage}[c]{0.7\textwidth}
+          \input{andDef.tex}
+        \end{minipage}
+      }
+    };
+
+    \node (b) [
+      transparent,
+      anchor=south]
+      at (a.north)
+    {\footnotesize
+        table-based implementation
+    };
+
+    \pause
+
+    \node (c) [
+      program,
+      anchor=south east,
+      xshift=-0.4cm,
+      yshift=0.5cm
+    ]
+    at (current page.south east)
+    {
+      \adjustbox{scale=0.65}
+      {
+        \begin{minipage}[c]{0.7\textwidth}
+          \input{andDef1.tex}
+        \end{minipage}
+      }
+    };
+
+    \node (d) [
+      transparent,
+      anchor=south]
+      at (c.north)
+    {\footnotesize
+        implementation via nand$^o$
+    };
+  \end{tikzpicture}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Evaluator of Logic Formulas: Evaluation}
+\begin{table}[!h]
+  \resizebox{0.65\textwidth}{!}{
+    \begin{minipage}{\textwidth}
+      \centering
+      \begin{tabular}{c||c||c}
+                        & Implementation & Placement \\ \hline\hline
+      \emph{FirstPlain} & table-based    & before \\ \hline
+      \emph{LastPlain}  & table-based    & after  \\ \hline
+      \emph{FirstNando} & via nand$^o$   & before \\ \hline
+      \emph{LastNando}  & via nand$^o$   & after  \\
+      \end{tabular}
+      \caption{Different implementations of eval$^o$}
+    \end{minipage}
+  }
+\label{tbl:eval}
+\end{table}
+
+\begin{center}
+  \includegraphics[width=0.65\textwidth]{pictures/prop/prop.pdf}
+\end{center}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Typechecker-Term Generator: Language}
+
+\begin{figure}[!h]
+  \resizebox{0.9\textwidth}{!}{
+    \begin{minipage}{1.3\textwidth}
+  \[\begin{array}{llll}
+    term = &\ BConst \ of \ Bool &| \ IConst \ of \ Int &| \ Var \ of \ Int \\
+    & | \ term + term &| \ term * term & \\
+    & | \ term = term &| \ term < term & \\
+    &| \ \underline{let} \ term \ \underline{in} \ term
+    &\multicolumn{2}{l}{| \ \underline{if} \ term \ \underline{then} \ term \ \underline{else} \ term}
+  \end{array}\]
+  \caption{Language syntax}
+    \end{minipage}
+  }
+
+\end{figure}
+
+
+
+
+\begin{figure}[!h]
+  \resizebox{0.9\textwidth}{!}{
+    \begin{minipage}{1.3\textwidth}
+  \setlength{\tabcolsep}{0.4cm}
+  \begin{tabular}{c c c}
+    \infer[]{\Gamma \vdash IConst \ i : Int}{} &
+    \infer[]{\Gamma \vdash BConst \ b : Bool}{}  &
+    \infer[\Gamma \lbrack v \rbrack \equiv \tau]{\Gamma \vdash Var \ v : \tau}{} \vspace{0.5cm}
+    \\
+    \infer[]{\Gamma \vdash t + s : Int}{\Gamma \vdash t : Int, \Gamma \vdash  s : Int}  \vspace{0.5cm} &
+    \infer[]{\Gamma \vdash t = s : Bool}{\Gamma \vdash t : \tau, \Gamma \vdash  s : \tau} &
+    \infer[]{\Gamma \vdash \underline{let} \ v \ b : \tau}{\Gamma \vdash v : \tau_v, \ (\tau_v :: \Gamma) \vdash b : \tau}
+      \\
+
+      \infer[]{\Gamma \vdash t * s : Int}{\Gamma \vdash t : Int, \Gamma \vdash  s : Int}  &
+    \infer[]{\Gamma \vdash t < s : Bool}{\Gamma \vdash t : Int, \Gamma \vdash  s : Int} \vspace{0.5cm} &
+      \infer[]{\Gamma \vdash \underline{if} \ c \ \underline{then} \ t \ \underline{else} \ s : \tau}{\Gamma \vdash c : Bool, \Gamma \vdash t : \tau, \Gamma \vdash s : \tau}
+  \end{tabular}
+  \vspace{-0.3cm}
+  \caption{Typing rules implemented in typecheck$^o$ relation}
+  \label{fig:typing}
+\end{minipage}
+  }
+\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Typechecker-Term Generator: Evaluation}
+
+Implementations:
+\begin{itemize}
+  \item Hand-coded typing rules in \mk
+  \item Generated from functional typechecker by relational conversion
+\end{itemize}
+
+  \begin{center}
+    \includegraphics[width=0.65\textwidth]{pictures/type/ltypelog.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Discussion: Order of Answers}
+Example from evalo.
+
+Uselessness of measuring time.
+
+Let's measure unifications
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Discussion: Deterministic Unfolding and Tupling}
+maxlen works
+maxmin does not work
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Conclusion}
+  \begin{itemize}
+    \item We developed and implemented Conservative Partial Deduction
+    \begin{itemize}
+      \item Less-branching heuristics
+    \end{itemize}
+    \item Evaluation shows some improvement, but not for every query
+    \item Future work:
+    \begin{itemize}
+      \item Develop models to predict execution time
+      \item Develop specialization which is more predictable, stable and well-behaved
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+\end{document}
