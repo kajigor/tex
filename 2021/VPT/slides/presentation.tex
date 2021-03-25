@@ -99,6 +99,7 @@ language=ocanren
 }
 
 \newcommand{\mk}{\textsc{miniKanren}\xspace}
+\newcommand{\pro}{\textsc{Prolog}\xspace}
 \renewcommand{\and}{$\&$\xspace}
 \newcommand{\rel}[2]{\texttt{#1}$^o$ #2}
 \newcommand{\subst}[1]{$\langle$#1$\rangle$}
@@ -418,6 +419,25 @@ We implemented the Conservative Partial Deduction and compared it with CPD\footn
 \end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Evaluation: Comparison with ECCE}
+\begin{center}
+  ECCE is a partial deduction system for \pro
+\end{center}
+
+\vfill
+
+
+To compare to ECCE we did the following steps:
+
+\begin{itemize}
+  \item Convert \mk program into \pro
+  \item Run the default transformation with ECCE
+  \item Convert generated \pro back into \mk
+\end{itemize}
+\end{frame}
+
+
 %\begin{frame}[fragile]
 %  \frametitle{Evaluator of Logic Formulas}
 %    \begin{center}
@@ -643,17 +663,42 @@ Implementations:
 
 \begin{frame}[fragile]
   \frametitle{Discussion: Order of Answers}
-Example from evalo.
+\begin{center}
+  Partial deduction changes the order of answers
+\end{center}
 
-Uselessness of measuring time.
+\begin{center}
+  Measuring time when order is different does not make much sense
+\end{center}
 
-Let's measure unifications
+\begin{center}
+  Partial deduction reduces the number of unifications needed \\ to compute an answer
+\end{center}
+
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Discussion: Deterministic Unfolding and Tupling}
-maxlen works
-maxmin does not work
+\begin{center}
+  ConsPD often splits too much failing to do tupling
+\end{center}
+
+\begin{center}
+  Because of the deterministic unfolding, ECCE fails to tuple \lstinline{maxmin}
+\end{center}
+
+\begin{lstlisting}
+max([],M,M).
+max([H|T],N,M) :- H =< N, max(T,N,M).
+max([H|T],N,M) :- H > N, max(T,H,M).
+
+min([],M,M).
+min([H|T],N,M) :- H > N, min(T,N,M).
+min([H|T],N,M) :- H =< N, min(T,H,M).
+
+maxmin([H],H,H).
+maxmin([H|T],Max,Min) :- max(T,H,Max),min(T,H,Min).
+\end{lstlisting}
 \end{frame}
 
 
