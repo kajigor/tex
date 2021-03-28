@@ -156,6 +156,7 @@ Saint Petersburg State University
           \setlength{\itemindent}{-0.6em}
           \item \lstinline{$\langle$ q $\to$ [1,2] $\rangle$}
         \end{itemize}
+        \pause
         \item \lstinline{fresh x, y in append$^o$ x y [1,2]}
         \begin{itemize}
           \setlength{\itemindent}{-0.6em}
@@ -163,6 +164,7 @@ Saint Petersburg State University
           \item \lstinline{$\langle$ x $\to$ [1], y $\to$ [2] $\rangle$}
           \item \lstinline{$\langle$ x $\to$ [1,2], y $\to$ [] $\rangle$}
         \end{itemize}
+        \pause
         \item \lstinline{fresh x, y, z in append$^o$ x y z}
         \begin{itemize}
           \setlength{\itemindent}{-0.6em}
@@ -177,15 +179,28 @@ Saint Petersburg State University
 \end{frame}
 
 \begin{frame}[fragile]
+  \frametitle{\mk: Semantics}
+  \begin{itemize}
+    \item Interleaving search
+    \item Complete search
+    \begin{itemize}
+      \item All existing answers will be eventually found
+      \item It is safe to reorder within conjunctions and disjunctions
+      \item Reordering affects the efficiency of programs
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
   \frametitle{Relational Interpreters for Search Problems}
   \begin{center}
-    Recognizer backwards = solver
+    Recognizer run backwards = solver
   \end{center}
 
   \begin{itemize}
-    \item Write recognizer in functional language
-    \item Run relational conversion to get relational interpreter from the recognizer
-    \item Run relational interpreter backwards
+    \item Write a recognizer in a functional language
+    \item Run relational conversion to get a relational interpreter from the recognizer
+    \item Run the relational interpreter backwards
   \end{itemize}
 
 \begin{center}

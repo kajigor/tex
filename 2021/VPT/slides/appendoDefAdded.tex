@@ -21,15 +21,16 @@ let rec append$^o$ x y r =
     \end{lstlisting}};
     \node (em) [draw=none, left=of code, yshift=3cm] {embedded};
     \node (rel) [draw=none, right=of code, yshift=3cm] {relation};
+    \draw [red,<-] ($(code.west)+(0.6,0.9)$) to [out=180,in=-90] node[below, draw=none, red] {} ($(em.south)+(0,0)$);
+    \draw [red,<-] ($(code.north)+(0,-0.4)$) to [out=90,in=180] node[below, draw=none, red] {} ($(rel.west)+(0,0)$);
+
+    \pause
+
     \node (disj) [draw=none, right=of code, yshift=0.4cm] {disjunction};
     \node (conj) [draw=none, right=of code, yshift=-1cm] {conjunction};
     \node (uni) [draw=none, left=of code, yshift=0.4cm] {term unification};
     \node (fresh) [draw=none, left=of code, yshift=-1cm] {variable introduction};
     \node (call) [draw=none, below=of code] {relation call};
-
-    \draw [red,<-] ($(code.west)+(0.6,0.9)$) to [out=180,in=-90] node[below, draw=none, red] {} ($(em.south)+(0,0)$);
-
-    \draw [red,<-] ($(code.north)+(0,-0.4)$) to [out=90,in=180] node[below, draw=none, red] {} ($(rel.west)+(0,0)$);
 
     \draw [red,<-] ($(code.south)+(-1.2,1.1)$) to [out=-180,in=135] node[below, draw=none, red] {} ($(call.north west)+(0,0)$);
 
