@@ -79,7 +79,7 @@ eval$^o$ fm s true
     program,
     anchor=south west,
     xshift=1cm,
-    yshift=1cm]
+    yshift=0.8cm]
   at (current page.south west)
   {
     \adjustbox{scale=0.65}{
@@ -87,6 +87,7 @@ eval$^o$ fm s true
         \begin{lstlisting}
 let rec eval$^o$_true fm s =
   ...
+  fm === conj x y &
   eval$^o$_true x s &
   eval$^o$_true y s |
   ...

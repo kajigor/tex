@@ -181,7 +181,7 @@ Saint Petersburg State University
 \begin{frame}[fragile]
   \frametitle{\mk: Semantics}
   \begin{itemize}
-    \item Interleaving search
+    \item Interleaving semantics
     \item Complete search
     \begin{itemize}
       \item All existing answers will be eventually found
@@ -698,6 +698,8 @@ Implementations:
   ConsPD often splits too much failing to do tupling
 \end{center}
 
+\pause
+
 \begin{center}
   Because of the deterministic unfolding, ECCE fails to tuple \lstinline{maxmin}
 \end{center}
@@ -727,6 +729,7 @@ maxmin([H|T],Max,Min) :- max(T,H,Max),min(T,H,Min).
     \item Evaluation shows some improvement, but not for every query
     \item Future work:
     \begin{itemize}
+      \item Tweak ConsPD to achieve tupling in more cases
       \item Develop models to predict execution time
       \item Develop specialization which is more predictable, stable and well-behaved
     \end{itemize}
