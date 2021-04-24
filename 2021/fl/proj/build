@@ -1,0 +1,4 @@
+for i in ./*.tex
+do 
+  xelatex "$i"
+done

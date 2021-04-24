@@ -1,0 +1,60 @@
+\documentclass[12pt]{article}
+\usepackage[left=1cm,right=1.5cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage{hyperref}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\usepackage{amssymb}
+\usepackage{cprotect}
+\setdefaultlanguage{russian}
+\pagestyle{empty}
+\newfontfamily{\cyrillicfonttt}{Liberation Mono}
+\setmainfont[Mapping=tex-text]{CMU Serif}
+
+\begin{document}
+\begin{center}
+{\LARGE Формальные языки}
+
+\bigskip
+
+{\Large Екатерина Леденева}
+\end{center}
+
+\bigskip
+
+Сравнить возможности инструментов для синтаксического анализа.
+
+\begin{itemize}
+  \item Выбрать три инструмента для синтаксического анализа:
+  \begin{itemize}
+    \item Генератор парсеров, реализующий алгоритм семейства LL.
+    \item Генератор парсеров, реализующий алгоритм семейства LR.
+    \item Библиотека парсер-комбинаторов.
+  \end{itemize}
+  \item Изучить, какие классы языков они поддерживают: привести грамматики, которые обрабатывает один инструмент, но не обрабатывает другой.
+  \item Изучить, как эти инструменты поддерживают нетривиальные особенности синтаксиса, привести примеры парсеров с такими особенностями.
+  \begin{itemize}
+    \item Контекстно-чувствительная лексика.
+    \item Многострочные комментарии с контролем правильной вложенности скобок.
+    \item Неоднозначность грамматик.
+    \item Поддержка часто повторяющихся паттернов типа арифметики, списков с разделителями, комментариев...
+  \end{itemize}
+  \item Подготовить отчет
+\end{itemize}
+
+Альтернативно: сравнить возможности алгоритмов синтаксического анализа.
+
+\begin{itemize}
+  \item Выбрать несколько алгоритмов синтаксического анализа:
+  \begin{itemize}
+    \item CYK, Earley
+    \item LL, GLL
+    \item LR, Tomita GLR, RNGLR, BRNGLR
+    \item Parsing by derivatives
+    \item Parser expression grammars, parser combinators
+    \item Что-нибудь про multiple context-free grammar
+  \end{itemize}
+  \item Сравнить временную и пространственную сложность, классы поддерживаемых языков и грамматик.
+  \item Подготовить отчет с примерами и пояснениями.
+\end{itemize}
+
+\end{document}
