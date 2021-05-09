@@ -1,0 +1,62 @@
+\subsection*{Review 3}
+
+This paper seems to show that programs can be constructed that perform better using one algorithm (for MiniKanren) than another (ECCE for Prolog).  As mentioned on page 2, "there are no ways to predict the effect of specialization on a given program in general".  So it is hard to see what general conclusions can be drawn from this empirical study.
+
+Many parts of the paper are written clearly but overall, more clarification of the purpose and significance of the experiment is needed.
+
+This paper reminds me of some of the discussions about control of partial evaluation of logic programs in the 1990s.  It seems that some of these issues are being rediscovered in the context of MiniKanren, for example the handling of deterministic choices.  See for example Section 4 of [2].
+
+MiniKanren and Prolog are similar languages, as shown by the experiments in which programs are translated from one language to the other.  However they have differences in their execution strategy and the translation could affect the execution.  This is a vital aspect that needs to be addressed.  Each language implementation is optimised for its respective execution strategy. However, all the experimental results seem to be achieved by running the programs as MiniKanren programs.  I.e. a Prolog program extracted from ECCE is executed as a MiniKanren program!
+
+
+This seriously detracts from the value of the experiment. I think that the experiments should go both ways; i.e. run all the programs both as Prolog and as MiniKanren.
+
+
+
+Detailed comments.
+
+page 1. impelement ==> implement
+
+page 2.  "What is worse, the efficiency of residual program from the target language evaluator point of view is rarely considered in the literature." This is certainly not true of PE for Prolog.  See for example references [1], [2].
+
+page 3.  While it is true that CPD (ECCE) optimises programs for a left-to-right strategy. CPD can unfold any atom in a conjunction.  This preserves its logical semantics.  It is not true to state that CPD only "unfolds atoms from left to right".
+
+page 3.  The strategy for CPD provided by ECCE can be varied, as mentioned.  However, the experiments apparently only use the default settings.
+
+page 3. "The strategy of unfolding atoms from left to right is reasonable in the context of PROLOG because it mimics the way programs in PROLOG execute. But it often leads to larger global control trees and, as a result, bigger, less efficient programs."  This is misleading, possible false.  Unfolding the leftmost atoms can clearly NEVER increase the size of the search space when executing left to right.  It merely pushes forward some choices (which often can improve indexing in the head clause and improve performance). So what is meant by "larger global trees" and "less efficient programs". Please provide a clear example.
+
+However, unfolding non-deterministic non-leftmost atoms CAN increase the search space of a left-right execution, since goals to the left of the unfolded atom are duplicated.
+
+
+page 3. A feature of CPD that seems to be ignored is that a conjunction can be unfolded, i.e. it is not always "atom-by-atom" but a conjunction p,q can be treated as a single predicate pq.  This allows more powerful specialisations, loop fusion, etc.  It is not clear whether MiniKanren can achieve these specialisations.
+
+
+page 4.  Note that putting formulas in canonical form (disjunction of conjunctions) blows up the size of the program and can also increase the search.  This is a critical part of the experiment that needs to be addressed.  It would be better to define a new predicate for each construct, and then interpret it.  E.g.
+
+p :- s,(q \/ r).
+
+should be translated as
+
+p :- s,qr.
+
+qr :- q.
+qr :- r.
+
+rather than
+
+p :- s,q.
+p :- s,r.
+
+Executing the second form repeats execution of s, but the first form does not.  If the normalize function uses the second form, it casts serious doubt about the whole experiment.
+
+page 5.  The mechanism of generalisation seems very crude.  It might work for the given examples but seems too simple to be used in general.  More powerful generalisation using abstract interpretation and related methods have been widely studied.
+
+page 6.  Please explain more clearly why the two problems were chosen. It is stated that they are examples of relational interpreters to solve search problems. This is a special kind of program - can the results be expected to apply to other programs?
+
+page 9, Fig 3.  It should be made absolutely clear whether the programs are all run in MiniKanren (not Prolog). In my opinion this casts doubt on the validity of the experiments, since ECCE is designed to optimised execution for Prolog.
+
+
+[1] Raf Venken, Bart Demoen:
+A Partial Evaluation System for Prolog: some Practical Considerations. New Gener. Comput. 6(2\&3): 279-290 (1988)
+
+[2] J.P. Gallagher: Tutorial on Logic Program Specialisation"  (PEPM 1993).

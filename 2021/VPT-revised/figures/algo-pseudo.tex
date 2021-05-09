@@ -40,7 +40,7 @@
   moredelim={[is][\color{dkgreen}\bfseries]{@!}{@!}},
   moredelim={[is][\color{red}\bfseries]{!!}{!!}}]
 conspd goal = residualize @*$\circ$@* drive @*$\circ$@* normalize (goal)
-drive       = drive_disj @*$\cup$@* drive_conj
+drive       = drive_disj
 
 drive_disj :: Disjunction @*$\to$@* Process_Tree
 drive_disj (c@*$_1$@*, @*$\dots$@*, c@*$_n$@*) = @*$\bigvee_{i=1}^n$@* t@*$_i$@* @*$\leftarrow$@* drive_conj (c@*$_i$@*)

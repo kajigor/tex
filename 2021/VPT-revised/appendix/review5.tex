@@ -1,0 +1,44 @@
+
+\subsection*{Review 5}
+
+Specialization is a transformation of a given program with respect to (a set of) given restrictions to its behavior. Relational programming offers the ability to run a program in various directions and to execute goals with free variables. The paper describes a novel approach to relational programs specialization. It aims at improving the conjunctive partial deduction (CPD) approach such that it accelerates the generated programs.
+
+In CPD, the specialization is done at the local level, where the shape of the residual program is determined, and at the global level, where every relation in the residual program is defined. At the local level, CPD considers atoms one-by-one from left to right. The paper proposes heuristics to relax the order of atom consideration and to decide if unfolding a relation call can lead to the discovery of contradictions between conjuncts. This leads to the restriction of the answer set at the specialization run.
+
+\emph{We thank you for the review and a nice summary of our paper.}
+
+The main algorithm is described in pseudocode (Alg.1), but it is not easy to follow for readers without a proper background. Below are some suggestions to improve the presentation:
+
+\begin{itemize}
+ \item residualize -- is not explained.
+
+ \emph{Added a paragraph in section \ref{conspd} which explains residualization. The residualization is also mentioned further in the description of the algorithm.}
+
+ \item I feel the combination of functional notation and set-theoretic notation is confusing. For instance, line 1 suggests that drive is a function, but in line 2 drive is defined as disjunction drive_disj $\cup$ drive_conj. Then in line 5, drive_disj is defined using drive_conj. So, if I understand correctly, drive can be replaced just by drive_disj, and line 2 of the algorithm can be completely removed.
+
+\emph{You are right, driving is, in essence, just \code{drive\_disj}. We wanted to avoid dealing with corner cases in pseudocode (when a disjunction contains only one disjunct, for example), and we see how it made the matters more confusing.}
+
+ \item What do the C@ and D@ prefixes denote?
+
+\emph{\code{C} and \emph{D} are just names given to the pattern matched values. This is a piece of syntax we borrowed from Haskell. The explanation of the notation used is added before the pseudocode discussion.}
+
+ \item The presentation of the main idea of joining instead of splitting is somewhat dry. The motivation is more-or-less understandable, but the technical description is hard to follow. An example would greatly help here.
+
+ \todo{EXAMPLE!}
+\end{itemize}
+
+The paper also presents a heuristic to control the unfolding by computing if the unfolded relation contains fewer disjuncts than it could possibly have. Still, I suggest the authors polish the technical sections and add a running example.
+
+\todo{EXAMPLE!}
+
+The related work section actually presents both the related work and background. For readability reasons, I suggest separating it into two sections; as well as introducing the notation and giving more background on MINIKANREN.
+
+\emph{Done: see section\ref{background}.}
+
+My main criticism is about the evaluation. There are two case studies: 1) a subset of propositional formulas and 2) type checking for a simple language. The approach is implemented in OCANREN (statically typed MINIKANREN embedding in OCAML) and compared to ECCE (the most mature implementation of CPD for PROLOG). The implementation of the approach (called ConsPD) outperforms ECCE almost always. But the running times in both cases are very short (seconds, or fractions of seconds). An experiment over larger benchmarks would look more convincing. Compare to SAT solvers -- they are pretty good at solving formulas with thousands and millions of variables. The task considered in this paper is way simpler because no actual solving is done. I then suggest generating some really large propositional formulas and copmare ECCE and ConsPD on them.
+
+\emph{We agree that the evaluation is not as remarkable as it should be. We are still working on the best way to specialize \mk. These particular example programs were chosen to demonstrate common non-trivial issues which arise in \mk specialization. They were purposely kept short, so that we were able to point at specific issues: ordering of the relation calls, and how much they should be unfolded to get any useful data from it. Developping better, more comprehensive benchmarks is future work.}
+
+To sum up, I think the paper gives an interesting contribution, but the presentation and experiments could be improved.
+
+\emph{Thank you for your review!}

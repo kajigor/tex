@@ -1,24 +1,39 @@
 \newcommand{\code}[1]{\texttt{#1}}
 
 \section{Conservative Partial Deduction}
+\label{conspd}
 
 In this section, we describe a novel approach to relational programs specialization.
 This approach draws inspiration from both conjunctive partial deduction and supercompilation.
 The aim was to create a specialization algorithm which would be simpler than conjunctive partial deduction and use properties of \mk to improve the performance of the input programs.
 
 The algorithm pseudocode is shown in Fig.~\ref{fig:ncpd-pseudo}.
-For the sake of brevity and clarity, we provide functions \code{drive\_disj} and \code{drive\_conj} which describe how to process disjunctions and conjunctions respectively.
-Driving itself is a trivial combination of the functions provided (line 2).
+We use the following notation in the pseudocode.
+The circle, $\circ$, represents function composition.
+The \emph{at} sign, @, is used to name a pattern matched value.
+The arrow, $\leftarrow$, is used to bind a variable on the left-hand side.
+The arrow can also be used to pattern match the value on the right-hand side (see line 9).
+We use symbols $\bigwedge$ and $\bigvee$ to represent creating, respectively, a conjunction or a disjunction node in a process tree.
+
+Functions \code{drive\_disj} and \code{drive\_conj} describe how to process disjunctions and conjunctions respectively.
+Hereafter, we consider all goals and relation bodies to be in \emph{canonical normal form}~---~a disjunction of conjunctions of either calls or unifications.
+Moreover, we assume all fresh variables to be introduced into the scope and all unifications to be computed at each step.
+Thus driving is declared to be the function \code{drive\_disj} (line 2).
 
 A driving process creates a process tree, from which a residual program is later created.
 The process tree is meant to mimic the execution of the input program.
 The nodes of the process tree include a \emph{configuration} which describes the state of program evaluation at some point.
 In our case a configuration is a conjunction of relation calls.
 The substitution computed at each step is also stored in the tree node, although it is not included in the configuration.
+This means that only the goal, and not the substitution, is passed into the \emph{whistle} to determine potential non-termination.
 
-Hereafter, we consider all goals and relation bodies to be in \emph{canonical normal form}~---~a disjunction of conjunctions of either calls or unifications.
-Moreover, we assume all fresh variables to be introduced into the scope and all unifications to be computed at each step.
-Those disjuncts in which unifications fail are removed.
+Residualization is done by the function \code{residualize}.
+Residualization traverses the process tree in preorder and generates the \mk goal as well as new relations whenever needed.
+A conjunction is created from a conjunction node, a disjunction --- from a disjunction node, while substitutions are generated into a conjunction of unifications.
+Transient nodes are removed during residualization to improve the performance of programs.
+We also employ \emph{redundant argument filtering} as described in~\cite{leuschel1996redundant}.
+
+Those disjuncts in which unifications fail are removed while driving.
 Each other disjunct takes the form of a possibly empty conjunction of relation calls accompanied with a substitution computed from unifications.
 Any \mk term can be trivially transformed into the described form.
 The function \code{normalize} in Fig.~\ref{fig:ncpd-pseudo} is assumed to perform term normalization.
