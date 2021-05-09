@@ -20,7 +20,7 @@ Hereafter, we consider all goals and relation bodies to be in \emph{canonical no
 Moreover, we assume all fresh variables to be introduced into the scope and all unifications to be computed at each step.
 Thus driving is declared to be the function \code{drive\_disj} (line 2).
 
-A driving process creates a process tree, from which a residual program is later created.
+A driving process (along with generalization and folding) creates a process tree, from which a residual program is later created.
 The process tree is meant to mimic the execution of the input program.
 The nodes of the process tree include a \emph{configuration} which describes the state of program evaluation at some point.
 In our case a configuration is a conjunction of relation calls.

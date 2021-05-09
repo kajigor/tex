@@ -21,7 +21,7 @@ What is even worse, it depends on the order of the relation calls within a progr
 One order can be good for one direction, but slow down the computation dramatically in the other direction.
 
 Partial evaluation~\cite{jonesbook} is a technique for specialization, i.e. improving the performance of a program given some information about it beforehand.
-It may either be a known value of some argument, its structure (i.e. the length of an input list) or, in case of a relational program, --- the direction in which the relation is intended to be run.
+It may either be a known value of some argument, its structure (e.g. the length of an input list) or, in case of a relational program, --- the direction in which the relation is intended to be run.
 An earlier paper~\cite{lozov2019relational} has shown that \emph{conjunctive partial deduction}~\cite{de1999conjunctive} can sometimes improve the performance of \mk programs.
 Depending on the particular \emph{control} decisions, it may also not affect the execution time of a program or even make it slower.
 
