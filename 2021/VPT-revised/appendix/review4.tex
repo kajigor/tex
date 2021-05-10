@@ -14,7 +14,7 @@ Nevertheless, studying the program specialization methods is laudable and should
 The introduction, the section "Related works", and the section "References" take five pages from 13 pages used for the whole paper, i.e., these three sections together take more than 38 percents of the paper size.
 Unfortunately, the paper contains no transformation example of miniKanren program given in details, thus the reader is not able to follows the details and be sure in soundness of the short comments.
 
-\todo{EXAMPLE!}
+\emph{We added an example: see section~\ref{example}.}
 
 The paper authors do not refer to many well known published papers that of course were read by them and indirectly used in the submitted tutorial.
 
@@ -22,7 +22,7 @@ The paper authors do not refer to many well known published papers that of cours
 
 Since the authors do not explicitly formulate their contribution, then I think perhaps the authors understand themselves that the "conservative partial deduction" was studied in published literature and its variants were used in a number of partial deduction systems.
 
-\emph{We agree that Conjunctive Partial Deduction as well as Fold-Unfold transformation are quite general and may be tweaked, but the literature do not provide a clear cut solution for the specific issues we encountered in specialization of relational interpreters in \mk.}
+\emph{Links to these papers would be appreciated.}
 
 Thus I am forced to estimate this submission only with "a border paper" score.
 
@@ -87,7 +87,8 @@ Page 2.
 
     --- As a rule, a program cannot be executed ``through all possible execution paths'', since the number of the paths are usually unbounded and lengths of the most of the paths are usually infinite. Your next sentence ``The result of driving is so-called process tree where nodes correspond to configurations which represent computation state.'' contradicts to the previous one.
 
-    \emph{A process tree can be infinite in general, thus representing an unbound number of the paths. Lazy evaluation in such programming languages as \haskell can facilitate building infinite trees. Dealing with the infinite tree in a productive way requires some kind of folding into a finite graph, which is usually interleaved into the driving phase.}
+    \emph{A process tree can be infinite, thus representing an unbound number of the paths.
+    Infinite data structures are not something particularly hard to deal with both in code and in theoretical reasoning.}
 
     \item {
       The two main sources for supercompilation optimizations are aggressive information propagation about variables' values, equalities and disequalities, and precomputing of all deterministic semantic evaluation steps.
@@ -110,7 +111,7 @@ Page 2.
 
       --- As a rule, the accumulating parameter cannot be removed by generalization; even more the task to recognize the fact that a parameter accumulating is undecidable.
 
-      \emph{If we determined a paramenter in a term is accumulating, for example, by using homeomorphic embedding, we can remove it by computing the most specific generalization of this term with the term embedded into it.}
+      \emph{We are not stating that generalization can identify any accumulating parameter and remove it. Sometimes accumulating parameters can be identified, for example, by homeomorphic embedding, and then removed by most specific generalization.}
     }
 
     \item{
@@ -125,7 +126,7 @@ Page 2.
 
     --- The authors do not understand that any (physical) computing system specified by a given program is unclosed. Hence, its performance efficiency depends on an external environment. The environment comprises, for example, (maybe) a number of sequential compilers transforming the source and residual programs to a code supported by hardware, and the hardware properties.
 
-    \emph{We do not see any actionable items in this comment.}
+    \emph{We understand this. However abstracting away from such details is a common practice in estimating how well some transformation works.}
     }
 
   }
@@ -183,7 +184,7 @@ Page 4.
 
     --- The code should be presented somewhere in the paper or in an appendix.
 
-    \emph{The implementation of the approach can be found on the github, where this code can be found.}
+    \emph{The implementation of the approach can be found on the github, the link is added into the paper.}
   }
 
   \item{
@@ -207,7 +208,7 @@ Page 4.
 
     --- It is not a news. There is a huge literature devoted to this subject. For example, a large series of works by A. Pettorossi, M. Proietti and theirs coauthors, unfortunately, not cited by the authors of the paper being reviewed.
 
-    \emph{We would love to see the list of these works.}
+    \emph{The list of these works would be greatly appreciated.}
   }
 
   \item{ --- Typo (here and many times along the papers): a heuristics -$\to$ a heuristic
@@ -297,7 +298,7 @@ Sec. 4.1 Evaluator of Logic Formulas
 
     --- Those are interesting experiments. The specialization results are quite expected.
 
-    \emph{We are happy you found our experiments interesting.}
+    \emph{Thank you.}
   }
 \end{enumerate}
 
@@ -312,7 +313,7 @@ Page 8.
 
   --- The problem discussing by you above is a problem of parallel evaluation. Parallel evaluation is natural for the relation programming. It is widely known that the simplest way to solve the problem is to use the breadth-first unfolding.
 
-  \emph{If we understand what you meant correctly, then breadth-first unfolding would not be enough. }
+  \emph{If we understand what you meant correctly, then breadth-first unfolding would not be enough since there is often a need to synchronize how much individual relation calls are unfolded to find contradictions. }
   }
 
 \end{enumerate}
@@ -350,7 +351,7 @@ Page 10.
 
   --- That is evidently since, in general, the problem discussed is undecidable.
 
-  \emph{As are many problems in programming languages research.}
+  \emph{Rephrased}
 \end{enumerate}
 
 Sec. 4.2 Typechecker-Term Generator
@@ -381,4 +382,4 @@ Page 12.
 
 Thanks for your enthusiasm.
 
-\emph{Thank you for taking the time and effort to write such a detailed review!}
+% \emph{Thank you for taking the time and effort to write such a detailed review!}

@@ -32,18 +32,18 @@ page 3.  While it is true that CPD (ECCE) optimises programs for a left-to-right
 
 page 3.  The strategy for CPD provided by ECCE can be varied, as mentioned.  However, the experiments apparently only use the default settings.
 
-\emph{This is true.}
+\emph{We did use only the default settings, see the previous answer.}
 
 page 3. ``The strategy of unfolding atoms from left to right is reasonable in the context of PROLOG because it mimics the way programs in PROLOG execute. But it often leads to larger global control trees and, as a result, bigger, less efficient programs.''  This is misleading, possible false.  Unfolding the leftmost atoms can clearly NEVER increase the size of the search space when executing left to right.  It merely pushes forward some choices (which often can improve indexing in the head clause and improve performance). So what is meant by ``larger global trees'' and ``less efficient programs''. Please provide a clear example.
 
 However, unfolding non-deterministic non-leftmost atoms CAN increase the search space of a left-right execution, since goals to the left of the unfolded atom are duplicated.
 
-\emph{All this was mentioned in the context of \mk, not \pro, where the execution strategy is not left to right.}
+\emph{All this was mentioned in the context of \mk, where the execution strategy is not left to right, not \pro. We fixed it in the text.}
 
 
 page 3. A feature of CPD that seems to be ignored is that a conjunction can be unfolded, i.e. it is not always ``atom-by-atom'' but a conjunction p,q can be treated as a single predicate pq.  This allows more powerful specialisations, loop fusion, etc.  It is not clear whether MiniKanren can achieve these specialisations.
 
-\emph{We realize CPD treats conjunctions as a single predicate. Conservative partial deduction does exactly that too: once a conjunction is encountered which is a renaming of another conjunction, we do not proceed to split it or unfold any of the relation calls within it. We note that it is a renaming and residualize it into a new predicate in the same manner CPD does.}
+\emph{We realize that CPD treats conjunctions as a single predicate. Conservative partial deduction does exactly that too: once a conjunction is encountered which is a renaming of another conjunction, we do not proceed to split it or unfold any of the relation calls within it. We note that it is a renaming and residualize it into a new predicate in the same manner CPD does.}
 
 
 page 4.  Note that putting formulas in canonical form (disjunction of conjunctions) blows up the size of the program and can also increase the search.  This is a critical part of the experiment that needs to be addressed.  It would be better to define a new predicate for each construct, and then interpret it.  E.g.
@@ -66,7 +66,7 @@ rather than
 
 Executing the second form repeats execution of s, but the first form does not.  If the normalize function uses the second form, it casts serious doubt about the whole experiment.
 
-\emph{This is an important comment, thank you. Normalization does deteriorate the performance of programs in the exact cases you described. However the experiments we discuss in the paper do not get affected: the original versions of the programs are in normal form from the beginning.}
+\emph{This is an important comment, thank you. Normalization does deteriorate the performance of programs in the exact cases you described. However duplicating s may also prove beneficial, if running it with q or r leads to contradictions. There is no way to spot this kind of interactions without duplicating calls first. Making sure that such duplication does not seep into the transformed program is the task for residualization. For example, some kind of common subexpression elimination can be employed fot it. }
 
 page 5.  The mechanism of generalisation seems very crude.  It might work for the given examples but seems too simple to be used in general.  More powerful generalisation using abstract interpretation and related methods have been widely studied.
 
@@ -76,7 +76,7 @@ page 6.  Please explain more clearly why the two problems were chosen. It is sta
 
 \emph{The goal of our project is to improve backwards execution of relational interpreters (see section~\ref{relinterp} for context). We chose these two programs as examples to demonstrate the common issues faced when dealing with automatically generated relational interpreters. The examples are meant to be small and observable, so the reader can fully comprehend them.}
 
-\emph{The issues are not specific for interpreters: any program may have relation calls which restrict substitutions considerably, but are not placed leftmost within a conjunctions. Also, one of the best pratices in programming is to not write the same code twice, thus many relations use calls to other relations in their definitions. Multiple unfoldings are often needed to get usefull results in such a case. Thus we believe our approach will apply to other kinds of relational programs. }
+\emph{The issues are not specific for interpreters: any program may have relation calls which restrict substitutions considerably, but are not placed leftmost within a conjunction. Also, one of the best pratices in programming is to not write the same code twice, thus many relations use calls to other relations in their definitions. Multiple unfoldings are often needed to get useful results in such a case. Thus we believe our approach will apply to other kinds of relational programs. }
 
 page 9, Fig 3.  It should be made absolutely clear whether the programs are all run in MiniKanren (not Prolog). In my opinion this casts doubt on the validity of the experiments, since ECCE is designed to optimised execution for Prolog.
 

@@ -5,7 +5,7 @@ Specialization is a transformation of a given program with respect to (a set of)
 
 In CPD, the specialization is done at the local level, where the shape of the residual program is determined, and at the global level, where every relation in the residual program is defined. At the local level, CPD considers atoms one-by-one from left to right. The paper proposes heuristics to relax the order of atom consideration and to decide if unfolding a relation call can lead to the discovery of contradictions between conjuncts. This leads to the restriction of the answer set at the specialization run.
 
-\emph{We thank you for the review and a nice summary of our paper.}
+% \emph{We thank you for the review and a nice summary of our paper.}
 
 The main algorithm is described in pseudocode (Alg.1), but it is not easy to follow for readers without a proper background. Below are some suggestions to improve the presentation:
 
@@ -23,13 +23,11 @@ The main algorithm is described in pseudocode (Alg.1), but it is not easy to fol
 \emph{\code{C} and \emph{D} are just names given to the pattern matched values. This is a piece of syntax we borrowed from Haskell. The explanation of the notation used is added before the pseudocode discussion.}
 
  \item The presentation of the main idea of joining instead of splitting is somewhat dry. The motivation is more-or-less understandable, but the technical description is hard to follow. An example would greatly help here.
-
- \todo{EXAMPLE!}
 \end{itemize}
 
 The paper also presents a heuristic to control the unfolding by computing if the unfolded relation contains fewer disjuncts than it could possibly have. Still, I suggest the authors polish the technical sections and add a running example.
 
-\todo{EXAMPLE!}
+\emph{We added an example: see section~\ref{example}.}
 
 The related work section actually presents both the related work and background. For readability reasons, I suggest separating it into two sections; as well as introducing the notation and giving more background on MINIKANREN.
 
@@ -37,8 +35,8 @@ The related work section actually presents both the related work and background.
 
 My main criticism is about the evaluation. There are two case studies: 1) a subset of propositional formulas and 2) type checking for a simple language. The approach is implemented in OCANREN (statically typed MINIKANREN embedding in OCAML) and compared to ECCE (the most mature implementation of CPD for PROLOG). The implementation of the approach (called ConsPD) outperforms ECCE almost always. But the running times in both cases are very short (seconds, or fractions of seconds). An experiment over larger benchmarks would look more convincing. Compare to SAT solvers -- they are pretty good at solving formulas with thousands and millions of variables. The task considered in this paper is way simpler because no actual solving is done. I then suggest generating some really large propositional formulas and copmare ECCE and ConsPD on them.
 
-\emph{We agree that the evaluation is not as remarkable as it should be. We are still working on the best way to specialize \mk. These particular example programs were chosen to demonstrate common non-trivial issues which arise in \mk specialization. They were purposely kept short, so that we were able to point at specific issues: ordering of the relation calls, and how much they should be unfolded to get any useful data from it. Developping better, more comprehensive benchmarks is future work.}
+\emph{We agree that the evaluation is not as remarkable as it should be. We are still working on the best way to specialize \mk. These particular example programs were chosen to demonstrate common non-trivial issues which arise in \mk specialization. They were purposely kept short, so that we were able to point at specific issues: ordering of the relation calls, and how much they should be unfolded to get any useful data from it. Developing better, more comprehensive benchmarks is future work.}
 
 To sum up, I think the paper gives an interesting contribution, but the presentation and experiments could be improved.
 
-\emph{Thank you for your review!}
+% \emph{Thank you for your review!}

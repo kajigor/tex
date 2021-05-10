@@ -5,7 +5,7 @@ This paper looks at partial deduction for the relational programming language  M
 
 The paper looks at issues faced by conjunctive partial deduction of MINIKANREN and describes a new approach to partial deduction for relational languages called conservative partial deduction. The main issue with conjunctive partial deduction of MINIKANREN is the unfolding strategy. For Prolog, this is usally done by deterministic unfolding where all atoms except one are only unfolded if it matches with at most one clause head. One atom, usually the leftmost one, can be unfolded non-deterministically. However, this can add many new relation calls to a conjunction. Although this works well for Prolog, it does not work so well for MINIKANREN as it does not match its order of evaluation and can result in large less efficient programs.
 
-\emph{Thank you for the detailed and accurate summary. This shows that we were able to communicate our intent well.}
+% \emph{Thank you for the detailed and accurate summary. This shows that we were able to communicate our intent well.}
 
 The solution proposed to this problem in this paper is called conservative partial deduction, which is inspired by both partial deduction and supercompilation. One aim is to create a speialization algorithm that is simpler than conjunctive partial deduction, but I am not sure this has been achieved as it still seems quite complex.
 
@@ -21,11 +21,11 @@ It might actually add many new relation calls to a conjunction and result in lar
 
 The algorithm does not take advantage of the fact that subgoals in the language can be reordered, so it appears to miss out on many further opportunities for optimisation.
 
-\emph{On the contrary, whenever the algorithm decides that some call within a conjunction may lead to contradiction, it unfolds the call and replaces it with the result of unfolding. This, at specialization-time, changes the order in which the calls are executed (see how boolean connectives are processed in different implementations of the} \lstinline{eval$^o$} \emph{relation). The residualized program will have the calls (or rather the result of unfolding of the calls) in roughly the same order, which was our intention from the very beginning.}
+\emph{On the contrary, whenever the algorithm decides that some call within a conjunction may lead to a contradiction, it unfolds the call and replaces it with the result of unfolding. This, at specialization-time, changes the order in which the calls are executed (see how boolean connectives are processed in different implementations of the} \lstinline{eval$^o$} \emph{relation). The residualized program will have the calls (or rather the result of unfolding of the calls) in roughly the same order, which was our intention from the very beginning.}
 
 The evaluation of the proposed technique is rather poor, with only variations of two test programs being evaluated. For the evaluator of logic formulas, the variations are on the way the boolean connectives are implemented, and whether these connectives are placed before or after the recursive call. For the type checker, the variations are on whether it was implemented by hand or  automatically generated from a corresponding functional program. This is not enough to conclude whether the transformation works well in practice.
 
-\emph{We agree this evaluation is not enough, and we are working on the better set of benchmarks. These programs were chosen to demonstrate typical issues which occur in developping efficient relational interpreters. Our goal in selecting them was to provide non-trivial examples which are illustrative and can be easily comprehended by the reader.}
+\emph{We agree this evaluation is not enough, and we are working on the better set of benchmarks. These programs were chosen to demonstrate typical issues which occur in developing efficient relational interpreters. Our goal in selecting them was to provide non-trivial examples which are illustrative and can be easily comprehended by the reader.}
 
 The transformed programs do all perform better than the original program, but ECCE does perform better than the described transformation for one program variation. The order of the answers produced by transformed programs can also be different to that of the original program, which I see as very problematic as the transformation is changing the behaviour of the program.
 
@@ -33,7 +33,7 @@ The transformed programs do all perform better than the original program, but EC
 
 Although the paper is well written, the contributions it makes to the area are minimal. It does not seem appropriate to apply conjunctive partial deduction to transform MINIKANREN programs, as conjunctive partial deduction follows the evaluation strategy of logic languages such as Prolog rather than that of relational languages such as MINIKANREN. It would seem to be more appropriate to devise a new transformation that follows the search strategy used by the MINIKANREN implementation.
 
-\emph{We believe that using a well-established framework for specialization of a language related to \mk is the most reasonable first step. If it had worked right away, we would have just applied CPD and moved on to the next challenge. Alas, it did not work as well as we hopped, thus we proceeded to developping a different transformation.}
+\emph{We believe that using a well-established framework for specialization of a language related to \mk is the most reasonable first step. If it had worked right away, we would have just applied CPD and moved on to the next challenge. Alas, it did not work as well as we hopped, thus we proceeded to developing a different transformation.}
 
 For the correctness of the transformation, it should be proved that the transformation does not change the order of answers produced for the program.
 
@@ -64,7 +64,7 @@ Section 3, para 5: use a heuristics which decides $\to$  use a heuristic which d
 
 Section 3, para 5: if the heuristics fails to select $\to$ if the heuristic fails to select
 
-\emph{Thank you spending you time on finding and correcting all these mistakes. English is our second language and we are happy every time someone points out a missing article or incorrect spelling, since it gives us a chance to improve.}
+% \emph{Thank you spending you time on finding and correcting all these mistakes. English is our second language and we are happy every time someone points out a missing article or incorrect spelling, since it gives us a chance to improve.}
 
 
 Section 3, final para: only if it is meaningful - what is meant by ``meaningful''?
@@ -101,4 +101,4 @@ Section 5, para 2: with regrads to $\to$ with regards to
 
 Section 5, para 3: were improved better $\to$ were improved more
 
-\emph{We thank you again for the detailed feedback. We value your work.}
+% \emph{We thank you again for the detailed feedback. We value your work.}

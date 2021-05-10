@@ -5,7 +5,7 @@ The paper considers the optimisation of miniKanren relational programs using som
 
 All in all, the paper contains interesting ideas and I recommend it to be accepted for VPT 2021.
 
-\emph{Thank you for the kind review.}
+% \emph{Thank you for the kind review.}
 
 Detailed comments for authors:
 
@@ -47,7 +47,7 @@ Detailed comments for authors:
 
   \item{In Sect. 3.1, you mention that unfolding too much might introduce extra unifications or duplicate computations. I think that this is not possible as long as partial evaluation considers a fixed left-to-right unfolding strategy at PE time. This is actually a problem when considering non-leftmost unfolding strategies at PE time.}
 
-  \emph{Section 5.1.1 of the paper~\cite{de1999conjunctive} states that non-determinate unfolding may add unifications regardless of wether the unfolding strategy is left-to-right or not. Of course, in pure \pro the effect of using unfolding strategies which are not left-to-right is more pronounced. Nevertheless, interleaving semantics of \mk complicates everything further.}
+  \emph{Section 5.1.1 of the paper~\cite{de1999conjunctive} states that non-determinate unfolding may add unifications regardless of wether the unfolding strategy is left-to-right or not. Of course, in pure \pro the effect of using unfolding strategies which are not left-to-right is more pronounced. Nevertheless, interleaving semantics of \mk complicates everything even further.}
 
   \item Another unfolding strategy that might be related to your heuristics
   is presented in
