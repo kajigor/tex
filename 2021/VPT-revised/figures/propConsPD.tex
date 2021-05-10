@@ -1,0 +1,112 @@
+\begin{tikzpicture}[
+  processTree]
+
+  \node(0) {\underline{\rel{eval}{\texttt{fm s \textbf{true}}}}};
+
+  \node(00)[below of=0, xshift=-7.5cm, yshift=0.6cm, anchor=north] {
+    \rel{eval}{\texttt{x s a}} \conj \\
+    \rel{eval}{\texttt{y s b}} \conj \\
+    \underline{\rel{and}{\texttt{a b \textbf{true}}}} \\
+    \subst{\texttt{fm} $\to$ \texttt{\textbf{conj} x y}}};
+
+  \node(000)[below of=00, anchor=north] {
+    \rel{eval}{\texttt{x s \textbf{true}}} \conj \\
+    \rel{eval}{\texttt{y s \textbf{true}}} \\
+    \subst{\texttt{a} $\to$ \texttt{\textbf{true},} \\ \texttt{b} $\to$ \texttt{\textbf{true}}}};
+
+  \node(0000)[diamond,below of=000, yshift=0.5cm,anchor=north] { \conj };
+
+  \node(00000)[below of=0000, xshift=-1.7cm, yshift=1cm, anchor=north] {
+          \rel{eval}{\texttt{x s \textbf{true}}}};
+  \node(00001)[below of=0000, xshift=1.7cm, yshift=1cm, anchor=north] {
+          \rel{eval}{\texttt{y s \textbf{true}}}};
+
+  \node(01)[below of=0, yshift=0.6cm, anchor=north] {
+    \rel{eval}{\texttt{x s a}} \conj \\
+    \rel{eval}{\texttt{y s b}} \conj \\
+    \underline{\rel{or}{\texttt{a b \textbf{true}}}} \\
+    \subst{\texttt{fm} $\to$ \texttt{\textbf{disj} x y}}};
+
+  \node(010)[below of=01, xshift=-3.6cm, anchor=north] {
+      \rel{eval}{\texttt{x s \textbf{true}}} \conj \\
+      \rel{eval}{\texttt{y s \textbf{true}}} \\
+      \subst{\texttt{a} $\to$ \texttt{\textbf{true},} \\ \texttt{b} $\to$ \texttt{\textbf{true}}}};
+
+  \node(0100)[below of=010, anchor=north, draw=none, fill=none, yshift=0.5cm]{...};
+  \node(011)[below of=01, anchor=north] {
+      \rel{eval}{\texttt{x s \textbf{true}}} \conj \\
+      \rel{eval}{\texttt{y s \textbf{false}}} \\
+      \subst{\texttt{a} $\to$ \texttt{\textbf{true},} \\ \texttt{b} $\to$ \texttt{\textbf{false}}}};
+
+  \node(0110)[diamond,below of=011, yshift=0.5cm,anchor=north] { \conj };
+
+  \node(01100)[below of=0110, xshift=-1.7cm, yshift=1cm, anchor=north] {
+          \rel{eval}{\texttt{x s \textbf{true}}}};
+  \node(01101)[below of=0110, xshift=1.7cm, yshift=1cm, anchor=north] {
+          \rel{eval}{\texttt{y s \textbf{false}}}};
+  \node(011010)[below of=01101, xshift=-1.5cm, yshift=1.5cm, anchor=north, draw=none, fill=none] {...};
+  \node(011011)[below of=01101, xshift=-0.5cm, yshift=1.5cm, anchor=north, draw=none, fill=none] {...};
+  \node(011012)[below of=01101, xshift=0.5cm,  yshift=1.5cm, anchor=north, draw=none, fill=none] {...};
+  \node(011013)[below of=01101, xshift=1.5cm,  yshift=1.5cm, anchor=north, draw=none, fill=none] {...};
+  \node(012)[below of=01, xshift=3.7cm, anchor=north] {
+      \rel{eval}{\texttt{x s \textbf{false}}} \conj \\
+      \rel{eval}{\texttt{y s \textbf{true}}} \\
+      \subst{\texttt{a} $\to$ \texttt{\textbf{false},} \\ \texttt{b} $\to$ \texttt{\textbf{true}}}};
+
+  \node(0120)[below of=012, anchor=north, draw=none, fill=none, yshift=0.5cm]{...};
+
+
+  \node(02)[below of=0, xshift=7.5cm, yshift=0.6cm, anchor=north] {
+    \rel{eval}{\texttt{x s a} \conj \\
+    \underline{\rel{not}{\texttt{a \textbf{true}}}} \\
+    \subst{\texttt{fm} $\to$ \texttt{\textbf{neg} x}}}};
+
+  \node(020)[below of=02,yshift=-0.23cm, anchor=north] {
+    \rel{eval}{\texttt{x s \textbf{false}}} \\
+    \subst{\texttt{a} $\to$ \texttt{\textbf{false}}}};
+
+  \node(03)[below of=0, xshift=11.5cm, yshift=0.6cm, anchor=north] {
+    \rel{elem}{\texttt{x s \textbf{true}}} \\
+    \subst{\texttt{fm} $\to$ \texttt{\textbf{var} v}}
+  };
+
+  \node(030)[below of=03, xshift=-1cm, anchor=north, yshift=-0.5cm]{
+    \subst{\texttt{s} $\to$ \texttt{h\%t}, \\ \texttt{x} $\to$ \texttt{\textbf{zero}} \\ \texttt{h} $\to$ \texttt{\textbf{true}}}
+  };
+  \node(031)[below of=03, xshift=2cm, anchor=north, yshift=-0.5cm]{
+    \rel{elem}{\texttt{y t \textbf{true}}} \\
+    \subst{\texttt{s} $\to$ \texttt{h\%t}, \\ \texttt{x} $\to$ \texttt{\textbf{succ} y}}};
+
+
+  \draw [->] (0.south west) to (00.north east);
+  \draw [->] (0) to (01);
+  \draw [->] (0) to (02.north west);
+  \draw [->] (0.south east) to (03.north west);
+  \draw [->] (00) to (000);
+  \draw [->] (000) to (0000);
+  \draw [->] (0000) to (00000);
+  \draw [->] (0000) to (00001);
+  \draw [->] (01) to (010);
+  \draw [->] (01) to (011);
+  \draw [->] (01) to (012);
+  \draw [->] (010) to (0100);
+  \draw [->] (011) to (0110);
+  \draw [->] (0110) to (01100);
+  \draw [->] (0110) to (01101);
+  \draw [->] (01101) to (011010);
+  \draw [->] (01101) to (011011);
+  \draw [->] (01101) to (011012);
+  \draw [->] (01101) to (011013);
+  \draw [->] (012) to (0120);
+  \draw [->] (02) to (020);
+  \draw [->] (03) to (030);
+  \draw [->] (03) to (031);
+
+  \draw [dashed,<-] ($(0.south west)+(0.1,0)$) .. controls +(-5,-2.5) and +(-4,0) .. (01100.west);
+  \draw [dashed,->] (00000.north west) to [out=90,in=180] ($(0.west)$);
+  \draw [dashed,->] (00001) to [out=90,in=-135] ($(0.west)+(0,-0.1)$);
+
+  \draw[dashed,->] (020.south) to [out=-90,in=0] (01101.east);
+  \draw[dashed,->] (031.north east) to [out=90,in=0] (03.south east);
+
+\end{tikzpicture}

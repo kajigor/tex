@@ -42,3 +42,57 @@ language=ocanren
 \newcommand{\todo}[1]{{\color{red}#1}}
 \newcommand{\change}[1]{{\color{red}#1}}
 \newcommand{\ecce}{\textsc{ECCE}\xspace}
+
+\newcommand{\conj}{$\wedge$\xspace}
+\newcommand{\rel}[2]{\texttt{#1}$^o$ #2}
+\newcommand{\subst}[1]{$\langle$#1$\rangle$}
+
+
+
+\tikzstyle{processTree} = [
+  ->,
+  sibling distance=15em,
+  scale=0.6,
+  node distance=2.5cm,
+  every node/.style = {
+    shape=rectangle,
+    rounded corners=0.05cm,
+    draw,
+    align=center,
+    minimum size=5mm,
+    scale=0.6,},
+  %level 1/.style={sibling distance=100em}
+  ]
+
+
+\tikzstyle{program} = [
+  draw=black,
+  thick,
+  rectangle,
+  rounded corners=1pt,
+  inner sep=5pt,
+  inner ysep=5pt
+  ]
+
+\tikzstyle{goal} = [
+  draw=black,
+  rectangle,
+  rounded corners=1pt,
+  inner ysep=0pt,
+  ]
+
+\tikzstyle{input} = [
+  draw=none,
+  rectangle,
+  rounded corners=1pt,
+  inner sep=2pt,
+  inner ysep=2pt,
+  fill=green!10,
+  minimum height=5mm
+  ]
+
+
+\tikzstyle{transparent} = [
+  draw=none,
+  inner ysep=3pt
+  ]

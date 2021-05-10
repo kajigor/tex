@@ -1,0 +1,137 @@
+\section{Example}
+
+In this section we demonstrate by example how Conservative Partial Deduction works.
+The example program is a relational interpreter of propositional formulas under given variable assignments.
+The complete code of the example program is provided in Listing~\ref{eval:whole}.
+
+The relation \lstinline{eval$^o$} has three arguments.
+The first argument, \lstinline{subst}, is a list of boolean values which plays a role of variable assignments.
+The $i$-th value of the substitution is the value of the $i$-th variable.
+The second argument, \lstinline{fm}, is a formula with the following abstract syntax.
+A formula is either a \emph{variable} represented with a Peano number, a \emph{negation} of a formula, a \emph{conjunction} of two formulas or a \emph{disjunction} of two formulas.
+The third argument, \lstinline{res}, is the value of the formula under the given assignment.
+
+The relation \lstinline{eval$^o$} is in canonical normal form: it is a single disjunction which consists of 4 conjunctions of unifications and relation calls, and all its fresh variables are introduced at the top level.
+The unification in each conjunction determines the shape of the input formula and binds variables to the corresponding subformulas.
+For each of the subformulas, the relation \lstinline{eval$^o$} is called recursively.
+Then the results of the evaluation of the subformulas are combined by the corresponding boolean connective to get the result for the input formula.
+For example, when the formula is a conjunction of two subformulas \lstinline{x} and \lstinline{y}, the results of their execution \lstinline{v} and \lstinline{w} are combined by the call to the relation \lstinline{and$^o$} to compute the result: \lstinline{and$^o$ v w res}.
+If the input formula is a variable, then its value is looked up in the substitution list by means of the relation \lstinline{elem$^o$}.
+
+\begin{figure*}[!t]
+  \centering
+  \begin{minipage}{0.95\textwidth}
+    \begin{lstlisting}[label={eval:whole}, caption={Evaluator of propositional formulas}, captionpos=b, frame=tb]
+  let rec eval$^o$ subst fm res = conde [fresh (x y z v w) (
+      ( fm === conj x y /\ eval$^o$ st x v /\  eval$^o$ st y w /\  and$^o$ v w res );
+      ( fm === disj x y /\ eval$^o$ st x v /\  eval$^o$ st y w /\  or$^o$   v w res );
+      ( fm === neg x    /\ eval$^o$ st x v /\  not$^o$ v res );
+      ( fm === var v    /\ elem$^o$ subst v res ))]
+
+  let not$^o$  x y = nand$^o$ x x y
+  let or$^o$   x y z = nand$^o$ x x xx /\  nand$^o$ y y yy /\ nand$^o$ xx yy z
+  let and$^o$ x y z = nand$^o$ x y xy /\   nand$^o$ xy xy z
+  let nand$^o$ a b c = conde [
+      ( a === ^false /\ b === ^false /\ c === ^true );
+      ( a === ^false /\ b === ^true  /\ c === ^true );
+      ( a === ^true  /\ b === ^false /\ c === ^true );
+      ( a === ^true  /\ b === ^true  /\ c === ^false )]
+
+  let elem$^o$ n subst v = conde [ fresh (h t m) (
+    ( n === zero /\ subst === h % t /\ h === v );
+    ( n === succ m /\ subst === h % t /\ elem$^o$ m t v ))]
+
+
+    \end{lstlisting}
+  \end{minipage}
+\end{figure*}
+
+Consider the goal \lstinline{fresh (s fm) (eval$^o$ s fm ^true)}.
+The partially constructed process tree for this goal is presented in Fig.~\ref{fig:evalTree}.
+The following notation is used.
+Rectangle nodes contain configurations, while diamond nodes correspond to splitting.
+Each configuration contains a goal along with a substitution in angle brackets.
+To visually differentiate constructors from variables within goals, we made them bold.
+For brevity, we only put a fragment of the substitution computed at each step in the corresponding node.
+The leaf node which contain only the substitution and no goal in its configuration is a success node.
+The call selected to be unfolded is underlined in a conjunction.
+Nodes corresponding to failures are not present within the process tree.
+Dashed arrows represent renamings.
+
+Conservative partial deduction starts by unfolding the single relation call in this goal once.
+Besides introducing fresh variables into the context, unifications in each conjunct are computed into substitutions.
+This produces 4 branches, each of which is processed further.
+
+Consider the first branch, in which the input formula \lstinline{fm} is a conjunction of subformulas \lstinline{x} and \lstinline{y}.
+First, each of the relation calls within a conjunction is examined to select one of them to unfold.
+To do so, we unfold each of them in isolation and use the less branching heuristic.
+Since both recursive calls to \lstinline{eval$^o$} are done with three distinct fresh variables, they are not selected.
+By unfolding the call to \lstinline{and$^o$} several times, we determine it has less branches than the same relation called on all free and distinct variables (see Fig.~\ref{fig:and}), thus this call is selected to be unfolded.
+The result of unfolding the call is a single substitution which associates the variables \lstinline{a} and \lstinline{b} with \lstinline{true}.
+By applying the computed substitution to the goal we get a conjunction of two calls to the \lstinline{eval$^o$} relation with the last argument being \lstinline{true}.
+This conjunction embeds the root goal, thus we split the conjunction and both calls become leaves which rename the root.
+This finishes the processing of the first branch.
+
+Consider the second branch, in which the input formula \lstinline{fm} is a disjunction of subformulas \lstinline{x} and \lstinline{y}.
+Similarly to the first branch, the heuristic selects the call to the boolean relation to be unfolded which produces three possible substitutions for variables \lstinline{a} and \lstinline{b}.
+The substitutions are propagated into the goals and three branches each of which embeds the root goal is added into the process tree.
+Each of the goals is split, then the calls with the last argument being \lstinline{true} rename the root goal.
+Then the call \lstinline{eval$^o$ y s false} is processed, which creates 4 branches similar to the branches of the root goal.
+
+The third branch is driven until a call with the last argument being \lstinline{false} is encountered.
+Since it renames one of the nodes which is already present in the process tree, we stop exploring this branch and add the back edge.
+
+The last branch, in which the input formula \lstinline{fm} is a variable \lstinline{v}, contain the single call to the relation \lstinline{elem$^o$}.
+The unfolding of this call produces two leaves: a success node and a renaming of the parent node.
+This finishes the construction of the process tree.
+
+The process tree is then residualized into a specialized version of the \lstinline{eval$^o$} relation.
+This program does not contain any calls to boolean connectives.
+Neither does the program contain the original, not specialized, relation \lstinline{eval$^o$}.
+
+
+\begin{figure}[!t]
+  \centering
+  \begin{minipage}{0.95\textwidth}
+    \input{figures/propConsPD.tex}
+  \end{minipage}
+  \caption{Partially constructed process tree for the relation eval$^o$.}
+  \label{fig:evalTree}
+\end{figure}
+
+\begin{figure*}[!t]
+  \centering
+  \begin{minipage}{0.95\textwidth}
+    \begin{lstlisting}[label={eval:whole}, caption={Specialized evaluator of propositional formulas}, captionpos=b, frame=tb]
+  let rec eval$^o_{true}$ subst fm = conde [fresh (x y z v w) (
+      ( fm === conj x y /\ eval$^o_{true}$ st x /\  eval$^o_{true}$ st y );
+      ( fm === disj x y /\ (conde [
+          ( eval$^o_{true}$ st x /\    eval$^o_{true}$ st y );
+          ( eval$^o_{true}$ st x /\    eval$^o_{false}$ st y );
+          ( eval$^o_{false}$ st x /\    eval$^o_{true}$ st y );
+      ]);
+      ( fm === neg x /\ eval$^o_{false}$ st x v );
+      ( fm === var v /\ elem$^o_{true}$ subst v ))]
+
+  let rec eval$^o_{false}$ subst fm = conde [fresh (x y z v w) (
+      ( fm === conj x y /\ (conde [
+          ( eval$^o_{false}$ st x /\    eval$^o_{false}$ st y );
+          ( eval$^o_{true}$ st x /\    eval$^o_{false}$ st y );
+          ( eval$^o_{false}$ st x /\    eval$^o_{true}$ st y );
+      ]);
+      ( fm === disj x y /\ eval$^o_{true}$ st x /\  eval$^o_{true}$ st y );
+      ( fm === neg x /\ eval$^o_{true}$ st x v );
+      ( fm === var v /\ elem$^o_{false}$ subst v ))]
+
+  let elem$^o_{true}$ n subst = conde [ fresh (h t m) (
+      ( n === zero /\ subst === true % t );
+      ( n === succ m /\ subst === h % t /\ elem$^o_{true}$ m t ))]
+
+  let elem$^o_{false}$ n subst = conde [ fresh (h t m) (
+      ( n === zero /\ subst === false % t );
+      ( n === succ m /\ subst === h % t /\ elem$^o_{false}$ m t ))]
+
+
+    \end{lstlisting}
+  \end{minipage}
+\end{figure*}
