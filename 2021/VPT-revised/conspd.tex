@@ -15,6 +15,14 @@ The arrow, $\leftarrow$, is used to bind a variable on the left-hand side.
 The arrow can also be used to pattern match the value on the right-hand side (see line 9).
 We use symbols $\bigwedge$ and $\bigvee$ to represent creating, respectively, a conjunction or a disjunction node in a process tree.
 
+
+\begin{figure}[!t]
+  \centering
+  \includegraphics[width=\textwidth]{figures/algo-pseudo-crop.pdf}
+  \caption{Conservative partial deduction pseudo code}
+  \label{fig:ncpd-pseudo}
+\end{figure}
+
 Functions \code{drive\_disj} and \code{drive\_conj} describe how to process disjunctions and conjunctions respectively.
 Hereafter, we consider all goals and relation bodies to be in \emph{canonical normal form}~---~a disjunction of conjunctions of either calls or unifications.
 Moreover, we assume all fresh variables to be introduced into the scope and all unifications to be computed at each step.
@@ -37,14 +45,8 @@ Those disjuncts in which unifications fail are removed while driving.
 Each other disjunct takes the form of a possibly empty conjunction of relation calls accompanied with a substitution computed from unifications.
 Any \mk term can be trivially transformed into the described form.
 The function \code{normalize} in Fig.~\ref{fig:ncpd-pseudo} is assumed to perform term normalization.
-The code is omitted for brevity.
+The code is omitted for brevity but can be found in the implementation of the approach on github\footnote{The project repository: \url{https://github.com/kajigor/uKanren_transformations/}. Access date: 28.02.2021}.
 
-\begin{figure}[!t]
-  \centering
-  \includegraphics[width=\textwidth]{figures/algo-pseudo-crop.pdf}
-  \caption{Conservative partial deduction pseudo code}
-  \label{fig:ncpd-pseudo}
-\end{figure}
 
 % The very first step of driving a conjunction is to apply a substitution to the variables in relation calls (line 10).
 
@@ -71,9 +73,11 @@ To do this, we check if the current conjunction is a renaming of any other confi
 If it is, then we fold the tree by creating a special node which then is residualized into a call to the corresponding relation.
 
 In this approach, we do not generalize in the same fashion as CPD or supercompilation.
+This decision was motivated by keeping the complexity of the approach to the minimum.
 Our conjunctions are always split into individual calls and are joined back together only if it is meaningful, for example, leads to contradictions.
 If the need for generalization arises, i.e. homeomorphic embedding of conjunctions~\cite{de1999conjunctive} is detected, then we immediately stop driving this conjunction (line 12).
 When residualizing such a conjunction, we just generate a conjunction of calls to the input program before specialization.
+
 
 % The generalization is used in supercompilation and partial deduction to ensure termination at the same time as some degree of specialization.
 % The generalization of two terms is usually a \emph{most-specific generalization}.

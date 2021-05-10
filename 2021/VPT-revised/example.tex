@@ -1,4 +1,5 @@
 \section{Example}
+\label{example}
 
 In this section we demonstrate by example how Conservative Partial Deduction works.
 The example program is a relational interpreter of propositional formulas under given variable assignments.
@@ -58,6 +59,26 @@ The call selected to be unfolded is underlined in a conjunction.
 Nodes corresponding to failures are not present within the process tree.
 Dashed arrows represent renamings.
 
+\begin{figure}[!t]
+  \centering
+  \begin{minipage}{0.95\textwidth}
+    \input{figures/propConsPD.tex}
+  \end{minipage}
+  \caption{Partially constructed process tree for the relation eval$^o$.}
+  \label{fig:evalTree}
+\end{figure}
+
+
+\begin{figure}[!t]
+  \centering
+  \begin{minipage}{0.95\textwidth}
+    \input{figures/ando.tex}
+  \end{minipage}
+  \caption{Unfolding of and$^o$.}
+  \label{fig:and}
+\end{figure}
+
+
 Conservative partial deduction starts by unfolding the single relation call in this goal once.
 Besides introducing fresh variables into the context, unifications in each conjunct are computed into substitutions.
 This produces 4 branches, each of which is processed further.
@@ -91,31 +112,14 @@ Neither does the program contain the original, not specialized, relation \lstinl
 
 It is worth noting that the result produced by the Conservative Partial Deduction is not ideal.
 For example, in the definition of the \lstinline{eval$^o_{true}$}, when the input formula \lstinline{fm} is a disjunction of subformulas \lstinline{x} and \lstinline{y}, the recursive call \lstinline{eval$^o_{true}$ s x } is done twice in two disjuncts.
-The ideal version of the relation \lstinline{eval$^o_{true}$} should not only contain this recursive call once, it also should not evaluate \lstinline{y} at all, since the value of the formula \lstinline{fm} does not depend on it.
+The ideal version of the relation \lstinline{eval$^o_{true}$} should contain this recursive call only once.
+This can be done, for example, by common subexpression elimination~\cite{muchnick1997advanced}.
+However \lstinline{y} should not be evaluted at all, since the value of the formula \lstinline{fm} does not depend on it.
 It is unclear if and how this kind of transformation can be done automatically.
 Such transformation would require, first, realising that a disjunction of two relation calls \lstinline{eval$^o_{true}$ s y} and \lstinline{eval$^o_{false}$ s y} exhaust all possible values for \lstinline{y}.
 Secondly, the transformation would have to examine if a relation restricts values of a given argument regardless of the other arguments' values.
 
-\begin{figure}[!t]
-  \centering
-  \begin{minipage}{0.95\textwidth}
-    \input{figures/propConsPD.tex}
-  \end{minipage}
-  \caption{Partially constructed process tree for the relation eval$^o$.}
-  \label{fig:evalTree}
-\end{figure}
-
-
-\begin{figure}[!t]
-  \centering
-  \begin{minipage}{0.95\textwidth}
-    \input{figures/ando.tex}
-  \end{minipage}
-  \caption{Unfolding of and$^o$.}
-  \label{fig:and}
-\end{figure}
-
-\begin{figure*}[!t]
+\begin{figure*}[!h]
   \centering
   \begin{minipage}{0.95\textwidth}
     \begin{lstlisting}[label={eval:whole}, caption={Specialized evaluator of propositional formulas}, captionpos=b, frame=tb]
