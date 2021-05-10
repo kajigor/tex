@@ -5,7 +5,7 @@ The example program is a relational interpreter of propositional formulas under 
 The complete code of the example program is provided in Listing~\ref{eval:whole}.
 
 The relation \lstinline{eval$^o$} has three arguments.
-The first argument, \lstinline{subst}, is a list of boolean values which plays a role of variable assignments.
+The first argument, \lstinline{s}, is a list of boolean values which plays a role of variable assignments.
 The $i$-th value of the substitution is the value of the $i$-th variable.
 The second argument, \lstinline{fm}, is a formula with the following abstract syntax.
 A formula is either a \emph{variable} represented with a Peano number, a \emph{negation} of a formula, a \emph{conjunction} of two formulas or a \emph{disjunction} of two formulas.
@@ -22,11 +22,11 @@ If the input formula is a variable, then its value is looked up in the substitut
   \centering
   \begin{minipage}{0.95\textwidth}
     \begin{lstlisting}[label={eval:whole}, caption={Evaluator of propositional formulas}, captionpos=b, frame=tb]
-  let rec eval$^o$ subst fm res = conde [fresh (x y z v w) (
-      ( fm === conj x y /\ eval$^o$ st x v /\  eval$^o$ st y w /\  and$^o$ v w res );
-      ( fm === disj x y /\ eval$^o$ st x v /\  eval$^o$ st y w /\  or$^o$   v w res );
-      ( fm === neg x    /\ eval$^o$ st x v /\  not$^o$ v res );
-      ( fm === var v    /\ elem$^o$ subst v res ))]
+  let rec eval$^o$ s fm res = conde [fresh (x y z v w) (
+      ( fm === conj x y /\ eval$^o$ s x v /\  eval$^o$ s y w /\  and$^o$ v w res );
+      ( fm === disj x y /\ eval$^o$ s x v /\  eval$^o$ s y w /\  or$^o$   v w res );
+      ( fm === neg x    /\ eval$^o$ s x v /\  not$^o$ v res );
+      ( fm === var v    /\ elem$^o$ s v res ))]
 
   let not$^o$  x y = nand$^o$ x x y
   let or$^o$   x y z = nand$^o$ x x xx /\  nand$^o$ y y yy /\ nand$^o$ xx yy z
@@ -37,9 +37,9 @@ If the input formula is a variable, then its value is looked up in the substitut
       ( a === ^true  /\ b === ^false /\ c === ^true );
       ( a === ^true  /\ b === ^true  /\ c === ^false )]
 
-  let elem$^o$ n subst v = conde [ fresh (h t m) (
-    ( n === zero /\ subst === h % t /\ h === v );
-    ( n === succ m /\ subst === h % t /\ elem$^o$ m t v ))]
+  let elem$^o$ n s v = conde [ fresh (h t m) (
+    ( n === zero /\ s === h % t /\ h === v );
+    ( n === succ m /\ s === h % t /\ elem$^o$ m t v ))]
 
 
     \end{lstlisting}
@@ -66,7 +66,7 @@ Consider the first branch, in which the input formula \lstinline{fm} is a conjun
 First, each of the relation calls within a conjunction is examined to select one of them to unfold.
 To do so, we unfold each of them in isolation and use the less branching heuristic.
 Since both recursive calls to \lstinline{eval$^o$} are done with three distinct fresh variables, they are not selected.
-By unfolding the call to \lstinline{and$^o$} several times, we determine it has less branches than the same relation called on all free and distinct variables (see Fig.~\ref{fig:and}), thus this call is selected to be unfolded.
+By unfolding the call to \lstinline{and$^o$} several times, we determine it has a single non-failing branch (see Fig.~\ref{fig:and}), which is less than the same relation called on all free and distinct variables, thus this call is selected to be unfolded.
 The result of unfolding the call is a single substitution which associates the variables \lstinline{a} and \lstinline{b} with \lstinline{true}.
 By applying the computed substitution to the goal we get a conjunction of two calls to the \lstinline{eval$^o$} relation with the last argument being \lstinline{true}.
 This conjunction embeds the root goal, thus we split the conjunction and both calls become leaves which rename the root.
@@ -89,6 +89,12 @@ The process tree is then residualized into a specialized version of the \lstinli
 This program does not contain any calls to boolean connectives.
 Neither does the program contain the original, not specialized, relation \lstinline{eval$^o$}.
 
+It is worth noting that the result produced by the Conservative Partial Deduction is not ideal.
+For example, in the definition of the \lstinline{eval$^o_{true}$}, when the input formula \lstinline{fm} is a disjunction of subformulas \lstinline{x} and \lstinline{y}, the recursive call \lstinline{eval$^o_{true}$ s x } is done twice in two disjuncts.
+The ideal version of the relation \lstinline{eval$^o_{true}$} should not only contain this recursive call once, it also should not evaluate \lstinline{y} at all, since the value of the formula \lstinline{fm} does not depend on it.
+It is unclear if and how this kind of transformation can be done automatically.
+Such transformation would require, first, realising that a disjunction of two relation calls \lstinline{eval$^o_{true}$ s y} and \lstinline{eval$^o_{false}$ s y} exhaust all possible values for \lstinline{y}.
+Secondly, the transformation would have to examine if a relation restricts values of a given argument regardless of the other arguments' values.
 
 \begin{figure}[!t]
   \centering
@@ -99,37 +105,47 @@ Neither does the program contain the original, not specialized, relation \lstinl
   \label{fig:evalTree}
 \end{figure}
 
+
+\begin{figure}[!t]
+  \centering
+  \begin{minipage}{0.95\textwidth}
+    \input{figures/ando.tex}
+  \end{minipage}
+  \caption{Unfolding of and$^o$.}
+  \label{fig:and}
+\end{figure}
+
 \begin{figure*}[!t]
   \centering
   \begin{minipage}{0.95\textwidth}
     \begin{lstlisting}[label={eval:whole}, caption={Specialized evaluator of propositional formulas}, captionpos=b, frame=tb]
-  let rec eval$^o_{true}$ subst fm = conde [fresh (x y z v w) (
-      ( fm === conj x y /\ eval$^o_{true}$ st x /\  eval$^o_{true}$ st y );
+  let rec eval$^o_{true}$ s fm = conde [fresh (x y z v w) (
+      ( fm === conj x y /\ eval$^o_{true}$ s x /\  eval$^o_{true}$ s y );
       ( fm === disj x y /\ (conde [
-          ( eval$^o_{true}$ st x /\    eval$^o_{true}$ st y );
-          ( eval$^o_{true}$ st x /\    eval$^o_{false}$ st y );
-          ( eval$^o_{false}$ st x /\    eval$^o_{true}$ st y );
+          ( eval$^o_{true}$ s x /\    eval$^o_{true}$ s y );
+          ( eval$^o_{true}$ s x /\    eval$^o_{false}$ s y );
+          ( eval$^o_{false}$ s x /\    eval$^o_{true}$ s y );
       ]);
-      ( fm === neg x /\ eval$^o_{false}$ st x v );
-      ( fm === var v /\ elem$^o_{true}$ subst v ))]
+      ( fm === neg x /\ eval$^o_{false}$ s x v );
+      ( fm === var v /\ elem$^o_{true}$ s v ))]
 
-  let rec eval$^o_{false}$ subst fm = conde [fresh (x y z v w) (
+  let rec eval$^o_{false}$ s fm = conde [fresh (x y z v w) (
       ( fm === conj x y /\ (conde [
-          ( eval$^o_{false}$ st x /\    eval$^o_{false}$ st y );
-          ( eval$^o_{true}$ st x /\    eval$^o_{false}$ st y );
-          ( eval$^o_{false}$ st x /\    eval$^o_{true}$ st y );
+          ( eval$^o_{false}$ s x /\    eval$^o_{false}$ s y );
+          ( eval$^o_{true}$ s x /\    eval$^o_{false}$ s y );
+          ( eval$^o_{false}$ s x /\    eval$^o_{true}$ s y );
       ]);
-      ( fm === disj x y /\ eval$^o_{true}$ st x /\  eval$^o_{true}$ st y );
-      ( fm === neg x /\ eval$^o_{true}$ st x v );
-      ( fm === var v /\ elem$^o_{false}$ subst v ))]
+      ( fm === disj x y /\ eval$^o_{true}$ s x /\  eval$^o_{true}$ s y );
+      ( fm === neg x /\ eval$^o_{true}$ s x v );
+      ( fm === var v /\ elem$^o_{false}$ s v ))]
 
-  let elem$^o_{true}$ n subst = conde [ fresh (h t m) (
-      ( n === zero /\ subst === true % t );
-      ( n === succ m /\ subst === h % t /\ elem$^o_{true}$ m t ))]
+  let elem$^o_{true}$ n s = conde [ fresh (h t m) (
+      ( n === zero /\ s === true % t );
+      ( n === succ m /\ s === h % t /\ elem$^o_{true}$ m t ))]
 
-  let elem$^o_{false}$ n subst = conde [ fresh (h t m) (
-      ( n === zero /\ subst === false % t );
-      ( n === succ m /\ subst === h % t /\ elem$^o_{false}$ m t ))]
+  let elem$^o_{false}$ n s = conde [ fresh (h t m) (
+      ( n === zero /\ s === false % t );
+      ( n === succ m /\ s === h % t /\ elem$^o_{false}$ m t ))]
 
 
     \end{lstlisting}

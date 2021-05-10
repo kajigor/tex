@@ -1,0 +1,34 @@
+\begin{tikzpicture}[
+  processTree,
+  anchor=center,
+  node distance=2.5cm]
+  \node(0) {\rel{and}{\texttt{x y} \texttt{\textbf{true}}}};
+  \node(00) [below of=0, yshift=1cm] {\rel{nand}{\texttt{x y xy} \conj \rel{nand}{\texttt{xy xy \texttt{\textbf{true}}}}}};
+  \node(000) [below of=00, xshift=-10cm] {
+    \rel{nand}{\texttt{\textbf{true true true}}} \\ \subst{\texttt{x} $\to$ \texttt{\textbf{false}}, \\ \texttt{y} $\to$ \texttt{\textbf{false}}, \\ xy $\to$ \texttt{\textbf{true}}}};
+  \node(0000) [below of=000, draw=none] {fail};
+  \node(001) [below of=00, xshift=-3cm] {
+    \rel{nand}{\texttt{\textbf{true true true}}} \\ \subst{\texttt{x} $\to$ \texttt{\textbf{false}}, \\ \texttt{y} $\to$ \texttt{\textbf{true}}, \\ xy $\to$ \texttt{\textbf{true}}}};
+  \node(0010) [below of=001, draw=none] {fail};
+
+  \node(002) [below of=00, xshift=3cm] {
+    \rel{nand}{\texttt{\textbf{true true true}}} \\ \subst{\texttt{x} $\to$ \texttt{\textbf{true}}, \\ \texttt{y} $\to$ \texttt{\textbf{false}}, \\ xy $\to$ \texttt{\textbf{true}}}};
+  \node(0020) [below of=002, draw=none] {fail};
+
+  \node(003) [below of=00, xshift=10cm] {
+    \rel{nand}{\texttt{\textbf{false false true}}} \\ \subst{\texttt{x} $\to$ \texttt{\textbf{true}}, \\ \texttt{y} $\to$ \texttt{\textbf{true}}, \\ xy $\to$ \texttt{\textbf{false}}}};
+  \node(0030) [below of=003] { \subst{\texttt{x} $\to$ \texttt{\textbf{true}}, \texttt{y} $\to$ \texttt{\textbf{true}}, xy $\to$ \texttt{\textbf{false}}}};
+
+  \draw[->] (0) to (00);
+
+  \draw[->] (00) to (000);
+  \draw[->] (00) to (001);
+  \draw[->] (00) to (002);
+  \draw[->] (00) to (003);
+
+  \draw[->] (000) to (0000);
+  \draw[->] (001) to (0010);
+  \draw[->] (002) to (0020);
+  \draw[->] (003) to (0030);
+
+\end{tikzpicture}
