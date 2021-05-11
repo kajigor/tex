@@ -1,7 +1,7 @@
 \section{Example}
 \label{example}
 
-In this section we demonstrate by example how Conservative Partial Deduction works.
+In this section we demonstrate by example how conservative partial deduction works.
 The example program is a relational interpreter of propositional formulas under given variable assignments.
 The complete code of the example program is provided in Listing~\ref{eval:whole}.
 
@@ -33,10 +33,10 @@ If the input formula is a variable, then its value is looked up in the substitut
   let or$^o$   x y z = nand$^o$ x x xx /\  nand$^o$ y y yy /\ nand$^o$ xx yy z
   let and$^o$ x y z = nand$^o$ x y xy /\   nand$^o$ xy xy z
   let nand$^o$ a b c = conde [
-      ( a === ^false /\ b === ^false /\ c === ^true );
-      ( a === ^false /\ b === ^true  /\ c === ^true );
-      ( a === ^true  /\ b === ^false /\ c === ^true );
-      ( a === ^true  /\ b === ^true  /\ c === ^false )]
+      ( a === false /\ b === false /\ c === true );
+      ( a === false /\ b === true  /\ c === true );
+      ( a === true  /\ b === false /\ c === true );
+      ( a === true  /\ b === true  /\ c === false )]
 
   let elem$^o$ n s v = conde [ fresh (h t m) (
     ( n === zero /\ s === h % t /\ h === v );
@@ -47,7 +47,7 @@ If the input formula is a variable, then its value is looked up in the substitut
   \end{minipage}
 \end{figure*}
 
-Consider the goal \lstinline{fresh (s fm) (eval$^o$ s fm ^true)}.
+Consider the goal \lstinline{fresh (s fm) (eval$^o$ s fm true)}.
 The partially constructed process tree for this goal is presented in Fig.~\ref{fig:evalTree}.
 The following notation is used.
 Rectangle nodes contain configurations, while diamond nodes correspond to splitting.
