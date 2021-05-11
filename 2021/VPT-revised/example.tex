@@ -57,7 +57,7 @@ For brevity, we only put a fragment of the substitution computed at each step in
 The leaf node which contain only the substitution and no goal in its configuration is a success node.
 The call selected to be unfolded is underlined in a conjunction.
 Nodes corresponding to failures are not present within the process tree.
-Dashed arrows represent renamings.
+Dashed arrows mark renamings.
 
 \begin{figure}[!t]
   \centering
@@ -84,10 +84,10 @@ Besides introducing fresh variables into the context, unifications in each conju
 This produces 4 branches, each of which is processed further.
 
 Consider the first branch, in which the input formula \lstinline{fm} is a conjunction of subformulas \lstinline{x} and \lstinline{y}.
-First, each of the relation calls within a conjunction is examined to select one of them to unfold.
+First, each relation call within a conjunction is examined separately to select one of the calls to unfold.
 To do so, we unfold each of them in isolation and use the less branching heuristic.
-Since both recursive calls to \lstinline{eval$^o$} are done with three distinct fresh variables, they are not selected.
-By unfolding the call to \lstinline{and$^o$} several times, we determine it has a single non-failing branch (see Fig.~\ref{fig:and}), which is less than the same relation called on all free and distinct variables, thus this call is selected to be unfolded.
+Since both recursive calls to \lstinline{eval$^o$} are done with three distinct fresh variables, they are not selected according to the less branching heuristic.
+By unfolding the call to \lstinline{and$^o$} several times, we determine it has a single non-failing branch (see Fig.~\ref{fig:and}), which is less than the same relation would have if called on all free and distinct variables, thus this call is selected to be unfolded.
 The result of unfolding the call is a single substitution which associates the variables \lstinline{a} and \lstinline{b} with \lstinline{true}.
 By applying the computed substitution to the goal we get a conjunction of two calls to the \lstinline{eval$^o$} relation with the last argument being \lstinline{true}.
 This conjunction embeds the root goal, thus we split the conjunction and both calls become leaves which rename the root.
@@ -95,35 +95,15 @@ This finishes the processing of the first branch.
 
 Consider the second branch, in which the input formula \lstinline{fm} is a disjunction of subformulas \lstinline{x} and \lstinline{y}.
 Similarly to the first branch, the heuristic selects the call to the boolean relation to be unfolded which produces three possible substitutions for variables \lstinline{a} and \lstinline{b}.
-The substitutions are propagated into the goals and three branches each of which embeds the root goal is added into the process tree.
-Each of the goals is split, then the calls with the last argument being \lstinline{true} rename the root goal.
-Then the call \lstinline{eval$^o$ y s false} is processed, which creates 4 branches similar to the branches of the root goal.
-
-The third branch is driven until a call with the last argument being \lstinline{false} is encountered.
-Since it renames one of the nodes which is already present in the process tree, we stop exploring this branch and add the back edge.
-
-The last branch, in which the input formula \lstinline{fm} is a variable \lstinline{v}, contain the single call to the relation \lstinline{elem$^o$}.
-The unfolding of this call produces two leaves: a success node and a renaming of the parent node.
-This finishes the construction of the process tree.
-
-The process tree is then residualized into a specialized version of the \lstinline{eval$^o$} relation.
-This program does not contain any calls to boolean connectives.
-Neither does the program contain the original, not specialized, relation \lstinline{eval$^o$}.
-
-It is worth noting that the result produced by the Conservative Partial Deduction is not ideal.
-For example, in the definition of the \lstinline{eval$^o_{true}$}, when the input formula \lstinline{fm} is a disjunction of subformulas \lstinline{x} and \lstinline{y}, the recursive call \lstinline{eval$^o_{true}$ s x } is done twice in two disjuncts.
-The ideal version of the relation \lstinline{eval$^o_{true}$} should contain this recursive call only once.
-This can be done, for example, by common subexpression elimination~\cite{muchnick1997advanced}.
-However \lstinline{y} should not be evaluted at all, since the value of the formula \lstinline{fm} does not depend on it.
-It is unclear if and how this kind of transformation can be done automatically.
-Such transformation would require, first, realising that a disjunction of two relation calls \lstinline{eval$^o_{true}$ s y} and \lstinline{eval$^o_{false}$ s y} exhaust all possible values for \lstinline{y}.
-Secondly, the transformation would have to examine if a relation restricts values of a given argument regardless of the other arguments' values.
+The substitutions are propagated into the goals and three branches, each of which embeds the root goal, are added into the process tree.
+Each goal is then split, and the calls with the last argument being \lstinline{true} rename the root.
+Finally, the call \lstinline{eval$^o$ y s false} is processed, which creates 4 branches similar to the branches of the root goal.
 
 
-\begin{figure*}[!h]
+\begin{figure*}[!t]
   \centering
-  \begin{minipage}{0.95\textwidth}
-    \begin{lstlisting}[label={eval:whole}, caption={Specialized evaluator of propositional formulas}, captionpos=b, frame=tb]
+  \begin{minipage}{0.65\textwidth}
+    \begin{lstlisting}[label={eval:conspd}, caption={Specialized evaluator of propositional formulas}, captionpos=b, frame=tb]
   let rec eval$^o_{true}$ s fm = conde [fresh (x y z v w) (
       ( fm === conj x y /\ eval$^o_{true}$ s x /\  eval$^o_{true}$ s y );
       ( fm === disj x y /\ (conde [
@@ -156,3 +136,23 @@ Secondly, the transformation would have to examine if a relation restricts value
     \end{lstlisting}
   \end{minipage}
 \end{figure*}
+
+The third branch is driven until a call with the last argument being \lstinline{false} is encountered.
+Since it renames one of the nodes which is already present in the process tree, we stop exploring this branch and add the back edge.
+
+The last branch, in which the input formula \lstinline{fm} is a variable \lstinline{v}, contain the single call to the relation \lstinline{elem$^o$}.
+The unfolding of this call produces two leaves: a success node and a renaming of the parent node.
+This finishes the construction of the process tree.
+
+The process tree is then residualized into a specialized version of the \lstinline{eval$^o$} relation (see Listing~\ref{eval:conspd}).
+This program does not contain any calls to boolean connectives.
+Neither does the program contain the original, not specialized, relation \lstinline{eval$^o$}.
+
+It is worth noting that the result produced by the Conservative Partial Deduction is not ideal.
+For example, in the definition of the \lstinline{eval$^o_{true}$}, when the input formula \lstinline{fm} is a disjunction of subformulas \lstinline{x} and \lstinline{y}, the recursive call \lstinline{eval$^o_{true}$ s x } is done twice in two disjuncts.
+The ideal version of the relation \lstinline{eval$^o_{true}$} should contain this recursive call only once.
+This can be done, for example, by common subexpression elimination~\cite{muchnick1997advanced}.
+However, ideally, \lstinline{y} should not be evaluted at all, since the value of the formula \lstinline{fm} does not depend on it.
+It is unclear if and how this kind of transformation can be done automatically.
+Such transformation would require, first, realising that a disjunction of two relation calls \lstinline{eval$^o_{true}$ s y} and \lstinline{eval$^o_{false}$ s y} exhaust all possible values for \lstinline{y}.
+Secondly, the transformation would have to examine if a relation restricts values of a given argument regardless of the other arguments' values.

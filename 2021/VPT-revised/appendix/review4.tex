@@ -18,7 +18,7 @@ Unfortunately, the paper contains no transformation example of miniKanren progra
 
 The paper authors do not refer to many well known published papers that of course were read by them and indirectly used in the submitted tutorial.
 
-\emph{We are not sure, how this can be arranged, but we would like to receive the list of the papers you have in mind to cite in this paper. It has never been our intention to leave out proper citations.}
+\emph{We added citations to more of the papers read by us, as well as to the papers the reviewers suggested.}
 
 Since the authors do not explicitly formulate their contribution, then I think perhaps the authors understand themselves that the "conservative partial deduction" was studied in published literature and its variants were used in a number of partial deduction systems.
 
@@ -103,7 +103,7 @@ Page 2.
 
       --- As a rule, a (local) generalization is a two-arity function depending on two configurations and, maybe, some nontrivial properties of the configuration automatically discovered by supercompilation before the corresponding generalization invocation starts.
 
-      \emph{We do not see any actionable items in this comment.}
+      % \emph{We do not see any actionable items in this comment.}
     }
 
     \item{
@@ -119,7 +119,7 @@ Page 2.
 
       --- In general, the most-specific generalization is not able prevent nontermination. Actually, it depends on the data set of the corresponding programming language. For example, if the data set is the set of finite strings in a given alphabet, then your statement is wrong. I.e. there are functional programming languages manipulating the character strings, rather than the LISP lists. In the case a programming language is Turing complete, using the most-specific generalization, as a rule, does not lead to any interesting transformations.
 
-      \emph{We agree with the statement. However, in the case of \mk, the data set of the language is indeed LISP lists, so the statement holds. }
+      \emph{We were referring to the resutls on the convergence of transfromers from the paper~\cite{sorensen1998convergence}.}
     }
 
     \item{Other criteria, like the size of the generated program or possible optimizations and execution cost of different language constructions by the target language evaluator, are usually out of consideration [7].
@@ -159,8 +159,6 @@ Page 4.
   \item { --- In this section a transformation example demonstrating the ``conservative partial deduction'' algorithm should given in details. You have spent only 13 pages and have at least two pages for such an example.  There are many problems hidden behind the pseudocode given in Figure 1. Without such an example it is not certainly that the authors understand the problems. For example, what is the strategy looking for the configuration C'? (1) Does the configuration belong to the path rooted at the initial goal and ending at the configuration C'? (2) Or, maybe, does your algorithm look among all generated configurations in the process tree? What is happened when there are at least two such configurations? Following the pseudocode one may guesses that the strategy follows the (1)-st variant. Actually, it is not the best choice. As far as I know the most specialization methods based on the the (2)-nd variant. It is quite natural since the (1)-st strategy leads to generating lager !
   residual programs as compared with the (2)-nd one (or code duplication).
 
-  \todo{EXAMPLE!}
-
   \emph{Currently, the less branching heuristics guides the choice of the suitable configuration. It works in the following manner. First it searches for the a static call within a conjunction. If there is no static calls, it then tries to find a deterministic call. If there are none, then it searches for the call which branchess less, than it does when all arguments are distinct free variables. It does select the leftmost suitable call, but only in the order described. If the leftmost call is less-branching, but the rightmost call is static, then the rightmost call will be selected and then relaced in the conjunction with the result of its unfolding. }
   }
 
@@ -176,7 +174,7 @@ Page 4.
 
     --- What does that mean? Only either an example mentioned above or a precise definition may provide information on the subject.
 
-    \emph{It means that the substitution is stored in the process tree, since it is later used in residualization. Substitutions are ignored by the whistle: only goals in configurations are checked for renaming and embedding.}
+    \emph{It means that the substitution is stored in the process tree, since it is later used in residualization. Substitutions are ignored by the whistle: only goals in configurations are checked for renaming and embedding. We clarified it in the paper.}
   }
 
   \item{
@@ -192,7 +190,7 @@ Page 4.
 
     --- Ok. See my remarks above.
 
-    \emph{We do not see any actionable items in this comment.}
+    % \emph{We do not see any actionable items in this comment.}
   }
 
   \item{
@@ -200,7 +198,7 @@ Page 4.
 
     --- Let us see below.
 
-    \emph{We do not see any actionable items in this comment.}
+    % \emph{We do not see any actionable items in this comment.}
   }
 
   \item{
@@ -240,7 +238,7 @@ Sec. 3.1 Unfolding
 
   --- Actually none can reason on any efficiency without fixing an efficiency model. As I have noted above the (physical) computing system is unclosed. The efficiency can be seen as kind of energy of the computing system. The task we are interested in is not quite mathematical and sometimes we should look for physical arguments.
 
-  \emph{We do not see any actionable items in this comment.}
+  % \emph{We do not see any actionable items in this comment.}
   }
 
   \item {
@@ -280,7 +278,7 @@ Page 7.
 
   --- I guess you have a series of examples demonstrating a different behaviour of ConsPD as compared with ECCE, but hide such examples. Do not have you?
 
-  \emph{ConsPD currently fails to perform deforestation and tupling on some programs which ECCE successfully transforms. We added a section discussing it \todo{ADD SECTION}. Battling this shortcomming is an ongoing project. }
+  \emph{ConsPD currently fails to perform deforestation and tupling on some programs which ECCE successfully transforms. We added a section~\ref{discussion} which discusses it. Battling this shortcomming is an ongoing project. }
 
   --- Have you explored some properties of the operating systems when the examples were specialized by both ConsPD and ECCE? For instance, how much of RAM was occupied, how many program were loaded in the operating system before starting and during the specialization?
 
@@ -326,7 +324,7 @@ Sec. 4.1.2 Unfolding of Complex Relations
 
   --- Here, for the first time in this paper, you use the ``driving'' term in a correct context, writing on ``a different number of driving steps''. Given an interpreter (an operation semantics of a programming language), the interpreter has a concept of a step repeated during evaluation (computation) of the programs on their given/fixed input data. The driving is a meta-extension of the step over the parameterized input data. Unfortunately, the data sets of Prolog and relation programming languages themselves include parameters named ``free variables''. That leads to a confusion.
 
-  \emph{We do not see any actionable items in this comment.}
+  % \emph{We do not see any actionable items in this comment.}
 
 \end{enumerate}
 

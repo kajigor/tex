@@ -52,7 +52,7 @@ The code is omitted for brevity but can be found in the implementation of the ap
 
 There are several core ideas behind this algorithm.
 The first is to select an arbitrary relation to unfold, not necessarily the leftmost which is safe.
-The second idea is to use a heuristic which decides if unfolding a relation call can lead to discovery of contradictions between conjuncts which in turn leads to restriction of the answer set at specialization-time (line 14; \code{heuristically\_select\_a\_call} stands for heuristic combination, see section~\ref{sec:heurictic} for details).
+The second idea is to use a heuristic which decides if unfolding a relation call can lead to discovery of contradictions between conjuncts which in turn leads to restriction of the answer set at specialization-time (line 14; \code{heuristically\_select\_a\_call} stands for heuristics combination, see section~\ref{sec:heurictic} for details).
 If those contradictions are found, then they are exposed by considering the conjunction as a whole and replacing the selected relation call with the result of its unfolding thus \emph{joining} the conjunction back together instead of using \emph{split} as in CPD (lines 15--22).
 Joining instead of splitting is why we call our transformer \emph{conservative} partial deduction.
 Finally, if the heuristic fails to select a potentially good call, then the conjunction is split into individual calls which are driven in isolation and are never joined (line 23).
@@ -68,9 +68,9 @@ According to the denotational semantics of \mk it is safe to compute individual 
 % If the selected call does not suit the criteria, the results of its unfolding is not propagated onto other relation calls withing the conjunction and the next suitable call is selected \db{(line 22)}.
 
 This process creates branchings whenever a disjunction is examined (lines 4--5).
-At each step, we make sure to not drive a conjunction which has been already examined.
+At each step, we make sure to not drive a conjunction which has already been examined.
 To do this, we check if the current conjunction is a renaming of any other configuration in the tree (line 11).
-If it is, then we fold the tree by creating a special node which then is residualized into a call to the corresponding relation.
+If it is, then we fold the tree by creating a special node which is then residualized into a call to the corresponding relation.
 
 In this approach, we do not generalize in the same fashion as CPD or supercompilation.
 This decision was motivated by keeping the complexity of the approach to the minimum.
@@ -108,7 +108,7 @@ Unfolding in the context of specialization of functional programming languages, 
 It may only lead to code explosion or code duplication which is mostly left to a target program compiler optimization or even is out of consideration at all if a specializer is considered as a standalone tool~\cite{jonesbook}.
 
 Unfortunately, this is not the case for the specialization of a relational programming language.
-Unlike functional and imperative languages, in logic and relational programming languages unfolding may easily affect the target program's efficiency~\cite{leuschel2002logic}.
+Unlike functional and imperative languages, in logic and relational programming languages unfolding may easily affect the target program's efficiency~\cite{leuschel2002logic, gallagher1993tutorial}.
 Unfolding too much may create extra unifications, which is by itself a costly operation, or even introduce duplicated computations by propagating the results of unfolding onto neighbouring conjuncts.
 
 There is a fine edge between too much unfolding and not enough unfolding.

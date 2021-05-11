@@ -75,7 +75,7 @@ Section 3.1, para 2: Unlike functional and imperative languages, in logic and re
 may easily affect the target program’s efficiency - actually unfolding in functional and imperative languages can also
 affect the program's efficiency if paramters are non-linear.
 
-\emph{We agree that unfolding may decrease the performance of programs with non-linear arguments for functional and imperative languages. In logic and relational programming, non-linear parameters are the primary way to share information between subgoals, thus they are prominent in most programs. It is much easier to come across this effect when specializing logic and relational programs. }
+\emph{We agree that unfolding may decrease the performance of programs with non-linear arguments for functional and imperative languages. In logic and relational programming languages the effect seems to be more drastic because of how costly unification is. }
 
 % \todo{Add something about non-linearity being everywhere in \mk programs, and point out that using non-linear arguments is crucial.}
 
@@ -85,7 +85,7 @@ Section 3.2, para 3: the less-branching heuristics $\to$ the less-branching heur
 
 Section 4, para 4: generated from the functional program - you have not really said what this functional program is
 
-\emph{We meant the straightforward implementation of the interpreter in a functional language which was then translated into \mk by means of relational conversion, according to the approach described in~\cite{lozov2019relational}.}
+\emph{We meant the straightforward implementation of the interpreter in a functional language which was then translated into \mk by means of relational conversion, according to the approach described in~\cite{lozov2019relational}. We clarified this in the paper.}
 
 Section 4.1.1, para 2: direction data - it is not clear what is meant by this
 

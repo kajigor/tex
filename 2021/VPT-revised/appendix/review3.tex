@@ -24,7 +24,7 @@ page 1. impelement $\Rightarrow$ implement
 
 page 2.  ``What is worse, the efficiency of residual program from the target language evaluator point of view is rarely considered in the literature.'' This is certainly not true of PE for Prolog.  See for example references [1], [2].
 
-\emph{We did not say it had never been considered.}
+\emph{Thank you for the referces. We added them into the paper.}
 
 page 3.  While it is true that CPD (ECCE) optimises programs for a left-to-right strategy. CPD can unfold any atom in a conjunction.  This preserves its logical semantics.  It is not true to state that CPD only ``unfolds atoms from left to right''.
 
@@ -38,12 +38,12 @@ page 3. ``The strategy of unfolding atoms from left to right is reasonable in th
 
 However, unfolding non-deterministic non-leftmost atoms CAN increase the search space of a left-right execution, since goals to the left of the unfolded atom are duplicated.
 
-\emph{All this was mentioned in the context of \mk, where the execution strategy is not left to right, not \pro. We fixed it in the text.}
+\emph{All this was mentioned in the context of \mk, where the execution strategy is not left to right, not in the context of \pro. We fixed this in the text.}
 
 
 page 3. A feature of CPD that seems to be ignored is that a conjunction can be unfolded, i.e. it is not always ``atom-by-atom'' but a conjunction p,q can be treated as a single predicate pq.  This allows more powerful specialisations, loop fusion, etc.  It is not clear whether MiniKanren can achieve these specialisations.
 
-\emph{We realize that CPD treats conjunctions as a single predicate. Conservative partial deduction does exactly that too: once a conjunction is encountered which is a renaming of another conjunction, we do not proceed to split it or unfold any of the relation calls within it. We note that it is a renaming and residualize it into a new predicate in the same manner CPD does.}
+\emph{We realize that CPD treats conjunctions as a single predicate. Conservative partial deduction does exactly that too: once a conjunction is encountered which is a renaming of another conjunction, we do not proceed to split it or unfold any of the relation calls within it. We note that it is a renaming and residualize it into a new predicate in the similar manner CPD does.}
 
 
 page 4.  Note that putting formulas in canonical form (disjunction of conjunctions) blows up the size of the program and can also increase the search.  This is a critical part of the experiment that needs to be addressed.  It would be better to define a new predicate for each construct, and then interpret it.  E.g.

@@ -31,7 +31,8 @@ While supercompilation generally improves the behaviour of input programs and di
 What is worse, the efficiency of a residual program from the target language evaluator point of view is rarely considered in the literature.
 The main optimization source is computing in advance all possible intermediate and statically-known semantics steps at program transformation-time.
 Other criteria, like the size of the generated program or possible optimizations and execution cost of different language constructions by the target language evaluator, are usually out of consideration~\cite{jonesbook}.
-It is known that supercompilation may adversely affect GHC optimizations making standalone compilation more powerful~\cite{SCBE,TCES} and cause code explosion~\cite{SCHC}.
+Partial evaluation in logic programming should be done with care to not interfere with the compiler optimizations~\cite{venken1988partial}.
+It is also known that supercompilation may adversely affect GHC optimizations making standalone compilation more powerful~\cite{SCBE,TCES} and cause code explosion~\cite{SCHC}.
 Moreover, it may be hard to predict the real speedup of any given program using concrete benchmarks even disregarding the problems above because of the complexity of the transformation algorithm.
 The worst-case for partial evaluation is when all static variables are used in a dynamic context, and there is some advice on how to implement a partial evaluator as well as a target program so that specialization indeed improves its performance~\cite{jonesbook,bulyonkov84}.
 There is a lack of research in determining the classes of programs which transformers would definitely speed~up.
