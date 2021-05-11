@@ -9,6 +9,8 @@ Our specializer improved the execution time of all queries.
 Conservative partial deduction is more stable with regards to the order of relation calls than \ecce which is demonstrated by the similar performance of all 4 implementations of the evaluator of logic formulas.
 
 Some queries to the same relation were improved more by ConsPD, while others --- by \ecce.
-We conclude that there is still no one good technique which definitively speeds up every relational program.
-More research is needed to develop models capable of predicting the performance of a relation which can be used in specialization.
-Another direction for future research is exploring how specialization influences the execution order of a \mk program.
+We conclude that there is still not one good technique which definitively speeds up every relational program.
+More research is needed to develop models capable of predicting the performance of a relation which can be used in specialization of \mk.
+There are some papers which estimate the efficiency of partial evaluation in the context of logic and functional logic programming languages~\cite{vidal2004cost,vidal2008trace}, and may facilitate achieving this goal.
+Employing a combination of offline and online transformations as done in~\cite{hybrid} may also be the step towards more effective and predictable partial evaluation.
+Other directions for future research include exploring how specialization influences the execution order of a \mk program, and coming up with a larger, more impressive, set of benchmarks.

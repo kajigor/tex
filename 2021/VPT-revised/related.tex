@@ -20,7 +20,7 @@ Generalization, abstracting away some computed data about the current term, make
 %  i.e. abstracting away some computed data about the current term which makes folding possible.
 One source of infinite branches is consecutive recursive calls to the same function with an accumulating parameter: by unfolding such a call further one can only increase the term size which leads to nontermination.
 The accumulating parameter can be removed by replacing the call with its generalization.
-There are several ways to ensure process correctness and termination, most-specific generalization
+There are several ways to ensure correctness and termination of a program transformer~\cite{sorensen1998convergence}, most-specific generalization
 (anti-unification) and \emph{homeomorphic embedding}~\cite{Higman52,Kruskal60} as a
 whistle being common.
 %the most common being \emph{homeomorphic embedding}~\cite{Higman52,Kruskal60} used as a whistle and most-specific generalization of terms.
@@ -59,6 +59,7 @@ An atom is unfolded only if precisely one suitable clause head exists for it wit
 This means that if a non-deterministic atom is the leftmost one within a conjunction, it is most likely to be unfolded, introducing many new relation calls within the conjunction.
 We believe this is the core problem of CPD which limits its power when applied to \mk.
 The strategy of unfolding atoms from left to right is reasonable in the context of \pro because it mimics the way programs in \pro execute.
-But in \mk it often leads to larger global control trees and, as a result, bigger, less efficient programs.
+Special care should be taken when unfolding non-leftmost atoms in \pro: one should ensure that it does not duplicate code, as well as that no side-effects are done out of order~\cite{nonleftmost, leuschel2014fast}.
+However in \mk leftmost unfolding often leads to larger global control trees and, as a result, bigger, less efficient programs.
 On the contrary, according to the denotational semantics, the results of evaluation of a \mk program do not depend on the order of relation calls (atoms) within conjunctions, thus we believe a better result can be achieved by selecting a relation call which can restrict the number of branches in the tree.
 We describe our approach, which implements this idea, in the next section.
