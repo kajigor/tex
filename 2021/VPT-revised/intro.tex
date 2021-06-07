@@ -1,7 +1,7 @@
 \section{Introduction}
 \label{intro}
 
-A family of embedded domain-specific languages \mk\footnote{\mk language web site: \url{http://minikanren.org}. Access date: 28.02.2021} implement relational programming~---~a paradigm closely related to the pure logic programming.
+A family of embedded domain-specific languages \mk\footnote{\mk language web site: \url{http://minikanren.org}. Access date: 28.02.2021} implement relational programming~---~a paradigm closely related to pure logic programming.
 The minimal core of the language, also known as \muk, can be implemented in as little as 39 lines of \scheme~\cite{friedmanmukanren}.
 An introduction to the language and some of its extensions in a series of examples can be found in the book The Reasoned Schemer~\cite{TheReasonedSchemer}.
 The formal certified semantics for \mk is described in~\cite{rozplokhas2020certified}.
@@ -21,11 +21,11 @@ What is even worse, it depends on the order of the relation calls within a progr
 One order can be good for one direction, but slow down the computation dramatically in the other direction.
 
 Partial evaluation~\cite{jonesbook} is a technique for specialization, i.e. improving the performance of a program given some information about it beforehand.
-It may either be a known value of some argument, its structure (e.g. the length of an input list) or, in case of a relational program, --- the direction in which the relation is intended to be run.
+It may either be a known value of some argument, its structure (e.g. the length of an input list) or, in case of a relational program, the direction in which the relation is intended to be run.
 An earlier paper~\cite{lozov2019relational} has shown that \emph{conjunctive partial deduction}~\cite{de1999conjunctive} can sometimes improve the performance of \mk programs.
 Depending on the particular \emph{control} decisions, it may also not affect the execution time of a program or even make it slower.
 
-Control issues in partial deduction of logic programming language \pro have been studied before~\cite{leuschel2002logic}.
+Control issues in partial deduction of the logic programming language \pro have been studied before~\cite{leuschel2002logic}.
 Under the left-to-right evaluation strategy of \pro, atoms in the right-hand side of a clause cannot be arbitrarily reordered without changing the semantics of a program.
 In \mk, the subgoals of a conjunction/disjunction can be freely switched without changing the denotational semantics of the program.
 This opens yet another possibility for optimization, not taken into account by the approaches initially developed in the context of conventional logic programming.

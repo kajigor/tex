@@ -26,8 +26,8 @@ In this section we provide some background on relational programming and relatio
 
 This paper considers the minimal relational core of the \mk language.
 The syntax of the language is presented in Fig.~\ref{syntax}.
-A specification of the \mk program consists of a set of \emph{relation definitions} accompanied by a top-level \emph{goal} which plays a role of a query.
-Goal, being the central syntactic category of the language, can take the form of either a term \emph{unification}, \emph{conjunction} or \emph{disjunction} of goals, a \emph{fresh} syntactic variable introduction, or a relation \emph{call}.
+A specification of the \mk program consists of a set of \emph{relation definitions} accompanied by a top-level \emph{goal} which plays the role of a query.
+Goals, being the central syntactic category of the language, can take the form of either a term \emph{unification}, \emph{conjunction} or \emph{disjunction} of goals, a \emph{fresh} syntactic variable introduction, or a relation \emph{call}.
 We consider the alphabet of constructors $\{C^{k_i}_i\}$ and relational symbols $\{R^{k_i}_i\}$ to be predefined and accompanied with their arities.
 
 The formal semantics of the language is best described in~\cite{rozplokhas2020certified}.
@@ -36,7 +36,7 @@ A stream of substitutions for free variables within the query goal is computed d
 Depending on the kind of the goal, one of the following situations is possible.
 
 \begin{enumerate}
-  \item Term unification $t_1 \equiv t_2$ computes the most-general unification in the context of the current substitution. If succeeded, the unifier is added into the current substitution and then it is returned as a singleton stream. Otherwise, an empty stream is returned.
+  \item Term unification $t_1 \equiv t_2$ computes the most-general unification in the context of the current substitution. If it succeeds, the unifier is added into the current substitution and then it is returned as a singleton stream. Otherwise, an empty stream is returned.
   \item Introduction of the fresh variable $fresh \ x. g$ allocates a new \emph{semantic} variable, substitutes it for all fresh occurrences of $x$ within $g$, then evaluates the goal.
   \item An execution of a relational call $R^{k_i}_i(t_1, \dots, t_{k_i})$ is done by first substuting the terms $t_j$ for the respective formal parameters and then running the resulting goal.
   \item When executing a conjunction $g_1 \wedge g_2$, first the goal $g_1$ is run in the context of the current substitution which results in the stream of substitutions, in each of which $g_2$ is run. The resulting stream of streams is then concatenated.

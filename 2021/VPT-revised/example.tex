@@ -6,7 +6,7 @@ The example program is a relational interpreter of propositional formulas under 
 The complete code of the example program is provided in Listing~\ref{eval:whole}.
 
 The relation \lstinline{eval$^o$} has three arguments.
-The first argument, \lstinline{s}, is a list of boolean values which plays a role of variable assignments.
+The first argument, \lstinline{s}, is a list of boolean values which plays the role of variable assignments.
 The $i$-th value of the substitution is the value of the $i$-th variable.
 The second argument, \lstinline{fm}, is a formula with the following abstract syntax.
 A formula is either a \emph{variable} represented with a Peano number, a \emph{negation} of a formula, a \emph{conjunction} of two formulas or a \emph{disjunction} of two formulas.
@@ -48,13 +48,13 @@ If the input formula is a variable, then its value is looked up in the substitut
 \end{figure*}
 
 Consider the goal \lstinline{fresh (s fm) (eval$^o$ s fm true)}.
-The partially constructed process tree for this goal is presented in Fig.~\ref{fig:evalTree}.
+The partially constructed process graph for this goal is presented in Fig.~\ref{fig:evalTree}.
 The following notation is used.
 Rectangle nodes contain configurations, while diamond nodes correspond to splitting.
 Each configuration contains a goal along with a substitution in angle brackets.
 To visually differentiate constructors from variables within goals, we made them bold.
 For brevity, we only put a fragment of the substitution computed at each step in the corresponding node.
-The leaf node which contain only the substitution and no goal in its configuration is a success node.
+The leaf node which contains only the substitution and no goal in its configuration is a success node.
 The call selected to be unfolded is underlined in a conjunction.
 Nodes corresponding to failures are not present within the process tree.
 Dashed arrows mark renamings.
@@ -64,7 +64,7 @@ Dashed arrows mark renamings.
   \begin{minipage}{0.95\textwidth}
     \input{figures/propConsPD.tex}
   \end{minipage}
-  \caption{Partially constructed process tree for the relation eval$^o$.}
+  \caption{Partially constructed process graph for the relation eval$^o$.}
   \label{fig:evalTree}
 \end{figure}
 
@@ -140,7 +140,7 @@ Finally, the call \lstinline{eval$^o$ y s false} is processed, which creates 4 b
 The third branch is driven until a call with the last argument being \lstinline{false} is encountered.
 Since it renames one of the nodes which is already present in the process tree, we stop exploring this branch and add the back edge.
 
-The last branch, in which the input formula \lstinline{fm} is a variable \lstinline{v}, contain the single call to the relation \lstinline{elem$^o$}.
+The last branch, in which the input formula \lstinline{fm} is a variable \lstinline{v}, contains the single call to the relation \lstinline{elem$^o$}.
 The unfolding of this call produces two leaves: a success node and a renaming of the parent node.
 This finishes the construction of the process tree.
 

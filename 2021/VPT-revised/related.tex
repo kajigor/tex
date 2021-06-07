@@ -5,7 +5,7 @@ Specialization is studied for functional, imperative, and logic programing and c
 
 
 The heart of supercompilation-based techniques is \emph{driving}~---~a symbolic execution of a program through all possible execution paths.
-The result of driving is a possibly infinite \emph{process tree} where nodes correspond to \emph{configurations} which represent computation state.
+The result of driving is a possibly infinite \emph{process tree} where nodes correspond to \emph{configurations} which represent computation states.
 For example, in the case of pure functional programming languages, the computational state might be a term.
 Each path in the tree corresponds to some concrete program execution.
 The two main sources for supercompilation optimizations are aggressive information propagation about variables' values, equalities and disequalities, and precomputing of deterministic semantic evaluation steps.
@@ -38,7 +38,7 @@ The worst-case for partial evaluation is when all static variables are used in a
 There is a lack of research in determining the classes of programs which transformers would definitely speed~up.
 
 Conjunctive partial deduction~\cite{de1999conjunctive} makes an effort to provide reasonable control for the left-to-right evaluation strategy of \pro.
-CPD constructs a tree which models goal evaluation and is similar to an SLDNF tree, then a residual program is generated from the tree.
+CPD constructs a tree which models goal evaluation and is similar to an SLDNF tree; then a residual program is generated from the tree.
 Partial deduction itself resembles driving in supercompilation~\cite{gluck1994partial}.
 The specialization is done in two levels of control: the local control determines the shape of the residual programs, while the global control ensures that every relation which can be called in the residual program is defined.
 The leaves of local control trees become nodes of the global control tree.
@@ -56,7 +56,7 @@ Unfortunately there is no automatic procedure to choose what control setting is 
 The choice of the proper control is left to the user.
 
 An empirical study has shown that the most well-behaved strategy of local control in CPD for \pro is \emph{deterministic unfolding}~\cite{leuschel1997advanced}.
-An atom is unfolded only if precisely one suitable clause head exists for it with the one exception: it is allowed to unfold an atom non-deterministically once for one local control tree.
+An atom is unfolded only if precisely one suitable clause head exists for it with the one exception: it is allowed to unfold an atom non-deterministically once for each local control tree.
 This means that if a non-deterministic atom is the leftmost one within a conjunction, it is most likely to be unfolded, introducing many new relation calls within the conjunction.
 We believe this is the core problem of CPD which limits its power when applied to \mk.
 The strategy of unfolding atoms from left to right is reasonable in the context of \pro because it mimics the way programs in \pro execute.
