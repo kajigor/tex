@@ -39,8 +39,8 @@ If the input formula is a variable, then its value is looked up in the substitut
       ( a === true  /\ b === true  /\ c === false )]
 
   let elem$^o$ n s v = conde [ fresh (h t m) (
-    ( n === zero /\ s === h % t /\ h === v );
-    ( n === succ m /\ s === h % t /\ elem$^o$ m t v ))]
+    ( n === zero /\ s === h : t /\ h === v );
+    ( n === succ m /\ s === h : t /\ elem$^o$ m t v ))]
 
 
     \end{lstlisting}
@@ -62,7 +62,7 @@ Dashed arrows mark renamings.
 \begin{figure}[!t]
   \centering
   \begin{minipage}{0.95\textwidth}
-    \input{figures/propConsPD.tex}
+    \input{figures/trees/propConsPD.tex}
   \end{minipage}
   \caption{Partially constructed process graph for the relation eval$^o$.}
   \label{fig:evalTree}
@@ -72,7 +72,7 @@ Dashed arrows mark renamings.
 \begin{figure}[!t]
   \centering
   \begin{minipage}{0.95\textwidth}
-    \input{figures/ando.tex}
+    \input{figures/trees/ando.tex}
   \end{minipage}
   \caption{Unfolding of and$^o$.}
   \label{fig:and}
@@ -125,12 +125,12 @@ Finally, the call \lstinline{eval$^o$ y s false} is processed, which creates 4 b
       ( fm === var v /\ elem$^o_{false}$ s v ))]
 
   let elem$^o_{true}$ n s = conde [ fresh (h t m) (
-      ( n === zero /\ s === true % t );
-      ( n === succ m /\ s === h % t /\ elem$^o_{true}$ m t ))]
+      ( n === zero /\ s === true : t );
+      ( n === succ m /\ s === h : t /\ elem$^o_{true}$ m t ))]
 
   let elem$^o_{false}$ n s = conde [ fresh (h t m) (
-      ( n === zero /\ s === false % t );
-      ( n === succ m /\ s === h % t /\ elem$^o_{false}$ m t ))]
+      ( n === zero /\ s === false : t );
+      ( n === succ m /\ s === h : t /\ elem$^o_{false}$ m t ))]
 
 
     \end{lstlisting}

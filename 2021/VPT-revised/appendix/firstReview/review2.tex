@@ -1,0 +1,104 @@
+
+\subsection*{Review 2}
+
+This paper looks at partial deduction for the relational programming language  MINIKANREN. The execution of programs in MINIKANREN differs from that in Prolog in that the subgoals of a conjunction or disjunction can be reordered. This creates many more degrees of freedom in the way a program can be executed, and also in the optimisations that can be performed.
+
+The paper looks at issues faced by conjunctive partial deduction of MINIKANREN and describes a new approach to partial deduction for relational languages called conservative partial deduction. The main issue with conjunctive partial deduction of MINIKANREN is the unfolding strategy. For Prolog, this is usally done by deterministic unfolding where all atoms except one are only unfolded if it matches with at most one clause head. One atom, usually the leftmost one, can be unfolded non-deterministically. However, this can add many new relation calls to a conjunction. Although this works well for Prolog, it does not work so well for MINIKANREN as it does not match its order of evaluation and can result in large less efficient programs.
+
+% \emph{Thank you for the detailed and accurate summary. This shows that we were able to communicate our intent well.}
+
+The solution proposed to this problem in this paper is called conservative partial deduction, which is inspired by both partial deduction and supercompilation. One aim is to create a speialization algorithm that is simpler than conjunctive partial deduction, but I am not sure this has been achieved as it still seems quite complex.
+
+\emph{We agree that our approach is not the simplest, but we still strive towards this goal.}
+
+The conservative aspect of the algorithm is in the unfolding of relation calls. This involves deciding if unfolding a relation call can lead to discovery of contradictions between conjuncts which in turn leads to restriction of the answer set at specialization-time. It is unclear how exactly this is preferrable to unfolding any other relation call.
+
+\emph{The core idea behind this approach is in removing (at specialization-time) those computations which will definitely fail at run-time. To do so we examine which calls within a conjunction interact in such a way as to lead to failures (one may say, the calls contradict each other), and if there are such calls, we process as a whole conjunction rather than splitting and driving them separately, loosing the information about contradictions by doing so.}
+
+It might actually add many new relation calls to a conjunction and result in large less efficient programs. The result of the unfolding is joined back into the conjunction rather than being split as is done in conjunctive partial deduction. It also just stops on encountering an embedding rather than trying to generalise and further transform.
+
+\emph{This decision was made in pursuit of reducing the algorithm's complexity. There is no reason not to do generalization of goals which do not require splitting.}
+
+The algorithm does not take advantage of the fact that subgoals in the language can be reordered, so it appears to miss out on many further opportunities for optimisation.
+
+\emph{On the contrary, whenever the algorithm decides that some call within a conjunction may lead to a contradiction, it unfolds the call and replaces it with the result of unfolding. This, at specialization-time, changes the order in which the calls are executed (see how boolean connectives are processed in different implementations of the} \lstinline{eval$^o$} \emph{relation). The residualized program will have the calls (or rather the result of unfolding of the calls) in roughly the same order, which was our intention from the very beginning.}
+
+The evaluation of the proposed technique is rather poor, with only variations of two test programs being evaluated. For the evaluator of logic formulas, the variations are on the way the boolean connectives are implemented, and whether these connectives are placed before or after the recursive call. For the type checker, the variations are on whether it was implemented by hand or  automatically generated from a corresponding functional program. This is not enough to conclude whether the transformation works well in practice.
+
+\emph{We agree this evaluation is not enough, and we are working on the better set of benchmarks. These programs were chosen to demonstrate typical issues which occur in developing efficient relational interpreters. Our goal in selecting them was to provide non-trivial examples which are illustrative and can be easily comprehended by the reader.}
+
+The transformed programs do all perform better than the original program, but ECCE does perform better than the described transformation for one program variation. The order of the answers produced by transformed programs can also be different to that of the original program, which I see as very problematic as the transformation is changing the behaviour of the program.
+
+\emph{The search in \mk is complete, thus all possible answers will be found, given enough time. This is why the \mk community does not focus on the order in which answers are found. The denotational semantics of a \mk program is a set of relations on the free variables of a goal rather that the list of answers in any particular order. See~\cite{rozplokhas2020certified} for the proof of the equivalence of the denotational and operational semantics of \mk.}
+
+Although the paper is well written, the contributions it makes to the area are minimal. It does not seem appropriate to apply conjunctive partial deduction to transform MINIKANREN programs, as conjunctive partial deduction follows the evaluation strategy of logic languages such as Prolog rather than that of relational languages such as MINIKANREN. It would seem to be more appropriate to devise a new transformation that follows the search strategy used by the MINIKANREN implementation.
+
+\emph{We believe that using a well-established framework for specialization of a language related to \mk is the most reasonable first step. If it had worked right away, we would have just applied CPD and moved on to the next challenge. Alas, it did not work as well as we hopped, thus we proceeded to developing a different transformation.}
+
+For the correctness of the transformation, it should be proved that the transformation does not change the order of answers produced for the program.
+
+\emph{According to the denotational semantics, the order of answers does not matter. Once we establish the best specialization method for \mk, we will prove its correctness with respect to the denotational semantics of \mk.}
+
+A more thorough evaluation of the described technique is also required. I am therefore on the fence as to whether to accept this paper or not.
+
+\emph{We agree with the need for better evaluation.}
+
+Detailed Comments
+=================
+
+Section 1, second last para: This opens a yet another possibility $\to$ This opens yet another possibility
+
+Section 2, para 2: is so-called process tree $\to$ is a so-called process tree
+
+Section 2, para 2: Of course, process tree $\to$ Of course, the process tree
+
+Section 2, para 2: signalls $\to$ signals
+
+Section 2, para 3: the efficiency of residual program $\to$ the efficiency of a residual program
+
+Section 2, para 3: yielding standalone compilation more powerful $\to$ making standalone compilation more powerful
+
+Section 2, final para: empitical $\to$ empirical
+
+Section 3, para 5: use a heuristics which decides $\to$  use a heuristic which decides
+
+Section 3, para 5: if the heuristics fails to select $\to$ if the heuristic fails to select
+
+% \emph{Thank you spending you time on finding and correcting all these mistakes. English is our second language and we are happy every time someone points out a missing article or incorrect spelling, since it gives us a chance to improve.}
+
+
+Section 3, final para: only if it is meaningful - what is meant by ``meaningful''?
+
+\emph{Here it was used as a more formal synonym for ``if it makes sense''.}
+
+Section 3.1, para 2: Unlike functional and imperative languages, in logic and relational programming languages unfolding
+may easily affect the target program’s efficiency - actually unfolding in functional and imperative languages can also
+affect the program's efficiency if paramters are non-linear.
+
+\emph{We agree that unfolding may decrease the performance of programs with non-linear arguments for functional and imperative languages. In logic and relational programming languages the effect seems to be more drastic because of how costly unification is. }
+
+% \todo{Add something about non-linearity being everywhere in \mk programs, and point out that using non-linear arguments is crucial.}
+
+Section 3.2, Figure 2: this figure is not really necessary and does not add very much
+
+Section 3.2, para 3: the less-branching heuristics $\to$ the less-branching heuristic
+
+Section 4, para 4: generated from the functional program - you have not really said what this functional program is
+
+\emph{We meant the straightforward implementation of the interpreter in a functional language which was then translated into \mk by means of relational conversion, according to the approach described in~\cite{lozov2019relational}. We clarified this in the paper.}
+
+Section 4.1.1, para 2: direction data - it is not clear what is meant by this
+
+\emph{We specialize a \mk goal in which some of the arguments are known statically. Which arguments are known and which are free variables determines the ``direction'' in which relation call is executed. See the second and the third paragraphs of the seciton~\ref{intro}. }
+
+Section 4.1.2, para 1: mimicking a truth tables $\to$ mimicking a truth table
+
+Section 4.2, para 3: in form of extra unifications $\to$ in the form of extra unifications
+
+Section 5, para 1: which uses a heuristics $\to$ which uses a heuristic
+
+Section 5, para 2: with regrads to $\to$ with regards to
+
+Section 5, para 3: were improved better $\to$ were improved more
+
+% \emph{We thank you again for the detailed feedback. We value your work.}

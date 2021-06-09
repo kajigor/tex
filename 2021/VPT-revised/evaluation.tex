@@ -209,7 +209,7 @@ Only terms of type integer can be added, multiplied or compared by the less-than
 Any terms of the same type can be checked for equality.
 Addition and multiplication of two terms of suitable types have integer type, while comparisons have boolean type.
 The if-then-else expression typechecks only if its condition is of type boolean, while both then- and else-branches have the same type.
-An environment $\Gamma$ is an ordered list, in which the $i$-th element is the type of the variable with the $i$-th de Bruijn index.
+An environment $\Gamma$ is a list, in which the $i$-th element is the type of the variable with the $i$-th de Bruijn index.
 To typecheck a let-binding, first, the term being bound is typechecked and is added in the beginning of the environment $\Gamma$, and then the body is typechecked in the context of the new environment.
 Typechecking a variable with the index $i$ boils down to getting an $i$-th element of the list.
 
@@ -319,7 +319,7 @@ This shows that the heuristic we presented gives more stable, although not the b
 
     let append$^o$ x y res = conde [ fresh (h t r) (
         ( x === [] /\ res === y );
-        ( x === h % t /\ append$^o$ t y r /\ res === h % r ))]
+        ( x === h : t /\ append$^o$ t y r /\ res === h : r ))]
     \end{lstlisting}
   \end{minipage}
 \end{figure*}
@@ -333,12 +333,12 @@ This shows that the heuristic we presented gives more stable, although not the b
 
     let length$^o$ x l = conde [ fresh (h t r) (
         ( x === [] /\ l === zero );
-        ( x === h % t /\ length$^o$ t r /\ l === succ r ))]
+        ( x === h : t /\ length$^o$ t r /\ l === succ r ))]
 
     let max$^o$ x m = max$_1^o$ x zero m
     let rec max$_1^o$ x n m = fresh (h t) ( conde [
         (x === [] /\ m === n);
-        (x === h % t) /\ (conde [
+        (x === h : t) /\ (conde [
           (le$^o$ h n true /\  max$_1^o$ t n m);
           (gt$^o$ h n true /\  max$_1^o$ t h m)])])
     \end{lstlisting}

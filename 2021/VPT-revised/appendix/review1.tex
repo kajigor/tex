@@ -1,69 +1,87 @@
 
 \subsection*{Review 1}
 
-The paper considers the optimisation of miniKanren relational programs using some form of (conjunctive) partial evaluation. In particular, the authors propose a novel approach, called conservative partial deduction, and reports on an experimental evaluation that compares the results obtained with ECCE (an online partial evaluator for Prolog based on conjunctive partial deduction) and the authors' tool. The results are very promising and show the advantages of the new approach.
-
-All in all, the paper contains interesting ideas and I recommend it to be accepted for VPT 2021.
-
-% \emph{Thank you for the kind review.}
-
-Detailed comments for authors:
+I'm mostly satisfied with the revision of the paper. Readability
+has been improved and several points have been clarified.
+Nevertheless, the paper has still some weaknesses:
 
 \begin{itemize}
-  \item In order for the paper to be as self-complete as possible, I'd suggest to add a brief introduction to miniKanren (syntax, informal semantics, a couple of examples) at the beginning of the paper.
+  \item The partial deduction algorithm is only informally specified.
+  Now it's clearer than in the previous version, but there are
+  several functions (e.g., residualize) which are only briefly
+  mentioned. Unfortunately, a better formalization is left as
+  future work.
+  \item The experimental evaluation is somehow limited, since only
+  two examples are considered (including several variants of these
+  examples). Moreover, the authors compare with a partial evaluator
+  for Prolog (ECCE), so one wonders if the comparison is indeed fair.
+  Nevertheless, the authors present the first partial evaluator for
+  MiniKanren (to the best of my knowledge), so it's understandable
+  that there are no other systems to compare with in a fair way.
+\end{itemize}
 
-  \emph{Added. See subsection \ref{mkIntro}.}
+All in all, I think that the paper presents an interesting
+development and can be accepted for the post-proceedings.
 
-  \item There are already some works that considered non-leftmost unfolding during partial evaluation, e.g.,
+Some minor remarks:
 
-  \begin{itemize}
-    \item  E. Albert, G. Puebla, J.P. Gallagher: Non-leftmost Unfolding in Partial Evaluation of Logic Programs with Impure Predicates. LOPSTR 2005: 115-132
-    \item M. Leuschel, G. Vidal: Fast offline partial evaluation of logic programs. Inf. Comput. 235: 70-97 (2014)
-  \end{itemize}
+\begin{itemize}
+  \item Abstract: at the early stages $\leftarrow$ at an early stage
+  \item Section 2.1: plays a role of a query $\leftarrow$ plays the role of a query
+  \item When explaining the operational semantics of MiniKanren, I'm a bit
+  confused with item 3 (page 3). It seems to say that conjunctions are
+  run from left to right. Is that true? I understood that conjuncts
+  can be run in any order during evaluation.
 
-  \emph{Thank you for bringing these papers to our attention. We cited them in the paper.}
+  \todo{\emph{Operational semantics of \mk employs interleaving to achieve completeness of the search: see the last paragraph in~\ref{mkIntro}.
+  The denotational semantics of the languages disregards the order in which conjuncts are executed, and this semantics is equivalent to the operational (modulo the order in which answers are computed) see~\cite{rozplokhas2020certified} for details.}}
+  \item Page 5: SLDNF tree, then a residual... $\leftarrow$ SLDNF tree; then, a residual...
+  \item Page 5: once for one local control tree $\leftarrow$ once for each local control tree
+  \item Figure 2: function drive_conj has two arguments (a conjunction
+  and a substitution) but, apparently, it's called in line 5 with only
+  one argument (the conjunction). Shall perhaps this call include a second
+  argument with an empty substitution?
 
-  \item As for the effectiveness of partial evaluation, you can check this one
+  \todo{\emph{Fixed, also improved the description of the pseudocode in text.}}
+  \item Page 7: please explain informally what transient nodes are. E.g., you
+  could mention that they would correspond to intermediate functions in
+  residual programs that are thus not necessary.
+  \item Section 6: for Prolog programming language $\leftarrow$ for the Prolog
+  programming language
+  \item Section 6: programs, written in miniKanren $\leftarrow$ programs written in miniKanren
+  \item Section 6.1: the way the eval is implemented $\leftarrow$ the way eval is implemented
+  \item Section 6.1.2: which is, in turn, has a $\leftarrow$ which, in turn, has a
+  \item Section 7: techniques for relational... $\leftarrow$ techniques for the relational...
+  \item Acknowledgements: discussiona $\leftarrow$ discussions
+  \item References [16] and [17] are incomplete. [16] is Michael's Phd thesis, see:
 
-  \begin{itemize}
-    \item G. Vidal: Cost-Augmented Partial Evaluation of Functional Logic Programs. High. Order Symb. Comput. 17(1-2): 7-46 (2004)
-  \end{itemize}
+  \url{https://limo.libis.be/primo-explore/fulldisplay?docid=LIRIAS1654943&context=L&vid=Lirias&search_scope=Lirias&tab=default_tab&lang=en_US&fromSitemap=1}
 
-  where the effectiveness of partial evaluation is estimated, and this one
+  As for [17], it was actually presented in a Workshop of ILPS'97.
+  Anyway, I suggest you consider this more recent reference:
 
-  \begin{itemize}
-    \item G. Vidal: Trace Analysis for Predicting the Effectiveness of Partial Evaluation. ICLP 2008: 790-794
-  \end{itemize}
+  \begin{verbatim}
+    @inproceedings{DBLP:conf/pepm/LeuschelEVCF06,
+    author    = {Michael Leuschel and
+                 Daniel Elphick and
+                 Mauricio Varea and
+                 Stephen{-}John Craig and
+                 Marc Fontaine},
+    editor    = {John Hatcliff and
+                 Frank Tip},
+    title     = {The Ecce and Logen partial evaluators and their web interfaces},
+    booktitle = {Proceedings of the 2006 {ACM} {SIGPLAN} Workshop on Partial Evaluation
+                 and Semantics-based Program Manipulation, 2006, Charleston, South
+                 Carolina, USA, January 9-10, 2006},
+    pages     = {88--94},
+    publisher = {{ACM}},
+    year      = {2006},
+    url       = {https://doi.org/10.1145/1111542.1111557},
+    doi       = {10.1145/1111542.1111557},
+    timestamp = {Tue, 06 Nov 2018 16:57:57 +0100},
+    biburl    = {https://dblp.org/rec/conf/pepm/LeuschelEVCF06.bib},
+    bibsource = {dblp computer science bibliography, https://dblp.org}
+  }
+  \end{verbatim}
 
-  which aims at predicting the effectiveness achieved by partial evaluation
-  (though it's just a preliminary approach).
-
-  \emph{Thank you! These papers do provide a nice way to estimate how efficient a transformation is and we will likely employ these ideas in future versions of our specializer, although this would likely require some tweaking for the interleaving semantics of \mk. }
-
-  \item The formalisation of conservative partial deduction using pseudocode is nice, but a more formal approach (as in [3]) might be useful to prove a number of properties. You could consider that as future work.
-
-  \emph{We agree that our approach will benefit from a more formal description and will consider it as future work.}
-
-  \item{In Sect. 3.1, you mention that unfolding too much might introduce extra unifications or duplicate computations. I think that this is not possible as long as partial evaluation considers a fixed left-to-right unfolding strategy at PE time. This is actually a problem when considering non-leftmost unfolding strategies at PE time.}
-
-  \emph{Section 5.1.1 of the paper~\cite{de1999conjunctive} states that non-determinate unfolding may add unifications regardless of wether the unfolding strategy is left-to-right or not. Of course, in pure \pro the effect of using unfolding strategies which are not left-to-right is more pronounced. Nevertheless, interleaving semantics of \mk complicates everything even further.}
-
-  \item Another unfolding strategy that might be related to your heuristics
-  is presented in
-
-  \begin{itemize}
-    \item G. Vidal: A Hybrid Approach to Conjunctive Partial Evaluation of Logic
-    Programs. LOPSTR 2010: 200-214
-  \end{itemize}
-
-  where the notion of ``strongly regular logic programs'' is introduced in order to characterise the predicates whose unfolding cannot produce infinitely growing conjunctions at PE time.
-
-  \emph{This notion seems to be related to our heuristic. Also, combining online and offline methods seems like a good idea. We will definitely consider this direction in future research.}
-
-  \item {The experimental evaluation is certainly promising. Nevertheless,
-  it would be great if you could put the implemented tool publicly available,
-  including the source code of the considered benchmarks so that the readers
-  can replicate the experiments.}
-
-  \emph{The tool is available on github: \url{https://github.com/kajigor/uKanren_transformations/}, the experiments, currently not very well structured, are also on github in a different repository: \url{https://github.com/kajigor/mk-transformers-bench}}
 \end{itemize}

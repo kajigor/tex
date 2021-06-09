@@ -1,0 +1,69 @@
+
+\subsection*{Review 1}
+
+The paper considers the optimisation of miniKanren relational programs using some form of (conjunctive) partial evaluation. In particular, the authors propose a novel approach, called conservative partial deduction, and reports on an experimental evaluation that compares the results obtained with ECCE (an online partial evaluator for Prolog based on conjunctive partial deduction) and the authors' tool. The results are very promising and show the advantages of the new approach.
+
+All in all, the paper contains interesting ideas and I recommend it to be accepted for VPT 2021.
+
+% \emph{Thank you for the kind review.}
+
+Detailed comments for authors:
+
+\begin{itemize}
+  \item In order for the paper to be as self-complete as possible, I'd suggest to add a brief introduction to miniKanren (syntax, informal semantics, a couple of examples) at the beginning of the paper.
+
+  \emph{Added. See subsection \ref{mkIntro}.}
+
+  \item There are already some works that considered non-leftmost unfolding during partial evaluation, e.g.,
+
+  \begin{itemize}
+    \item  E. Albert, G. Puebla, J.P. Gallagher: Non-leftmost Unfolding in Partial Evaluation of Logic Programs with Impure Predicates. LOPSTR 2005: 115-132
+    \item M. Leuschel, G. Vidal: Fast offline partial evaluation of logic programs. Inf. Comput. 235: 70-97 (2014)
+  \end{itemize}
+
+  \emph{Thank you for bringing these papers to our attention. We cited them in the paper.}
+
+  \item As for the effectiveness of partial evaluation, you can check this one
+
+  \begin{itemize}
+    \item G. Vidal: Cost-Augmented Partial Evaluation of Functional Logic Programs. High. Order Symb. Comput. 17(1-2): 7-46 (2004)
+  \end{itemize}
+
+  where the effectiveness of partial evaluation is estimated, and this one
+
+  \begin{itemize}
+    \item G. Vidal: Trace Analysis for Predicting the Effectiveness of Partial Evaluation. ICLP 2008: 790-794
+  \end{itemize}
+
+  which aims at predicting the effectiveness achieved by partial evaluation
+  (though it's just a preliminary approach).
+
+  \emph{Thank you! These papers do provide a nice way to estimate how efficient a transformation is and we will likely employ these ideas in future versions of our specializer, although this would likely require some tweaking for the interleaving semantics of \mk. }
+
+  \item The formalisation of conservative partial deduction using pseudocode is nice, but a more formal approach (as in [3]) might be useful to prove a number of properties. You could consider that as future work.
+
+  \emph{We agree that our approach will benefit from a more formal description and will consider it as future work.}
+
+  \item{In Sect. 3.1, you mention that unfolding too much might introduce extra unifications or duplicate computations. I think that this is not possible as long as partial evaluation considers a fixed left-to-right unfolding strategy at PE time. This is actually a problem when considering non-leftmost unfolding strategies at PE time.}
+
+  \emph{Section 5.1.1 of the paper~\cite{de1999conjunctive} states that non-determinate unfolding may add unifications regardless of wether the unfolding strategy is left-to-right or not. Of course, in pure \pro the effect of using unfolding strategies which are not left-to-right is more pronounced. Nevertheless, interleaving semantics of \mk complicates everything even further.}
+
+  \item Another unfolding strategy that might be related to your heuristics
+  is presented in
+
+  \begin{itemize}
+    \item G. Vidal: A Hybrid Approach to Conjunctive Partial Evaluation of Logic
+    Programs. LOPSTR 2010: 200-214
+  \end{itemize}
+
+  where the notion of ``strongly regular logic programs'' is introduced in order to characterise the predicates whose unfolding cannot produce infinitely growing conjunctions at PE time.
+
+  \emph{This notion seems to be related to our heuristic. Also, combining online and offline methods seems like a good idea. We will definitely consider this direction in future research.}
+
+  \item {The experimental evaluation is certainly promising. Nevertheless,
+  it would be great if you could put the implemented tool publicly available,
+  including the source code of the considered benchmarks so that the readers
+  can replicate the experiments.}
+
+  \emph{The tool is available on github: \url{https://github.com/kajigor/uKanren_transformations/}, the experiments, currently not very well structured, are also on github in a different repository: \url{https://github.com/kajigor/mk-transformers-bench}}
+\end{itemize}
