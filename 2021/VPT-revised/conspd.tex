@@ -12,7 +12,7 @@ We use the following notation in the pseudocode.
 The circle, $\circ$, represents function composition.
 The \emph{at} sign, @, is used to name a pattern matched value.
 The arrow, $\leftarrow$, is used to bind a variable on the left-hand side.
-The arrow can also be used to pattern match the value on the right-hand side (see line 9).
+The arrow can also be used to pattern match the value on the right-hand side (see line 8).
 We use symbols $\bigwedge$ and $\bigvee$ to represent creating, respectively, a conjunction or a disjunction node in a process tree.
 
 
@@ -26,19 +26,19 @@ We use symbols $\bigwedge$ and $\bigvee$ to represent creating, respectively, a 
 Functions \code{drive\_disj} and \code{drive\_conj} describe how to process disjunctions and conjunctions respectively.
 Hereafter, we consider all goals and relation bodies to be in \emph{canonical normal form}~---~a disjunction of conjunctions of either calls or unifications.
 Moreover, we assume all fresh variables to be introduced into the scope and all unifications to be computed at each step.
-Thus driving is declared to be the function \code{drive\_disj} (line 2).
+Thus driving is declared to be the function \code{drive\_disj} (line 4).
 
-A driving process (along with generalization and folding) creates a process tree, from which a residual program is later created.
-The process tree is meant to mimic the execution of the input program.
-The nodes of the process tree include a \emph{configuration} which describes the state of program evaluation at some point.
+A driving process (along with generalization and folding) creates a process graph, from which a residual program is later created.
+The process graph is meant to mimic the execution of the input program.
+The nodes of the process graph include a \emph{configuration} which describes the state of program evaluation at some point.
 In our case a configuration is a conjunction of relation calls.
-The substitution computed at each step is also stored in the tree node, although it is not included in the configuration.
+The substitution computed at each step is also stored in the graph node, although it is not included in the configuration.
 This means that only the goal, and not the substitution, is passed into the \emph{whistle} to determine potential non-termination.
 
 Residualization is done by the function \code{residualize}.
-Residualization traverses the process tree in preorder and generates the \mk goal as well as new relations whenever needed.
+Residualization traverses the process graph and generates the \mk goal as well as new relations whenever needed.
 A conjunction is created from a conjunction node, a disjunction --- from a disjunction node, while substitutions are generated into a conjunction of unifications.
-Transient nodes are removed during residualization to improve the performance of programs.
+Transient nodes --- the nodes which have a single child node --- correspond to intermediate \todo{functions} in residual programs and are removed during residualization to improve the performance of programs.
 We also employ \emph{redundant argument filtering} as described in~\cite{leuschel1996redundant}.
 
 Those disjuncts in which unifications fail are removed while driving.
@@ -52,30 +52,30 @@ The code is omitted for brevity but can be found in the implementation of the ap
 
 There are several core ideas behind this algorithm.
 The first is to select an arbitrary relation to unfold, not necessarily the leftmost which is safe.
-The second idea is to use a heuristic which decides if unfolding a relation call can lead to discovery of contradictions between conjuncts which in turn leads to restriction of the answer set at specialization-time (line 14; \code{heuristically\_select\_a\_call} stands for heuristics combination, see section~\ref{sec:heurictic} for details).
-If those contradictions are found, then they are exposed by considering the conjunction as a whole and replacing the selected relation call with the result of its unfolding thus \emph{joining} the conjunction back together instead of using \emph{split} as in CPD (lines 15--22).
+The second idea is to use a heuristic which decides if unfolding a relation call can lead to discovery of contradictions between conjuncts which in turn leads to restriction of the answer set at specialization-time (line 13; \code{heuristically\_select\_a\_call} stands for heuristics combination, see section~\ref{sec:heurictic} for details).
+If those contradictions are found, then they are exposed by considering the conjunction as a whole and replacing the selected relation call with the result of its unfolding thus \emph{joining} the conjunction back together instead of using \emph{split} as in CPD (lines 14--21).
 Joining instead of splitting is why we call our transformer \emph{conservative} partial deduction.
-Finally, if the heuristic fails to select a potentially good call, then the conjunction is split into individual calls which are driven in isolation and are never joined (line 23).
+Finally, if the heuristic fails to select a potentially good call, then the conjunction is split into individual calls which are driven in isolation and are never joined (line 22).
 
-When the heuristic selects a call to unfold (line 15), a process tree is constructed for the selected call \emph{in isolation} (line 16).
+When the heuristic selects a call to unfold (line 14), a process tree is constructed for the selected call \emph{in isolation} (line 15) by unfolding the call once, normalizing the unfolded goal and computing all unifications into substitutions.
 The leaves of the computed tree are examined.
-If all leaves are either computed substitutions or are instances of some relations accompanied with non-empty substitutions, then the leaves are collected and each of them replaces the considered call in the root conjunction (lines 19--20).
-If the selected call does not suit the criteria, the results of its unfolding are not propagated onto other relation calls within the conjunction, instead, the next suitable call is selected (line 22).
+If all leaves are either computed substitutions or are instances of some relations accompanied with non-empty substitutions, then the leaves are collected and each of them replaces the considered call in the root conjunction (line 19).
+If the selected call does not suit the criteria, the results of its unfolding are not propagated onto other relation calls within the conjunction, instead, the next suitable call is selected (line 21).
 According to the denotational semantics of \mk it is safe to compute individual conjuncts in any order, thus it is okay to drive any call and then propagate its results onto the other calls.
 
 % Each time we examine a conjunction of calls, we \emph{split} them into separate nodes which are driven independently from each other.
 % Among the relation calls we select one which is according to the heuristic is likely to narrow down the answer set \db{(line 15)}.
 % If the selected call does not suit the criteria, the results of its unfolding is not propagated onto other relation calls withing the conjunction and the next suitable call is selected \db{(line 22)}.
 
-This process creates branchings whenever a disjunction is examined (lines 4--5).
+This process creates branchings whenever a disjunction is examined (lines 4, 19).
 At each step, we make sure to not drive a conjunction which has already been examined.
-To do this, we check if the current conjunction is a renaming of any other configuration in the tree (line 11).
+To do this, we check if the current conjunction is a renaming of any other configuration in the tree (line 10).
 If it is, then we fold the tree by creating a special node which is then residualized into a call to the corresponding relation.
 
 In this approach, we do not generalize in the same fashion as CPD or supercompilation.
 This decision was motivated by keeping the complexity of the approach to the minimum.
 Our conjunctions are always split into individual calls and are joined back together only if it is meaningful, for example, leads to contradictions.
-If the need for generalization arises, i.e. homeomorphic embedding of conjunctions~\cite{de1999conjunctive} is detected, then we immediately stop driving this conjunction (line 12).
+If the need for generalization arises, i.e. homeomorphic embedding of conjunctions~\cite{de1999conjunctive} is detected, then we immediately stop driving this conjunction (line 11).
 When residualizing such a conjunction, we just generate a conjunction of calls to the input program before specialization.
 
 

@@ -1,2 +1,90 @@
 
 \subsection*{Review 2}
+
+
+This revised version of the paper has been improved a lot from the previous version, with a lot more
+detailed explanations and background, and has taken a lot of the previous referees comments on board.
+The paper is a lot easier to read, although many typos remain (see below).
+
+The paper is still very weak, and a lot of fundamental flaws remain. The order of evaluation that is
+chosen for the transformation is rather strange and does not seem suited to obtaining the best possible
+results. A relation is selected for unfolding if it can lead to the discovery of contradictions between conjuncts;
+no details of the algorithm for this are given. It is not clear why this would be a good idea, and what benefits
+it provides. The goal of the unfolding should be to control the size of the term, not the size of the answer set.
+
+\todo{\emph{Contradictions between conjuncts lead to failures at runtime. By detecting contradictions at specialization-time, we can remove the failing computations from programs thus improving its performance. This is the motivation behind our heuristic.}}
+
+When a relation is selected for unfolding, it is fully processed in isolation. This also seems strange. This is
+in fact following a more depth-first evaluation strategy than the original CPD, while miniKanren itself follows
+a breadth-first evaluation strategy, so it seems even more inappropriate for this language.
+
+\todo{\emph{Due to the use of interleaving, the search in \mk is complete. Thus the order in which subgoals are evaluated is irrelevant: different evaluation strategies influence the order of the answers, not which answers can be potentially computed. Unfolding a goal in isolation helps reveal }}
+
+This therefore means
+that the conservative approach is not able to perform the deforestation or tupling transformations, which is a
+major problem.
+
+\todo{\emph{This is a major problem indeed. We are currently working on mitigating it.}}
+
+It is claimed that the original CPD will not be able to apply deforestation for doubleAppend if
+one extra disjunct is added into the appendo relation, or to apply tupling for maxLength if the calls to maxo and
+lengtho are reordered; I do not believe that either of these is the case.
+
+\todo{
+\emph{
+  We put the prolog programs for maxlenght and double appendo in gists. Each file contains an input program in prolog, a goal to specialize, and the result of transformation done by ECCE with the default control settings. We used the instance of ECCE available online here: \url{http://wyvern.cs.uni-duesseldorf.de/ecce/index.php}
+}
+\emph{
+\begin{itemize}
+  \item Original maxLength: \url{https://gist.github.com/kajigor/58f79b0e5847ad860b0af12d98e2c9e2}.
+  \item maxLength with the reordered max and len atoms: \url{https://gist.github.com/kajigor/dc348c05ba0a973c6b3e8cdb671ce73b}.
+  \item Original doubleAppend: \url{https://gist.github.com/kajigor/0f878c6843e4954ab628f94edfe574cd}.
+  \item Modified doubleAppend for which ECCE performs deforestation: \url{https://gist.github.com/kajigor/a30f21604d8ebc91923135fe5026a83c}.
+  \item Modified doubleAppend for which ECCE fails to perform deforestation: \url{https://gist.github.com/kajigor/2d9dfbaf8ff6134d97892dcf3bd9bc1e}.
+\end{itemize}
+}
+}
+
+The evaluation of the proposed transformation scheme is still inadequate. Only two examples are considered (with variants)
+and the results are compared with CPD for Prolog using ECCE, so it does not seem fair. If the examples included opportunites
+for deforestation or tupling, then presumably ECCE would have performed considerable better in these cases.
+
+\todo{\emph{Section~\ref{discussion} states that our method cannot perform deforestation and tupling for some programs, and ConsPD will not improve them.}}
+
+I will argue for the weak acceptance of this paper since it makes the following contributions: it is the first partial
+evaluator for miniKanren and it makes it clear that the described approach should not be used for this purpose.
+
+Detailed Comments:
+
+\begin{itemize}
+  \item{Abstract: at the early stages $\rightarrow$ at an early stage}
+  \item{Section 1, para 1: related to the pure logic programming $\rightarrow$ related to pure logic programming}
+  \item{Section 1, para 4:  — the direction in which $\rightarrow$ the direction in which}
+  \item{Section 1, para 5: of logic programming language $\rightarrow$ of the logic programming language}
+  \item{Section 2.1, para 1: plays a role of a query $\rightarrow$ plays the role of a query}
+  \item{Section 2.1, para 1: Goal, being the central $\rightarrow$ Goals, being the central}
+  \item{Section 2.1, item 1: If succeeded $\rightarrow$ If it succeeds}
+  \item{Section 3, para 2: configurations which represent computation state $\rightarrow$ configurations which represent computation states}
+  \item{Section 3, final para: once for one local control tree $\rightarrow$ once for each local control tree}
+  \item{Figure 2: drive_conj has an inconsistent number of arguments}
+  \item{Section 4, para 1: relational programs specialization $\rightarrow$ relational program specialization}
+  \item{Section 5, para 4: The leaf node which contain $\rightarrow$ The leaf node which contains}
+  \item{Figure 4 label: Partially constructed process tree $\rightarrow$ Partially constructed process graph}
+  \item{Page 11, para 3: contain the single call $\rightarrow$ containing the single call}
+  \item{Section 6, para 3: in the section 5 $\rightarrow$ in Section 5}
+  \item{Section 6, para 1: for Prolog programming language $\rightarrow$ for the Prolog programming language}
+  \item{Section 6, para 1: programs, written in miniKanren $\rightarrow$ programs written in miniKanren}
+  \item{Section 6.1, para 1: the way the evalo is implemented $\rightarrow$ the way evalo is implemented}
+  \item{Section 6.1.2, para 2: which is, in turn, has a $\rightarrow$ which, in turn, has a}
+  \item{Section 6.1.3, para 1: summed up in the Table 1 $\rightarrow$ summarised in Table 1}
+  \item{Section 6.1.3, para 2: ConsPD do not worsen performance $\rightarrow$ ConsPD does not worsen performance}
+  \item{Section 6.2, para 2: Only terms of type integer can be summed up, multiplied or compared by less-than operator $\rightarrow$ Only terms of type integer can be added, multiplied or compared by the less-than operator.}
+  \item{Section 6.2, para 2: If-then-else expression typechecks only if $\rightarrow$ The if-then-else expression typechecks only if}
+  \item{Section 6.2, para 4: than the hand-written $\rightarrow$ than the hand-written one}
+  \item{Section 6.2, para 5: performing average amount $\rightarrow$ performing an average amount}
+  \item{Section 6.3, para 4: The similar thing happens $\rightarrow$ A similar thing happens}
+  \item{Section 6.3, para 4: splits too much too early $\rightarrow$ splits much too early}
+  \item{Section 6.3, para 5: This is an evidence of $\rightarrow$ This is evidence of}
+  \item{Section 7: techniques for relational programming language MINIKANREN $\rightarrow$ techniques for the relational programming language MINIKANREN}
+  \item{Acknowledgements: fruitful discussiona $\rightarrow$ fruitful discussions}
+\end{itemize}

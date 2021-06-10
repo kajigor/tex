@@ -58,16 +58,16 @@ The denotational semantics of \mk ignores the order of the answers because the s
 \begin{figure*}[!t]
   \centering
   \begin{minipage}{0.68\textwidth}
-    \begin{lstlisting}[label={eval:arith}, caption={Evaluator of arithmetic expressions}, captionpos=b, frame=tb]
+    \begin{lstlisting}[label={eval:arith}, caption={Evaluator of arithmetic expressions}, captionpos=b, frame=tb, escapeinside={(*}{*)}]
   let rec add$^o$ x y z = conde [
       (x === zero /\ y === z);
       (fresh (p) (x === succ p /\ add$^o$ p (succ y) z) ) ]
 
   let rec eval$^o$ fm res = conde [fresh (x y xr yr) (
-      (fm === num res);
+      (fm === (*\textbf{num}*) res);
       (eval$^o$ x xr /\  eval$^o$ y yr /\
         conde [
-          (fm === sum x y /\ add$^o$ xr yr res);
+          (fm === (*\textbf{sum}*) x y /\ add$^o$ xr yr res);
           (fm === prod x y /\ $\dots$);
           $\dots$ ] )
     \end{lstlisting}
