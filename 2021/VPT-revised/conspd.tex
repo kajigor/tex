@@ -144,7 +144,7 @@ The maximum number of disjuncts is computed by unfolding the body of the relatio
 %  more complicated case is when there are less disjuncts than there can possibly be.
 % This signifies that at least one branch of computations is gotten rid of.
 
-The pseudocode describing our heuristic is shown in Fig.~\ref{fig:ncpd-pseudo} (ines 25-27).
+The pseudocode describing our heuristic is shown in Fig.~\ref{fig:ncpd-pseudo} (lines 25-27).
 Selecting a good relation call can fail (line 25).
 The implementation works such that we first select those relation calls which are static, and only if there are none, we proceed to consider deterministic unfoldings and then we search for those which are less branching.
 We believe this heuristic provides a good balance in unfolding.
