@@ -56,7 +56,7 @@ To visually differentiate constructors from variables within goals, we made them
 For brevity, we only put a fragment of the substitution computed at each step in the corresponding node.
 The leaf node which contains only the substitution and no goal in its configuration is a success node.
 The call selected to be unfolded is underlined in a conjunction.
-Nodes corresponding to failures are not present within the process tree.
+Nodes corresponding to failures are not present within the process graph.
 Dashed arrows mark renamings.
 
 \begin{figure}[!t]
@@ -95,7 +95,7 @@ This finishes the processing of the first branch.
 
 Consider the second branch, in which the input formula \lstinline{fm} is a disjunction of subformulas \lstinline{x} and \lstinline{y}.
 Similarly to the first branch, the heuristic selects the call to the boolean relation to be unfolded which produces three possible substitutions for variables \lstinline{a} and \lstinline{b}.
-The substitutions are propagated into the goals and three branches, each of which embeds the root goal, are added into the process tree.
+The substitutions are propagated into the goals and three branches, each of which embeds the root goal, are added into the process graph.
 Each goal is then split, and the calls with the last argument being \lstinline{true} rename the root.
 Finally, the call \lstinline{eval$^o$ y s false} is processed, which creates 4 branches similar to the branches of the root goal.
 
@@ -138,13 +138,13 @@ Finally, the call \lstinline{eval$^o$ y s false} is processed, which creates 4 b
 \end{figure*}
 
 The third branch is driven until a call with the last argument being \lstinline{false} is encountered.
-Since it renames one of the nodes which is already present in the process tree, we stop exploring this branch and add the back edge.
+Since it renames one of the nodes which is already present in the process graph, we stop exploring this branch and add the back edge.
 
 The last branch, in which the input formula \lstinline{fm} is a variable \lstinline{v}, contains the single call to the relation \lstinline{elem$^o$}.
 The unfolding of this call produces two leaves: a success node and a renaming of the parent node.
-This finishes the construction of the process tree.
+This finishes the construction of the process graph.
 
-The process tree is then residualized into a specialized version of the \lstinline{eval$^o$} relation (see Listing~\ref{eval:conspd}).
+The process graph is then residualized into a specialized version of the \lstinline{eval$^o$} relation (see Listing~\ref{eval:conspd}).
 This program does not contain any calls to boolean connectives.
 Neither does the program contain the original, not specialized, relation \lstinline{eval$^o$}.
 

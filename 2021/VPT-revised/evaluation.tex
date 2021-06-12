@@ -357,7 +357,7 @@ By renaming this conjunction into a new predicate, deforestation is achieved in 
 
 Unfortunately, conservative partial deduction does not succeed at this transformation on this example.
 This happens because ConsPD splits the conjunction of two calls to \lstinline{append$^o$}, since none of them is selected by the less branching heuristic.
-Splitting the conjunction leads to information loss and makes it so there is no renaming of the whole conjunction in the process tree.
+Splitting the conjunction leads to information loss and makes it so there is no renaming of the whole conjunction in the process graph.
 
 A similar thing happens when considering the common example on which tupling is demonstrated in literature on CPD: the \lstinline{maxLength$^o$} program.
 The original implementation of this program computes the maximum element of the list along with the length of the list by conjunction of two calls to the corresponding relations: \lstinline{max$^o$} and \lstinline{length$^o$} (see Listing.~\ref{maxlen}).

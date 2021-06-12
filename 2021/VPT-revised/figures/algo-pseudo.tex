@@ -45,7 +45,8 @@ drive_disj :: [(Disjunction, Substitution)] @*$\to$@* Process_Graph
 drive_disj [(c@*$_1$@*, subst@*$_1$@*), @*$\dots$@*, (c@*$_n$@*, subst@*$_n$@*)] = @*$\bigvee_{i=1}^n$@* t@*$_i$@* @*$\leftarrow$@* drive_conj(c@*$_i$@*, subst@*$_i$@*)
 
 drive_conj :: (Conjunction, Substitution) @*$\to$@* Process_Graph
-drive_conj ((r@*$_1$@*, @*$\dots$@*, r@*$_n$@*), subst) =
+drive_conj ([], subst) = create_success_node (subst)
+drive_conj ([r@*$_1$@*, @*$\dots$@*, r@*$_n$@*], subst) =
   C@(r@*$_1$@*, @*$\dots$@*, r@*$_n$@*) @*$\leftarrow$@* propagate_substitution subst onto r@*$_1$@*, @*$\dots$@*, r@*$_n$@*
   case whistle(C) of
   | instance(C', subst')      @*$\Rightarrow$@* create_fold_node(C', subst')
@@ -53,14 +54,18 @@ drive_conj ((r@*$_1$@*, @*$\dots$@*, r@*$_n$@*), subst) =
   | otherwise @*$\Rightarrow$@*
   | | case heuristically_select_a_call(r@*$_1$@*, @*$\dots$@*, r@*$_n$@*) of
   | | | Just r @*$\Rightarrow$@*
-  | | | | t @*$\leftarrow$@* one_step_unfold(r, subst)
-  | | | | ls  @*$\leftarrow$@* leaves(t)
+  | | | | t @*$\leftarrow$@* unfold_in_isolation(r, subst)
+  | | | | ls @*$\leftarrow$@* leaves(t)
   | | | | if trivial(ls)
   | | | | then
   | | | | | @*$\bigvee_{i=1}^k$@* t@*$_i$@* @*$\leftarrow$@* drive_conj(C[r @*$\mapsto$@* get_call(i, ls)], get_subst(i, ls))
   | | | | else
-  | | | | | r @*$\bigwedge$@* drive_conj(C @*$\setminus$@* r, subst)
+  | | | | | t @*$\bigwedge$@* drive_conj(C @*$\setminus$@* r, subst)
   | | | Nothing @*$\Rightarrow$@* @*$\bigwedge_{i=1}^n$@* t@*$_i$@* @*$\leftarrow$@* drive_disj @*$\circ$@* normalize @*$\circ$@* unfold(r@*$_i$@*, subst)
+
+heuristically_select_a_call :: Conjunction @*$\to$@* Maybe Call
+heuristically_select_a_call C =
+  find isStatic C <|> find isDeterministic C <|> find isLessBranching C
 \end{PseudoCode}
 \end{figure}
 
