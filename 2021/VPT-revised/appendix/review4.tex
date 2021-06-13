@@ -1,2 +1,207 @@
 
 \subsection*{Review 4}
+This revised version of the paper has been improved as compared with the version accepted in the first round of reviewing, but still there are flaws to be corrected.
+
+The authors hide carefully what is a contribution of the paper, forcing the reader to look for the contribution over all details presented in the whole paper. There is still no transparent list of authors' contributions in the introduction marked clearly with the word "Contributions:". That is exactly the main problem of the presentation, mentioned by the reviewers in the first round of reviewing.
+Nevertheless this reviewer was able to find something in the revised version, what is maybe one of contribution of the paper. So I suppose the following might be pretend to be a novelty contributed by the authors.
+
+Heads of clauses in programs written in logical or relational languages include quite often multiple occurrences of variables to be unified. As a rule, the values of such variables are used for specifying the conditions of exits from recursions. Unification against such a clause takes a time that is not uniformly bounded over size of input data. Thus the runtime complexity, by default, assumed by the unfolding operation becomes inadequate. The unfolding may generate too many clauses of a residual predicate definition, along which clause-wise backtracking is very time expensive. The authors try to control such a situation and propose a heuristic being responsible for balancing between enough many of unfolding steps and enough little of the syntactic branchings in the residual programs.
+
+In general terms not using by the authors, the heuristic can be described, for example, as follows.
+Given a configuration including a number of function or relation calls, which may be reordered in such a way that the configuration's result does not depend on the order chosen for computing the calls. As a rule, the unfolding and whole specialization process will lead to better results if the first call to be specialized is a call that can be most specialized (i.e. more efficiently, meaning the result) as compared to the specialization results of the other calls in the configuration.
+
+Another flaw: the authors use actively the supercompilation terminology, although do often that in incorrect ways, but no reference to Valentin Turchin, who is the founder of the supercompilation method, is included.  A number of references to original Turchin's works have to be given in the paper.
+
+The introduction consists mainly of modified cites taken from other authors and misunderstood by these paper' authors.
+
+A list of additional concrete remarks, suggestions, and typos can be found below.
+
+
+1 Introduction
+1) Page 1
+You write: "The search employed in MINIKANREN is complete which means that every answer will be found, although it may take a long time."
+
+It may non-terminate rather than only take a long time, if a relation encoded with a program has infinite domain that have to be found, i.e., actually, a component of the corresponding Cartesian product.
+
+\emph{If a \mk relation has a finite number of answers $n$ and a user asks for $m \leq n$ answers, then \mk interpreter will find all the answers eventually. If a user asks for $m > n$ answers, then, after finding all $n$ answers, \mk interpreter can either terminate or not terminate --- this depends on the \mk program. If there are infinitely many answers, and a user asks for $m$ answers, then $m$ answers will be found eventually. If a user asks for all the answers and there are infinitely many answers, then non-termination is unavoidable, but \mk interpreter will not get stuck exploring some failing brunch forever, it will still produce answers.}
+
+2) Page 1
+You write: "An earlier paper [22] has shown that conjunctive partial deduction [5] can sometimes improve the performance of MINIKANREN programs."
+
+Actually it was shown much earlier in the context of whole logical programming.
+
+3) Page 2
+The introduction should include a paragraph starting with the following words: Our contributions: …
+Where all the subjects, that you deem your contributions, should be briefly and explicitly listed with using theirs meaning rather than only names.
+For example, use of  "the conservative partial deduction" in the list, without an additional brief explanation, is a bad idea.
+
+
+3 Related Work
+4) Page 4
+You write: "The heart of supercompilation-based techniques is driving - a symbolic execution of a program through all possible execution paths. The result of driving is a possibly infinite process tree where nodes correspond to configurations which represent computation _state_."
+
+    a) Unfortunately, the authors do not understand the essence of one of the basic concepts of supercompilation, namely the driving.
+    b) Typo:  state $\rightarrow$ states
+
+5) Page 4
+You write: "Each path in the tree corresponds to some concrete program execution."
+
+That is wrong. For example, the unfolding of any unconditional one step program results in the only parameterized path corresponding to all concrete executions.
+
+6) Page 4
+You write: "When the tree is constructed, the resulting, or residual, program can be extracted from the process tree by the process called residualization."
+
+ This contradicts a sentence written a couple lines above (as well as the next your sentence): "The result of driving is a possibly infinite process tree …".  Actually, the residual program is extracted from the corresponding finite residual graph.
+
+
+7) Page 5
+You write: "The specialization is done in two levels of control: the local control determines the shape of the residual programs, while the global control ensures that every relation which can be called in the residual program is defined. The leaves of local control trees become nodes of the global control tree. CPD analyses these nodes at the global level and runs local control for all those which are new."
+
+The first sentence is misleading while at the first glance the third one shows the fact that the authors unawares of the huge amount literature about the question discussed, but it is only partly true.
+
+
+8) Page 5
+You write: "At the local level, CPD examines a conjunction of atoms by considering each atom one-by-one from left to right. An atom is unfolded if it is deemed safe, i.e. a whistle based on homeomorphic embedding does not signal for the atom.
+When an atom is unfolded, a clause whose head can be unified with the atom is found, and a new node is added into the tree where the atom in the conjunction is replaced with the body of that clause."
+
+  The first statement is wrong once again. It contradicts the second one, since the unfolding can recurrently increase the number of atoms in a conjunction of a configuration.
+  The home homeomorphic embedding should control the size of the whole configuration rather than any atom standing alone.
+  The authors go on pretending that they are unaware of the tupling program transformation method aiming at rearranging the structure of configurations in the process tree and opening opportunities for improving runtime complexity of the residual program as compared with an input program to be transformed. Please, study also a more fundamental concept of the function circuit widely used in the computation complexity theory and having direct relation to the tupling method. The last two our sentences also are directly related to your last paragraph in this section.
+
+\emph{Default CPD uses homeomorphic embedding on the local control level to select an atom to unfold. It does not unfold an atom which has an ancestor in the local control tree which is embedded into the atom (see page 252, definition 3.8 in~\cite{de1999conjunctive}). At the global control level, an extension of the homeomorphic embedding for conjunctions is applied to the whole configuration. }
+
+
+
+4 Conservative Partial Deduction
+9) Page 6, The algorithm pseudocode is shown in Fig. 2.
+You write: "A driving process (along with generalization and folding) creates a process tree …"
+
+ Immediately after the very first folding action the process tree become a process graph rather than a tree. That is the main aim of the folding. Too many such a "tree process" term are encountered in your paper and misleading the reader.  Thus I am forced to think the authors do not understand the background being considered.
+
+\emph{In our implementation, process graphs are represented as trees, since trees can be straightforwardly represented with an ADT and are easier to use. Backedges thus are not actually edges: when folding a special leaf node is added into the tree, this node has its ancestors' configuration stored in it. It complicates residualization, while making everything else easier. This implementation design decision clearly seeped into the text. We fixed the terminology. }
+
+10) Page 6, The algorithm pseudocode is shown in Fig. 2.
+You write: "The nodes of the process tree include a configuration which describes the state of program evaluation at some point."
+
+Typos: The nodes of the process tree include  … $\rightarrow$ Given a node of the process tree, it includes a configuration …
+
+11) Page 6, The algorithm pseudocode is shown in Fig. 2.
+You write: "The substitution computed at each step is also stored in the tree node, although it is not included in the configuration. This means that only the goal, and not the substitution, is passed into the whistle to determine potential non-termination."
+
+(a) How I see you mean here the narrowing substitution. Actually I doubt strongly that your partial deduction tool being developed terminates without generalizing the narrowing substitutions, since a relation domain may be infinite and as a consequence the corresponding narrowing substitutions may indefinitely grow in their sizes. This problem should be clarified.
+
+\emph{\mk programs execute to a stream of substitutions as per the operational semantics of \mk. While driving, we compute unifications into substitutions, and store them alongside conjunctions in nodes. We always apply corresponding substitutions to conjunctions, thus there is no need to generalize them. }
+
+(b) I do not think that it is a good idea to use the vulgar meaningless term "whistle", though a number of authors use such a "term" in the same context.
+
+12) Page 7, The algorithm pseudocode is shown in Fig. 2.
+You write: "In this approach, we do not generalize in the same fashion as CPD or supercompilation. This decision was motivated by keeping the complexity of the approach to the minimum. Our conjunctions are always split into individual calls and are joined back together only if it is meaningful, for example, leads to contradictions. If the need for generalization arises, i.e. homeomorphic embedding of conjunctions [5] is detected, then we immediately stop driving this conjunction (line 12). When residualizing such a conjunction, we just generate a conjunction of calls to the input program before specialization."
+
+Is the explanation above the main contribution done in the paper? If it is true then you have to evidently write it in the introduction, using the word "contribution".
+Actually I do not think that such a decision is a novel one, since it is trivial and was certainly tried by a huge amount of researchers in the branch of program specialization and refused since no interesting transformations may be expected using such a kind of  "generalization".
+
+4.1 Unfolding
+13) Page 8
+You write: "Unfolding too much may create extra unifications, which is by itself a costly operation, or even introduce duplicated computations by propagating the results of unfolding onto neighbouring conjuncts."
+
+In the first round review I wrote "Actually none can reason on any efficiency without fixing an efficiency model. And so on … (See my first review.)"
+Your remark above is exactly about this notion. Please read once again my first review. Actually similar problems are encountered in the context of specialization of functional programs.
+I do not believe that your remark and corresponding approach are original. As a rule such a problem is taken into account with additional program transformation tools that are invoked only after the main stage of specialization.
+
+
+4.2 Less Branching Heuristic
+14) Page 8
+You write: "Selecting a good relation call can fail (line 1)."
+
+Actually the first line contains only the signature of the function. That should be corrected.
+
+\emph{The signature states that the result is \code{Maybe Call} which expresses that the result is optional. Clarified it in the text.}
+
+5 Example
+15) Page 9, Listing 2
+The meaning of the percent sign should be either commented or replaced with the standard colon sign widely used for the infix constructor standing for Cons.
+
+16) Page 10, Figure 4:
+You write: "Partially constructed process tree for the relation evalo."
+
+process tree $\rightarrow$ process graph
+
+17) Page 10, Figure 4:
+You write: "Since both recursive calls to evalo are done with three distinct fresh variables, they are not selected according to the less branching heuristic."
+
+This statement means nothing. In general it cannot be the reason of the delay of the evalo calls, since unification of the calls against clauses' heads might be uniform, i.e. it might be done without any narrowing some of the fresh variables. The sentence should be rewritten.
+
+\emph{\mk does not unify calls against clauses' head, since there are no clauses in \mk programs. The heuristic selects those atoms which have strictly less branches in their unfolding than it's possible. There cannot be more branches than when a call with all arguments fresh and distinct variables is considered.}
+
+
+18) Page 11, Listing 3: Specialized evaluator of propositional formulas
+The presented example is clear, but too very simple. Let it be. None of possible problems that you try to overcome has been demonstrated with a corresponding specialization example.
+
+
+19) Page 12
+You write: "It is worth noting that the result produced by the Conservative Partial Deduction is not ideal. For example, in the definition of the evalo_true, when the input formula fm is a disjunction of subformulas x and y, the recursive call evalo_true s x is done twice in two disjuncts. The ideal version of the relation evalo_true should contain this recursive call only once. However, ideally, y should not be evaluted at all, since the value of the formula fm does not depend on it. It is unclear if and how this kind of transformation can be done automatically."
+
+It is not a problem, meaning this example. The corresponding redundant call should be cleaned by a post processing.
+But, in general, it is certainly that the problem is undecidable. It is quite natural. Isn't it?
+
+
+6 Evaluation
+6.1.1 The Order of Relation Calls
+20) Page 13
+You write: "The conservative partial deduction first unfolds those calls which are selected according to the heuristic. Since exploring the implementations of boolean connectives makes more sense, they are unfolded before the recursive calls of evalo. The way conservative partial deduction treats this program is the same as it treats the other implementation in which boolean connectives are moved to the left, as shown in Listing 5. This program is easier for ECCE to specialize which demonstrates how unequal the behaviour of CPD for similar programs is."
+
+It is not news. Any researcher having a real practical experience in developing any program specialization tool is aware of the problem and the heuristic described and tested by you. You formulate the heuristic, usually named a strategy, in specific MiniKanren terms. That confuses the reader, obscures the essence of the problem and heuristic considered. Actually the heuristic can be described in general terms revealing its essence,
+for example, as follows.
+
+Given a configuration including a number of function or relation calls which may be reordered in such a way that the configuration's result does not depend on the order chosen for computing the calls. As a rule, the unfolding and whole specialization process will lead to better results if the first call to be specialized is a call that can be most specialized (i.e. more efficiently, meaning the result) as compared to the specialization results of the other calls in the configuration.
+
+It is rather a thesis (a principle) than a heuristic.
+
+6.2 Typechecker-Term Generator
+21) Page 16
+You write: "An environment G is an ordered list, …"
+
+By definition, any list is ordered. Any "unordered list" is named a set.
+
+
+6.3 Discussion: Tupling and Deforestation
+22) Page 18
+A couple of references to the tupling methods should be given. The tupling method originates from A. Pettorossi and was improved by W.N. Chin.
+
+
+7 Conclusion
+23) Page 19
+You write: "We conclude that there is still not one good technique which definitively speeds up every relational program."
+
+If one mean not only trivial program transformations then such a technique does not exist at all, since the corresponding problem is undecidable. It is our life.
+
+Acknowledgements
+24) Page 19
+Typo: … fruitful discussiona … $\rightarrow$ … fruitful discussions …
+
+
+References
+25) Page 20
+You write: "[4] William E Byrd, Eric Holk \& Daniel P Friedman (2012): …"
+
+There are a number of such a kind of typos in the list of the references (the dot signs are absent after the seconds capitalized letters):
+William E Byrd $\rightarrow$ William E. Byrd
+Daniel P Friedman $\rightarrow$ Daniel P. Friedman
+
+26) Page 20
+You write: "[7] Jason Hemann Daniel P Friedman: … "
+
+Typo: the comma sign is absent:
+Hemann $\rightarrow$ Hemann,
+
+27) Page 20
+You write:
+" [7] Jason Hemann Daniel P Friedman: mKanren: A Minimal Functional Core for Relational Programming.
+  [8] John P Gallagher (1993): Tutorial on specialisation of logic programs. In: Proceedings of the 1993 ACM SIGPLAN symposium on Partial evaluation and semantics-based program manipulation, pp. 88-98, doi:10.1145/154630.154640."
+
+All the references in the reference list have to be represented in the common fashion required by the EPTCS team. The two references cited above are written in two different fashions.
+
+
+28) Page 20
+The paper uses actively the supercompilation terminology, although does often that in incorrect ways, but no reference to V.F. Turchin, who is the founder of the supercompilation method, is included.
+A number of references to original Turchin's works have to be given and cited in the paper.

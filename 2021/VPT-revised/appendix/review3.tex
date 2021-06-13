@@ -1,1 +1,27 @@
 \subsection*{Review 3}
+The paper has been revised, but my opinion of the quality and significance of the paper has not been improved.  Generally, the points that were mentioned in my first review were not satisfactorily addressed.
+
+The goal of running relational programs backwards is definitely a challenging and interesting problem.  However, this experiment does not advance our understanding of the problem and its possible solutions.
+
+The proposed "novel approach" (less branching heuristic) is to select goals for unfolding that are either deterministic (so that unfolding cannot increase the search space), or result in some pruning of the search space by discovering failures.  These are relevant heuristics, but are not so different from existing strategies for unfolding during partial evaluation of logic programs, which are also related to well known search heuristics such as the "first-fail" and "forward-checking" principles. The analysis and evaluation of the heuristic is quite limited.
+
+The comparison with ECCE is inadequate and nothing significant can be concluded from it.  Firstly, the existing facilities in ECCE are not exploited (only default settings are tried) and there is no analysis of the reasons why ECCE does not produce the desired result (perhaps resulting in trying some other ECCE options).  Secondly, the Prolog programs presented to ECCE are translated from MiniKanren using a naive DNF-based translation, which can introduce inefficiencies that ECCE is not designed to handle.  The approach consists of taking a program P1 in MiniKanren, translating it to program P2 in Prolog, which is possibly far less efficient than P1 due to duplication of goals and extra backtracking introduced by DNF translation, then apply ECCE leading to P3, which may still contains the search overhead of P2.  P1 is also specialised using the MiniKanren partial evaluator, yielding P4. Then P3 and P4 are compared, running both in MiniKanren. There are so many factors to consider that could affect performance, yet this paper ignores them. The response to the first review mentions some potential benefits of the DNF form for detecting failures, but this is not convincing and not discussed in the paper, though it could possibly be important. Finally, very few programs are tested, and running times are small, reducing the significance of the evaluation.
+
+My recommendation would be to develop a specialiser for MiniKanren, and perform significant tests on a wide variety of MiniKanren programs.  Where relevant, experience from ECCE and other Prolog partial evaluators can be transferred to MiniKanren, but a direct comparison with ECCE is not meaningful.
+
+However, in its present form, I cannot recommend acceptance.
+
+Some detailed comments
+======================
+
+page 2, lines 1-6 (under fig 1).  This paragraph is confused and misleading.  The model semantics of Prolog is independent of the order of body goals.  This is exploited by Prolog transformation tools, even without changing the operational behaviour of Prolog.  E.g. See ref [1] which you cite, and ECCE itself. The impression is given that this is a special new feature of MiniKanren.
+
+\emph{The paragraph is rewritten to better convey what we meant. Unlike \pro, operational semantics of \mk is complete. It is also equivalent to the denotational semantics of \mk. This means that no new answers will be found and no existing answers will be lost when \mk program is transformed by switching around subgoals. Tranforming \mk program may only affect the termination of the \mk interpreter when it is asked to find more answers than there exists.}
+
+page 3, line 1.  typo substuting
+
+  Section 2.2.  Relational interpreters are interesting, but from the point of view of specialisation they do not present any different problems than other relations.  If so, please explain how.
+
+line -2.  "Search problems are notoriously complicated."  This is a meaningless statement.  In what sense are they "more complex than verification", given that verification is undecidable, and that even in finite cases, the verification of a forall property can require the whole search space to be traversed.
+
+\emph{It is usually harder for a human programmer to come up with an algorithm for the search program, as compared to the corresponding verification problem.}

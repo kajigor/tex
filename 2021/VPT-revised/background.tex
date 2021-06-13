@@ -38,9 +38,9 @@ Depending on the kind of the goal, one of the following situations is possible.
 \begin{enumerate}
   \item Term unification $t_1 \equiv t_2$ computes the most-general unification in the context of the current substitution. If it succeeds, the unifier is added into the current substitution and then it is returned as a singleton stream. Otherwise, an empty stream is returned.
   \item Introduction of a fresh variable $fresh \ x. g$ allocates a new \emph{semantic} variable, substitutes it for all fresh occurrences of $x$ within $g$, then evaluates the goal.
-  \item An execution of a relational call $R^{k_i}_i(t_1, \dots, t_{k_i})$ is done by first substuting the terms $t_j$ for the respective formal parameters and then running the resulting goal.
+  \item An execution of a relational call $R^{k_i}_i(t_1, \dots, t_{k_i})$ is done by first substituting the terms $t_j$ for the respective formal parameters and then running the resulting goal.
   \item When executing a conjunction $g_1 \wedge g_2$, first the goal $g_1$ is run in the context of the current substitution which results in the stream of substitutions, in each of which $g_2$ is run. The resulting stream of streams is then concatenated.
-  \item Disjunction $g_1 \vee g_2$ applies both goals to the current substitution and concatenates the results, interleaving them.
+  \item Disjunction $g_1 \vee g_2$ applies both goals to the current substitution, incrementally switching evaluation steps between the subgoals until all results (if any) are found.
 \end{enumerate}
 
 Consider the relation \lstinline{add$^o$} in Listing~\ref{eval:arith}.

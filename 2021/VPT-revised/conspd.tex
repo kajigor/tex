@@ -14,6 +14,8 @@ The \emph{at} sign, @, is used to name a pattern matched value.
 The arrow, $\leftarrow$, is used to bind a variable on the left-hand side.
 The arrow can also be used to pattern match the value on the right-hand side (see line 9).
 We use symbols $\bigwedge$ and $\bigvee$ to represent creating, respectively, a conjunction or a disjunction node in a process graph.
+The data type \code{Maybe a = Just a | Nothing} is taken from \haskell and represents optional value.
+The binary function \verb!x <|> y! combines two optional values: \verb!Just x <|> y = Just x!, while \verb!Nothing <|> y = y!.
 
 
 \begin{figure}[!t]
@@ -38,7 +40,7 @@ This means that only the goal, and not the substitution, is passed into the \emp
 Residualization is done by the function \code{residualize}.
 Residualization traverses the process graph and generates the \mk goal as well as new relations whenever needed.
 A conjunction is created from a conjunction node, a disjunction --- from a disjunction node, while substitutions are generated into a conjunction of unifications.
-Transient nodes --- the nodes which have a single child node --- correspond to intermediate \todo{functions} in residual programs and are removed during residualization to improve the performance of programs.
+Transient nodes --- the nodes which have a single child node --- correspond to intermediate functions in residual programs and are removed during residualization to improve the performance of programs.
 We also employ \emph{redundant argument filtering} as described in~\cite{leuschel1996redundant}.
 
 Those disjuncts in which unifications fail are removed while driving.
@@ -57,9 +59,9 @@ If those contradictions are found, then they are exposed by considering the conj
 Joining instead of splitting is why we call our transformer \emph{conservative} partial deduction.
 Finally, if the heuristic fails to select a potentially good call, then the conjunction is split into individual calls which are driven in isolation and are never joined (line 23).
 
-\todo{When the heuristic selects a call to unfold (line 15), a process tree is constructed for the selected call \emph{in isolation} (line 16).
+When the heuristic selects a call to unfold (line 15), a process tree is constructed for the selected call \emph{in isolation} (line 16).
 This is done by driving the call until all leaves of the process tree are either substitutions, failures or recursive calls to the relations unfolded within the tree (example process tree is provided in Figure~\ref{fig:and}).
-No folding is performed by \code{unfold\_in\_isolation} and each recursive call is unfolded at most once.}
+No folding is performed by \code{unfold\_in\_isolation} and each recursive call is unfolded at most once.
 The leaves of the computed tree are examined.
 If all leaves are either computed substitutions or are instances of some relations accompanied with non-empty substitutions, then the leaves are collected and each of them replaces the considered call in the root conjunction (line 20).
 If the selected call does not suit the criteria, the results of its unfolding are not propagated onto other relation calls within the conjunction, instead, the next suitable call is selected (line 22).
@@ -145,7 +147,8 @@ The maximum number of disjuncts is computed by unfolding the body of the relatio
 % This signifies that at least one branch of computations is gotten rid of.
 
 The pseudocode describing our heuristic is shown in Fig.~\ref{fig:ncpd-pseudo} (lines 25-27).
-Selecting a good relation call can fail (line 25).
+Selecting a good relation call can fail.
+We express this by using \verb!Maybe! data type for the result (line 25).
 The implementation works such that we first select those relation calls which are static, and only if there are none, we proceed to consider deterministic unfoldings and then we search for those which are less branching.
 We believe this heuristic provides a good balance in unfolding.
 % The final heuristic selects the first conjunct which suites either of the following cases.

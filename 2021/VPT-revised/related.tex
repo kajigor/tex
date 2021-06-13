@@ -10,15 +10,15 @@ For example, in the case of pure functional programming languages, the computati
 Each path in the tree corresponds to some concrete program execution.
 The two main sources for supercompilation optimizations are aggressive information propagation about variables' values, equalities and disequalities, and precomputing of deterministic semantic evaluation steps.
 The latter process, also known as \emph{deforestation}~\cite{deforestation}, means  combining of consecutive process tree nodes with no branching.
-When the tree is constructed, the resulting, or \emph{residual}, program can be extracted from the process tree by the process called \emph{residualization}.
 Of course, the process tree can contain infinite branches.
 \emph{Whistles} --- heuristics to identify possibly infinite branches --- are used to ensure supercompilation termination.
 If a whistle signals during the construction of some branch, then something should be done to ensure termination.
 The most common approaches are either to stop driving the infinite branch completely (no specialization is done in this case and the source code is blindly copied into the residual program) or to fold the process tree to a \emph{process graph}.
-The main instrument to perform such a folding is some form of \emph{generalization}.
+When the process graph is constructed, the resulting, or \emph{residual}, program can be extracted from the graph by the process called \emph{residualization}.
+The main instrument to perform folding is some form of \emph{generalization}.
 Generalization, abstracting away some computed data about the current term, makes folding possible.
 %  i.e. abstracting away some computed data about the current term which makes folding possible.
-One source of infinite branches is consecutive recursive calls to the same function with an accumulating parameter: by unfolding such a call further one can only increase the term size which leads to nontermination.
+For example, one source of infinite branches is consecutive recursive calls to the same function with an accumulating parameter: by unfolding such a call further one can only increase the term size which leads to nontermination.
 The accumulating parameter can be removed by replacing the call with its generalization.
 There are several ways to ensure correctness and termination of a program transformer~\cite{sorensen1998convergence}, most-specific generalization
 (anti-unification) and \emph{homeomorphic embedding}~\cite{Higman52,Kruskal60} as a
