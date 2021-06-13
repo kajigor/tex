@@ -345,7 +345,7 @@ This shows that the heuristic we presented gives more stable, although not the b
   \end{minipage}
 \end{figure*}
 
-Tupling and deforestation are among the important transformations conjunctive partial deduction is capable of.
+Tupling~\cite{pettorossi1984powerful, chin1993towards} and deforestation are among the important transformations conjunctive partial deduction is capable of.
 Deforestation is often demonstrated by the \lstinline{doubleAppend$^o$} program which concatenates three lists by calling the concatenation relation \lstinline{append$^o$} twice in a conjunction (see Listing~\ref{doubleApp}).
 The two calls to \lstinline{append} lead to double traversal of the first list, which is inefficient.
 The program may be transformed in such a way so as to only traverse the first list once (see~\cite{de1999conjunctive} for details), which conjunctive partial deduction does.
