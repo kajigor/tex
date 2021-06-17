@@ -13,7 +13,7 @@ The circle, $\circ$, represents function composition.
 The \emph{at} sign, @, is used to name a pattern matched value.
 The arrow, $\leftarrow$, is used to bind a variable on the left-hand side.
 The arrow can also be used to pattern match the value on the right-hand side (see line 9).
-We use symbols $\bigwedge$ and $\bigvee$ to represent creating, respectively, a conjunction or a disjunction node in a process graph.
+We use symbols $\bigwedge$ and $\bigvee$ to represent creating, respectively, a conjunction and a disjunction node in a process graph.
 The data type \code{Maybe a = Just a | Nothing} is taken from \haskell and represents optional value.
 The binary function \verb!x <|> y! combines two optional values: \verb!Just x <|> y = Just x!, while \verb!Nothing <|> y = y!.
 
@@ -149,7 +149,7 @@ The maximum number of disjuncts is computed by unfolding the body of the relatio
 The pseudocode describing our heuristic is shown in Fig.~\ref{fig:ncpd-pseudo} (lines 25-27).
 Selecting a good relation call can fail.
 We express this by using \verb!Maybe! data type for the result (line 25).
-The implementation works such that we first select those relation calls which are static, and only if there are none, we proceed to consider deterministic unfoldings and then we search for those which are less branching.
+The implementation works as follows: we first select those relation calls which are static, and only if there are none, we proceed to consider deterministic unfoldings and then we search for those which are less branching.
 We believe this heuristic provides a good balance in unfolding.
 % The final heuristic selects the first conjunct which suites either of the following cases.
 % First we unfold those conjuncts which are static.

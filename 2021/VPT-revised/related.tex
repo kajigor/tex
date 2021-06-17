@@ -42,7 +42,7 @@ CPD constructs a tree which models goal evaluation and is similar to an SLDNF tr
 Partial deduction itself resembles driving in supercompilation~\cite{gluck1994partial}.
 The specialization is done in two levels of control: the local control determines the shape of the residual programs, while the global control ensures that every relation which can be called in the residual program is defined.
 The leaves of local control trees become nodes of the global control tree.
-CPD analyses these nodes at the global level and runs local control for all those which are new.
+CPD analyses these nodes at the global level and runs local control for all those nodes which are new.
 
 At the local level, CPD examines a conjunction of atoms by considering each atom one-by-one from left to right.
 An atom is \emph{unfolded} if it is deemed safe, i.e. a whistle based on homeomorphic embedding does not signal for the atom.

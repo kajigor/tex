@@ -7,7 +7,7 @@ Nevertheless, the languages show resemblance, and it is valuable to check if the
 To be able to compare our approach with \ecce, we converted each input program first to the pure subset of \pro, then specialized it with \ecce, and then we converted the result back to \mk.
 The conversion to \pro is a simple syntactic conversion. In the conversion from \pro to \mk, for each Horn clause a conjunction is generated in which unifications are placed before any relation call.
 All programs are run as \mk programs in our experiments.
-In the final subsection we discuss some limitations of our approach and ECCE.
+In the final subsection we discuss some limitations of both our approach and ECCE.
 
 We chose two problems for our study: evaluation of a subset of propositional formulas and typechecking for a simple language.
 The problems illustrate the approach of using relational interpreters to solve search problems~\cite{lozov2019relational}.
@@ -22,7 +22,7 @@ We consider two different implementations of this relation: one written by hand 
 We demonstrate how much these implementations differ in terms of performance before and after specialization.
 
 In this study we measured the execution time for the sample queries, averaging them over multiple runs.
-We also measured the number of unifications done in search of each individual answer.
+% We also measured the number of unifications done in search of each individual answer.
 All examples of \mk relations in this paper are written in \oc.
 The queries were run on a laptop running Ubuntu 18.04 with quad core Intel Core i5 2.30GHz CPU and 8 GB of RAM.
 
@@ -264,6 +264,7 @@ We measured the time needed to generate 1000 closed terms of type integer (see F
 As expected, the generated program is far slower than the hand-written one.
 The principal difference between these two implementations is that the generated program contains a certain redundancy introduced by unnesting.
 For example, typechecking of the sum of two terms in the hand-written implementation consists of a single conjunction (see Listing~\ref{type:hand}) while the generated program is far more complicated and also uses a special relation \lstinline{typeEq$^o$} to compare types (see Listing~\ref{type:gen}).
+This relation has to be unfolded early to determine types of the subterms, much like the boolean relations implemented via a basic relation had to be unfolded in the previous problem.
 
 \begin{figure*}[!t]
   \centering
@@ -360,10 +361,10 @@ This happens because ConsPD splits the conjunction of two calls to \lstinline{ap
 Splitting the conjunction leads to information loss and makes it so there is no renaming of the whole conjunction in the process graph.
 
 A similar thing happens when considering the common example on which tupling is demonstrated in literature on CPD: the \lstinline{maxLength$^o$} program.
-The original implementation of this program computes the maximum element of the list along with the length of the list by conjunction of two calls to the corresponding relations: \lstinline{max$^o$} and \lstinline{length$^o$} (see Listing.~\ref{maxlen}).
+The original implementation of this program computes the maximum element of the list along with the length of the list by conjunction of two calls to the relations \lstinline{max$^o$} and \lstinline{length$^o$} respectively (see Listing.~\ref{maxlen}).
 This implementation also traverses the input list twice when run in the forward direction.
 By tupling, this program may be transformed so that the list is traversed once while both the maximum value and the length of the list are computed simultaneously, and CPD is capable to achieve this transformation with the default settings.
-Conservative partial deduction also splits too much too early and thus fails to yield any useful transformation for this program.
+Conservative partial deduction also splits much too early and thus fails to yield any useful transformation for this program.
 
 It is worth noting that determinate unfolding performed by CPD plays a huge role in these examples.
 The default unfolding strategy implemented in \ecce allows for only a single non-determinate unfolding per a local control tree.

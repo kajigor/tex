@@ -86,7 +86,7 @@ This produces 4 branches, each of which is processed further.
 Consider the first branch, in which the input formula \lstinline{fm} is a conjunction of subformulas \lstinline{x} and \lstinline{y}.
 First, each relation call within a conjunction is examined separately to select one of the calls to unfold.
 To do so, we unfold each of them in isolation and use the less branching heuristic.
-Since both recursive calls to \lstinline{eval$^o$} are done with three distinct fresh variables, they are not selected according to the less branching heuristic.
+Both recursive calls to \lstinline{eval$^o$} are done with three distinct fresh variables, and are not selected according to the less branching heuristic.
 By unfolding the call to \lstinline{and$^o$} several times, we determine it has a single non-failing branch (see Fig.~\ref{fig:and}), which is less than the same relation would have if called on all free and distinct variables, thus this call is selected to be unfolded.
 The result of unfolding the call is a single substitution which associates the variables \lstinline{a} and \lstinline{b} with \lstinline{true}.
 By applying the computed substitution to the goal we get a conjunction of two calls to the \lstinline{eval$^o$} relation with the last argument being \lstinline{true}.
