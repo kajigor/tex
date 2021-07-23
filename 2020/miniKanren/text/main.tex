@@ -1,20 +1,27 @@
-\documentclass[acmlarge]{acmart}
+\documentclass[final,acmlarge,draft=false,review=false,nonacm=false]{acmart}
+\usepackage[
+    type={CC},           % your choice
+    modifier={by-sa},    % your choice
+    version={4.0},       % your choice
+]{doclicense}            % your choice, see \doclicenseThis below
 
-%%
-%% \BibTeX command to typeset BibTeX logo in the docs
-\AtBeginDocument{%
-  \providecommand\BibTeX{{%
-    \normalfont B\kern-0.5em{\scshape i\kern-0.25em b}\kern-0.8em\TeX}}}
+\settopmatter{printacmref=false,printfolios=false}
+\fancyfoot{}
 
-%% Rights management information.  This information is sent to you
-%% when you complete the rights form.  These commands have SAMPLE
-%% values in them; it is your responsibility as an author to replace
-%% the commands and values with those provided to you when you
-%% complete the rights form.
-\setcopyright{acmcopyright}
+\makeatletter
+\def\@formatdoi#1{}
+\def\@permissionCodeOne{miniKanren.org/workshop}
+\def\@copyrightpermission{\doclicenseThis} % your choice of text
+\def\@copyrightowner{Copyright held by the author(s).} % your choice
+\makeatother
+
 \copyrightyear{2020}
-\acmYear{2020}
-\acmDOI{12.3456/7890123.4567890}
+\setcopyright{rightsretained}
+
+% \acmConference[miniKanren 2020]{The Second miniKanren and Relational Programming Workshop}{August 27 2020}{Online}
+
+\acmMonth{8}
+\acmArticle{9} % your number in the order of presentations (between 1 and 11)
 
 \input{packages.tex}
 \input{defs.tex}
@@ -97,6 +104,7 @@
 \keywords{relational programming, partial deduction, specialization}
 
 \maketitle
+\thispagestyle{empty}
 
 \input{intro.tex}
 \input{related.tex}
