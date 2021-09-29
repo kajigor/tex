@@ -1,0 +1,52 @@
+\documentclass[12pt,a4paper]{article}%
+\usepackage{amsthm}
+\usepackage{amsmath}%
+\usepackage{amsfonts}%
+\usepackage{amssymb}%
+\usepackage{graphicx}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+%-------------------------------------------
+\setlength{\textwidth}{7.0in}
+\setlength{\oddsidemargin}{-0.35in}
+\setlength{\topmargin}{-0.5in}
+\setlength{\textheight}{9.0in}
+\setlength{\parindent}{0.3in}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{task}[theorem]{Задача}
+\addto\captionsrussian{\renewcommand*{\proofname}{Решение}}
+
+
+\newcommand{\abovemath}[2]{\ensuremath{\stackrel{\text{#1}}{#2}}}
+\newcommand{\aboveeq}[1]{\abovemath{#1}{=}}
+\newcommand\bydef{\aboveeq{def}}
+\begin{document}
+
+
+% \begin{flushright}
+% \textbf{Екатерина Вербицкая \\
+% \today}
+% \end{flushright}
+
+\begin{center}
+\textbf{Формальные языки\\
+HW02 \\
+Дедлайн: 23:59 4 октября 2021} \\
+\end{center}
+
+\task{
+  Привести полный минимальный детерминированный конечный автомат для следующих языков
+
+  \begin{enumerate}
+    \item $\{\omega \in \{0, 1, \dots, 9\}^* \mid \omega \text{ делится нацело на } 5 \}$
+    \item Язык положительных чисел с плавающей точкой. Целая часть может отсутствовать, дробная часть может отсутствовать, но не одновременно. Перед точкой может не быть ничего. Лидирующих нулей быть не должно
+    \begin{itemize}
+      \item $123.45, .45, 123$ -- числа
+      \item $\varepsilon, ., abc, 123., 1.2.3.4, 007$ -- не числа
+    \end{itemize}
+    \item $\{\omega \in \{a, b\}^* \mid |\omega|_a \leq 3, |\omega|_b > 2\}$
+  \end{enumerate}
+}
+\end{document}
