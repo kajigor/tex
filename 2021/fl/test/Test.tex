@@ -15,34 +15,525 @@
 
 \begin{document}
 
+% \begin{center}
+% {\LARGE Формальные языки}
+
+% {\Large Контрольная работа 1}
+
+% {\Large Первый поток}
+
+% {\large 26.10.2021}
+% \end{center}
+
+% \begin{center}
+%   \LARGE Порядок проведения контрольной работы
+% \end{center}
+
+% \begin{itemize}
+%   \item Контрольная работа будет проходить онлайн 26.10 с 12 до 15 (по Санкт-Петербургу).
+%   \item Распределение вариантов задач находится в таблице: \url{https://bit.ly/3pyKyOF}.
+%   \item Результаты этой и следующей контрольной работы будут учитываться при выставлении оценки за курс. Хорошо написанные контрольные будут означать автомат по курсу. Если все контрольные вами написаны плохо, вы сможете в конце семестра сдать экзамен, повышающий оценку. Переписываний контрольной не будет.
+%   \item Контрольная работа должна выполняться каждым индивидуально. Если будет обнаружено списывание хотя бы одной задачи, вся контрольная работа будет не зачтена всем заподозренным в списывании вне зависимости от того, кто у кого списывал.
+%   \item Контрольную работу можно писать ручкой на листе бумаги. Если есть возможность отсканировать выполненную работу --- отсканируйте, иначе достаточно качественной фотографии. Нечитаемые работы проверяться не будут. Если есть планшет, можно использовать его. Если есть навык верстки в техе --- верстайте, но учитывайте ограничения по времени.
+%   \item Перед решением каждого задания обязательно укажите номер задачи и номер варианта (например, "2.3)"). Обязательно убедитесь, что решаете положенный вам вариант, иначе задача не будет зачтена, даже если решена правильно.
+%   \item Контрольная работа должна быть прислана на мою электронную почту не позднее \textbf{15:10 26.10.2020}. Присланные после этого момента контрольные проверяться не будут. Можно присылать по одной задаче, присланные задачи можно исправлять в новом письме, но не позднее дедлайна своего потока. Исправления присылайте \textbf{ответом} на письмо с первой версией, иначе велик риск, что они потеряются.
+%   \item Каждая присланная страница должна быть подписана вашими ФИО и номером группы.
+%   \item Обязательно присылать контрольную в письме с темой \textbf{[FL\_ElTech] Test 1}. Письма с любой другой темой будут игнорироваться.
+%   \item Любые соображения, которые привели вас к решению, целесообразно написать. Иногда студенты опечатываются в самом ответе, хотя все предыдущие шаги были выполнены правильно. Приведенные шаги помогут мне поверить, что это действительно опечатка, а не ошибка.
+%   \item Проверьте, что у всех автоматов явно указаны стартовое состояние (одно) и терминальные состояния. Проверьте, что у всех грамматик явно указан стартовый нетерминал. Если вы используете лемму о накачке или любое другое утверждение, укажите это явно.
+% \end{itemize}
+
+
+% \newpage
+
+% \begin{enumerate}
+% \setlength\itemsep{1em}
+
+%   \item Привести три кратчайших различных строки \textbf{длины хотя бы 5}, принадлежащих языку, описанному регулярным выражением; принадлежат ли строки $cabac$ и $abacaba$ данному языку?
+%   \begin{enumerate}[label=\arabic*)]
+%     \setlength\itemsep{0.8em}
+%     \item $(c (a \mid b)^+ c)^*$
+%     \item $(a \mid (cc)^+ \mid b)^*$
+%     \item $(a (b \mid c)^* (ba)^+)$
+%   \end{enumerate}
+
+%   \item Построить минимальный детерминированный конечный автомат, распознающий данный язык. Суперкскрипт $^R$ означает обращение строки: $01101^R = 10110$. Черта сверху~--- замену в строке всех $0$ на $1$ и всех $1$ на $0$: $\overline{01101} = 10010$. $|\alpha|$ означает длину строки $\alpha$, $|\alpha|_0$ --- количество в строке $\alpha$ символов $0$. Знак $\cdot$ обозначает конкатенацию строк.
+%   \begin{enumerate}[label=\arabic*)]
+%     \setlength\itemsep{0.8em}
+%     \item $\{\omega \cdot (0 \mid 1)^* \mid |\omega| = 3, \omega = \omega^R, \omega \in \{0, 1\}^*\}$
+%     \item $\{ \alpha \cdot (0 \mid 1)^* \cdot \beta \mid |\alpha| = 2, \beta = \alpha^R \}$
+%   \end{enumerate}
+
+%   \item Построить регулярную грамматику, задающую язык:
+%   \begin{enumerate}[label=\arabic*)]
+%     \setlength\itemsep{0.8em}
+%     \item $\{ 01 \cdot \alpha \cdot 01 \mid \alpha \in \{0, 1\}^* \} \setminus \{ \beta \cdot 00 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+%     \item $\{ 01 \cdot \alpha \cdot 01 \mid \alpha \in \{0, 1\}^* \} \cap      \{ \beta \cdot 00 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+%     \item $\{ 10 \cdot \alpha \cdot 10 \mid \alpha \in \{0, 1\}^* \} \setminus \{ \beta \cdot 00 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+%     \item $\{ 10 \cdot \alpha \cdot 10 \mid \alpha \in \{0, 1\}^* \} \cap      \{ \beta \cdot 00 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+%   \end{enumerate}
+
+%   \item Проверить регулярность языка (если регулярный, построить автомат, регулярное выражение или регулярную грамматику, иначе --- доказать нерегулярность)
+%   \begin{enumerate}[label=\arabic*)]
+%     \setlength\itemsep{0.8em}
+%     \item $\{ a^n b^m c^n \mid n, m \ge 0 \}$
+%     \item $\{ a^k b a^k \mid k \ge 0 \}$
+%   \end{enumerate}
+
+%   \item По регулярному выражению построить недетерминированный конечный автомат без эпсилон-переходов
+%   \begin{enumerate}[label=\arabic*)]
+%     \setlength\itemsep{0.8em}
+%     \item $(c (a \mid b)^+ c)^*$
+%     \item $(a \mid (cc)^+ \mid b)^*$
+%     \item $(a (b \mid c)^* (ba)^+)$
+%   \end{enumerate}
+
+% \end{enumerate}
+
+
+% \newpage
+
 \begin{center}
 {\LARGE Формальные языки}
 
 {\Large Контрольная работа 1}
 
+{\Large Второй поток}
+
 {\large 26.10.2021}
 \end{center}
-
-\bigskip
 
 \begin{center}
   \LARGE Порядок проведения контрольной работы
 \end{center}
 
 \begin{itemize}
-  \item Контрольная работа будет проходить онлайн 26.10 в три потока по три часа каждый: с 12 до 15, с 15 до 18, с 18 до 21 (по Санкт-Петербургу). У каждого потока свои задачи.
-  \item Все, кто не отметил свои пожелания в таблице выбора времени контрольной до утра 25 октября или не отметил ни одного непрерывного трехчасового временного промежутка не красным, пишут контрольную во второй поток.
-  \item Распределение вариантов задач появится в той же таблице, которую использовали для выбора времени: \url{https://bit.ly/3pyKyOF}.
+  \item Контрольная работа будет проходить онлайн 26.10 с 15 до 18 (по Санкт-Петербургу).
+  \item Распределение вариантов задач находится в таблице: \url{https://bit.ly/3pyKyOF}.
   \item Результаты этой и следующей контрольной работы будут учитываться при выставлении оценки за курс. Хорошо написанные контрольные будут означать автомат по курсу. Если все контрольные вами написаны плохо, вы сможете в конце семестра сдать экзамен, повышающий оценку. Переписываний контрольной не будет.
   \item Контрольная работа должна выполняться каждым индивидуально. Если будет обнаружено списывание хотя бы одной задачи, вся контрольная работа будет не зачтена всем заподозренным в списывании вне зависимости от того, кто у кого списывал.
   \item Контрольную работу можно писать ручкой на листе бумаги. Если есть возможность отсканировать выполненную работу --- отсканируйте, иначе достаточно качественной фотографии. Нечитаемые работы проверяться не будут. Если есть планшет, можно использовать его. Если есть навык верстки в техе --- верстайте, но учитывайте ограничения по времени.
   \item Перед решением каждого задания обязательно укажите номер задачи и номер варианта (например, "2.3)"). Обязательно убедитесь, что решаете положенный вам вариант, иначе задача не будет зачтена, даже если решена правильно.
-  \item Контрольная работа должна быть прислана на мою электронную почту не позднее \textbf{15:10 26.10.2020} для первого потока, \textbf{18:10 26.10.2020} для второго потока и \textbf{21:10 26.10.2020} для третьего потока. Присланные после этого момента контрольные проверяться не будут. Можно присылать по одной задаче, присланные задачи можно исправлять в новом письме, но не позднее дедлайна своего потока. Исправления присылайте \textbf{ответом} на письмо с первой версией, иначе велик риск, что они потеряются.
+  \item Контрольная работа должна быть прислана на мою электронную почту не позднее \textbf{18:10 26.10.2020}. Присланные после этого момента контрольные проверяться не будут. Можно присылать по одной задаче, присланные задачи можно исправлять в новом письме, но не позднее дедлайна своего потока. Исправления присылайте \textbf{ответом} на письмо с первой версией, иначе велик риск, что они потеряются.
   \item Каждая присланная страница должна быть подписана вашими ФИО и номером группы.
   \item Обязательно присылать контрольную в письме с темой \textbf{[FL\_ElTech] Test 1}. Письма с любой другой темой будут игнорироваться.
   \item Любые соображения, которые привели вас к решению, целесообразно написать. Иногда студенты опечатываются в самом ответе, хотя все предыдущие шаги были выполнены правильно. Приведенные шаги помогут мне поверить, что это действительно опечатка, а не ошибка.
   \item Проверьте, что у всех автоматов явно указаны стартовое состояние (одно) и терминальные состояния. Проверьте, что у всех грамматик явно указан стартовый нетерминал. Если вы используете лемму о накачке или любое другое утверждение, укажите это явно.
 \end{itemize}
 
+
+\newpage
+
+\begin{enumerate}
+\setlength\itemsep{1em}
+
+  \item Привести три кратчайших различных строки \textbf{длины хотя бы 5}, принадлежащих языку, описанному регулярным выражением; принадлежат ли строки $cabac$ и $abacaba$ данному языку?
+
+  \begin{enumerate}[label=\arabic*)]
+    \setlength\itemsep{0.8em}
+    \setcounter{enumii}{3}
+    \item $(c c (a \mid b)^+)^*$
+    \item $(a \mid (ca)^+ \mid b)^*$
+    \item $(c \mid (aa)^+ \mid b)^*$
+    \item $b (a \mid c)^* (bc)^+$
+    \item $b (b \mid c)^* (aa)^+$
+    \item $(bc (b \mid c))^* a^+$
+    \item $(aa (a \mid b))^* c^+$
+    \item $b (a \mid b \mid c)^* c$
+    \item $a (bb \mid ac)^+ b^*$
+    \item $((a \mid b)^+ c c)^*$
+    \item $(a \mid (bb)^+ \mid ca)^*$
+    \item $(ab \mid b^+ \mid c)^*$
+    \item $a (b \mid c)^* (ba)^+$
+    \item $c (a \mid b)^* (bb)^+$
+    \item $(ab (b \mid c))^* a^+$
+    \item $(bb (a \mid c))^* b^+$
+    \item $a (a \mid b \mid c)^* b$
+    \item $c (cc \mid ab)^+ b^*$
+  \end{enumerate}
+
+  \item Построить минимальный детерминированный конечный автомат, распознающий данный язык. Суперкскрипт $^R$ означает обращение строки: $01101^R = 10110$. Черта сверху~--- замену в строке всех $0$ на $1$ и всех $1$ на $0$: $\overline{01101} = 10010$. $|\alpha|$ означает длину строки $\alpha$, $|\alpha|_0$ --- количество в строке $\alpha$ символов $0$. Знак $\cdot$ обозначает конкатенацию строк.
+
+  \begin{enumerate}[label=\arabic*)]
+    \setlength\itemsep{0.8em}
+    \setcounter{enumii}{2}
+    \item $\{(0 \mid 1)^* \cdot \omega \mid |\omega| = 3, \omega = \omega^R, \omega \in \{0, 1\}^*\}$
+    \item $\{ (0 \mid 1)^* \cdot \alpha \cdot \beta \mid |\alpha| = 2, \beta = \alpha^R, \alpha \in \{0, 1\}^* \}$
+    \item $\{ \alpha \cdot \beta \cdot (0 \mid 1)^* \mid |\alpha| = 2, \beta = \alpha^R, \alpha \in \{0, 1\}^* \}$
+    \item $\{(0 \mid 1)^+ \cdot \omega \mid |\omega| = 2, \omega = \omega^R, \omega = \{0, 1\}^*\}$
+    \item $\{ (0 \mid 1)^* \cdot \alpha \cdot \beta \mid |\alpha| = 2, \beta = \overline{\alpha}, \alpha \in \{0, 1\}^* \}$
+    \item $\{ \alpha \cdot \beta \cdot (0 \mid 1)^* \mid |\alpha| = 2, \beta = \overline{\alpha}, \alpha \in \{0, 1\}^* \}$
+    \item $\{ a \cdot \alpha \cdot a \cdot \beta \cdot b \mid a = \overline{b}, a \in \{0,1\}, b \in \{0, 1\}, \alpha \in \{0, 1\}^*, \beta \in \{0, 1\}^*\}$
+    \item $\{ a \cdot \alpha \cdot b \cdot \beta \cdot b \mid a = \overline{b}, a \in \{0,1\}, b \in \{0, 1\}, \alpha \in \{0, 1\}^*, \beta \in \{0, 1\}^*\}$
+    \item $\{(0 \mid 1)^* \cdot \omega \mid |\omega| \le 3, |\omega|_0 = |\omega|_1, \omega \in \{0, 1\}^*\}$
+    \item $\{ (\alpha \cdot \beta)^* \mid |\beta| = 2, \alpha = \overline{\beta}, \beta \in \{0, 1\}^* \}$
+
+  \end{enumerate}
+
+  \item Построить регулярную грамматику, задающую язык:
+
+  \begin{enumerate}[label=\arabic*)]
+    \setlength\itemsep{0.8em}
+    \setcounter{enumii}{4}
+    \item $\{ 10 \cdot \alpha \cdot 10 \mid \alpha \in \{0, 1\}^* \} \setminus \{ \beta \cdot 01 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+    \item $\{ 10 \cdot \alpha \cdot 10 \mid \alpha \in \{0, 1\}^* \} \cap      \{ \beta \cdot 01 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+    \item $\{ 11 \cdot \alpha \cdot 11 \mid \alpha \in \{0, 1\}^* \} \setminus \{ \beta \cdot 01 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+    \item $\{ 11 \cdot \alpha \cdot 11 \mid \alpha \in \{0, 1\}^* \} \cap      \{ \beta \cdot 01 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+    \item $\{ 00 \cdot \alpha \cdot 00 \mid \alpha \in \{0, 1\}^* \} \setminus \{ \beta \cdot 10 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+    \item $\{ 00 \cdot \alpha \cdot 00 \mid \alpha \in \{0, 1\}^* \} \cap      \{ \beta \cdot 10 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+    \item $\{ 01 \cdot \alpha \cdot 01 \mid \alpha \in \{0, 1\}^* \} \setminus \{ \beta \cdot 10 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+    \item $\{ 01 \cdot \alpha \cdot 01 \mid \alpha \in \{0, 1\}^* \} \cap      \{ \beta \cdot 10 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+    \item $\{ 11 \cdot \alpha \cdot 11 \mid \alpha \in \{0, 1\}^* \} \setminus \{ \beta \cdot 10 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+    \item $\{ 11 \cdot \alpha \cdot 11 \mid \alpha \in \{0, 1\}^* \} \cap      \{ \beta \cdot 10 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+    \item $\{ 00 \cdot \alpha \cdot 00 \mid \alpha \in \{0, 1\}^* \} \setminus \{ \beta \cdot 11 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+    \item $\{ 00 \cdot \alpha \cdot 00 \mid \alpha \in \{0, 1\}^* \} \cap      \{ \beta \cdot 11 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+    \item $\{ 01 \cdot \alpha \cdot 01 \mid \alpha \in \{0, 1\}^* \} \setminus \{ \beta \cdot 11 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+    \item $\{ 01 \cdot \alpha \cdot 01 \mid \alpha \in \{0, 1\}^* \} \cap      \{ \beta \cdot 11 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+    \item $\{ 10 \cdot \alpha \cdot 10 \mid \alpha \in \{0, 1\}^* \} \setminus \{ \beta \cdot 11 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+    \item $\{ 10 \cdot \alpha \cdot 10 \mid \alpha \in \{0, 1\}^* \} \cap      \{ \beta \cdot 11 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+
+  \end{enumerate}
+
+  \item Проверить регулярность языка (если регулярный, построить автомат, регулярное выражение или регулярную грамматику, иначе --- доказать нерегулярность)
+
+  \begin{enumerate}[label=\arabic*)]
+    \setlength\itemsep{0.8em}
+    \setcounter{enumii}{2}
+    \item $\{ \omega \cdot a^{2k} \mid |\omega| = k, \omega \in \{a, b\}^* \}$
+    \item $\{ a^{2k} \cdot \omega \mid |\omega| = k, \omega \in \{a, b\}^* \}$
+    \item $\{ \omega \cdot a^{k+1} \mid |\omega| = k, \omega \in \{a, b\}^* \}$
+    \item $\{ a^{k+1} \cdot \omega \mid |\omega| = k, \omega \in \{a, b\}^* \}$
+    \item $\{ a^n b^m a^l \mid l = n + m \}$
+    \item $\{ a^n b^l \mid n \le l\}$
+    \item $\{ a^i b^m \mid i, m \ge 0, i = m \text{ или } i = 2m \}$
+  \end{enumerate}
+
+  \item По регулярному выражению построить недетерминированный конечный автомат без эпсилон-переходов
+
+  \begin{enumerate}[label=\arabic*)]
+    \setlength\itemsep{0.8em}
+    \setcounter{enumii}{3}
+    \item $(c c (a \mid b)^+)^*$
+    \item $(a \mid (ca)^+ \mid b)^*$
+    \item $(c \mid (aa)^+ \mid b)^*$
+    \item $b (a \mid c)^* (bc)^+$
+    \item $b (b \mid c)^* (aa)^+$
+    \item $(bc (b \mid c))^* a^+$
+    \item $(aa (a \mid b))^* c^+$
+    \item $b (a \mid b \mid c)^* c$
+    \item $a (bb \mid ac)^+ b^*$
+    \item $((a \mid b)^+ c c)^*$
+    \item $(a \mid (bb)^+ \mid ca)^*$
+    \item $(ab \mid b^+ \mid c)^*$
+    \item $a (b \mid c)^* (ba)^+$
+    \item $c (a \mid b)^* (bb)^+$
+    \item $(ab (b \mid c))^* a^+$
+    \item $(bb (a \mid c))^* b^+$
+    \item $a (a \mid b \mid c)^* b$
+    \item $c (cc \mid ab)^+ b^*$
+  \end{enumerate}
+\end{enumerate}
+
+
+
+% % % \newpage
+
+% \begin{center}
+% {\LARGE Формальные языки}
+
+% {\Large Контрольная работа 1}
+
+% {\Large Третий поток}
+
+% {\large 26.10.2021}
+% \end{center}
+
+% \begin{center}
+%   \LARGE Порядок проведения контрольной работы
+% \end{center}
+
+% \begin{itemize}
+%   \item Контрольная работа будет проходить онлайн 26.10 с 18 до 21 (по Санкт-Петербургу).
+%   \item Распределение вариантов задач находится в таблице: \url{https://bit.ly/3pyKyOF}.
+%   \item Результаты этой и следующей контрольной работы будут учитываться при выставлении оценки за курс. Хорошо написанные контрольные будут означать автомат по курсу. Если все контрольные вами написаны плохо, вы сможете в конце семестра сдать экзамен, повышающий оценку. Переписываний контрольной не будет.
+%   \item Контрольная работа должна выполняться каждым индивидуально. Если будет обнаружено списывание хотя бы одной задачи, вся контрольная работа будет не зачтена всем заподозренным в списывании вне зависимости от того, кто у кого списывал.
+%   \item Контрольную работу можно писать ручкой на листе бумаги. Если есть возможность отсканировать выполненную работу --- отсканируйте, иначе достаточно качественной фотографии. Нечитаемые работы проверяться не будут. Если есть планшет, можно использовать его. Если есть навык верстки в техе --- верстайте, но учитывайте ограничения по времени.
+%   \item Перед решением каждого задания обязательно укажите номер задачи и номер варианта (например, "2.3)"). Обязательно убедитесь, что решаете положенный вам вариант, иначе задача не будет зачтена, даже если решена правильно.
+%   \item Контрольная работа должна быть прислана на мою электронную почту не позднее \textbf{21:10 26.10.2020}. Присланные после этого момента контрольные проверяться не будут. Можно присылать по одной задаче, присланные задачи можно исправлять в новом письме, но не позднее дедлайна своего потока. Исправления присылайте \textbf{ответом} на письмо с первой версией, иначе велик риск, что они потеряются.
+%   \item Каждая присланная страница должна быть подписана вашими ФИО и номером группы.
+%   \item Обязательно присылать контрольную в письме с темой \textbf{[FL\_ElTech] Test 1}. Письма с любой другой темой будут игнорироваться.
+%   \item Любые соображения, которые привели вас к решению, целесообразно написать. Иногда студенты опечатываются в самом ответе, хотя все предыдущие шаги были выполнены правильно. Приведенные шаги помогут мне поверить, что это действительно опечатка, а не ошибка.
+%   \item Проверьте, что у всех автоматов явно указаны стартовое состояние (одно) и терминальные состояния. Проверьте, что у всех грамматик явно указан стартовый нетерминал. Если вы используете лемму о накачке или любое другое утверждение, укажите это явно.
+% \end{itemize}
+
+
+% \newpage
+
+% \begin{enumerate}
+% \setlength\itemsep{1em}
+
+%   \item Привести три кратчайших различных строки \textbf{длины хотя бы 5}, принадлежащих языку, описанному регулярным выражением; принадлежат ли строки $cabac$ и $abacaba$ данному языку?
+%   \begin{enumerate}[label=\arabic*)]
+%     \setcounter{enumii}{21}
+%     \setlength\itemsep{0.8em}
+%     \item $(bc (a \mid c))^* b^+$
+%     \item $b (a \mid b \mid c)^* a$
+%     \item $b (aa \mid bc)^+ a^*$
+%   \end{enumerate}
+
+%   \item Построить минимальный детерминированный конечный автомат, распознающий данный язык. Суперкскрипт $^R$ означает обращение строки: $01101^R = 10110$. Черта сверху~--- замену в строке всех $0$ на $1$ и всех $1$ на $0$: $\overline{01101} = 10010$. $|\alpha|$ означает длину строки $\alpha$, $|\alpha|_0$ --- количество в строке $\alpha$ символов $0$. Знак $\cdot$ обозначает конкатенацию строк.
+
+%   \begin{enumerate}[label=\arabic*)]
+%     \setlength\itemsep{0.8em}
+%     \setcounter{enumii}{12}
+%     \item $\{\omega \cdot (0 \mid 1)^+ \mid |\omega| = 2, \omega = \omega^R, \omega = \{0, 1\}^*\}$
+%     \item $\{ \alpha \cdot (0 \mid 1)^* \cdot \beta \mid |\alpha| = 2, \beta = \overline{\alpha}, \alpha \in \{0, 1\}^* \}$
+%   \end{enumerate}
+
+%   \item Построить регулярную грамматику, задающую язык:
+
+%   \begin{enumerate}[label=\arabic*)]
+%     \setlength\itemsep{0.8em}
+%     \setcounter{enumii}{20}
+%     \item $\{ 11 \cdot \alpha \cdot 11 \mid \alpha \in \{0, 1\}^* \} \setminus \{ \beta \cdot 00 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+%     \item $\{ 11 \cdot \alpha \cdot 11 \mid \alpha \in \{0, 1\}^* \} \cap      \{ \beta \cdot 00 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+%     \item $\{ 00 \cdot \alpha \cdot 00 \mid \alpha \in \{0, 1\}^* \} \setminus \{ \beta \cdot 01 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+%     \item $\{ 00 \cdot \alpha \cdot 00 \mid \alpha \in \{0, 1\}^* \} \cap      \{ \beta \cdot 01 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+%   \end{enumerate}
+
+
+%   \item Проверить регулярность языка (если регулярный, построить автомат, регулярное выражение или регулярную грамматику, иначе --- доказать нерегулярность)
+
+%   \begin{enumerate}[label=\arabic*)]
+%     \setlength\itemsep{0.8em}
+%     \setcounter{enumii}{9}
+%     \item $\{ a^n b^l a^k \mid n = l \text{ или } l \neq k\}$
+%     \item $\{ a^n b^l a^k \mid k > n + l \}$
+%   \end{enumerate}
+
+%   \item По регулярному выражению построить недетерминированный конечный автомат без эпсилон-переходов
+
+%   \begin{enumerate}[label=\arabic*)]
+%     \setlength\itemsep{0.8em}
+%     \setcounter{enumii}{21}
+%     \item $(bc (a \mid c))^* b^+$
+%     \item $b (a \mid b \mid c)^* a$
+%     \item $b (aa \mid bc)^+ a^*$
+%   \end{enumerate}
+
+% \end{enumerate}
+
+% \newpage
+
+% \begin{center}
+% {\LARGE Формальные языки}
+
+% {\Large Контрольная работа 1}
+
+% {\large 26.10.2021}
+% \end{center}
+
+% \bigskip
+
+% \begin{center}
+%   \LARGE Порядок проведения контрольной работы
+% \end{center}
+
+% \begin{itemize}
+%   \item Контрольная работа будет проходить онлайн 26.10 в три потока по три часа каждый: с 12 до 15, с 15 до 18, с 18 до 21 (по Санкт-Петербургу). У каждого потока свои задачи.
+%   \item Все, кто не отметил свои пожелания в таблице выбора времени контрольной до утра 25 октября или не отметил ни одного непрерывного трехчасового временного промежутка не красным, пишут контрольную во второй поток.
+%   \item Распределение вариантов задач появится в той же таблице, которую использовали для выбора времени: \url{https://bit.ly/3pyKyOF}.
+%   \item Результаты этой и следующей контрольной работы будут учитываться при выставлении оценки за курс. Хорошо написанные контрольные будут означать автомат по курсу. Если все контрольные вами написаны плохо, вы сможете в конце семестра сдать экзамен, повышающий оценку. Переписываний контрольной не будет.
+%   \item Контрольная работа должна выполняться каждым индивидуально. Если будет обнаружено списывание хотя бы одной задачи, вся контрольная работа будет не зачтена всем заподозренным в списывании вне зависимости от того, кто у кого списывал.
+%   \item Контрольную работу можно писать ручкой на листе бумаги. Если есть возможность отсканировать выполненную работу --- отсканируйте, иначе достаточно качественной фотографии. Нечитаемые работы проверяться не будут. Если есть планшет, можно использовать его. Если есть навык верстки в техе --- верстайте, но учитывайте ограничения по времени.
+%   \item Перед решением каждого задания обязательно укажите номер задачи и номер варианта (например, "2.3)"). Обязательно убедитесь, что решаете положенный вам вариант, иначе задача не будет зачтена, даже если решена правильно.
+%   \item Контрольная работа должна быть прислана на мою электронную почту не позднее \textbf{15:10 26.10.2020} для первого потока, \textbf{18:10 26.10.2020} для второго потока и \textbf{21:10 26.10.2020} для третьего потока. Присланные после этого момента контрольные проверяться не будут. Можно присылать по одной задаче, присланные задачи можно исправлять в новом письме, но не позднее дедлайна своего потока. Исправления присылайте \textbf{ответом} на письмо с первой версией, иначе велик риск, что они потеряются.
+%   \item Каждая присланная страница должна быть подписана вашими ФИО и номером группы.
+%   \item Обязательно присылать контрольную в письме с темой \textbf{[FL\_ElTech] Test 1}. Письма с любой другой темой будут игнорироваться.
+%   \item Любые соображения, которые привели вас к решению, целесообразно написать. Иногда студенты опечатываются в самом ответе, хотя все предыдущие шаги были выполнены правильно. Приведенные шаги помогут мне поверить, что это действительно опечатка, а не ошибка.
+%   \item Проверьте, что у всех автоматов явно указаны стартовое состояние (одно) и терминальные состояния. Проверьте, что у всех грамматик явно указан стартовый нетерминал. Если вы используете лемму о накачке или любое другое утверждение, укажите это явно.
+% \end{itemize}
+
+
+% \newpage
+
+% \begin{enumerate}
+% \setlength\itemsep{1em}
+
+%   \item Привести три кратчайших различных строки \textbf{длины хотя бы 5}, принадлежащих языку, описанному регулярным выражением; принадлежат ли строки $cabac$ и $abacaba$ данному языку?
+%   \begin{enumerate}[label=\arabic*)]
+%     \setlength\itemsep{0.8em}
+%     \item $(c (a \mid b)^+ c)^*$
+%     \item $(a \mid (cc)^+ \mid b)^*$
+%     \item $(a (b \mid c)^* (ba)^+)$
+%   \end{enumerate}
+
+%   \begin{enumerate}[label=\arabic*)]
+%     \setcounter{enumii}{3}
+%     \setlength\itemsep{0.8em}
+%     \item $(bc (a \mid c))^* b^+$
+%     \item $b (a \mid b \mid c)^* a$
+%     \item $b (aa \mid bc)^+ a^*$
+%   \end{enumerate}
+
+%   \begin{enumerate}[label=\arabic*)]
+%     \setlength\itemsep{0.8em}
+%     \setcounter{enumii}{6}
+%     \item $(c c (a \mid b)^+)^*$
+%     \item $(a \mid (ca)^+ \mid b)^*$
+%     \item $(c \mid (aa)^+ \mid b)^*$
+%     \item $b (a \mid c)^* (bc)^+$
+%     \item $b (b \mid c)^* (aa)^+$
+%     \item $(bc (b \mid c))^* a^+$
+%     \item $(aa (a \mid b))^* c^+$
+%     \item $b (a \mid b \mid c)^* c$
+%     \item $a (bb \mid ac)^+ b^*$
+%     \item $((a \mid b)^+ c c)^*$
+%     \item $(a \mid (bb)^+ \mid ca)^*$
+%     \item $(ab \mid b^+ \mid c)^*$
+%     \item $a (b \mid c)^* (ba)^+$
+%     \item $c (a \mid b)^* (bb)^+$
+%     \item $(ab (b \mid c))^* a^+$
+%     \item $(bb (a \mid c))^* b^+$
+%     \item $a (a \mid b \mid c)^* b$
+%     \item $c (cc \mid ab)^+ b^*$
+%   \end{enumerate}
+
+%   \item Построить минимальный детерминированный конечный автомат, распознающий данный язык. Суперкскрипт $^R$ означает обращение строки: $01101^R = 10110$. Черта сверху~--- замену в строке всех $0$ на $1$ и всех $1$ на $0$: $\overline{01101} = 10010$. $|\alpha|$ означает длину строки $\alpha$, $|\alpha|_0$ --- количество в строке $\alpha$ символов $0$. Знак $\cdot$ обозначает конкатенацию строк.
+%   \begin{enumerate}[label=\arabic*)]
+%     \setlength\itemsep{0.8em}
+%     \item $\{\omega \cdot (0 \mid 1)^* \mid |\omega| = 3, \omega = \omega^R, \omega \in \{0, 1\}^*\}$
+%     \item $\{ \alpha \cdot (0 \mid 1)^* \cdot \beta \mid |\alpha| = 2, \beta = \alpha^R \}$
+%   \end{enumerate}
+
+%   \begin{enumerate}[label=\arabic*)]
+%     \setlength\itemsep{0.8em}
+%     \setcounter{enumii}{2}
+%     \item $\{\omega \cdot (0 \mid 1)^+ \mid |\omega| = 2, \omega = \omega^R, \omega = \{0, 1\}^*\}$
+%     \item $\{ \alpha \cdot (0 \mid 1)^* \cdot \beta \mid |\alpha| = 2, \beta = \overline{\alpha} \}$
+%   \end{enumerate}
+
+%   \begin{enumerate}[label=\arabic*)]
+%     \setlength\itemsep{0.8em}
+%     \setcounter{enumii}{4}
+%     \item $\{(0 \mid 1)^* \cdot \omega \mid |\omega| = 3, \omega = \omega^R, \omega \in \{0, 1\}^*\}$
+%     \item $\{ (0 \mid 1)^* \cdot \alpha \cdot \beta \mid |\alpha| = 2, \beta = \alpha^R \}$
+%     \item $\{ \alpha \cdot \beta \cdot (0 \mid 1)^* \mid |\alpha| = 2, \beta = \alpha^R \}$
+%     \item $\{(0 \mid 1)^+ \cdot \omega \mid |\omega| = 2, \omega = \omega^R, \omega = \{0, 1\}^*\}$
+%     \item $\{ (0 \mid 1)^* \cdot \alpha \cdot \beta \mid |\alpha| = 2, \beta = \overline{\alpha} \}$
+%     \item $\{ \alpha \cdot \beta \cdot (0 \mid 1)^* \mid |\alpha| = 2, \beta = \overline{\alpha} \}$
+%     \item $\{ a \cdot \alpha \cdot a \cdot \beta \cdot b \mid a = \overline{b}, a \in \{0,1\}, b \in \{0, 1\}, \alpha \in \{0, 1\}^*, \beta \in \{0, 1\}^*\}$
+%     \item $\{ a \cdot \alpha \cdot b \cdot \beta \cdot b \mid a = \overline{b}, a \in \{0,1\}, b \in \{0, 1\}, \alpha \in \{0, 1\}^*, \beta \in \{0, 1\}^*\}$
+%     \item $\{(0 \mid 1)^* \cdot \omega \mid |\omega| \le 3, |\omega|_0 = |\omega|_1, \omega \in \{0, 1\}^*\}$
+%     \item $\{ (\alpha \cdot \beta)^* \mid |\beta| = 2, \alpha = \overline{\beta}, \beta \in \{0, 1\}^* \}$
+
+%   \end{enumerate}
+
+%   \item Построить регулярную грамматику, задающую язык:
+%   \begin{enumerate}[label=\arabic*)]
+%     \setlength\itemsep{0.8em}
+%     \item $\{ 01 \cdot \alpha \cdot 01 \mid \alpha \in \{0, 1\}^* \} \setminus \{ \beta \cdot 00 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+%     \item $\{ 01 \cdot \alpha \cdot 01 \mid \alpha \in \{0, 1\}^* \} \cap      \{ \beta \cdot 00 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+%     \item $\{ 10 \cdot \alpha \cdot 10 \mid \alpha \in \{0, 1\}^* \} \setminus \{ \beta \cdot 00 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+%     \item $\{ 10 \cdot \alpha \cdot 10 \mid \alpha \in \{0, 1\}^* \} \cap      \{ \beta \cdot 00 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+%   \end{enumerate}
+
+%   \begin{enumerate}[label=\arabic*)]
+%     \setlength\itemsep{0.8em}
+%     \setcounter{enumii}{4}
+%     \item $\{ 11 \cdot \alpha \cdot 11 \mid \alpha \in \{0, 1\}^* \} \setminus \{ \beta \cdot 00 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+%     \item $\{ 11 \cdot \alpha \cdot 11 \mid \alpha \in \{0, 1\}^* \} \cap      \{ \beta \cdot 00 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+%     \item $\{ 00 \cdot \alpha \cdot 00 \mid \alpha \in \{0, 1\}^* \} \setminus \{ \beta \cdot 01 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+%     \item $\{ 00 \cdot \alpha \cdot 00 \mid \alpha \in \{0, 1\}^* \} \cap      \{ \beta \cdot 01 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+%   \end{enumerate}
+
+%   \begin{enumerate}[label=\arabic*)]
+%     \setlength\itemsep{0.8em}
+%     \setcounter{enumii}{8}
+%     \item $\{ 10 \cdot \alpha \cdot 10 \mid \alpha \in \{0, 1\}^* \} \setminus \{ \beta \cdot 01 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+%     \item $\{ 10 \cdot \alpha \cdot 10 \mid \alpha \in \{0, 1\}^* \} \cap      \{ \beta \cdot 01 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+%     \item $\{ 11 \cdot \alpha \cdot 11 \mid \alpha \in \{0, 1\}^* \} \setminus \{ \beta \cdot 01 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+%     \item $\{ 11 \cdot \alpha \cdot 11 \mid \alpha \in \{0, 1\}^* \} \cap      \{ \beta \cdot 01 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+%     \item $\{ 00 \cdot \alpha \cdot 00 \mid \alpha \in \{0, 1\}^* \} \setminus \{ \beta \cdot 10 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+%     \item $\{ 00 \cdot \alpha \cdot 00 \mid \alpha \in \{0, 1\}^* \} \cap      \{ \beta \cdot 10 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+%     \item $\{ 01 \cdot \alpha \cdot 01 \mid \alpha \in \{0, 1\}^* \} \setminus \{ \beta \cdot 10 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+%     \item $\{ 01 \cdot \alpha \cdot 01 \mid \alpha \in \{0, 1\}^* \} \cap      \{ \beta \cdot 10 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+%     \item $\{ 11 \cdot \alpha \cdot 11 \mid \alpha \in \{0, 1\}^* \} \setminus \{ \beta \cdot 10 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+%     \item $\{ 11 \cdot \alpha \cdot 11 \mid \alpha \in \{0, 1\}^* \} \cap      \{ \beta \cdot 10 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+%     \item $\{ 00 \cdot \alpha \cdot 00 \mid \alpha \in \{0, 1\}^* \} \setminus \{ \beta \cdot 11 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+%     \item $\{ 00 \cdot \alpha \cdot 00 \mid \alpha \in \{0, 1\}^* \} \cap      \{ \beta \cdot 11 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+%     \item $\{ 01 \cdot \alpha \cdot 01 \mid \alpha \in \{0, 1\}^* \} \setminus \{ \beta \cdot 11 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+%     \item $\{ 01 \cdot \alpha \cdot 01 \mid \alpha \in \{0, 1\}^* \} \cap      \{ \beta \cdot 11 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+%     \item $\{ 10 \cdot \alpha \cdot 10 \mid \alpha \in \{0, 1\}^* \} \setminus \{ \beta \cdot 11 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+%     \item $\{ 10 \cdot \alpha \cdot 10 \mid \alpha \in \{0, 1\}^* \} \cap      \{ \beta \cdot 11 \cdot \gamma \mid \beta, \gamma \in \{0, 1\}^*\}$
+
+%   \end{enumerate}
+
+%   \item Проверить регулярность языка (если регулярный, построить автомат, регулярное выражение или регулярную грамматику, иначе --- доказать нерегулярность)
+%   \begin{enumerate}[label=\arabic*)]
+%     \setlength\itemsep{0.8em}
+
+%     \item $\{ a^n b^m c^n \mid n, m \ge 0 \}$
+%     \item $\{ a^k b a^k \mid k \ge 0 \}$
+%   \end{enumerate}
+
+%   \begin{enumerate}[label=\arabic*)]
+%     \setlength\itemsep{0.8em}
+%     \setcounter{enumii}{2}
+%     \item $\{ a^n b^l a^k \mid n = l \text{ или } l \neq k\}$
+%     \item $\{ a^n b^l a^k \mid k > n + l \}$
+%   \end{enumerate}
+
+%   \begin{enumerate}[label=\arabic*)]
+%     \setlength\itemsep{0.8em}
+%     \setcounter{enumii}{4}
+%     \item $\{ \omega \cdot a^{2k} \mid |\omega| = k, \omega \in \{a, b\}^* \}$
+%     \item $\{ a^{2k} \cdot \omega \mid \omega \in \{a, b\}^*, |\omega| = k \}$
+%     \item $\{ \omega \cdot a^{k+1} \mid |\omega| = k, \omega \in \{a, b\}^* \}$
+%     \item $\{ a^{k+1} \cdot \omega \mid |\omega| = k, \omega \in \{a, b\}^* \}$
+%     \item $\{ a^n b^m a^l \mid l = n + m \}$
+%     \item $\{ a^n b^l \mid n \le l\}$
+%     \item $\{ a^i b^m \mid i, m \ge 0, i = m \text{ или } i = 2m \}$
+%   \end{enumerate}
+
+%   \item По регулярному выражению построить недетерминированный конечный автомат без эпсилон-переходов
+%   \begin{enumerate}[label=\arabic*)]
+%     \setlength\itemsep{0.8em}
+%     \item $(c (a \mid b)^+ c)^*$
+%     \item $(a \mid (cc)^+ \mid b)^*$
+%     \item $(a (b \mid c)^* (ba)^+)$
+%   \end{enumerate}
+
+%   \begin{enumerate}[label=\arabic*)]
+%     \setlength\itemsep{0.8em}
+%     \setcounter{enumii}{3}
+%     \item $(bc (a \mid c))^* b^+$
+%     \item $b (a \mid b \mid c)^* a$
+%     \item $b (aa \mid bc)^+ a^*$
+%   \end{enumerate}
+
+%   \begin{enumerate}[label=\arabic*)]
+%     \setlength\itemsep{0.8em}
+%     \setcounter{enumii}{6}
+%     \item $(c c (a \mid b)^+)^*$
+%     \item $(a \mid (ca)^+ \mid b)^*$
+%     \item $(c \mid (aa)^+ \mid b)^*$
+%     \item $b (a \mid c)^* (bc)^+$
+%     \item $b (b \mid c)^* (aa)^+$
+%     \item $(bc (b \mid c))^* a^+$
+%     \item $(aa (a \mid b))^* c^+$
+%     \item $b (a \mid b \mid c)^* c$
+%     \item $a (bb \mid ac)^+ b^*$
+%     \item $((a \mid b)^+ c c)^*$
+%     \item $(a \mid (bb)^+ \mid ca)^*$
+%     \item $(ab \mid b^+ \mid c)^*$
+%     \item $a (b \mid c)^* (ba)^+$
+%     \item $c (a \mid b)^* (bb)^+$
+%     \item $(ab (b \mid c))^* a^+$
+%     \item $(bb (a \mid c))^* b^+$
+%     \item $a (a \mid b \mid c)^* b$
+%     \item $c (cc \mid ab)^+ b^*$
+%   \end{enumerate}
+% \end{enumerate}
 
 \end{document}
