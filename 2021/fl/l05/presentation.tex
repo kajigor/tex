@@ -539,7 +539,7 @@
 
    Включаем в него все нецепные правила  $P$.
 
-   Затем добавляем в $P_1$ правила вида $A \derives \alpha$, если $A \derives B$, где $A, B \in V_N$ и $B \to \alpha$~--- нецепное правило из $P$.
+   Затем добавляем в $P_1$ правила вида $A \to \alpha$, если $A \to B$, где $A, B \in V_N$ и $B \to \alpha$~--- нецепное правило из $P$.
 
    Замечание: достаточно проверять только цепные выводы длины меньшей, чем $|V_N|$
 
@@ -669,9 +669,9 @@
     \item Удалить длинные правила (длины больше 2)
     \item Удалить непродуктивные правила ($\varepsilon$-правила)
     \begin{itemize}
-      \item Если $A \to \varepsilon$, то $A$~--- $\varepsilon$-правило
-      \item Если $A \to X_1 X_2 \dots X_n, \forall i: X_i$~--- $\varepsilon$-правило, то $A$~--- $\varepsilon$-правило
-      \item Заменяем $A \to X_1 X_2 \dots X_n$ на множество правил, где каждый $X_i$ опущен во всех возможных комбинациях, удаляем те, которые выводят $\varepsilon$
+      \item Если $A \to \varepsilon$, то $A$~--- $\varepsilon$-порождающий нетерминал
+      \item Если $A \to X_1 X_2 \dots X_n, \forall i: X_i$~--- $\varepsilon$-порождающий, то $A$~--- $\varepsilon$-порождающий нетерминал
+      \item Заменяем $A \to X_1 X_2 \dots X_n$ на множество правил, где каждый $X_i$ опущен во всех возможных комбинациях, удаляем $\varepsilon$-правила
       \item $A \to X_1 X_2 X_3 \Rightarrow A \to X_1 X_2 X_3 \mid X_2 X_3 \mid X_1 X_3 \mid X_1 X_2 \mid X_3 \mid X_2 \mid X_1 \mid \varepsilon$
     \end{itemize}
     \item Удалить цепные правила
