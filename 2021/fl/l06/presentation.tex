@@ -262,22 +262,21 @@ T
 
   \bigskip
 
- \begin{center}
-   Код
- \end{center}
-% \begin{verbatim}
-% parse_S word =
-%   if (word == empty) then (true, word)
-%   else
-%     let (r, w') = parse_lbr word in
-%       if (not r)
-%       then (false, word)
-%       else
-%         let (r, w'') = parse_S w' in
-%           if (not r)
-%           then (false, w')
-%           else parser_rbr w''
-% \end{verbatim}
+  \begin{verbatim}
+  parse_S(word) =
+    if (isEmpty(word))
+    then (true, word)
+    else
+      let (r, w') = parse_lbr(word) in
+      if (r)
+      then
+        let (r, w'') = parse_S(w') in
+        if (r)
+        then parser_rbr(w'')
+        else (false, w')
+      else (false, word)
+
+  \end{verbatim}
 \end{frame}
 
 
