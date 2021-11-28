@@ -1,0 +1,373 @@
+\documentclass{beamer}
+\usepackage{beamerthemesplit}
+\usepackage{wrapfig}
+\usetheme{SPbGU}
+\usepackage{pdfpages}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{cmap}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{indentfirst}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usepackage{multirow}
+\usepackage[noend]{algpseudocode}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{ stmaryrd }
+\usepackage{qtree}
+\usetikzlibrary{shapes,arrows}
+\usepackage{fancyvrb}
+
+\usetikzlibrary{positioning}
+\usetikzlibrary{decorations.pathmorphing}
+
+\usetikzlibrary{shapes,arrows}
+\usetikzlibrary{positioning,automata}
+\tikzset{
+  snake it/.style={decorate, decoration=snake},
+  every state/.style={minimum size=0.2cm},
+  initial text={}
+}
+
+\newtheorem{rutheorem}{Теорема}
+\newtheorem{ruproof}{Доказательство}
+\newtheorem{rudefinition}{Определение}
+\newtheorem{rulemma}{Лемма}
+\beamertemplatenavigationsymbolsempty
+
+\newcommand{\derive}[0]{\xRightarrow[]{*}}
+\newcommand{\derives}[0]{\xRightarrow[]{}}
+\newcommand{\derivek}[1]{\xRightarrow[]{#1}}
+\newcommand{\deriveg}[1]{\xRightarrow[#1]{*}}
+\newcommand{\derivegone}[1]{\xRightarrow[#1]{}}
+
+\setbeamertemplate{itemize item}[circle]
+\setbeamertemplate{enumerate item}[circle]
+
+  % \newcommand{\derives}[1][*]{\xRightarrow[]{#1}}
+  % \newcommand{\deriveg}[1]{\xRightarrow[#1]{*}}
+  % \newcommand{\derivegone}[1]{\xRightarrow[#1]{}}
+
+\title[]{Теория автоматов и формальных языков}
+\subtitle[]{Контекстно-свободные языки: нисходящий анализ}
+\institute[]{
+Санкт-Петербургский государственный электротехнический университет <<ЛЭТИ>>\\
+}
+
+\author[]{Екатерина Вербицкая}
+
+\date{23 ноября 2021}
+
+\definecolor{orange}{RGB}{179,36,31}
+
+\begin{document}
+{
+  \begin{frame}
+    \titlepage
+  \end{frame}
+}
+
+
+\begin{frame}[fragile]
+  \transwipe[direction=90]
+  \frametitle{В предыдущей серии}
+  \begin{itemize}
+    \item Нисходящий анализ
+    \item Алгоритм синтаксического анализа LL(1)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \transwipe[direction=90]
+  \frametitle{Когда LL-анализ не возможен}
+\begin{itemize}
+  \item Леворекурсивные правила
+  \item Когда при построении таблицы в одну ячейку нужно записать
+  больше одной записи
+  \begin{itemize}
+    \item FIRST-FIRST конфликт
+    \begin{itemize}
+      \item $A \to \alpha \mid \beta, FIRST(\alpha) \cap FIRST(\beta) \neq \varnothing$
+      \item $E \to T + E \mid T * E$
+    \end{itemize}
+    \item FIRST-FOLLOW конфликт
+    \begin{itemize}
+      \item $FIRST(A) \cap FOLLOW (A) \neq \varnothing$
+      \item $S \to Aab, A \to a \mid \varepsilon$
+    \end{itemize}
+  \end{itemize}
+  \item Как с этим бороться?
+  \begin{itemize}
+    \item Избавиться от левой рекурсии
+    \item Избавиться от недетерминизма
+    \item Факторизовать грамматику
+    \item Использовать аннотации (если есть)
+    \item Переписать грамматику
+    \item Использовать более одного символа предпросмотра
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \transwipe[direction=90]
+  \frametitle{Леворекурсивные правила грамматики}
+  \begin{itemize}
+    \item Явная (непосредственная) левая рекурсия
+    \begin{itemize}
+      \item $A \to A \beta$
+    \end{itemize}
+    \item Неявная левая рекурсия
+    \begin{itemize}
+      \item $A \to \alpha A \beta, \, \alpha \derive \varepsilon$
+    \end{itemize}
+    \item Взаимная рекурсия
+    \begin{itemize}
+      \item $A \to \alpha B \beta, \, B \to \gamma A \delta, \, \alpha \derive \varepsilon, \gamma \derive \varepsilon$
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \transwipe[direction=90]
+  \frametitle{Избавление от левой рекурсии}
+  \begin{itemize}
+   \item $A \to A \alpha \mid \beta \Leftrightarrow A \to \beta A', \, A' \to \varepsilon \mid \alpha A'$
+  \end{itemize} \pause
+  \begin{itemize}
+    \item $E \to E + T \mid T \Leftrightarrow E \to T E', \, E' \to \varepsilon \mid + T E'$
+  \end{itemize} \pause
+
+\begin{tabular}{p{5.5cm} p{6cm}}
+
+\Tree [.E [.E [.E T ] + T ] + T ]
+&
+\Tree [.E T [.E' + T [.E' + T [.E' $\varepsilon$ ] ] ] ]
+
+\end{tabular}
+\end{frame}
+
+\begin{frame}[fragile]
+  \transwipe[direction=90]
+  \frametitle{Избавление от левой рекурсии: более общий случай}
+  \begin{itemize}
+   \item $A \to A \alpha_1 \mid A \alpha_2 \mid \dots \mid A \alpha_n \mid \beta_1 \mid \beta_2 \mid \dots \mid \beta_k$
+  \end{itemize}
+  \begin{itemize}
+   \item $A \to \beta_1 A' \mid \beta_2 A' \mid \dots \mid \beta_k A'$
+   \item $A' \to \varepsilon \mid \alpha_1 A' \mid \alpha_2 A' \mid \dots \mid \alpha_n A' $
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \transwipe[direction=90]
+  \frametitle{Избавление от взаимной левой рекурсии}
+  \begin{itemize}
+   \item Избавляемся от $\varepsilon$-продукций
+   \item Упорядочиваем правила по индексу нетерминала
+   \item Добиваемся того, чтобы не было правил вида $A_i \to A_j \alpha, j \leq i$
+   \begin{itemize}
+     \item Перебираем все $A_i$
+     \item Перебираем все $A_j, 1 \leq j < i$
+     \item Для каждого правила $p: A_i \to A_j \gamma$
+     \begin{itemize}
+       \item Удалить правило $p$
+       \item Для каждого правила $A_j \to \delta_1 \,|\, \dots \mid \delta_k$ Добавить правила $A_i \to \delta_l$
+     \end{itemize}
+     \item Устранить непосредственную левую рекурсию для $A_i$
+   \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \transwipe[direction=90]
+  \frametitle{Левая факторизация грамматики}
+  \begin{itemize}
+   \item Выделяем наибольший общий префикс продукций $A \to \alpha \beta \mid \alpha \gamma \Rightarrow A\to \alpha A', \, A' \to \beta \mid \gamma$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \transwipe[direction=90]
+  \frametitle{Пример}
+  \[
+  \begin{array}{crcl}
+  &S& \to & a S S b S \\
+  & &           | & a S a S b \\
+  & &           | & a b b \\
+  & &           | & b
+  \end{array}
+  \]
+ \pause
+  \[
+  \begin{array}{crcl}
+  &S & \to & a S' \\
+  &  &           | & b \\
+
+  &S'& \to & S S b S \\
+  &  &           | & S a S b \\
+  &  &           | & b b
+  \end{array}
+  \]
+  \pause
+  \[
+  \begin{array}{crcl}
+  &S  & \to & a S' \mid b \\
+
+  &S' & \to & S S'' \mid b b \\
+
+  &S''& \to & S b S \mid a S b
+  \end{array}
+  \]
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \transwipe[direction=90]
+  \frametitle{LL(k)-анализ}
+
+  \begin{itemize}
+    \item Можно использовать более одного символа предпросмотра
+    \item Все равно применимо не ко всем КС-грамматикам
+  \end{itemize}
+
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+  \transwipe[direction=90]
+  \frametitle{LL(k): функция $FIRST$}
+  \begin{itemize}
+      \item Функция $FIRST^G_k(\alpha) = $
+
+      $\{ \omega \in V_T^* \, |$ либо $|\omega| < k$ и $ \alpha \derive \omega$, либо $|\omega| = k$ и $\alpha \derive \omega \gamma, \gamma \in V_T^*\}$
+      \begin{itemize}
+        \item По сути: первые $k$ символов, встречающиеся в выводе из $\alpha$
+      \end{itemize}
+      \item Пример
+      \begin{itemize}
+        \item $S \to S S \mid a S b \mid \varepsilon$
+        \item $FIRST^G_3( a S b ) = \{ ab, aab, aaa\} $
+        \item $aba \notin FIRST^G_3 (a S b)$!
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \transwipe[direction=90]
+  \frametitle{LL(k): функция FOLLOW}
+  \[FOLLOW^G_k(\beta) = \{ \omega \in V_T^* \mid S \derive \gamma \beta \alpha, \omega \in FIRST^G_k(\alpha) \}, k \geq 0\]
+
+  \vfill
+
+   Пример: $S \to S S \mid a S b \mid \varepsilon$
+
+   \begin{itemize}
+     \item  $FOLLOW^G_3( a a ) = \{ a b b, a a b, a a a, a b a, b a a, b a b, b b, b b a, \dots \}$
+     \item $\varepsilon, b \notin FOLLOW^G_3$!
+   \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \transwipe[direction=90]
+  \frametitle{Нисходящий синтаксический анализ: LL-грамматики}
+    Фундаментальное свойство: по сентенциальной форме $a_1 a_2 \dots a_j A \beta, a_i \in V_T, A \in V_N, \beta \in (V_T \cup V_N)^*$ однозначно определяется, какое правило нужно применять дальше, чтобы разобрать всю строку \pause
+
+    \vfill
+
+   КС грамматика $G$ является $\textbf{LL(k)}$\textbf{-грамматикой} для некоторого $k$,  если для любых двух левосторонних выводов вида
+  \begin{itemize}
+    \item $S \derive \omega A \alpha \Rightarrow \omega \beta \alpha \derive \omega \delta$
+    \item $S \derive \omega A \alpha \Rightarrow \omega \gamma \alpha \derive \omega \eta$
+  \end{itemize}
+  в которых $FIRST^G_k(\delta) = FIRST ^G_k(\eta)$, верно $\beta = \gamma$
+
+\vfill
+
+  КС грамматика $G$ является $\textbf{LL}$\textbf{-грамматикой}, если она является $LL(k)$-грамматикой для некоторого $k \geq 0$
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \transwipe[direction=90]
+  \frametitle{Пример LL(1)-грамматики}
+  $S \to a B S \mid b$
+
+  $B \to a \mid b S B$
+
+  Надо показать: для любых левосторонних выводов
+  \begin{itemize}
+    \item $S \derive \omega A \alpha \Rightarrow \omega \beta \alpha \derive \omega \delta$
+    \item $S \derive \omega A \alpha \Rightarrow \omega \gamma \alpha \derive \omega \eta$
+  \end{itemize}
+  если $\delta$ и $\eta$ начинаются с одного символа, то $\beta = \gamma$
+
+  Рассматриваем выводы, где роль $A$ выполняет $S$: $S \Rightarrow a B S, S \Rightarrow b$. $\omega = \alpha = \varepsilon, \beta = a B S, \gamma = b$. Любая цепочка, выводимая из $\beta \alpha = a B S$ начинается на $a$; любая цепочка, выводимая из $\gamma \alpha = b$ начинается на $b$. Однозначно определяется, какой альтернативе следовать.
+
+  Аналогично с $A = B: S \Rightarrow a B S \Rightarrow a a S; S \Rightarrow a B S \Rightarrow a b S B S$
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \transwipe[direction=90]
+  \frametitle{Простая LL(1)-грамматика}
+  КС-грамматика $G$ называется \textbf{простой LL(1)-грамматикой}, если в ней нет $\varepsilon$-правил, и все альтернативы для каждого нертерминала начинаются с терминалов, и притом различных.
+
+  \vfill
+
+  $\forall (A, a), A \in V_N, a \in V_T, \exists $ максимум 1 альтернатива вида $A \to a \alpha$
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \transwipe[direction=90]
+  \frametitle{LL-грамматика: необходимое и достаточное условие}
+  \begin{rutheorem}
+  КС грамматика $G = \langle V_N, V_T, P, S \rangle$ является $LL(k)$-грамматикой $\Leftrightarrow FIRST^G_k(\beta \alpha) \cap FIRST^G_k(\gamma \alpha) = \varnothing$, для всех таких $\alpha, \beta, \gamma: A \to \beta, A \to \gamma \in P, \beta \neq \gamma, \exists$ вывод $S \derive \omega A \alpha$
+  \end{rutheorem}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \transwipe[direction=90]
+  \frametitle{LL(1)-грамматика: необходимое и достаточное условие}
+  \begin{rutheorem}
+    КС-грамматика  $G = \langle V_N, V_T, P, S \rangle$ является $LL(1)$-грамматикой $\Leftrightarrow FIRST^G_1 (\beta FOLLOW^G_1(A)) \cap FIRST^G_1(\gamma FOLLOW^G_1(A)) = \varnothing, \forall A \in V_N, \beta, \gamma \in (V_N \cup V_T)^*, A \to \gamma, A \to \beta \in P, \beta \neq \gamma$
+  \end{rutheorem}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \transwipe[direction=90]
+  \frametitle{LL(1)-грамматика: необходимое и достаточное условие: другая формулировка}
+  \begin{rutheorem}
+    КС-грамматика  $G = \langle V_N, V_T, P, S \rangle$ является $LL(1)$-грамматикой $\Leftrightarrow
+    \forall A \to \alpha_1 \mid \alpha_2 \mid \dots \mid \alpha_n$ верно:
+    \begin{itemize}
+      \item $FIRST^G_1(\alpha_i) \cap FIRST^G_1(\alpha_j) = \varnothing, i \neq j, 1 \leq i, j \leq n$
+      \item если $\alpha_i \derive \varepsilon,$ то $FIRST^G_1(\alpha_j) \cap FOLLOW^G_1(A) = \varnothing, 1 \leq j \leq n, i \neq j$
+    \end{itemize}
+   \end{rutheorem}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \transwipe[direction=90]
+  \frametitle{Леворекурсивность}
+  \begin{rutheorem}
+    Если  КС-грамматика  $G = \langle V_N, V_T, P, S \rangle$ леворекурсивна, то она не является $LL(k)$-грамматикой ни при каком $k$
+  \end{rutheorem}
+\end{frame}
+
+
+   \end{document}
+
+
+
