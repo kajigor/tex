@@ -1,0 +1,307 @@
+\documentclass{beamer}
+\usepackage{beamerthemesplit}
+\usepackage{wrapfig}
+\usetheme{SPbGU}
+\usepackage{pdfpages}
+\usepackage{amsmath}
+\usepackage{cmap}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{indentfirst}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usepackage{multirow}
+\usepackage[noend]{algpseudocode}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{listings}
+\usepackage{pifont}% http://ctan.org/pkg/pifont
+\usepackage{xcolor}
+\usepackage{mdframed}
+\usepackage{multicol}
+\usepackage{graphicx}
+\usepackage{xspace}
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
+\usepackage{hyperref}
+
+\usepackage{epstopdf}
+\usepackage{forest}
+\usetikzlibrary{shapes,arrows,positioning}
+\usepackage{fancyvrb}
+\newtheorem{rutheorem}{Theorem}
+\beamertemplatenavigationsymbolsempty
+\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{enumerate items}[circle]
+
+\lstdefinelanguage{ocaml}{
+%keywords={fresh, let, begin, end, in, match, type, and, fun, function, try, with, when, class,
+%object, method, of, rec, %repeat,
+%until, while, not, do, done, as, val, inherit,
+%new, module, sig, deriving, datatype, struct, if, then, else, open, private, virtual, ostap},
+sensitive=true,
+basicstyle=\small,
+commentstyle=\small\itshape\ttfamily,
+keywordstyle=\ttfamily\underbar,
+identifierstyle=\ttfamily,
+basewidth={0.5em,0.5em},
+columns=fixed,
+fontadjust=true,
+literate={->}{{$\;\;\to\;\;$}}1
+         {===}{{$\equiv$}}1
+         {&&&}{{$\wedge$}}1
+         {|||}{{$\vee$}}1
+         {fresh}{{$\exists$}}1,
+morecomment=[s]{(*}{*)}
+}
+
+\lstset{
+basicstyle=\small,
+identifierstyle=\ttfamily,
+keywordstyle=\bfseries,
+commentstyle=\scriptsize\rmfamily,
+basewidth={0.5em,0.5em},
+fontadjust=true,
+%escapechar=~,
+language=ocaml,
+mathescape=true,
+moredelim=[is][\bfseries]{[*}{*]}
+}
+
+\definecolor{SadRed}{RGB}{255, 200, 200}
+\definecolor{HappyGreen}{RGB}{200, 255, 200}
+
+\newmdenv[backgroundcolor=SadRed, innertopmargin=8,innerbottommargin=1, linecolor=SadRed]{badcode}
+
+\newmdenv[backgroundcolor=MehYellow, innertopmargin=8,innerbottommargin=1, linecolor=MehYellow]{mehcode}
+
+\newmdenv[backgroundcolor=HappyGreen, innertopmargin=8,innerbottommargin=1, linecolor=HappyGreen]{goodcode}
+
+\newcommand{\miniKanren}{\texttt{miniKanren}\xspace}
+
+\title[]{Specialization for miniKanren and its Translation to a Functional Language}
+\institute[]{
+JetBrains Programming Languages and Tools Lab
+}
+
+\author[Kate Verbitskaia]{Kate Verbitskaia}
+
+\date{18.12.2021}
+
+\definecolor{orange}{RGB}{179,36,31}
+
+\begin{document}
+{
+
+\begin{frame}
+      \begin{center}
+        {\includegraphics[width=1.5cm]{pics/jb.png}}
+      \end{center}
+
+  \titlepage
+\end{frame}
+}
+
+\begin{frame}[fragile]
+  \frametitle{Recap: Relational Programming}
+
+ \begin{center}
+    Programs are relations:
+ \end{center}
+
+ \vspace{0.1cm}
+
+  \begin{center}
+    \begin{minipage}{3.5cm}
+    \begin{lstlisting}[frame=single]
+len$^o$ l n =
+  (l === [] &&& n === 0)
+  ||| (fresh h t m
+       ( l === h : t
+       &&& n === 1 + m
+       &&& len$^o$ t m))
+    \end{lstlisting}
+    \end{minipage}
+\end{center}
+
+\vspace{0.3cm}
+
+\begin{center}
+  Execution in different directions
+\end{center}
+
+\vspace{-0.1cm}
+
+\begin{columns}
+  \begin{column}{0.45\textwidth}
+    \begin{center}
+      \begin{minipage}{0.45\textwidth}
+        \lstinline{len$^o$ [0,1] ? $\rightsquigarrow$ 2}
+      \end{minipage}
+    \end{center}
+  \end{column}
+  \begin{column}{0.55\textwidth}
+    \begin{center}
+      \begin{minipage}{0.55\textwidth}
+        \lstinline{len$^o$ ? 2 $\rightsquigarrow$ [$\_.0, \_.1$]}
+      \end{minipage}
+    \end{center}
+  \end{column}
+\end{columns}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Recap: Relational Interpreters for Search}
+  \begin{itemize}
+    \item Implement a verifier (interpreter) in a functional programming language
+    \item Translate the functional interpreter into \miniKanren
+    \item Run the relational interpreter backwards to get a solver
+  \end{itemize}
+
+  \vfill
+
+  \begin{itemize}
+    \item Relational interpreter is the most performant in the forward direction and is not as performant in the backwards direction
+    \item Specialization improves performance
+  \end{itemize}
+
+  \vfill
+
+  \begin{center}
+    Lozov, P., Verbitskaia, E. and Boulytchev, D., 2019.
+
+    Relational Interpreters for Search Problems.
+\end{center}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{The Great Leap}
+\begin{center}
+  \href{http://eptcs.web.cse.unsw.edu.au/paper.cgi?VPT2021.5}{A paper on conservative partial deduction has been published}
+\end{center}
+
+\vspace{1cm}
+
+\begin{center}
+  \includegraphics[width=\textwidth]{pics/paper.png}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Translation to Functional Programming Language}
+
+\begin{center}
+  Specialization has never been the end goal
+\end{center}
+
+\vspace{0.5cm}
+
+\begin{center}
+  The goal was to create solvers out of verifiers
+\end{center}
+
+\vspace{0.5cm}
+
+\begin{center}
+  We need to translate \miniKanren programs back into the functional programming language
+\end{center}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Generating Extension}
+\begin{center}
+  $p(x,y)$
+\end{center}
+
+\begin{center}
+  $spec(p, x) = p_x$
+\end{center}
+
+\begin{center}
+  $gen_p(x) = p_x$
+\end{center}
+
+\begin{center}
+  $p_x(y) \equiv p(x,y)$
+\end{center}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Generating Extension: Example}
+\begin{verbatim}
+f (x, y) {
+  if x > 0
+  then y
+  else y+1
+}
+\end{verbatim}
+
+\vspace{1cm}
+
+\begin{verbatim}
+gen_f(x) =
+  "f (y) {"
+  ++ if x > 0 then "y" else "y+1"
+  ++ "}"
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Generating Extension for L}
+\begin{center}
+  Code
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Specialization Efforts for Topsort}
+\begin{center}
+  Code
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{The Plan}
+\begin{enumerate}
+  \item Write a generating extension for \miniKanren
+  \item Employ online specialization
+  \item ???
+  \item PROFIT
+\end{enumerate}
+
+\begin{center}
+\end{center}
+
+\begin{center}
+
+\end{center}
+
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Conclusion}
+  \begin{itemize}
+    \item The Paper
+    \begin{itemize}
+      \item Verbitskaia E, Berezun D, Boulytchev D. An Empirical Study of Partial Deduction for miniKanren. (VPT-2021)
+    \end{itemize}
+    \item Teaching
+    \begin{itemize}
+      \item Theory of Formal Languages (SPbU, HSE, ElTech)
+    \end{itemize}
+    \item New research direction
+    \begin{itemize}
+      \item Employing generating extension for relational interpreters
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+
+\end{document}
