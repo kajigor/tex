@@ -1,0 +1,54 @@
+\lstdefinelanguage{ocanren}{
+keywords={run, conde, fresh, let, in, match, with, when, class, type,
+object, method, of, rec, repeat, until, while, do, done, as, val, inherit,
+new, module, sig, deriving, datatype, struct, if, then, else, open, private, virtual, include, success, failure,
+% true, false, none, some, integer, zero, succ, prod},
+true, false, none, some, integer, zero, succ, prod, num, sum},
+sensitive=true,
+commentstyle=\small\itshape\ttfamily,
+keywordstyle=\textbf,%\ttfamily\underline,
+identifierstyle=\ttfamily,
+basewidth={0.5em,0.5em},
+columns=fixed,
+mathescape=true,
+fontadjust=true,
+literate={fun}{{$\lambda$}}1 {->}{{$\to$}}3 {===}{{$\equiv$}}1 {=/=}{{$\not\equiv$}}1 {|>}{{$\triangleright$}}3 {\\/}{{$\vee$}}2 {/\\}{{$\wedge$}}2 {^}{{$\uparrow$}}1,
+morecomment=[s]{(*}{*)}
+}
+
+\lstset{
+%mathescape=true,
+%basicstyle=\small,
+%identifierstyle=\ttfamily,
+%keywordstyle=\bfseries,
+%commentstyle=\scriptsize\rmfamily,
+%basewidth={0.5em,0.5em},
+%fontadjust=true,
+language=ocanren
+}
+
+\interfootnotelinepenalty=10000
+
+\newcommand{\mk}{\textsc{miniKanren}\xspace}
+\newcommand{\muk}{\textsc{microKanren}\xspace}
+\newcommand{\oc}{\textsc{OCanren}\xspace}
+\newcommand{\ocaml}{\textsc{OCaml}\xspace}
+\newcommand{\haskell}{\textsc{Haskell}\xspace}
+\newcommand{\pro}{\textsc{Prolog}\xspace}
+\newcommand{\scheme}{\textsc{Scheme}\xspace}
+\newcommand{\mercury}{\textsc{Mercury}\xspace}
+\newcommand{\todo}[1]{{\color{red}#1}}
+\newcommand{\change}[1]{{\color{red}#1}}
+\newcommand{\ecce}{\textsc{ECCE}\xspace}
+
+\newcommand{\x}{\lstinline{x}\xspace}
+\newcommand{\y}{\lstinline{y}\xspace}
+\newcommand{\z}{\lstinline{z}\xspace}
+\newcommand{\conde}{\lstinline{conde}\xspace}
+
+
+\newcommand{\conj}{$\wedge$\xspace}
+\newcommand{\rel}[2]{\texttt{#1}$^o$ #2}
+\newcommand{\subst}[1]{$\langle$#1$\rangle$}
+
+
