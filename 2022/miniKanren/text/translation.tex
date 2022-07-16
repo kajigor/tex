@@ -90,17 +90,74 @@ In this case there is no way to just force only the first answers, they all have
 
 \subsection{Generators}
 
-\todo{This all is wrong, should be rewritten with a more suitable example which really involves a generator}
-Some relations do not restrict some of the variables at all.
-Consider the relation \lstinline{append$^o$ xs ys zs} which concatenates the lists \lstinline{xs} and \lstinline{ys} to get the result \lstinline{zs} (Listing~\ref{append}).
-Whatever the mode of this relation is, it never restricts the value of the fresh variable \lstinline{h}.
-Our objective is to implement a function which computes \emph{ground} answers, but since \lstinline{h} is never restricted in any way, there is no way to provide ground elements of lists.
-One to solve this problem is by asking the end user to provide a generator of the values which can be used as elements of the list.
-Sometimes, this information can be derived from the task or from the type annotations, if the host language is typed.
+Some relations in some modes do not restrict certain variables at all.
+Consider the relation \lstinline{lookup$^o$ xs i v} in which the \lstinline{i}-th element of the list \lstinline{xs} is \lstinline{v} (see Listing~\ref{lookup}).
+When run with the mode \lstinline{(out, out, in) is nondet} this relation computes all list-index pairs, such that one element of the list is fixed and given.
+No restrictions exist for any other elements of the list, neither the length of the list is known.
+In \mk this can be expressed as a reified value \lstinline{(i, _.0 :: ... :: _.(i - 1) :: v :: _.i)}, where \lstinline{v} is the input ground value.
+This is not a ground term, and to provide a set of answers for the end user we need a way to generate the fresh elements of the list which come before the given value, as well as the tail of the list which comes after it.
 
-\begin{figure}[!t]
+One extra caveat is that we need to take care of what values we generate.
+In this example, the index must be a number, while the elements of the list have the same type as the given value \lstinline{v}, assuming the host language is strictly typed such as \haskell or \ocaml.
+Once we determined the types of the values to be generated, then we may use some automatic system for generating values by types, \todo{such as used in property based testing, for example}.
+However, if there is no type restriction on a fresh value, or the host languages \todo{is not typed, such as Scheme}, the only way to choose a proper generator is to as the user to provide it.
+For now, we decided to use user-provided generators always, but we will try to lift this restriction whenever possible in future work.
+
+\begin{figure*}[!t]
   \centering
   \begin{minipage}{0.28\textwidth}
+    \begin{lstlisting}[label={lookup}, caption={Lookup relation}, captionpos=b, frame=tb]
+let rec lookup xs i v =
+  fresh (h tl) (xs === h :: tl) /\ conde [
+    (i === zero /\ h === v) ;
+    (fresh (k) (i === succ k /\ lookup tl k v))
+  ]
+    \end{lstlisting}
+  \end{minipage}
+\end{figure*}
+
+\subsection{Interleaving Answers}
+
+It is easy to deal with an infinite number of answers of a top-level relation: laziness and forcing only a finite number of answers does the trick.
+If some intermediate computation constructs an infinite number of answers, then matters become more complicated.
+Consider the \lstinline{eval$^o$ fm st result} relation on Listing~\ref{eval}.
+It evaluates a propositional formula \lstinline{fm} with a variable mapping \lstinline{st} to get the \lstinline{result}.
+Formula may be either a boolean literal \lstinline{lit b}, a variable \lstinline{var i}, indexed by a number, a negation of another formula \lstinline{neg n}, a conjunction or disjunction of two formulas: \lstinline{conj x y} and \lstinline{disj x y} correspondingly.
+A variable mapping \lstinline{st} is just a list, \lstinline{i}-th element of which is a boolean number assigned to a formula \lstinline{var i}.
+The mode \lstinline{(out, in, in) is nondet} corresponds to generation of formulas which evaluate to the given \lstinline{result} with the given variable mapping \lstinline{st}.
+In case of conjunctions and disjunctions, we first need to generate its two subformulas and then apply the corresponding constructor.
+There are infinitely many formulas which evaluate to the given result which entails infinite number of subformulas.
+In order to start generating the second subconjunction, one needs to finish generating all possible first subconjunctions which is impossible when using lists as an abstraction for several answers.
+
+An answer to this conundrum already exists in \mk.
+The answers computed by different intermediate computations can be organized as Streams and then interleaved, so that new answers could be constructed.
+This change does not really change anything major in the implementation, but allows for better dealing with infinite streams of answers
+
+\begin{figure*}[!t]
+  \centering
+  \begin{minipage}{\textwidth}
+    \begin{lstlisting}[label={eval}, caption={A simple evaluator relation}, captionpos=b, frame=tb]
+let rec eval$^o$ fm st result = conde [
+  (fm === lit b /\ result === b);
+  (fm === var i /\ lookup$^o$ st i result);
+  (fm === neg x /\ not$^o$ v result /\ eval$^o$ x st v);
+  (fm === conj x y /\ and$^o$ v w result /\ eval$^o$ x st v /\ eval$^o$ y xs w);
+  (fm === disj x y /\ or$^o$ v w result /\ eval$^o$ x st v /\ eval$^o$ y xs w)
+  ]
+    \end{lstlisting}
+  \end{minipage}
+\end{figure*}
+
+
+
+
+
+
+
+
+\begin{figure*}[!t]
+  \centering
+  \begin{minipage}{0.38\textwidth}
     \begin{lstlisting}[label={append}, caption={List concatenation relation}, captionpos=b, frame=tb]
 let rec append$^o$ xs ys zs = conde [
   (x === [] /\ y === z);
@@ -110,7 +167,7 @@ let rec append$^o$ xs ys zs = conde [
      append$^o$ t y z') ) ]
     \end{lstlisting}
   \end{minipage}
-\end{figure}
+\end{figure*}
 
 
 
