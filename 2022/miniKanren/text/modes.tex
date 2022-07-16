@@ -6,19 +6,6 @@ The mode, among other things, specifies which arguments of the relation are inpu
 In some systems, such as \mercury, modes also specify the determinism of a relation: whether or not it is supposed to compute one or many values.
 There are many other different types of determinism, one can \todo{read more about this here}.
 
-\begin{figure}[!t]
-  \centering
-  \begin{minipage}{0.28\textwidth}
-    \begin{lstlisting}[label={add}, caption={Addition relation}, captionpos=b, frame=tb]
-let rec add$^o$ x y z = conde [
-  (x === zero /\ y === z);
-  (fresh (x' z')
-    (x === succ x' /\
-     z === succ z' /\
-     add$^o$ x' y z') ) ]
-    \end{lstlisting}
-  \end{minipage}
-\end{figure}
 
 A relation with a specified mode can be viewed as a function which maps its bound variables into its free variables.
 Consider a relation \lstinline{add$^o$ x y z} in Listing~\ref{add} with the mode \lstinline{(in, in, out) is det}.

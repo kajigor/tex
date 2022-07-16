@@ -12,9 +12,11 @@ basewidth={0.5em,0.5em},
 columns=fixed,
 mathescape=true,
 fontadjust=true,
-literate={fun}{{$\lambda$}}1 {->}{{$\to$}}3 {===}{{$\equiv$}}1 {=/=}{{$\not\equiv$}}1 {|>}{{$\triangleright$}}3 {\\/}{{$\vee$}}2 {/\\}{{$\wedge$}}2 {^}{{$\uparrow$}}1,
+literate={fun}{{$\lambda$}}1 {->}{{$\to$}}3 {<-}{{$\leftarrow$}}3 {===}{{$\equiv$}}1 {=/=}{{$\not\equiv$}}1 {|>}{{$\triangleright$}}3 {\\/}{{$\vee$}}2 {/\\}{{$\wedge$}}2 {^}{{$\uparrow$}}1,
 morecomment=[s]{(*}{*)}
 }
+
+\newcommand{\dollar}{\mbox{\textdollar}}
 
 \lstset{
 %mathescape=true,
@@ -44,6 +46,7 @@ language=ocanren
 \newcommand{\x}{\lstinline{x}\xspace}
 \newcommand{\y}{\lstinline{y}\xspace}
 \newcommand{\z}{\lstinline{z}\xspace}
+\newcommand{\zero}{\lstinline{zero}\xspace}
 \newcommand{\conde}{\lstinline{conde}\xspace}
 
 
