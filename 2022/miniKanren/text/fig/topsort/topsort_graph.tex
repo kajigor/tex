@@ -1,0 +1,23 @@
+\begin{figure*}[!t]
+  \centering
+  \begin{minipage}{\textwidth}
+    \begin{lstlisting}[label={topsort_graph}, caption={Functional implementation for a \lstinline{topsortoTrue in out} direction}, captionpos=b, frame=tb]
+topsortGraph :: Graph -> Stream [Nat]
+topsortGraph graph = do
+    n <- numberOfNodesG graph
+    go graph (n + 1) n (n + 1)
+  where
+    go graph n maxInt maxListLength =
+      case graph of
+        [] -> return []
+        ((b, e) : graph') -> do
+          (nb, numbering) <- lookupKey b maxInt maxListLength
+          ne <- lookupXsKey numbering e
+          q47 <- lessXY nb ne
+          guard q47
+          q43 <- lessXY ne n
+          guard q43
+          topsortGraphNumbering graph' numbering n
+    \end{lstlisting}
+  \end{minipage}
+\end{figure*}

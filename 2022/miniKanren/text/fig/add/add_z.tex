@@ -1,0 +1,15 @@
+\begin{figure}[!t]
+  \centering
+  \begin{minipage}{\columnwidth}
+    \begin{lstlisting}[label={add_z}, caption={Function for \lstinline{addo out out in} direction}, captionpos=b, frame=tb]
+addZ :: Nat -> Stream (Nat, Nat)
+addZ z =
+  return (O, z) `mplus`
+  case z of
+    O -> Empty
+    S z' -> do
+      (x', y) <- addZ z'
+      return (S x', y)
+    \end{lstlisting}
+  \end{minipage}
+\end{figure}

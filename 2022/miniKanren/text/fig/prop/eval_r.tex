@@ -1,0 +1,39 @@
+
+
+\begin{figure*}[!t]
+  \centering
+  \begin{minipage}{\textwidth}
+    \begin{lstlisting}[label={eval_r}, caption={Functional implementation of the direction \lstinline{evalo out out in}}, captionpos=b, frame=tb]
+evalR :: Bool -> Int -> Stream (Term, [Bool])
+evalR result maxListLength =
+    lit  result `mplus`
+    var  result `mplus`
+    neg  result `mplus`
+    disj result `mplus`
+    conj result
+  where
+    conj result = do
+      (v, w) <- andR result
+      (y, st) <- evalR w maxListLength
+      x <- evalStR st v
+      return (Conj x y, st)
+    disj result = do
+      (v, w) <- orR result
+      (y, st) <- evalR w maxListLength
+      x <- evalStR st v
+      return (Disj x y, st)
+    neg result = do
+      v <- notR result
+      (x, st) <- evalR v  maxListLength
+      return (Neg x, st)
+    var result = do
+      (z, st) <- elemR result maxListLength
+      return (Var z, st)
+    lit result =
+      if result
+      then return (Lit True, [])
+      else return (Lit False, [])
+    \end{lstlisting}
+  \end{minipage}
+\end{figure*}
+

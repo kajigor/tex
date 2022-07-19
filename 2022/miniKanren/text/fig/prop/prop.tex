@@ -1,0 +1,37 @@
+
+
+\begin{figure*}[!t]
+  \centering
+  \begin{minipage}{\textwidth}
+    \begin{lstlisting}[label={prop}, caption={Relational evaluator of logic formulas}, captionpos=b, frame=tb]
+eval$^o$ st fm u =
+  fresh (x y v w z) (conde [
+    (fm === Conj x y /\ and$^o$ v w u /\ eval$^o$ st x v /\ eval$^o$ st y w);
+    (fm === Disj x y /\ or$^o$ v w u /\ eval$^o$ st x v /\ eval$^o$ st y w);
+    (fm === Neg x /\ not$^o$ v u /\ eval$^o$ st x v);
+    (fm === Var z /\ elem$^o$ z st u);
+    (fm === Lit u)])
+
+and$^o$ x y b = conde [
+  (x === True /\ y === True /\ b === True);
+  (x === False /\ y === True /\ b === False);
+  (x === True /\ y === False /\ b === False);
+  (x === False /\ y === False /\ b === False)]
+
+or$^o$ x y b = conde [
+  (x === True /\ y === True /\ b === True);
+  (x === False /\ y === True /\ b === True);
+  (x === True /\ y === False /\ b === True);
+  (x === False /\ y === False /\ b === False)]
+
+not$^o$ x b = [
+  (x === True /\ b === False);
+  (x === False /\ b === True)]
+
+elem$^o$ i st v =
+  fresh (h t i') conde [
+    (i === O /\ st === (v : t));
+    (i === S i' /\ st === (h : t) /\ elem$^o$ i' t v)]
+    \end{lstlisting}
+  \end{minipage}
+\end{figure*}
