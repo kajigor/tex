@@ -1,6 +1,50 @@
 \section{Preliminaries}
 
+In this section we remind the reader some basics of \mk.
+Usually, \mk is implemented as an embedded language and consists of a small set of basic combinators: disjunction and conjunction of goals, unification of terms and a helper to introduce fresh variables.
+Relations can be defined and called in the same manner as functions of the host language.
+Each \mk goal maps a variable substitution into a stream of substitutions.
+Computation may fail, producing an empty stream, or succeed and produce a non-empty stream of substitutions.
+In order to assure completeness of search, \mk usually implements conjunctions as monadic \lstinline{bind} on streams and disjunctions as \lstinline{mplus} which interleaves streams~\todo{cite Kiselyov}.
+
+We use the following syntactic conventions.
+We denote conjunctions as a right-associative binary relation \lstinline{/\}.
+In~place of disjunctions we use \conde with a list of \mk goals which is just a syntactic sugar.
+Unifications between two terms are denoted by a not associative binary relation \lstinline{===}.
+Several fresh variables may be introduced to the scope by a construction \lstinline{fresh}.
+We use superscript \lstinline{$^o$} to differentiate \mk relations from functions written in a host language.
+
 Consider an addition relation \lstinline{add$^o$ x y z} which specifies that \z equals to \lstinline{x + y} (Listing~\ref{add}).
-Having this relation, one can \emph{run} it in some \emph{direction} to compute useful data.
-Running \lstinline{add$^o$} with the specific known \x and \y produces their sum as a result, implementing addition.
-It is also possible to run the same relation \lstinline{add$^o$} and pass only \z and this produces all pairs of numbers which sum up to the given \z.
+This relation has three arguments: \x, \y and \z, and is comprised of a single \conde with two branches.
+The first \conde branch is a conjunction of two unifications: \x with a term \zero and \y with \z.
+The second \conde branch introduces fresh variables \lstinline{x'} and \lstinline{z'} and follows with a conjunction of two unifications and a recursive relation call.
+
+One can \emph{run} a relation in some direction by passing it \emph{input} arguments.
+For example, executing \lstinline{add$^o$ (S O) O z} finds the sum of the first two arguments and maps \lstinline{z} to the sum \lstinline{S O}.
+We can also provide only the last argument: \lstinline{add$^o$ x y (S O)}, which can be considered as an inversion of addition.
+This computes all pairs of Peano numbers \lstinline{(x, y)} which sum up to the given value \lstinline{z = S O}, namely \lstinline{(O, S O)} and \lstinline{(S O, O)}.
+Moreover, we can pass as input arguments not only \emph{ground terms} but terms which contain fresh variables, such as \lstinline{add$^o$ x (S y) z}.
+Executing this relation finds all triples \lstinline{(x, y, z)} such that \lstinline{x + (y + 1) = z}.
+Running in some directions can fail.
+For example \lstinline{add$^o$ (S x) y O} may never succeed, since \lstinline{(1 + x) + y} can never be equal to \zero.
+
+There exists a multitude of different directions for each relation.
+In this paper we only consider directions in which input arguments are ground, i.e. do not contain any fresh variables, we will call them \emph{principal directions}.
+We denote a principal direction by the name of a relation followed by specification of its arguments: in place of each argument we write either \lstinline{in} when the argument is input or \lstinline{out} if it is output.
+There are $8$ principal directions for \lstinline{add$^o$ x y z}:
+\begin{itemize}
+  \item three directions with one input: \lstinline{add$^o$ in out out},
+
+  \lstinline{add$^o$ out in out}, and \lstinline{add$^o$ out out in};
+  \item three directions with two inputs: \lstinline{add$^o$ in in out},
+
+  \lstinline{add$^o$ in out in}, \lstinline{add$^o$ out in in};
+  \item one direction which does not have any input arguments:
+  \lstinline{add$^o$ out out out};
+  \item and one direction in which all arguments are input:
+  \lstinline{add$^o$ in in in};
+\end{itemize}
+
+When all arguments of a relation are input arguments, it serves as a predicate, while passing no arguments corresponds to the generation of all valid values for all arguments of a relation.
+
+\input{fig/add/add.tex}

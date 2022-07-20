@@ -1,36 +1,11 @@
-\section{Examples of Translation}
+\section{Examples of Conversion}
 
+In this section we gradually explain our conversion on a set of examples.
 A relation \lstinline{add$^o$ x y z} succeeds whenever \z is a sum of \x and \y.
 An implementation of this relation which uses Peano numbers is shown in Listing~\ref{add}.
 
 % \input{fig/add/add.tex}
 
-One can run a relation in some \emph{direction} by passing it \emph{input} arguments.
-For example, executing \lstinline{add$^o$ (S O) O z} finds the sum of the first two arguments and maps \lstinline{z} to the sum \lstinline{S O}.
-We can also provide only the last argument: \lstinline{add$^o$ x y (S O)}.
-This computes all pairs of Peano numbers \lstinline{(x, y)} which sum up to the given value \lstinline{z = S O} which are \lstinline{(O, S O)} and \lstinline{(S O, O)}.
-Moreover, we can pass as input arguments not only \emph{ground terms} but terms which contain fresh variables, such as \lstinline{add$^o$ x (S y) z}.
-Executing this relation finds all triples \lstinline{(x, y, z)} such that \lstinline{x + (y + 1) = z}.
-Running in some directions can fail.
-For example \lstinline{add$^o$ (S x) y O} may never succeed, since \lstinline{(1 + x) + y} can never be equal to \zero.
-
-There exists a multitude of different directions for each relation.
-In this paper we only consider directions in which input arguments are ground, i.e. do not contain any fresh variables, we will call them \emph{principal directions}.
-We denote a principal direction by the name of a relation followed by specification of its arguments: in place of each argument we write either \lstinline{in} when the argument is input or \lstinline{out} if it is output.
-There are $8$ principal directions for \lstinline{add$^o$ x y z}:
-\begin{itemize}
-  \item three directions with one input: \lstinline{add$^o$ in out out},
-
-  \lstinline{add$^o$ out in out}, and \lstinline{add$^o$ out out in};
-  \item three directions with two inputs: \lstinline{add$^o$ in in out},
-
-  \lstinline{add$^o$ in out in}, \lstinline{add$^o$ out in in};
-  \item one direction with no input arguments:
-  \lstinline{add$^o$ out out out};
-  \item one direction when all arguments are input:
-  \lstinline{add$^o$ in in in};
-\end{itemize}
-When all arguments of a relation are input arguments, it works as a predicate, while passing no arguments corresponds to the generation of all valid values for all arguments of a relation.
 
 In the rest of this section we describe a translation scheme which allows to implement principal directions of a relation as functions.
 Each direction we consider illustrates some aspect of the translation.
