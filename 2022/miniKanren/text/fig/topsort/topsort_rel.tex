@@ -1,6 +1,6 @@
-\begin{figure*}[!t]
+\begin{figure}[!t]
   \centering
-  \begin{minipage}{\textwidth}
+  \begin{minipage}{0.49\textwidth}
     \begin{lstlisting}[label={topsort_rel}, caption={Relational intepreter for topologic sort of a graph}, captionpos=b, frame=tb]
 let topsort$^o$ graph numbering r =
   let rec topsort$^o$ graph numbering n r = conde [
@@ -18,8 +18,12 @@ let topsort$^o$ graph numbering r =
              less$^o$ ne n q43 /\
              conde [
               (q43 === false /\ r === false);
-              (q43 === true /\ topsort$^o$ graph' numbering n r)]))]))))] in
-   (fresh (n n') (n' === s n /\ numberOfNodes$^o$ graph n /\ topsort$^o$ graph numbering n' r))
+              (q43 === true  /\
+               topsort$^o$ graph' numbering n r)
+             ]))]))))] in
+  (fresh (n n')
+    (n' === s n /\ numberOfNodes$^o$ graph n
+     /\ topsort$^o$ graph numbering n' r))
     \end{lstlisting}
   \end{minipage}
-\end{figure*}
+\end{figure}
