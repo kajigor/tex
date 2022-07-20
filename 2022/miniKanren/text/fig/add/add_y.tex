@@ -1,0 +1,13 @@
+\begin{figure}[!t]
+  \centering
+  \begin{minipage}{\columnwidth}
+    \begin{lstlisting}[label={add_y}, caption={Function for \lstinline{addo out in out} direction}, captionpos=b, frame=tb]
+addY :: Nat -> Stream (Nat, Nat)
+addY y =
+  return (O, y) `mplus`
+  do
+    (x', z') <- addY y
+    return (S x', S z')
+    \end{lstlisting}
+  \end{minipage}
+\end{figure}

@@ -1,0 +1,17 @@
+\begin{figure}[!t]
+  \centering
+  \begin{minipage}{\columnwidth}
+    \begin{lstlisting}[label={add_y_z}, caption={Function for \lstinline{addo out in in} direction}, captionpos=b, frame=tb]
+addYZ :: Nat -> Nat -> Stream Nat
+addYZ y z =
+  if y == z
+  then return O
+  else
+    case z of
+      S z' -> do
+        x <- addYZ y z'
+        return (S x)
+      O -> Empty
+    \end{lstlisting}
+  \end{minipage}
+\end{figure}

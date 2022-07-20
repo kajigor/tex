@@ -1,17 +1,10 @@
-\section{Examples of Conversion}
+\section{Conversion by Examples}
 
-In this section we gradually explain our conversion on a set of examples.
-A relation \lstinline{add$^o$ x y z} succeeds whenever \z is a sum of \x and \y.
-An implementation of this relation which uses Peano numbers is shown in Listing~\ref{add}.
-
-% \input{fig/add/add.tex}
+In this section we gradually introduce our conversion by means of a set of examples.
+Each direction we consider illustrates some aspect of the conversion.
 
 
-In the rest of this section we describe a translation scheme which allows to implement principal directions of a relation as functions.
-Each direction we consider illustrates some aspect of the translation.
-Functional implementations of the principal directions of the \lstinline{add$^o$ x y z} relation which does not make into this section, may be found in Appendix.
-
-\subsection{Basic Translation}
+\subsection{Basic Conversion}
 
 Consider \lstinline{add$^o$ in in out}.
 This direction can be expressed as a function presented in Listing~\ref{add_x_y}.
@@ -34,7 +27,7 @@ The only thing that is left is to apply the constructor \lstinline{S} to the res
 \subsection{Nondeterministic Directions}
 
 Running a relation in a given direction may succeed with one \emph{or more} possible answers or it may fail, i.e. it may run nondeterministically.
-It is natural to implement nondeterminism by using Streams which are at the core of \mk.
+It is natural to implement nondeterminism by using streams which are at the core of \mk.
 Any deterministic directions can be trivially transformed to using streams as shown in Listing~\ref{add_x_y_stream}.
 One example in which there are multiple answers is \lstinline{add$^o$ out out in}.
 This direction corresponds to finding all pairs of numbers which sum up to the given \z and can be implemented as shown in Listing~\ref{add_z}.
@@ -82,6 +75,8 @@ The only thing one should be careful about, is to ensure lazy generation of the 
 
 \subsection{Predicates}
 
+\input{fig/add/add_x_y_z.tex}
+
 When all arguments of a relation are input, the direction serves as a predicate.
 Consider \lstinline{add$^o$ in in in} and its functional implementation in Listing~\ref{add_x_y_z}.
 In this case there is no actual answers we should return: the only thing that matters is whether the computation succeeded or failed.
@@ -92,8 +87,9 @@ This means, that all unification can be replaced with either pattern-matching or
 When translating the first \conde branch we pattern match on \x, and then check if \y and \z are equal.
 The second \conde branch introduces another pattern matching, this time on \z, which ensures that \z is not \zero.
 
-\input{fig/add/add_x_y_z.tex}
 
+
+Functional implementations of the principal directions of the \lstinline{add$^o$ x y z} relation which does not make into this section, may be found in Appendix.
 
 \subsection{Order within Conjunctions}
 

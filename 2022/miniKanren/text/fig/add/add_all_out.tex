@@ -1,0 +1,17 @@
+\begin{figure}[!t]
+  \centering
+  \begin{minipage}{\columnwidth}
+    \begin{lstlisting}[label={add_all}, caption={Function for \lstinline{addo out out out} direction}, captionpos=b, frame=tb]
+add :: Stream (Nat, Nat, Nat)
+add =
+    disj1 `mplus` disj2
+  where
+    disj1 = do
+      z <- genNat
+      return (O, z, z)
+    disj2 = do
+      (x', y, z') <- add
+      return (S x', y, S z')
+    \end{lstlisting}
+  \end{minipage}
+\end{figure}
