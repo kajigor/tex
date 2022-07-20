@@ -8,10 +8,8 @@ let rec mult$^o$ x y z = conde [
   (x === S O /\ z === y);
   (y === S O /\ z === x);
   (fresh (x' r')
-    (x === S x') /\
-    (add y r' z) /\
-    (mult x' y r')
-   ) ]
+    (x === S x') /\ (add y r' z) /\ (mult x' y r')
+  )]
     \end{lstlisting}
   \end{minipage}
 \end{figure}
