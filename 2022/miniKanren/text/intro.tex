@@ -1,39 +1,23 @@
 \section{Introduction}
 
-The \kan family of embedded programming languages is designed to bring the power of logic programming into any host language \todo{cite minikanren.org}.
-The smallest core language, \muk, is comprised of as little as 4 combinators and can be implemented in 40 lines of code \todo{cite}.
-Using this minimal core, one can implement \emph{relations}: programs which describe how values relate to each other in mathematical sense.
-\kan languages are intended to be easily modifiable, including extensions for nominal and constraint logic programming \todo{cite, cite}.
+Implementing a program is often significantly easier than its inversion.
+For example, integer multiplication is much simpler than factoring, while program evaluation is easier than program generation.
+Although inversion is undecidable, there are approaches capable of inversing a computation in some cases, notably, universal resolving algorithm \todo{cite Gluck}, logic and relational programming.
+Inversion comes with a lot of overhead which may be reduced in some circumstances.
+% The focus of this paper is to reduce overhead when implementing inversions of  programs written in \mk by translating them into functional counterparts.
 
-Consider an addition relation \lstinline{add$^o$ x y z} which specifies that \z equals to \lstinline{x + y} (Listing~\ref{add}).
-Having a relation, one can \emph{run} it in some \emph{direction} to compute useful data.
-Running \lstinline{add$^o$} with the specific known \x and \y produces their sum as a result, implementing addition.
-It is also possible to run the same relation \lstinline{add$^o$} and pass only \z and this produces all pairs of numbers which sum up to the given \z.
-
-\input{fig/add/add.tex}
-
-Relational programming is a step towards truly declarative programming, in which user only states \emph{what} is to be done and not \emph{how}.
-Being an attractive technique on its own, it also enables \todo{list applications}.
-
-Automatic translation from a general purpose programming \todo{cite Lozov, unnesting} makes it possible to create relational specifications which then may be run in a direction of choice and thus do more than original program.
-As an example, one may implement a simple functional verifier which checks that some candidate is indeed a solution for a search problem.
-When translated into \mk, this verifier may be used to actually solve search problems with no deep knowledge required from a programmer. \todo{cite rel.interpreters}.
-
-Unfortunately, \mk comes with a lot of overhead, which may hinder using it in practical setting.
-One source of overhead comes from \emph{unification} --- the basic operation which is at the core of all \kan languages.
-Unification involves traversing terms being unified along with a list of substitutions and doing occurs-check all of which may be redundant when there is a specific execution direction in mind.
-The other source of overhead comes from the planning complexity \todo{cite Rozplohos}.
-\todo{We do not do anything about this, do we?}
-
+One source of overhead in relational programming comes from \emph{unification} --- the basic operation which is at the core of \mk.
+Unification involves traversing terms being unified along with a list of substitutions and doing occurs-check all of which may be redundant when there is a specific execution \emph{direction} in mind.
 Directions fix at compile-time which arguments of a relation are always going to be known and ground at runtime.
-Having this information, it is possible to specialize a relation for the direction \todo{cite Verbitskaia} and reduce some of the overhead.
-Moreover, unifications may prove to be redundant and be replaced with much simpler pattern-matching and equality checks.
+Having this information, it is possible to specialize a relation for the direction \todo{cite Verbitskaia} and get rid of some of the overhead.
+In this case, unifications may prove to be redundant and be replaced with much simpler pattern-matching and equality checks.
 
 In this paper we present a scheme of translation of \mk programs into a host functional programming language as a sequence of examples.
-Examples start from simplest translations and evolve to introduce different features of \mk which influence translation.
+Examples start from the simplest translations and evolve to introduce different features of \mk which influence translation.
 Currently translation is not automated: everything is done manually.
-We believe the translation may be semi-automated: some decisions will still be left up to a programmer.
+We believe the translation can be semi-automated, leaving some decisions up to a programmer.
 Although this project is at the early state, evaluation demonstrates its usefulness by significantly speeding up such programs as computing a topological sorting of a graph and generating logic formulas which evaluate to the given value.
 
 
 
+\input{fig/add/add.tex}

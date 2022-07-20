@@ -85,6 +85,9 @@ The implementations of the directions \lstinline{add$^o$ in in out}, \lstinline{
 In order to assess the usefulness of the proposed transformation scheme we compared execution times of \mk relations \lstinline{topsort$^o$} and \lstinline{eval$^o$} with their functional translations.
 All functional translations are done by hand, having a specific direction in mind.
 All implementations are written in \ocaml language and can be found in \todo{this repository}.
+Note that throughout this paper we presented all examples written in \haskell for brevity, but we used \ocaml in evaluation to make the comparison with \ocanren more fair.
+Technically, to implement our translations in \ocaml, we had to desugar \haskell do-notation into \lstinline{bind}s and make some calls return lazy streams.
+
 
 For the evaluator of logic formulas, we run both implementations to search for 10000 formulas which evaluate to \lstinline{True}.
 The functional implementation restricts the length of the variable mapping list, thus we also restricted the size of it in its relational counterpart.
