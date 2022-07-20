@@ -29,10 +29,7 @@ evalR result maxListLength =
     var result = do
       (z, st) <- elemR result maxListLength
       return (Var z, st)
-    lit result =
-      if result
-      then return (Lit True, [])
-      else return (Lit False, [])
+    lit b = return (Lit b, [])
     \end{lstlisting}
   \end{minipage}
 \end{figure}

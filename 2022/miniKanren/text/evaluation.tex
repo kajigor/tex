@@ -89,7 +89,7 @@ Technically, to implement our conversions in \ocaml, we had to desugar \haskell 
 For the evaluator of logic formulas, we run both implementations to search for 10000 formulas which evaluate to \lstinline{True}.
 The functional implementation restricts the length of the variable mapping list, thus we also restricted the size of it in its relational counterpart.
 We averaged the execution time over 10 runs.
-The result are presented in table~\ref{tbl:prop}.
+The result are presented in table~\ref{tbl:prop} and figure~\ref{graph:prop}.
 ``OCanren'' contains execution time of relational implementation, and ``Function'' column contains execution time of the functional implementation.
 In our experiments, functional implementation outperforms the relational interpretation by 1.3-2.5 times.
 
@@ -130,6 +130,22 @@ In our experiments, functional implementation outperforms the relational interpr
 \end{tabular}
 \end{table*}
 
+\begin{figure}[!h]
+\caption{Comparison of exection time of topologic sort (logarithmic scale, time measured in microseconds)}
+\includegraphics[width=\columnwidth]{fig/eval/topsort.pdf}
+\label{graph:topsort}
+\end{figure}
+
+
+\begin{figure}[!h]
+\caption{Comparison of exection time of formulas generator (time measured in seconds)}
+\includegraphics[width=\columnwidth]{fig/eval/prop.pdf}
+\label{graph:prop}
+\end{figure}
+
+
+
+
 We run \lstinline{topsort$^o$} on directed graphs with exactly one edge between each pair of edges.
 For example, graph with 4 vertices has the following edges: \lstinline[breaklines=true]{[(0, 1), (0, 2), (0, 3), (1, 2), (1, 3), (2, 3)]}, which we sort lexicographically.
 We generated graphs for a given number of vertices and then executed both relational and functional implementations of \lstinline{topsort$^o$}.
@@ -137,7 +153,7 @@ The correct numbering in this condition should map each vertex into itself.
 We also run the same functions on the same graph, but with its list of edges reversed, i.e. \lstinline[breaklines=true]{[(2, 3), (1, 3), (1, 2), (0, 3), (0, 2), (0, 1)]}.
 In this case, the correct numbering maps a vertex \lstinline{i} into \lstinline{n - i}, where \lstinline{n} is the number of vertices in the graph.
 
-Execution times averaged over 10 runs are presented in table~\ref{tbl:sort}.
+Execution times averaged over 10 runs are presented in table~\ref{tbl:sort} and figure~\ref{graph:topsort}.
 Columns ``Functional'' and ``Functional (r)'' contain execution times of functional implementations when run on a graph and reversed graph correspondingly.
 Columns ``OCanren'' and ``OCanren (r)'' contain execution times of functional implementations when run on a graph and reversed graph correspondingly.
 Relational implementation took more than 300 seconds for a sorted graph with 7 vertices, thus we only consider graphs with up to 6 vertices.

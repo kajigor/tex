@@ -29,10 +29,7 @@ evalStR st result =
     var st result = do
       z <- elemStR st result
       return (Var z)
-    lit st result =
-      if result
-      then return (Lit True)
-      else return (Lit False)
+    lit st b = Lit b
     \end{lstlisting}
   \end{minipage}
 \end{figure}
