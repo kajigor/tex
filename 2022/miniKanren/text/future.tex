@@ -1,8 +1,14 @@
 \section{Future Work}
 
-\begin{itemize}
-  \item Research if there exists a way to automatically deduce better order of calls within a conjunction.
-  \item Formalize translation scheme, prove its correctness
-  \item Implement automatic translation
-  \item Integrate the translator into a relational interpreters framework
-\end{itemize}
+Since this project is in active phase of development, there are many directions for future work.
+
+First of all, we need to research how to best order calls within a conjunction.
+Since the order of calls greatly influences the efficiency of the converted function, this research direction is of upmost importance.
+Annotations of variables with \lstinline{in} and \lstinline{out} is also affected by the order of calls and thus we need to adapt mode analysis to take it into account.
+
+Second of all, the conversion should be formalized and its correctness should be proven.
+
+Third of all, the conversion should be implemented either as a standalone tool or  integrated into some of the major \mk implementations.
+
+Finally, after all these building blocks are done, we would like to integrate the conversion into a relational interpreters framework.
+This would made a fullstack solution for the program inversion problem.
