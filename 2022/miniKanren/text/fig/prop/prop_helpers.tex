@@ -1,6 +1,6 @@
-\begin{figure*}[!t]
+\begin{figure}[!t]
   \centering
-  \begin{minipage}{\textwidth}
+  \begin{minipage}{0.49\textwidth}
     \begin{lstlisting}[label={prop_helpers}, caption={Functions used in logic formulas generation}, captionpos=b, frame=tb]
 andR :: Bool -> Stream (Bool, Bool)
 andR result =
@@ -33,13 +33,13 @@ elemR _ maxListLength | maxListLength <= 0 = Empty
 elemR result maxListLength =
      zero result `mplus` succ result
   where
-    zero result  =
-      fromList [ (0, result : tl) | tl <- genList genBool (maxListLength - 1) ]
+    zero result  = fromList [ (0, result : tl) |
+      tl <- genList genBool (maxListLength - 1) ]
     succ result = do
       (n', t) <- elemR result (maxListLength - 1)
       fromList [(n' + 1, h : t) | h <- genBool ]
     \end{lstlisting}
   \end{minipage}
-\end{figure*}
+\end{figure}
 
 
