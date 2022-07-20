@@ -2,19 +2,19 @@
 
 Implementing a program is often significantly easier than its inversion.
 For example, integer multiplication is much simpler than factoring, while program evaluation is easier than program generation.
-Although inversion is undecidable, there are approaches capable of inversing a computation in some cases, notably, universal resolving algorithm \todo{cite Gluck}, logic and relational programming.
+Although inversion is undecidable, there are approaches capable of inversing a computation in some cases, notably, universal resolving algorithm~\cite{abramov2002principles}, logic and relational programming.
 Inversion comes with a lot of overhead which may be reduced in some circumstances.
 % The focus of this paper is to reduce overhead when implementing inversions of  programs written in \mk by translating them into functional counterparts.
 
 One source of overhead in relational programming comes from \emph{unification} --- the basic operation which is at the core of \mk.
 Unification involves traversing terms being unified along with a list of substitutions and doing occurs-check all of which may be redundant when there is a specific execution \emph{direction} in mind.
 Directions fix at compile-time which arguments of a relation are always going to be known and ground at runtime.
-Having this information, it is possible to specialize a relation for the direction \todo{cite Verbitskaia} and get rid of some of the overhead.
+Having this information, it is possible to specialize a relation for the direction~\cite{EPTCS341.5} and get rid of some of the overhead.
 In this case, unifications may prove to be redundant and be replaced with much simpler pattern-matching and equality checks.
 
-In this paper we present a scheme of translation of \mk programs into a host functional programming language as a sequence of examples.
-Examples start from the simplest translations and evolve to introduce different features of \mk which influence translation.
-Currently translation is not automated: everything is done manually.
-We believe the translation can be semi-automated, leaving some decisions up to a programmer.
+In this paper we present a conversion of \mk programs into a host functional programming language as a sequence of examples.
+Examples start from the simplest conversions and evolve to introduce different features of \mk which influence conversion.
+Currently the conversion is not automated: everything is done manually.
+We believe the conversion can be semi-automated, leaving some decisions up to a programmer.
 Although this project is at the early state, evaluation demonstrates its usefulness by significantly speeding up such programs as computing a topological sorting of a graph and generating logic formulas which evaluate to the given value.
 

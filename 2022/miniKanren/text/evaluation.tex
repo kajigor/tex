@@ -1,7 +1,7 @@
 \section{Evaluation}
 
-To evaluate our proposed translation scheme, we manually rewritten severals problems in different directions and compared their execution times with their relational counterparts.
-Here we showcase two relational programs and their translations.
+To evaluate our proposed conversion scheme, we manually rewritten severals problems in different directions and compared their execution times with their relational counterparts.
+Here we showcase two relational programs and their conversions.
 
 \input{fig/topsort/topsort_pred.tex}
 \input{fig/topsort/topsort_rel.tex}
@@ -11,18 +11,18 @@ Here we showcase two relational programs and their translations.
 
 This program topologically sorts a directed graph.
 A graph is represented as a list of edges, where each edge is a pair of vertices.
-First vertex in a pair is the beginning of the edge, and the second vertex is the end of the edge.
+The first vertex of a pair is the beginning of the edge, and the second vertex is the end of the edge.
 A vertex is a distinct Peano number in the range \lstinline{[0..n-1]} where \lstinline{n} is the number of edges.
 The vertices are sorted as a result of executing the program.
 The sort is represented as a list of length \lstinline{n} in which the order of vertex \lstinline{i} is the \lstinline{i}-th element of the list.
 We call this list \emph{numbering}.
 For example, numbering \lstinline{[2, 1, 0]} means that the zeroth variable is the second, the first variable is the first, and the last variable is the zeroth in the ordering.
 
-The relational program is generated from a functional interpreter \todo{cite stuff}.
+The relational program is generated from a functional verifier as proposed in~\cite{lozov2019relational}.
 The functional interpreter takes a graph and a numbering and checks if the variables are indeed topologically sorted as shown in Listing~\ref{topsort_pred}.
 To do it, it checks all edges of the graph in order, finds the numbers which correspond to the vertices in the numbering, and ensures that the beginning comes before the end of the edge, and that the edge is not greater than the number of vertices in graph.
 
-This simple predicate along with the other functions it uses is translated into a relational program shown in Listing~\ref{topsort_rel}.
+This simple predicate along with the other functions it uses is converted into a relational program shown in Listing~\ref{topsort_rel}.
 The relation is then specialized so that it searches for a correct topologic sort by fixing its last argument to \lstinline{true}.
 The result of specialization is in Listing~\ref{topsort_spec}.
 Specialization removes any \conde branches which are failing, i.e. unify the result \lstinline{r} with \lstinline{false}.
@@ -31,43 +31,42 @@ Specialization removes any \conde branches which are failing, i.e. unify the res
 \input{fig/topsort/topsort_graph.tex}
 \input{fig/topsort/lookup.tex}
 
-The specialized version is manually translated in a direction \lstinline{topsort$^o$ in out}.
+The specialized version is manually converted in a direction \lstinline{topsort$^o$ in out}.
 This creates a function which constructs a numbering which topologically sorts vertices in a given graph.
-Most of the translation follows the principles outlined in \todo{ref section}, but there are several notable details about this translation.
+Most of the conversion follows the principles outlined in the previous section, but there are several notable details about this conversion.
 
-First of all, we translated all Peano numbers into \lstinline{Int}s and all \mk boolean values into \lstinline{Bool}s.
+First of all, we replaced all Peano numbers with \lstinline{Int}s and all \mk boolean values with \lstinline{Bool}s.
 This can be done because of the groundness of variables in this direction.
-\todo{Write something a little more convincing}.
 
 Second of all, the relational interpreter contains two consecutive calls to \lstinline{lookup$^o$} relation, both of which has the same numbering passed to them.
-When translating them, the first call is done in the \lstinline{lookup$^o$ out in out} direction, since only the value of its second argument \lstinline{b} is known to be ground.
+When converting them, the first call is done in the \lstinline{lookup$^o$ out in out} direction, since only the value of its second argument \lstinline{b} is known to be ground.
 Calling this direction computes the \lstinline{numbering} which is a list with only its \lstinline{b}-th element fixed --- \lstinline{nb}.
 We generate values of \lstinline{nb} with a generator, since \lstinline{nb} is a free variable.
 The same goes for all other elements of the \lstinline{numbering}.
-We restrict the amount of the generating lists by capping their length with \lstinline{maxListLength} and capping maximum value of an element with \lstinline{maxInt}, both of which correspond to the number of vertices in the input graph.
+We restrict the number of the generated lists by capping their length with \lstinline{maxListLength} and capping maximum value of an element with \lstinline{maxInt}, both of which correspond to the number of vertices in the input graph.
 
 Having now \lstinline{numbering} ground, the second call to \lstinline{lookup$^o$} relation is done in the direction \lstinline{lookup$^o$ in in out}.
 The second direction is much simpler as it does not involve generation of any new values for free variables.
-Translations of the both directions are in Listing~\ref{lookup}.
+Conversions of the both directions are in Listing~\ref{lookup}.
 
 Calls to \lstinline{less$^o$ x y r} relations are both done in direction {less$^o$ in in out}, and their outputs must be \lstinline{true}.
 To express this check we use \lstinline{guard} which fails computation (i.e. returns an \lstinline{Empty} stream) if its argument is false.
 
-\input{fig/prop/term.tex}
-
 \subsection{Logic Formulas Generation}
 
-In this example we translate an evaluator of logic formulas in a direction which generates formulas which evaluate to a given result.
+In this example we convert an evaluator of logic formulas in a direction which generates formulas which evaluate to a given result.
 Logic formulas are values of type \lstinline{Term} presented in Listing~\ref{term}.
 A formula is either a boolean literal, a variable indexed by an integer number, a negation of another formula, a conjunction or disjunction of two formulas.
 
+\input{fig/prop/term.tex}
+
 The relational interpreter is shown in Listing~\ref{prop}.
 The relation \lstinline{eval$^o$ fm st r} computes the value \lstinline{r} of a formula \lstinline{fm} with a given variable mapping \lstinline{st}.
-The boolean value \lstinline{v} of a variable \lstinline{Var i} is the \lstinline{i}-th element of \lstinline{st} which can be retrieved by means of the relation \lstinline{elem$^o$ i st v}
+The boolean value \lstinline{v} of a variable \lstinline{Var i} is the \lstinline{i}-th element of \lstinline{st} which can be retrieved by means of the relation \lstinline{elem$^o$ i st v}.
 The relation \lstinline{eval$^o$} uses relations \lstinline{add$^o$}, \lstinline{or$^o$}, and \lstinline{not$^o$} for boolean operations.
 
-Translation of \lstinline{eval$^o$} relation in the direction \lstinline[breaklines=true]{eval$^o$ out out in} is presented in Listing~\ref{eval_r}.
-As in the previous example, here relation \lstinline{eval$^o$} is called twice when formula is either a conjunction or a disjunction.
+Conversion of \lstinline{eval$^o$} relation in the direction \lstinline[breaklines=true]{eval$^o$ out out in} is presented in Listing~\ref{eval_r}.
+As in the previous example, the relation \lstinline{eval$^o$} is called twice when formula is either a conjunction or a disjunction.
 The direction of the second call is different from the direction of the first call, as first call generates possible variable mappings.
 The implementation of the direction \lstinline{eval$^o$ out in in} is shown in Listing~\ref{eval_st_r}.
 The implementations of the directions \lstinline{add$^o$ in in out}, \lstinline{or$^o$ in in out}, \lstinline{not$^o$ in out}, and \lstinline{elem$^o$ in in out} are in Listing~\ref{prop_helpers}.
@@ -80,11 +79,11 @@ The implementations of the directions \lstinline{add$^o$ in in out}, \lstinline{
 
 \subsection{Execution Time Comparison}
 
-In order to assess the usefulness of the proposed transformation scheme we compared execution times of \mk relations \lstinline{topsort$^o$} and \lstinline{eval$^o$} with their functional translations.
-All functional translations are done by hand, having a specific direction in mind.
-All implementations are written in \ocaml language and can be found in \todo{this repository}.
+In order to assess the usefulness of the proposed transformation scheme we compared execution times of \mk relations \lstinline{topsort$^o$} and \lstinline{eval$^o$} with their functional conversions.
+All functional conversions are done by hand, having a specific direction in mind.
+All implementations are written in \ocaml language and can be found in \href{https://github.com/kajigor/miniKanren-func/tree/f7a3ab72fe1a945a650a443627be35093d7224a0}{the repository}.
 Note that throughout this paper we presented all examples written in \haskell for brevity, but we used \ocaml in evaluation to make the comparison with \ocanren more fair.
-Technically, to implement our translations in \ocaml, we had to desugar \haskell do-notation into \lstinline{bind}s and make some calls return lazy streams.
+Technically, to implement our conversions in \ocaml, we had to desugar \haskell do-notation into \lstinline{bind}s and make some calls return lazy streams.
 
 
 For the evaluator of logic formulas, we run both implementations to search for 10000 formulas which evaluate to \lstinline{True}.
@@ -116,23 +115,6 @@ In our experiments, functional implementation outperforms the relational interpr
 \end{tabular}
 \end{table}
 
-We run \lstinline{topsort$^o$} on directed graphs with exactly one edge between each pair of edges.
-For example, graph with 4 vertices has the following edges: \lstinline[breaklines=true]{[(0, 1), (0, 2), (0, 3), (1, 2), (1, 3), (2, 3)]}, which we sort lexicographically.
-We generated graphs for a given number of vertices and then executed both relational and functional implementations of \lstinline{topsort$^o$}.
-The correct numbering in this condition should map each vertex into itself.
-We also run the same functions on the same graph, but with its list of edges reversed, i.e. \lstinline[breaklines=true]{[(2, 3), (1, 3), (1, 2), (0, 3), (0, 2), (0, 1)]}.
-In this case, the correct numbering maps a vertex \lstinline{i} into \lstinline{n - i}, where \lstinline{n} is the number of vertices in the graph.
-
-Execution times averaged over 10 runs are presented in table~\ref{tbl:sort}.
-Columns ``Functional'' and ``Functional (r)'' contain execution times of functional implementations when run on a graph and reversed graph correspondingly.
-Columns ``OCanren'' and ``OCanren (r)'' contain execution times of functional implementations when run on a graph and reversed graph correspondingly.
-Relational implementation took more than 300 seconds for a sorted graph with 7 vertices, thus we only consider graphs with up to 6 vertices.
-On all graphs, functional implementation much less time that the \mk program.
-Topologically sorting a reversed graph takes much less time.
-This is caused by earlier rejection of candidate solutions, since vertex numbers are higher in the beginning of the list.
-
-As a result of our evaluation, we can conclude that the translation of \mk program with a given direction into a function speeds up execution a lot and thus it is reasonable to continue working in this direction.
-
 \begin{table*}
   \caption{Execution times of the OCanren and functional implementations of \lstinline{topsorto}}
   \label{tbl:sort}
@@ -148,4 +130,21 @@ As a result of our evaluation, we can conclude that the translation of \mk progr
 \end{tabular}
 \end{table*}
 
-Topological Sort
+We run \lstinline{topsort$^o$} on directed graphs with exactly one edge between each pair of edges.
+For example, graph with 4 vertices has the following edges: \lstinline[breaklines=true]{[(0, 1), (0, 2), (0, 3), (1, 2), (1, 3), (2, 3)]}, which we sort lexicographically.
+We generated graphs for a given number of vertices and then executed both relational and functional implementations of \lstinline{topsort$^o$}.
+The correct numbering in this condition should map each vertex into itself.
+We also run the same functions on the same graph, but with its list of edges reversed, i.e. \lstinline[breaklines=true]{[(2, 3), (1, 3), (1, 2), (0, 3), (0, 2), (0, 1)]}.
+In this case, the correct numbering maps a vertex \lstinline{i} into \lstinline{n - i}, where \lstinline{n} is the number of vertices in the graph.
+
+Execution times averaged over 10 runs are presented in table~\ref{tbl:sort}.
+Columns ``Functional'' and ``Functional (r)'' contain execution times of functional implementations when run on a graph and reversed graph correspondingly.
+Columns ``OCanren'' and ``OCanren (r)'' contain execution times of functional implementations when run on a graph and reversed graph correspondingly.
+Relational implementation took more than 300 seconds for a sorted graph with 7 vertices, thus we only consider graphs with up to 6 vertices.
+On all graphs, functional implementation is faster than the \mk program.
+Topologically sorting a reversed graph takes significantly less time.
+This is caused by earlier rejection of candidate solutions, since vertex numbers are higher in the beginning of the list.
+
+As a result of our evaluation, we can conclude that the conversion of \mk program with a given direction into a function speeds up execution a lot and thus it is reasonable to continue working in this direction.
+
+

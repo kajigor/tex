@@ -3,30 +3,20 @@
   \begin{minipage}{0.49\textwidth}
     \begin{lstlisting}[label={prop_helpers}, caption={Functions used in logic formulas generation}, captionpos=b, frame=tb]
 andR :: Bool -> Stream (Bool, Bool)
-andR result =
-  if result
-  then
-    return (True, True)
-  else
-    return (True, False) `mplus`
-    return (False, True) `mplus`
-    return (False, False)
+andR True = return (True, True)
+andR False = return (True, False) `mplus`
+             return (False, True) `mplus`
+             return (False, False)
 
 orR :: Bool -> Stream (Bool, Bool)
-orR result =
-  if result
-  then
-    return (True, False) `mplus`
-    return (True, True) `mplus`
-    return (False, True)
-  else
-    return (False, False)
+orR True = return (True, False) `mplus`
+           return (True, True) `mplus`
+           return (False, True)
+orR False = return (False, False)
 
 notR :: Bool -> Stream Bool
-notR result =
-  if result
-  then return False
-  else return True
+notR True = return False
+notR False = return True
 
 elemR :: Bool -> Int -> Stream (Int, [Bool])
 elemR _ maxListLength | maxListLength <= 0 = Empty

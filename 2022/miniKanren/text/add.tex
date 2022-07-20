@@ -2,6 +2,8 @@
 
 In this section we gradually introduce our conversion by means of a set of examples.
 Each direction we consider illustrates some aspect of the conversion.
+For brevity, we will use \haskell as a target language in this paper.
+In practice, any programming language in which \mk is implemented may be used as a target language.
 
 
 \subsection{Basic Conversion}
@@ -17,7 +19,7 @@ Thus we can just return \y as the result when \x is pattern-matched with \zero.
 
 Now consider the \conde branch in which \x unifies with \lstinline{S x'} where \lstinline{x'} is a fresh variable.
 The variable \x in this direction is always ground, thus \lstinline{x'} is also ground after unification.
-This means, that the recursive call \lstinline{add$^o$ x' y z'} is done in the direction \lstinline{add$^o$ in in out} and can be translated into a recursive call to the function \lstinline{addXY}.
+This means, that the recursive call \lstinline{add$^o$ x' y z'} is done in the direction \lstinline{add$^o$ in in out} and can be converted into a recursive call to the function \lstinline{addXY}.
 This recursive call computes the value of \lstinline{z'}, making it ground.
 The only thing that is left is to apply the constructor \lstinline{S} to the result of the recursive call, since \lstinline{z === S z'}.
 
@@ -39,13 +41,13 @@ In this case we need to consider the two branches independently and then combine
 The first \conde branch produces a single answer in which \x is \zero, and \y is equal to \z.
 This single result is then wrapped into a singleton stream.
 
-The second \conde branch succeeds only if \z is a successor of another value, thus when \z is a \zero we should fail.
+The second \conde branch succeeds only if \z is a successor of another value, thus when \z is \zero it should fail.
 We express this by pattern-matching on \z and returning an \lstinline{Empty} stream when \z is \zero.
-Otherwise \z unifies with \lstinline{S z'}, which means that \lstinline{z'} is ground, and the recursive call to the relation is done in the direction \lstinline{add$^o$ out out in}.
-This recursive call returns a stream of pairs \lstinline{(x', y)}, and by applying the constuctor \lstinline{S} to \lstinline{x'} we get the value of \x.
+Otherwise \z unifies with \lstinline{S z'}, which makes \lstinline{z'} ground, and the recursive call to the relation is done in the direction \lstinline{add$^o$ out out in}.
+This recursive call returns a stream of pairs \lstinline{(x', y)}, and by applying the constuctor \lstinline{S} to \lstinline{x'}, we get the value of \x.
 
-The two translated \conde branches are then combined by using \lstinline{`mplus`}: the same combinator which is used in \mk for disjunctions.
-We use do-notation when translating the second branch of \conde which is just a syntactic sugar for the monadic bind operation \lstinline{>>=}.
+The two converted \conde branches are then combined by using \lstinline{`mplus`}: the same combinator which is used in \mk for disjunctions.
+We use do-notation when converting the second branch of \conde which is just a syntactic sugar for the monadic bind operation \lstinline{>>=}.
 Binds implement conjunctions in \mk and it is no surprise they fit well into the functional implementation.
 
 \input{fig/add/add_z.tex}
@@ -68,7 +70,7 @@ This direction is very similar to the \lstinline{add$^o$ in in out}: we can patt
 But in the case when \x is \zero, the only thing we know about the values of \y and \z is that they are equal.
 In this case can generate a stream of all Peano numbers for \z (or \y) and use them in the returned result.
 
-The generation of all numbers is done as shown in Listing~\ref{add_x}, function \lstinline{genNat}.
+The generation of all numbers is done as shown in Listing~\ref{add_x}, function \lstinline{genNat}, where \lstinline{Mature} is a stream constructor.
 The only thing one should be careful about, is to ensure lazy generation of the values, especially in case of an eager host language, such as \ocaml.
 
 
@@ -84,12 +86,10 @@ Failure is expressed with an empty stream and success --- as a singleton stream 
 
 All arguments of the relation in this direction are ground.
 This means, that all unification can be replaced with either pattern-matching or simple equality check.
-When translating the first \conde branch we pattern match on \x, and then check if \y and \z are equal.
+When converting the first \conde branch we pattern match on \x, and then check if \y and \z are equal.
 The second \conde branch introduces another pattern matching, this time on \z, which ensures that \z is not \zero.
 
-
-
-Functional implementations of the principal directions of the \lstinline{add$^o$ x y z} relation which does not make into this section, may be found in Appendix.
+Functional implementations of other principal directions of the \lstinline{add$^o$ x y z} relation which did not make into this section, can be found in Appendix.
 
 \input{fig/mult/mult.tex}
 \input{fig/mult/mult_slow.tex}
@@ -104,24 +104,24 @@ The base cases in this relation are when \x or \y are \zero and \lstinline{S O}.
 When \x unifies with a successor of another value, then we can use equalities \lstinline[breaklines=true]{(x' + 1) * y = x' * y + y}.
 This is done by adding \y to the intermediate result of multiplying \lstinline{x'} by \y.
 
-When translating it into a function for the given direction, we need to make sure to call functional counterparts of \lstinline{add$^o$} and \lstinline{mult$^o$} in the right order which depends on the direction.
+When converting it into a function for the given direction, we need to make sure to call functional counterparts of \lstinline{add$^o$} and \lstinline{mult$^o$} in the right order which depends on the direction.
 Consider the direction \lstinline{mult$^o$ in in out}.
-The translation of base cases is done with the same principals as the previous examples.
+The conversion of base cases is done with the same principals as the previous examples.
 The last \conde branch contains two call to two different relations: \lstinline{add$^o$} and \lstinline{mult$^o$}.
 Variables \lstinline{x'} and \y in this direction are ground, which impose possible directions on the relation calls.
-There are two ways we can do these calls.
+There are two ways we can order these calls.
 
 One of them is to first call \lstinline{add$^o$} in the direction \lstinline[breaklines=true]{add$^o$ in out out} since \y is ground, while \lstinline{r} and \lstinline{r'} are to be computed.
 After this, all arguments in the call to \lstinline{mult$^o$} are known, and it can be used as a predicate \lstinline[breaklines=true]{mult$^o$ in in in}.
 Finally, we return \lstinline{r} if the predicate succeeds: see Listing~\ref{mult_slow}.
 Unfortunately, this order proves to bee too slow: it takes about half of a second to multiply 4 by 4, and more than 300 seconds to multiply 5 by 5.
-This can be explained by the fact that \lstinline[breaklines=true]{add$^o$ in out out} generates an infinite streams of answers, only one which succeeds in multiplication, but considering them all even to find the first (and only) answer to \lstinline{multXY'} takes too much time.
+This can be explained by the fact that \lstinline[breaklines=true]{add$^o$ in out out} generates an infinite streams of answers, only one which succeeds in  multiplication predicate, but considering them all even to find the first (and only) answer to \lstinline{multXY'} takes too much time.
 
 Better and more efficient implementation of \lstinline[breaklines=true]{mult$^o$ in in out} is shown in Listing~\ref{mult_fast}.
 Here, we first execute the recursive call of the direction \lstinline[breaklines=true]{mult$^o$ in in out}, and then use \lstinline{add$^o$ in in out} to compute the final result.
 None of these relations produce an infinite stream, and the function runs in a fraction of a second.
-You may note also that in this case there is no need to generate any additional functions for directions which are different from the one being translated.
+Note also that in this case there is no need to generate any additional functions for directions which are different from the one being converted.
 
-In general, it is not clear how to choose the best order in which to translate calls within a conjunction.
+In general, it is not clear how to choose the best order in which to convert calls within a conjunction.
 One heuristic is to favor calls which do not produce infinite streams, namely do not use generators for free variables.
 

@@ -5,7 +5,7 @@ Usually, \mk is implemented as an embedded language and consists of a small set 
 Relations can be defined and called in the same manner as functions of the host language.
 Each \mk goal maps a variable substitution into a stream of substitutions.
 Computation may fail, producing an empty stream, or succeed and produce a non-empty stream of substitutions.
-In order to assure completeness of search, \mk usually implements conjunctions as monadic \lstinline{bind} on streams and disjunctions as \lstinline{mplus} which interleaves streams~\todo{cite Kiselyov}.
+In order to assure completeness of search, \mk usually implements conjunctions as monadic \lstinline{bind} on streams and disjunctions as \lstinline{mplus} which interleaves streams~\cite{kiselyov2005backtracking}.
 
 We use the following syntactic conventions.
 We denote conjunctions as a right-associative binary relation \lstinline{/\}.
@@ -20,7 +20,7 @@ The first \conde branch is a conjunction of two unifications: \x with a term \ze
 The second \conde branch introduces fresh variables \lstinline{x'} and \lstinline{z'} and follows with a conjunction of two unifications and a recursive relation call.
 
 One can \emph{run} a relation in some direction by passing it \emph{input} arguments.
-For example, executing \lstinline{add$^o$ (S O) O z} finds the sum of the first two arguments and maps \lstinline{z} to the sum \lstinline{S O}.
+For example, executing \lstinline{add$^o$ (S O) O z} finds the sum of the first two arguments and maps \lstinline{z} to their sum \lstinline{S O}.
 We can also provide only the last argument: \lstinline{add$^o$ x y (S O)}, which can be considered as an inversion of addition.
 This computes all pairs of Peano numbers \lstinline{(x, y)} which sum up to the given value \lstinline{z = S O}, namely \lstinline{(O, S O)} and \lstinline{(S O, O)}.
 Moreover, we can pass as input arguments not only \emph{ground terms} but terms which contain fresh variables, such as \lstinline{add$^o$ x (S y) z}.
@@ -30,7 +30,7 @@ For example \lstinline{add$^o$ (S x) y O} may never succeed, since \lstinline{(1
 
 There exists a multitude of different directions for each relation.
 In this paper we only consider directions in which input arguments are ground, i.e. do not contain any fresh variables, we will call them \emph{principal directions}.
-We denote a principal direction by the name of a relation followed by specification of its arguments: in place of each argument we write either \lstinline{in} when the argument is input or \lstinline{out} if it is output.
+We denote a principal direction by the name of a relation followed by a specification of its arguments: in place of each argument we write either \lstinline{in} when the argument is input or \lstinline{out} if it is output.
 There are $8$ principal directions for \lstinline{add$^o$ x y z}:
 \begin{itemize}
   \item three directions with one input: \lstinline{add$^o$ in out out},
@@ -42,7 +42,7 @@ There are $8$ principal directions for \lstinline{add$^o$ x y z}:
   \item one direction which does not have any input arguments:
   \lstinline{add$^o$ out out out};
   \item and one direction in which all arguments are input:
-  \lstinline{add$^o$ in in in};
+  \lstinline{add$^o$ in in in}.
 \end{itemize}
 
 When all arguments of a relation are input arguments, it serves as a predicate, while passing no arguments corresponds to the generation of all valid values for all arguments of a relation.

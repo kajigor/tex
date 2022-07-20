@@ -1,8 +1,10 @@
 \begin{abstract}
-  Languages in the Kanren family strive to bridge the gap between logic and general-purpose mainstream programming.
-  Logic programming comes with an overhead such as keeping track of substitutions of logic variables and unifying terms.
-  However, in many practical applications there is no need to bear all that overhead, and thus we should not.
-  Ideally, we should be able to automatically rewrite a relation into a function which computes the outputs but omits most unnecessary overhead.
-  In this paper we present a method to translate miniKanren relations into pure functions in continuation passing stule.
-  The project is at an early stage, but it is promising: the functions run much faster than the original miniKanren code.
+  In many computer science problems, verifying that a candidate is indeed a solution for a problem is easier than implementing a solver.
+  At the same time, solvers can be obtained as an inversion of a verifier.
+  Relational programming is specifically created to make inversion of programs easy.
+  Unfortunately, relational programming comes with an overhead such as keeping track of substitutions of logic variables and unifying terms.
+  However, in many practical applications there is no need to bear all that overhead, and thus it may be eliminated.
+  Ideally, we should be able to automatically rewrite a relation into a function which computes the outputs but omits unnecessary overhead.
+  In this paper we present a method to convert \mk relations into pure functions.
+  The project is at an early stage, but it is promising: the converted functions run much faster than the original \mk code.
 \end{abstract}
