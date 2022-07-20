@@ -59,7 +59,7 @@ When only the second argument is known, the answer is all pairs of numbers \lsti
 In \mk, this is expressed with help of free variables.
 Say \x is \lstinline{S O}, then the stream of answers is represented as \lstinline{(_.0, S _.0)}.
 This means that whatever the value of \y is, \z is just its successor.
-In our paper we only consider scenarios when the answers are ground, so we expect the stream of answers to be \lstinline{(O, S O), (S O, S (S O)), ...}.
+In our paper we only consider scenarios when the answers are ground, so the expected stream of answers is \lstinline{(O, S O), (S O, S(S O)), $\dots$}.
 To do it, we need to systematically generate a stream of ground values for \y and \z.
 Currently, we leave the generation up to the user, but generators may be automatically created from their types.
 
@@ -91,18 +91,17 @@ The second \conde branch introduces another pattern matching, this time on \z, w
 
 Functional implementations of the principal directions of the \lstinline{add$^o$ x y z} relation which does not make into this section, may be found in Appendix.
 
-\subsection{Order within Conjunctions}
-
 \input{fig/mult/mult.tex}
 \input{fig/mult/mult_slow.tex}
 \input{fig/mult/mult_fast.tex}
 
+\subsection{Order within Conjunctions}
 
 Up until now we only seen examples with only one recursive call which is done to the same relation.
 Many programs in \mk use several relations in the same bodies, see for example Listing~\ref{mult}.
-The relation \lstinline{mult$^o$ x y z} relates variables such that \lstinline{x * y = z}.
+The relation \lstinline[breaklines=true]{mult$^o$ x y z} relates variables such that \lstinline[breaklines=true]{x * y = z}.
 The base cases in this relation are when \x or \y are \zero and \lstinline{S O}.
-When \x unifies with a successor of another value, then we can use equalities \lstinline{(x' + 1) * y = x' * y + y}.
+When \x unifies with a successor of another value, then we can use equalities \lstinline[breaklines=true]{(x' + 1) * y = x' * y + y}.
 This is done by adding \y to the intermediate result of multiplying \lstinline{x'} by \y.
 
 When translating it into a function for the given direction, we need to make sure to call functional counterparts of \lstinline{add$^o$} and \lstinline{mult$^o$} in the right order which depends on the direction.
@@ -112,14 +111,14 @@ The last \conde branch contains two call to two different relations: \lstinline{
 Variables \lstinline{x'} and \y in this direction are ground, which impose possible directions on the relation calls.
 There are two ways we can do these calls.
 
-One of them is to first call \lstinline{add$^o$} in the direction \lstinline{add$^o$ in out out} since \y is ground, while \lstinline{r} and \lstinline{r'} are to be computed.
-After this, all arguments in the call to \lstinline{mult$^o$} are known, and it can be used as a predicate \lstinline{mult$^o$ in in in}.
+One of them is to first call \lstinline{add$^o$} in the direction \lstinline[breaklines=true]{add$^o$ in out out} since \y is ground, while \lstinline{r} and \lstinline{r'} are to be computed.
+After this, all arguments in the call to \lstinline{mult$^o$} are known, and it can be used as a predicate \lstinline[breaklines=true]{mult$^o$ in in in}.
 Finally, we return \lstinline{r} if the predicate succeeds: see Listing~\ref{mult_slow}.
 Unfortunately, this order proves to bee too slow: it takes about half of a second to multiply 4 by 4, and more than 300 seconds to multiply 5 by 5.
-This can be explained by the fact that \lstinline{add$^o$ in out out} generates an infinite streams of answers, only one which succeeds in multiplication, but considering them all even to find the first (and only) answer to \lstinline{multXY'} takes too much time.
+This can be explained by the fact that \lstinline[breaklines=true]{add$^o$ in out out} generates an infinite streams of answers, only one which succeeds in multiplication, but considering them all even to find the first (and only) answer to \lstinline{multXY'} takes too much time.
 
-Better and more efficient implementation of \lstinline{mult$^o$ in in out} is shown in Listing~\ref{mult_fast}.
-Here, we first execute the recursive call of the direction \lstinline{mult$^o$ in in out}, and then use \lstinline{add$^o$ in in out} to compute the final result.
+Better and more efficient implementation of \lstinline[breaklines=true]{mult$^o$ in in out} is shown in Listing~\ref{mult_fast}.
+Here, we first execute the recursive call of the direction \lstinline[breaklines=true]{mult$^o$ in in out}, and then use \lstinline{add$^o$ in in out} to compute the final result.
 None of these relations produce an infinite stream, and the function runs in a fraction of a second.
 You may note also that in this case there is no need to generate any additional functions for directions which are different from the one being translated.
 

@@ -3,11 +3,11 @@
   \begin{minipage}{\columnwidth}
     \begin{lstlisting}[label={mult_fast}, caption={Efficient implementation of \lstinline{multo in in out} direciton}, captionpos=b, frame=tb]
 multXY :: Nat -> Nat -> Stream Nat
-multXY O y = return O
-multXY x O = return O
-multXY (S O) y = return y
-multXY x (S O) = return x
-multXY (S x') y = do
+multXY O      y     = return O
+multXY x      O     = return O
+multXY (S O)  y     = return y
+multXY x      (S O) = return x
+multXY (S x') y     = do
   r' <- multXY x' y
   addXY y r'
     \end{lstlisting}
