@@ -3,11 +3,11 @@
 To evaluate our proposed translation scheme, we manually rewritten severals problems in different directions and compared their execution times with their relational counterparts.
 Here we showcase two relational programs and their translations.
 
-\subsection{Topologic sort}
-
-
 \input{fig/topsort/topsort_pred.tex}
 \input{fig/topsort/topsort_rel.tex}
+
+
+\subsection{Topologic sort}
 
 This program topologically sorts a directed graph.
 A graph is represented as a list of edges, where each edge is a pair of vertices.
@@ -26,6 +26,10 @@ This simple predicate along with the other functions it uses is translated into 
 The relation is then specialized so that it searches for a correct topologic sort by fixing its last argument to \lstinline{true}.
 The result of specialization is in Listing~\ref{topsort_spec}.
 Specialization removes any \conde branches which are failing, i.e. unify the result \lstinline{r} with \lstinline{false}.
+
+\input{fig/topsort/topsort_spec.tex}
+\input{fig/topsort/topsort_graph.tex}
+\input{fig/topsort/lookup.tex}
 
 The specialized version is manually translated in a direction \lstinline{topsort$^o$ in out}.
 This creates a function which constructs a numbering which topologically sorts vertices in a given graph.
@@ -49,14 +53,7 @@ Translations of the both directions are in Listing~\ref{lookup}.
 Calls to \lstinline{less$^o$ x y r} relations are both done in direction {less$^o$ in in out}, and their outputs must be \lstinline{true}.
 To express this check we use \lstinline{guard} which fails computation (i.e. returns an \lstinline{Empty} stream) if its argument is false.
 
-
-\input{fig/topsort/topsort_spec.tex}
-\input{fig/topsort/topsort_graph.tex}
-\input{fig/topsort/lookup.tex}
-
-
 \input{fig/prop/term.tex}
-\vspace{-0.8cm}
 
 \subsection{Logic Formulas Generation}
 

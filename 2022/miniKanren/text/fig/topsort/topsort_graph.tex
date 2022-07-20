@@ -1,6 +1,6 @@
-\begin{figure*}[!t]
+\begin{figure}[!t]
   \centering
-  \begin{minipage}{\textwidth}
+  \begin{minipage}{0.49\textwidth}
     \begin{lstlisting}[label={topsort_graph}, caption={Functional implementation for a \lstinline{topsortoTrue in out} direction}, captionpos=b, frame=tb]
 topsortGraph :: Graph -> Stream [Nat]
 topsortGraph graph = do
@@ -11,8 +11,9 @@ topsortGraph graph = do
       case graph of
         [] -> return []
         ((b, e) : graph') -> do
-          (nb, numbering) <- lookupKey b maxInt maxListLength
-          ne <- lookupXsKey numbering e
+          (nb, numbering) <-
+            lookupKey b maxInt maxListLength
+          ne  <- lookupXsKey numbering e
           q47 <- lessXY nb ne
           guard q47
           q43 <- lessXY ne n
@@ -20,4 +21,4 @@ topsortGraph graph = do
           topsortGraphNumbering graph' numbering n
     \end{lstlisting}
   \end{minipage}
-\end{figure*}
+\end{figure}
