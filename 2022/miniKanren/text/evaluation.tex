@@ -55,9 +55,10 @@ To express this check we use \lstinline{guard} which fails computation (i.e. ret
 \input{fig/topsort/lookup.tex}
 
 
-\subsection{Logic Formulas Generation}
-
 \input{fig/prop/term.tex}
+\vspace{-0.8cm}
+
+\subsection{Logic Formulas Generation}
 
 In this example we translate an evaluator of logic formulas in a direction which generates formulas which evaluate to a given result.
 Logic formulas are values of type \lstinline{Term} presented in Listing~\ref{term}.
@@ -68,7 +69,7 @@ The relation \lstinline{eval$^o$ fm st r} computes the value \lstinline{r} of a 
 The boolean value \lstinline{v} of a variable \lstinline{Var i} is the \lstinline{i}-th element of \lstinline{st} which can be retrieved by means of the relation \lstinline{elem$^o$ i st v}
 The relation \lstinline{eval$^o$} uses relations \lstinline{add$^o$}, \lstinline{or$^o$}, and \lstinline{not$^o$} for boolean operations.
 
-Translation of \lstinline{eval$^o$} relation in the direction \lstinline{eval$^o$ out out in} is presented in Listing~\ref{eval_r}.
+Translation of \lstinline{eval$^o$} relation in the direction \lstinline[breaklines=true]{eval$^o$ out out in} is presented in Listing~\ref{eval_r}.
 As in the previous example, here relation \lstinline{eval$^o$} is called twice when formula is either a conjunction or a disjunction.
 The direction of the second call is different from the direction of the first call, as first call generates possible variable mappings.
 The implementation of the direction \lstinline{eval$^o$ out in in} is shown in Listing~\ref{eval_st_r}.
