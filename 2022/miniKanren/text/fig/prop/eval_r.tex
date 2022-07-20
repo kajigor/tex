@@ -1,8 +1,8 @@
 
 
-\begin{figure*}[!t]
+\begin{figure}[!t]
   \centering
-  \begin{minipage}{\textwidth}
+  \begin{minipage}{0.49\textwidth}
     \begin{lstlisting}[label={eval_r}, caption={Functional implementation of the direction \lstinline{evalo out out in}}, captionpos=b, frame=tb]
 evalR :: Bool -> Int -> Stream (Term, [Bool])
 evalR result maxListLength =
@@ -35,5 +35,5 @@ evalR result maxListLength =
       else return (Lit False, [])
     \end{lstlisting}
   \end{minipage}
-\end{figure*}
+\end{figure}
 
