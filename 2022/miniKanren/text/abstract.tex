@@ -1,10 +1,12 @@
 \begin{abstract}
-  In many computer science problems, verifying that a candidate is indeed a solution for a problem is easier than implementing a solver.
-  At the same time, solvers can be obtained as an inversion of a verifier.
-  Relational programming is specifically created to make inversion of programs easy.
-  Unfortunately, relational programming comes with an overhead such as keeping track of substitutions of logic variables and unifying terms.
-  However, in many practical applications there is no need to bear all that overhead, and thus it may be eliminated.
-  Ideally, we should be able to automatically rewrite a relation into a function which computes the outputs but omits unnecessary overhead.
-  In this paper we present a method to convert \mk relations into pure functions.
-  The project is at an early stage, but it is promising: the converted functions run much faster than the original \mk code.
+  Relational programming is known for its capability to provide a short and concise executable specifications
+  for a wide range of interesting problems. Specifically, the nature of relational programming makes it possible
+  to consider a single specification as a whole family of concrete programs. Individual programs of this family
+  can be taken and run by placing free variables inside a top-level goal arguments. In particular, relational
+  programming provides a very generic way to implement \emph{program inversion}, which opens a way for
+  program synthesis via converting \emph{verifiers} into \emph{solvers}. However, acquired in such a way
+  solvers often come with an overhead, originating from the very nature of relational computations
+  with substitutions, unifications, interleaving, etc. In this paper we study a conversion of relational programs
+  into functional form taking into account a concrete \emph{direction} of evaluation. The project is at an early stage,
+  but the resulats so far are promising: converted functions run much faster than the original relations.
 \end{abstract}
