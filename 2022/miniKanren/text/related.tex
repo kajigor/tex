@@ -15,8 +15,11 @@ The search strategy in \mercury is not complete which limits its use for our app
 \curry has several compilers including the one whose target language is \haskell~\cite{brassel2011kics2}.
 Although, \curry provides some flexibility in choosing the search strategy~\cite{hanus2012search}, it uses \lstinline{choice} to implement nondeterminism instead of unifications.
 
+An earlier attempt at conversion of \mk into a functional program has been made.
+It involved binding-time analysis to determine \lstinline{in/out} annotations of variables~\cite{verbitskaiabinding}.
+It only works for directions which return finite answer streams which severely limits its applications.
 
 There exist an automatic conversion from a subset of \ocaml into \ocanren~\cite{lozov2017typed}.
-Coupling it with conversion from \mk back into \ocaml can be used for generating solvers from verifies.
+Coupling it with conversion from \mk back into \ocaml can be used to efficiently inverse computations.
 
 
