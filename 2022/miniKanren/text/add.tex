@@ -51,10 +51,9 @@ We use do-notation when converting the second branch of \conde which is just a s
 Binds implement conjunctions in \mk and it is no surprise they fit well into the functional implementation.
 
 \input{fig/add/add_z.tex}
+\input{fig/add/add_x.tex}
 
 \subsection{Free Variables in Answers}
-
-\input{fig/add/add_x.tex}
 
 In some directions, there are infinitely many answers, such as in \lstinline{add$^o$ in out out}.
 When only the second argument is known, the answer is all pairs of numbers \lstinline{(y, z)} which satisfy \lstinline{x + y = z}.
@@ -89,7 +88,7 @@ This means, that all unification can be replaced with either pattern-matching or
 When converting the first \conde branch we pattern match on \x, and then check if \y and \z are equal.
 The second \conde branch introduces another pattern matching, this time on \z, which ensures that \z is not \zero.
 
-Functional implementations of other principal directions of the \lstinline{add$^o$ x y z} relation which did not make into this section, can be found in Appendix.
+Functional implementations of other principal directions of the \lstinline{add$^o$ x y z} relation which did not make into this section, can be found in Appendix~\ref{sec:appendix}.
 
 \input{fig/mult/mult.tex}
 \input{fig/mult/mult_slow.tex}
