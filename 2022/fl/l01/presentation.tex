@@ -579,4 +579,300 @@ else print "Wear long pants."
   \includegraphics[width=0.75\textwidth]{pics/sdterm.png}
 \end{center}
 \end{frame}
+
+
+\begin{frame}[fragile]
+  \transwipe[direction=90]
+  \frametitle{Метаязык}
+  \begin{itemize}
+    \item Язык, на котором дано описание языка
+    \begin{itemize}
+      \item Естественный язык
+      \item Язык металингвистических формул Бэкуса (БНФ)
+      \item Синтаксические диаграммы
+      \item \textbf{Грамматики}
+      \item $\dots$
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \transwipe[direction=90]
+  \frametitle{Описание языка: формальная грамматика}
+  \begin{itemize}
+    \item \textbf{Порождающая грамматика $G$} --- это четверка $\langle V_T, V_N, P, S \rangle$
+
+    \begin{itemize}
+      \item $V_T$ --- алфавит терминальных  символов (терминалов)
+      \item $V_N$ --- алфавит нетерминальных  символов (нетерминалов)
+      \begin{itemize}
+        \item $V_T \cap V_N = \emptyset$
+        \item $V ::= V_T \cup V_N$
+      \end{itemize}
+      \item P --- конечное множество правил вида $\alpha \rightarrow \beta$
+      \begin{itemize}
+        \item $\alpha \in V^* V_N V^*$
+        \item $\beta \in V^*$
+      \end{itemize}
+      \item S --- начальный нетерминал грамматики,\begin{itemize}
+        \item $S  \in N$
+      \end{itemize}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \transwipe[direction=90]
+  \frametitle{Пример: язык чисел в двоичной системе счисления}
+
+\begin{center}
+  $V_T = \{ 0, 1, - \} \ \ \  V_N = \{ S, N, A \}$
+\end{center}
+
+\begin{tabular}{p{3cm} | p{4cm} | p{3cm}}
+
+\[
+\begin{array}{rcl}
+S& \rightarrow & 0 \\
+S& \rightarrow & N \\
+S& \rightarrow & - N \\
+N& \rightarrow & 1 A \\
+A& \rightarrow & 0 A \\
+A& \rightarrow & 1 A \\
+A& \rightarrow & \varepsilon \\
+\end{array}
+\]
+
+& \pause
+
+\[
+\begin{array}{rcl}
+S& \rightarrow & 0 \mid N \mid - N  \\
+N& \rightarrow & 1 A \\
+A& \rightarrow & 0 A \mid 1 A  \mid \varepsilon\\
+\end{array}
+\]
+
+& \pause
+
+\[
+\begin{array}{rcl}
+S& \rightarrow & 0 \mid [-] N  \\
+N& \rightarrow & 1 A \\
+A& \rightarrow & (0 \mid 1) A  \mid \varepsilon\\
+\end{array}
+\]
+
+\end{tabular}
+\end{frame}
+
+\begin{frame}[fragile]
+  \transwipe[direction=90]
+  \frametitle{Отношение непосредственной выводимости}
+  \begin{itemize}
+    \item $\alpha \rightarrow \beta \in P$
+    \item $\gamma, \delta \in V^*$
+    \item $\gamma \alpha \delta \Rightarrow \gamma \beta \delta$: $\gamma \beta \delta$ \textbf{непосредственно выводится} из $\gamma \alpha \delta$ при помощи правила $\alpha \rightarrow \beta$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \transwipe[direction=90]
+  \frametitle{Отношение непосредственной выводимости: пример}
+  \[
+  \begin{array}{rcl}
+  S& \rightarrow & 0 \mid N \mid - N  \\
+  N& \rightarrow & 1 A \\
+  A& \rightarrow & 0 A \mid 1 A  \mid \varepsilon\\
+  \end{array}
+  \]
+
+\vspace{10pt}
+
+\[S \derives[] -N\]
+
+\[-N \derives[] -1A\]
+
+\[-1A \derives[] -11A\]
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \transwipe[direction=90]
+  \frametitle{Отношение выводимости}
+
+  \begin{center}
+    \textbf{Отношение выводимости} является рефлексивно-транзитивным замыканием отношения непосредственной выводимости
+  \end{center}
+
+  \begin{itemize}
+    \item $\alpha_0, \alpha_1, \alpha_2, \dots, \alpha_n \in V^*$
+    \item $\alpha_0 \Rightarrow \alpha_1 \Rightarrow \alpha_2 \Rightarrow \dots \Rightarrow \alpha_n$
+    \item $\alpha_0 \derives \alpha_n$: $\alpha_n$ \textbf{выводится} из $\alpha_0$
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \transwipe[direction=90]
+  \frametitle{Отношение выводимости: пример}
+
+  \[
+  \begin{array}{rcl}
+  S& \rightarrow & 0 \mid N \mid - N  \\
+  N& \rightarrow & 1 A \\
+  A& \rightarrow & 0 A \mid 1 A  \mid \varepsilon\\
+  \end{array}
+  \]
+
+  \[ S \Rightarrow - N \Rightarrow - 1 A \Rightarrow - 1 1 A \derives - 1 1 0 1 A \Rightarrow - 1 1 0 1 \]
+\end{frame}
+
+\begin{frame}[fragile]
+  \transwipe[direction=90]
+  \frametitle{Отношение выводимости: свойства}
+
+  \begin{itemize}
+    \item Транзитивность: $\forall \alpha, \beta, \gamma \in V^*: \ \alpha \derives \beta, \beta \derives \gamma \text{ следовательно } \alpha \derives \gamma$
+    \item Рефлексивность: $\forall \alpha \in V^*: \ \alpha \derives \alpha$
+  \end{itemize}
+
+  \begin{itemize}
+    \item $\alpha_0 \derives[+] \alpha_n$: вывод использует хотя бы одно правило грамматики
+    \item $\alpha_0 \derives[k] \alpha_n$: вывод происходит за $k$ шагов
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \transwipe[direction=90]
+  \frametitle{Левосторонний вывод}
+
+\begin{center}
+  На каждом шагу заменяем самый \textbf{левый} нетерминал
+\end{center}
+
+\[
+  \begin{array}{rcl}
+  S& \rightarrow & A A \mid s  \\
+  A& \rightarrow & A A \mid B b \mid a \\
+  B& \rightarrow & c \mid d
+  \end{array}
+\]
+
+\[ \boldsymbol{S} \derives[] \boldsymbol{A} A \derives[] \boldsymbol{B} b A \derives[] c b \boldsymbol{A} \derives[] c b \boldsymbol{A} A \derives[] c b a \boldsymbol{A} \derives[] c b a a \]
+
+\begin{center}
+  Аналогично определяется \textbf{правосторонний} вывод
+\end{center}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \transwipe[direction=90]
+  \frametitle{Язык, порождаемый грамматикой $G = \langle V_T, V_N, P, S \rangle$}
+\[ L(G) = \{ \omega \in V_T^* \mid S \derives \omega \} \]
+\end{frame}
+
+\begin{frame}[fragile]
+  \transwipe[direction=90]
+  \frametitle{Эквивалентность грамматик}
+\begin{center}
+  Грамматики $G_1$ и $G_2$ \textbf{эквивалентны}, если $L(G_1) = L(G_2)$
+\end{center}
+
+\pause
+
+\begin{tabular}{p{0.5\textwidth} | p{0.5\textwidth}}
+
+\[
+  \begin{array}{rcl}
+  V_T &=& \{ 0, 1, - \} \\
+  V_N &=& \{ S, N, A \} \\~\\
+  S& \rightarrow & 0 \mid N \mid - N  \\
+  N& \rightarrow & 1 A \\
+  A& \rightarrow & 0 A \mid 1 A  \mid \varepsilon\\
+  \end{array}
+\]
+
+&
+
+\[
+  \begin{array}{rcl}
+  V_T &=& \{ 0, 1, - \} \\
+  V_N &=& \{ S, A \} \\~\\
+  S& \rightarrow & 0 \mid 1 A  \mid - 1 A  \\
+  A& \rightarrow &  0 A \mid 1 A  \mid \varepsilon\\
+  \end{array}
+\]
+\end{tabular}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \transwipe[direction=90]
+  \frametitle{Контекстно-свободная грамматика}
+    \begin{center}
+      \textbf{Контекстно-свободная грамматика} --- грамматика, все правила которой имеют вид $A \rightarrow \alpha, A \in V_N, \alpha \in V^*$
+    \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \transwipe[direction=90]
+  \frametitle{Дерево вывода}
+
+  Дерево является \textbf{деревом вывода} для $G = \langle V_N, V_T, P, S\rangle$, если:
+  \begin{itemize}
+    \item Каждый узел помечен символом из алфавита $V$
+    \item Метка корня --- $S$
+    \item Листья помечены терминалами, остальные узлы --- нетерминалами
+    \item Если узлы $n_0, \dots, n_k$ --- прямые потомки узла $n$, перечисленные слева направо, с метками $A_0, \dots, A_k$; метка $n$ --- $A$, то $A \rightarrow A_0 \dots A_k \in P$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \transwipe[direction=90]
+  \frametitle{Пример дерева вывода}
+\begin{center}
+
+\[ G = \langle \{ S, A \}, \{ a, b \}, \{ S \rightarrow a A S \mid a, A \rightarrow S b A \mid b a \mid SS \}, S\rangle \]
+
+\[ S \Rightarrow aAS \Rightarrow a S b A S \Rightarrow a a b A S \Rightarrow a a b b a S \Rightarrow a a b b a a \]
+
+\begin{forest}
+  [S
+    [a]
+    [A
+      [S
+        [a]
+      ]
+      [b]
+      [A
+        [b]
+        [a]
+      ]
+    ]
+    [S
+      [a]
+    ]
+  ]
+\end{forest}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \transwipe[direction=90]
+  \frametitle{Вывод и дерево вывода}
+  \begin{rutheorem}[]
+    Пусть $G = \langle V_N, V_T, P, S \rangle$ --- КС-грамматика
+
+    Вывод $S \derives \alpha$, где $\alpha \in V^*, \alpha \neq \varepsilon$ существует $\Leftrightarrow$ существует дерево вывода в грамматике G с результатом $\alpha$
+  \end{rutheorem}
+
+\begin{center}
+  Упражнение: доказать теорему
+\end{center}
+\end{frame}
+
 \end{document}
