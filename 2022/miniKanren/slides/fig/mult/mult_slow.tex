@@ -1,0 +1,23 @@
+\begin{figure}[!t]
+  \centering
+  \begin{minipage}{\columnwidth}
+    \begin{lstlisting}[label={mult_slow},
+                      %  caption={Inefficient implementation of \lstinline{multo in in out} direciton},
+                       captionpos=b,
+                       frame=tb]
+multXY' :: Nat -> Nat -> Stream Nat
+...
+multXY' (S x') y    = do
+  (r', r) <- addX y
+  multXYZ x' y r'
+  return r
+
+multXYZ :: Nat -> Nat -> Nat -> Stream ()
+...
+multXYZ (S x') y     z = do
+  z' <- multXY' x' y
+  addXYZ y z' z
+multXYZ _ _ _ = Empty
+    \end{lstlisting}
+  \end{minipage}
+\end{figure}

@@ -1,0 +1,15 @@
+\begin{figure}[!t]
+  \centering
+  \begin{minipage}{\columnwidth}
+    \begin{lstlisting}[label={add_x_y},
+                      %  caption={Function for \lstinline{addo in in out} direction},
+                       captionpos=b,
+                       frame=tb]
+addXY :: Nat -> Nat -> Nat
+addXY x y =
+  case x of
+    O -> y
+    S x' -> S (addXY x' y)
+    \end{lstlisting}
+  \end{minipage}
+\end{figure}
