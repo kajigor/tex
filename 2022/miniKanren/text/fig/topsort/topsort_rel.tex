@@ -7,18 +7,18 @@ let topsort$^o$ graph numbering r =
     (graph === [] /\ r === true);
     (fresh (b e graph')
       (graph === (b, e) : graph' /\
-      (fresh (q47 nb ne)
+      (fresh (x nb ne)
         (lookup$^o$ numbering b nb /\
          lookup$^o$ numbering e ne /\
-         less$^o$ nb ne q47 /\
+         less$^o$ nb ne x /\
          conde [
-          (q47 === false /\ r === false);
-          (fresh (q43)
-            (q47 === true /\
-             less$^o$ ne n q43 /\
+          (x === false /\ r === false);
+          (fresh (y)
+            (x === true /\
+             less$^o$ ne n y /\
              conde [
-              (q43 === false /\ r === false);
-              (q43 === true  /\
+              (y === false /\ r === false);
+              (y === true  /\
                topsort$^o$ graph' numbering n r)
              ]))]))))] in
   (fresh (n n')

@@ -16,11 +16,11 @@ A vertex is a distinct Peano number in the range \lstinline{[0..n-1]} where \lst
 The vertices are sorted as a result of executing the program.
 The sort is represented as a list of length \lstinline{n} in which the order of vertex \lstinline{i} is the \lstinline{i}-th element of the list.
 We call this list \emph{numbering}.
-For example, numbering \lstinline{[2, 1, 0]} means that the zeroth variable is the second, the first variable is the first, and the last variable is the zeroth in the ordering.
+For example, numbering \lstinline{[2, 1, 0]} means that the zeroth vertex is the second, the first vertex is the first, and the last vertex is the zeroth in the ordering.
 
 The relational program is generated from a functional verifier as proposed in~\cite{lozov2019relational}.
-The functional interpreter takes a graph and a numbering and checks if the variables are indeed topologically sorted as shown in Listing~\ref{topsort_pred}.
-To do it, it checks all edges of the graph in order, finds the numbers which correspond to the vertices in the numbering, and ensures that the beginning comes before the end of the edge, and that the edge is not greater than the number of vertices in graph.
+The functional interpreter takes a graph and a numbering and checks if the vertices are indeed topologically sorted as shown in Listing~\ref{topsort_pred}.
+To do it, it checks all edges of the graph in order, finds the numbers which correspond to the vertices in the numbering, and ensures that the beginning comes before the end of the edge, and that the end of the edge is not greater than the number of vertices in graph.
 
 This simple predicate along with the other functions it uses is converted into a relational program shown in Listing~\ref{topsort_rel}.
 The relation is then specialized so that it searches for a correct topologic sort by fixing its last argument to \lstinline{true}.
@@ -69,13 +69,13 @@ A formula is either a boolean literal, a variable indexed by an integer number, 
 The relational interpreter is shown in Listing~\ref{prop}.
 The relation \lstinline{eval$^o$ fm st r} computes the value \lstinline{r} of a formula \lstinline{fm} with a given variable mapping \lstinline{st}.
 The boolean value \lstinline{v} of a variable \lstinline{Var i} is the \lstinline{i}-th element of \lstinline{st} which can be retrieved by means of the relation \lstinline{elem$^o$ i st v}.
-The relation \lstinline{eval$^o$} uses relations \lstinline{add$^o$}, \lstinline{or$^o$}, and \lstinline{not$^o$} for boolean operations.
+The relation \lstinline{eval$^o$} uses relations \lstinline{and$^o$}, \lstinline{or$^o$}, and \lstinline{not$^o$} for boolean operations.
 
 Conversion of \lstinline{eval$^o$} relation in the direction \lstinline[breaklines=true]{eval$^o$ out out in} is presented in Listing~\ref{eval_r}.
 As in the previous example, the relation \lstinline{eval$^o$} is called twice when formula is either a conjunction or a disjunction.
 The direction of the second call is different from the direction of the first call, as first call generates possible variable mappings.
 The implementation of the direction \lstinline{eval$^o$ out in in} is shown in Listing~\ref{eval_st_r}.
-The implementations of the directions \lstinline{add$^o$ in in out}, \lstinline{or$^o$ in in out}, \lstinline{not$^o$ in out}, and \lstinline{elem$^o$ in in out} are in Listing~\ref{prop_helpers}.
+The implementations of the directions \lstinline{and$^o$ in in out}, \lstinline{or$^o$ in in out}, \lstinline{not$^o$ in out}, and \lstinline{elem$^o$ in in out} are in Listing~\ref{prop_helpers}.
 
 
 \subsection{Execution Time Comparison}

@@ -10,7 +10,7 @@ In practice, any programming language in which \mk is implemented may be used as
 
 Consider \lstinline{add$^o$ in in out}.
 This direction can be expressed as a function presented in Listing~\ref{add_x_y}.
-The relation \lstinline{add$^o$ x y z} has two branches in a \conde: one unifies \x with \zero and the other --- with \lstinline{S x'}.
+The relation \lstinline{add$^o$ x y z} has two branches in a \conde: one unifies \x with \zero and the other with \lstinline{S x'}.
 Since we know that \x is always ground in this direction, we can replace unifications with a pattern-matching.
 
 When \x unifies with \zero, the rest of the \conde branch is the unification \lstinline{y === z}.

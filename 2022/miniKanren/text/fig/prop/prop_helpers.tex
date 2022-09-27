@@ -9,8 +9,8 @@ andR False = return (True, False) `mplus`
              return (False, False)
 
 orR :: Bool -> Stream (Bool, Bool)
-orR True = return (True, False) `mplus`
-           return (True, True) `mplus`
+orR True = return (True, True) `mplus`
+           return (True, False) `mplus`
            return (False, True)
 orR False = return (False, False)
 

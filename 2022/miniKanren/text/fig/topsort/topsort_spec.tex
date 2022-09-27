@@ -7,13 +7,13 @@ let topsort$^o$True graph numbering =
     (graph === []);
     (fresh (b e graph')
       (graph === (b, e) : graph' /\
-      (fresh (q47 q43 nb ne)
+      (fresh (x y nb ne)
         (lookup$^o$ numbering b nb /\
          lookup$^o$ numbering e ne /\
-         less$^o$ nb ne q47 /\
-         q47 === true      /\
-         less$^o$ ne n   q43 /\
-         q43 === true      /\
+         less$^o$ nb ne x /\
+         x === true      /\
+         less$^o$ ne n y /\
+         y === true      /\
          topsort$^o$ graph' numbering n))))] in
   (fresh (n n')
     (n' === s n /\ numberOfNodes$^o$ graph n

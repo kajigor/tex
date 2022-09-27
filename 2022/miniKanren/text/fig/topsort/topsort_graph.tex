@@ -14,10 +14,10 @@ topsortGraph graph = do
           (nb, numbering) <-
             lookupKey b maxInt maxListLength
           ne  <- lookupXsKey numbering e
-          q47 <- lessXY nb ne
-          guard q47
-          q43 <- lessXY ne n
-          guard q43
+          x <- lessXY nb ne
+          guard x
+          y <- lessXY ne n
+          guard y
           topsortGraphNumbering graph' numbering n
     \end{lstlisting}
   \end{minipage}
