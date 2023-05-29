@@ -1,0 +1,19 @@
+\begin{figure}[!t]
+  \centering
+  \begin{minipage}{\columnwidth}
+    \begin{lstlisting}[label={add_x_y_z},
+                      %  caption={Function for \lstinline{addo in in in} direction},
+                       captionpos=b,
+                       frame=tb]
+addIII :: Nat -> Nat -> Nat -> Stream ()
+addIII x y z =
+  case x of
+    O | y == z -> return ()
+      | otherwise -> Empty
+    S x' ->
+      case z of
+        O -> Empty
+        S z' -> addIII x' y z'
+    \end{lstlisting}
+  \end{minipage}
+\end{figure}

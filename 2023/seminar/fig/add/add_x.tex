@@ -1,0 +1,21 @@
+\begin{figure}[!t]
+  \centering
+  \begin{minipage}{\columnwidth}
+    \begin{lstlisting}[label={add_x},
+                      %  caption={Function for \lstinline{addo in out out} direction},
+                       captionpos=b,
+                       frame=tb]
+addIOO :: Nat -> Stream (Nat, Nat)
+addIOO x = case x of
+           O -> do
+             z <- genNat
+             return (z, z)
+           S x' -> do
+             (y, z') <- addIOO x'
+             return (y, S z')
+
+genNat :: Stream Nat
+genNat = Mature O (S <$\$$> genNat)
+    \end{lstlisting}
+  \end{minipage}
+\end{figure}

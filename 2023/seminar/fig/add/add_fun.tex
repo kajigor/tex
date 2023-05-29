@@ -1,0 +1,14 @@
+\begin{figure}[!t]
+  \centering
+  \begin{minipage}{\columnwidth}
+    \begin{lstlisting}[label={add_fun},
+                      %  caption={Addition function},
+                       captionpos=b,
+                       frame=tb]
+let rec add x y =
+  match x with
+  | O -> y
+  | S x' -> S (add x' y)
+    \end{lstlisting}
+  \end{minipage}
+\end{figure}

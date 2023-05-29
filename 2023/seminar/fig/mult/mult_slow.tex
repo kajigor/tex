@@ -1,0 +1,23 @@
+\begin{figure}[!t]
+  \centering
+  \begin{minipage}{\columnwidth}
+    \begin{lstlisting}[label={mult_slow},
+                      %  caption={Inefficient implementation of \lstinline{multo in in out} direciton},
+                       captionpos=b,
+                       frame=tb]
+multIIO' :: Nat -> Nat -> Stream Nat
+...
+multIIO' (S x') y    = do
+  (r', r) <- addX y
+  multIII x' y r'
+  return r
+
+multIII :: Nat -> Nat -> Nat -> Stream ()
+...
+multIII (S x') y z = do
+  z' <- multIIO' x' y
+  addIII y z' z
+multIII _ _ _ = Empty
+    \end{lstlisting}
+  \end{minipage}
+\end{figure}
