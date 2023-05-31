@@ -98,6 +98,41 @@ morecomment=[s]{(*}{*)},
 language=ocanren
 }
 
+
+\DeclareMathOperator{\Term}{\mathcal{T}}
+\DeclareMathOperator{\FlatTerm}{\mathcal{FT}}
+\DeclareMathOperator{\Var}{\mathbf{Var}}
+\DeclareMathOperator{\Cons}{\mathcal{C}}
+\DeclareMathOperator{\Kan}{\mathcal{G}}
+\DeclareMathOperator{\Fresh}{\mathbf{Fresh}}
+\DeclareMathOperator{\Delay}{\mathbf{Delay}}
+\DeclareMathOperator{\Cll}{\mathbf{Call}}
+\DeclareMathOperator{\Def}{\mathcal{D}}
+\DeclareMathOperator{\Base}{\mathbf{Base}}
+\DeclareMathOperator{\Conj}{\mathbf{Conj}}
+\DeclareMathOperator{\free}{\mathbf{free}}
+\DeclareMathOperator{\ground}{\mathbf{ground}}
+\DeclareMathOperator{\In}{\mathbf{In}}
+\DeclareMathOperator{\Out}{\mathbf{Out}}
+\DeclareMathOperator{\Fun}{\mathcal{F}}
+\DeclareMathOperator{\Rtrn}{\mathbf{Return}}
+\DeclareMathOperator{\Bind}{\mathbf{Bind}}
+\DeclareMathOperator{\Match}{\mathbf{Match}}
+\DeclareMathOperator{\Sum}{\mathbf{Sum}}
+\DeclareMathOperator{\Guard}{\mathbf{Guard}}
+\DeclareMathOperator{\Gen}{\mathbf{Gen}}
+\DeclareMathOperator{\Stream}{\mathit{Stream}}
+\DeclareMathOperator{\vars}{vars}
+\DeclareMathOperator{\inmode}{in}
+\DeclareMathOperator{\outmode}{out}
+% \DeclareMathOperator{\inmode}{g \rightarrow g}
+% \DeclareMathOperator{\outmode}{f \rightarrow g}
+% \DeclareMathOperator{\mode1}{mode}
+% \DeclareMathOperator{\Mode1}{\mathcal{M}}
+\newcommand{\KanN}{\mathcal{K}^{N}}
+\newcommand{\tran}[1]{\left\llbracket #1 \right\rrbracket}
+\newcommand{\LIST}[1]{\left[ #1 \right]}
+\renewcommand{\emptyset}{\varnothing}
 \newcommand{\mk}{\textsc{miniKanren}\xspace}
 \renewcommand{\and}{$\&$\xspace}
 \newcommand{\rel}[2]{\texttt{#1}$^o$ #2}
@@ -106,7 +141,7 @@ language=ocanren
 
 \beamertemplatenavigationsymbolsempty
 
-\title[Functional Conversion of microKanren]{Semi-Automatic Functional Conversion of microKanren}
+\title[Functional Conversion for microKanren]{Semi-Automatic Functional Conversion for microKanren}
 \institute[JetBrains Research]{
 JetBrains Research, Programming Languages and Tools Lab
 }
@@ -267,6 +302,136 @@ Both inputs and outputs are expected to be ground
 \end{frame}
 
 
+
+\begin{frame}[fragile]
+  \frametitle{Conversion Scheme}
+  \begin{itemize}
+    \item Normalization
+    \item Mode analysis
+    \item Functional conversion
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Normalization: Flat Term}
+
+Flat terms: a var or a constructor which takes distinct vars as arguments:
+
+  \[  \FlatTerm_{V} = V \cup \{\Cons_{i}\left( x_1, \ldots, x_{k_{i}} \right) \mid x_{j}\in V\} \]
+
+Examples:
+
+\[ C\left( x_1, x_2 \right) \equiv C\left( C\left( y_1, y_2 \right), y_3 \right) \iff x_1 \equiv C\left( y_1, y_2 \right) \land x_2 \equiv y_3   \]
+
+\[ C\left( C\left( x_1, x_2 \right), x_3 \right) \equiv C\left( C\left( y_1, y_2 \right), y_3 \right) \iff x_1 \equiv y_1 \land x_2 \equiv y_2 \land x_3 \equiv y_3   \]
+
+\[x \equiv C\left( y, y \right) \iff x \equiv C\left( y_1, y_2 \right)\land y_1 \equiv y_2 \]
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+  \frametitle{Normalization: Goal}
+\begin{tabular}{llll}
+$\KanN_{V}$ & $=$ & $\bigvee\left( c_1, \ldots, c_{n} \right), c_{i}\in \Conj_{V}$ & normal form \\
+$\Conj_{V}$ & $=$ & $\bigwedge\left( g_1, \ldots, g_n \right), g_{i}\in \Base_{V}$ & normal conjunction \\
+$\Base_{V}$ & $=$ & $V \equiv \FlatTerm_{V}$ & flat unification \\
+            & $\mid$ & $R_{i}^{d}\left( x_1, \ldots, x_{k_{i}} \right), d\in \Delay, x_{j}\in V$ & flat call\\
+
+$\Delay$ & $=$ &  $\{\text{Delay}, \text{NoDelay}\} $ &
+\end{tabular}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Mode of a Variable}
+Mode of a variable: mapping between its instantiations
+
+\vfill
+
+\emph{Ground} term has no variables
+
+\emph{Free} variable: fresh variable, no info about its instantiation
+
+Once we know that a variable is \emph{ground}, it stays \emph{ground} in subsequent conjuncts
+
+\vfill
+
+Mode $in$: $ground \rightarrow ground$
+
+Mode $out$: $free \rightarrow ground$
+
+\vfill
+
+Mercury uses more complicated modes
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Modded Goal}
+Assign mode to every variable, make sure they are consistent
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Modded Unification}
+
+\begin{itemize}
+    \item Assignments: $x^{\outmode}  \equiv \Term^{\inmode}$ and $x^{\inmode} \equiv y^{\outmode}$
+    \item Guards: $x^{\inmode} \equiv \Term^{\inmode}$
+    \item Match: $x^{\inmode} \equiv \Term$ ($\Term$ contains both \emph{in} and \emph{out} variables)
+    \item Generators: $x^{\outmode} \equiv \Term$
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Mode Inference: Initialization }
+
+\begin{itemize}
+  \item For all input variables: $ground \rightarrow ?$
+  \item For all other variables: $free \rightarrow ?$
+\end{itemize}
+
+\input{fig/add/addInit.tex}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Mode Inference: Disjunction }
+Run inference on each disjunct independently
+
+\input{fig/add/addDisj1.tex}
+\input{fig/add/addDisj2.tex}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Mode Inference: Unification}
+Propagate the groundness information according to the 4 types of modded unifications
+
+
+\input{fig/add/addUnif1.tex}
+\input{fig/add/addUnif2.tex}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Mode Inference: Conjunction}
+Pick a conjunct according to the priority, propagate groundness
+\begin{itemize}
+  \item Guards
+  \item Assignments
+  \item Matches
+  \item Calls with at least one ground argument
+  \item Generators
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Mode Inference: Conjunction}
+\input{fig/add/addConj1.tex}
+\input{fig/add/addConj2.tex}
+\input{fig/add/addConj3.tex}
+\end{frame}
+
 \begin{frame}[fragile]
   \frametitle{Order in Conjunctions}
   \input{fig/mult/mult.tex}
@@ -283,9 +448,50 @@ Both inputs and outputs are expected to be ground
   \input{fig/mult/mult_fast.tex}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Functional Conversion: Intermediate Language}
+\begin{tabular}{llll}
+    $\Fun_{V}$ & $=$ &  $\Rtrn \LIST{\Term_{V}}$ & return a tuple of terms\\
+               & $\mid$ &  $\Match_{V} \left( \Term_{V}, \Fun_{V} \right)$& match a variable against a pattern\\
+               & $\mid$ & $\Bind\LIST{\left(\LIST{V}, \Fun_{V}\right)} $ & monadic bind on streams\\
+               & $\mid$ & $\Sum\LIST{\Fun_{V}}$ & concatenation of streams\\
+               & $\mid$ & $\Guard\left( V, V \right)$ & equality check\\
+               & $\mid$ & $\Gen_{G}$ & generator\\
+               & $\mid$ & $R_{i}^{d}(\LIST{V}, \LIST{G}), d\in \Delay $ & function call
+\end{tabular}
+\end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Evaluation}
+  \frametitle{Functional Conversion into Intermediate Language}
+\begin{itemize}
+  \item Disjunction $\rightarrow \Sum\LIST{\Fun_{V}}$
+  \item Conjunction $\rightarrow \Bind\LIST{\left(\LIST{V}, \Fun_{V}\right)}$
+  \item Relation call $\rightarrow R_{i}^{d}(\LIST{V}, \LIST{G}), d\in \Delay$
+  \item Unification $\rightarrow \Rtrn \LIST{\Term_{V}}$ or $\Match_{V} \left( \Term_{V}, \Fun_{V} \right)$ or $\Guard\left( V, V \right)$ or $\Gen_{G}$
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Functional Conversion into Haskell}
+  \begin{itemize}
+    \item TemplateHaskell to generate code
+    \item Stream monad
+    \item do-notation
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Functional Conversion into OCaml}
+  \begin{itemize}
+    \item Hand-crafted (not so) pretty-printer
+    \item Stream monad
+    \item let*
+    \item Taking extra care to employ laziness
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Evaluation (last year)}
   \begin{center}
     We manually converted relational interpreters and measured execution time
   \end{center}
@@ -308,14 +514,101 @@ Both inputs and outputs are expected to be ground
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Evaluation: Topologic Sort}
+  \frametitle{Evaluation: Topologic Sort (last year)}
   \includegraphics[width=\textwidth]{fig/eval/topsort.pdf}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Evaluation: Logic Formulas Generation}
+  \frametitle{Evaluation: Logic Formulas Generation (last year)}
   \includegraphics[width=\textwidth]{fig/eval/prop.pdf}
 \end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Evaluation: Addition Relation (Time in Seconds)}
+\begin{itemize}
+  \item addIIO x = 10000, y = 0
+  \begin{itemize}
+    \item Fun: 0.007
+    \item Rel: 1.533
+  \end{itemize}
+  \item addOII y = 0, z = 10000
+  \begin{itemize}
+    \item Fun: 0.009
+    \item Rel: 1.547
+  \end{itemize}
+  \item addIOI x = 10000, z = 10000
+  \begin{itemize}
+    \item 0.009
+    \item 3.029
+  \end{itemize}
+  \item addIII x = 10000, y = 0, z = 10000
+  \begin{itemize}
+    \item 0.008
+    \item 3.041
+  \end{itemize}
+  \item addIOO x = 0, n = 1000
+  \begin{itemize}
+    \item Fun: 0.143
+    \item Rel: 0.000
+  \end{itemize}
+  \item addOOO n = 1000
+  \begin{itemize}
+    \item Fun: 0.074
+    \item Rel: 0.585
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Evaluation: Proposition Evaluator (Time in Seconds)}
+\begin{itemize}
+  \item evalo [true; false; true] fm true
+  \begin{itemize}
+    \item Fun: 0.759
+    \item Rel: 0.308
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Data Types}
+We generate weird data type declarations:
+\input{fig/data_type.tex}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Need for Determinism Check}
+  \begin{itemize}
+    \item Replacing Stream with Maybe improves performance about 10 times for relations on natural numbers
+    \item Functional (no monad) version is still faster
+    \item Use determinism check to figure out when replacing Stream is feasible
+    \item How to combine different monads naturally?
+  \end{itemize}
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+  \frametitle{Need for Partial deduction}
+
+\begin{center}
+\mk can run a verifier backwards to get solver
+\end{center}
+
+\begin{center}
+\begin{minipage}{0.3\textwidth}
+  \lstinline{run q (eval$^o$ q true)}
+\end{minipage}
+
+\begin{center}
+  Augmenting functional conversion with partial deduction must be beneficial
+\end{center}
+\end{center}
+
+
+\end{frame}
+
 
 \begin{frame}[fragile]
   \frametitle{Conclusion}
@@ -323,14 +616,15 @@ Conclusion
   \begin{itemize}
     \item We presented a functional conversion scheme as a series of examples
     \item The conversion speeds up implementations considerably
+    \item We implemented the conversion scheme in Haskell
+    \item Found some way to order conjuncts
   \end{itemize}
 
 \vfill
 
 Future work
   \begin{itemize}
-    \item Implementation and formalization of the conversion scheme
-    \item Finding a better way to order conjuncts
+    \item Integration with partial deduction
     \item Integration into a relational interpreters for solving framework
   \end{itemize}
 \end{frame}
