@@ -1,0 +1,36 @@
+
+% -- Augments variables with the initial mode information:
+% -- * input variables have initial instantiation g
+% -- * all other variables have initial instantiation f
+% initModes :: $\Def_{V}^N$ -> $\Def_{(V, M)}^N$
+
+
+\begin{figure}[h]
+  \centering
+  \begin{minipage}{\columnwidth}
+    \begin{lstlisting}[label={fig:modeInference},
+                       caption={Mode inference pseudocode},
+                       captionpos=b,
+                       frame=tb]
+modeInfer ($R_{i}\left( x_1, \ldots, x_{k_{i}} \right) \equiv body$) =
+  ($R_{i}\left( x_1, \ldots, x_{k_{i}} \right) \equiv$ (modeInferDisj body))
+
+modeInferDisj ($\bigvee\left( c_1, \ldots, c_{n} \right)$) =
+  $\bigvee( $modeInferConj $ c_1, \ldots, $ modeInferConj $ c_{n})$
+
+modeInferConj ($\bigwedge\left( g_1, \ldots, g_n \right)$) =
+  let (picked, theRest) = pickConjunction($\left[ g_1, \ldots, g_n \right]$) in
+  let moddedPicked = modeInferBase picked in
+  let moddedConjs = modeInferConj ($\bigwedge$ theRest) in
+  $\bigwedge($moddedPicked : moddedConjs)
+
+pickConjunction goals =
+  pickGuard goals <|>
+  pickAssignment goals <|>
+  pickMatch goals <|>
+  pickCallGuard goals <|>
+  pickCall goals <|>
+  pickGenerator goals
+    \end{lstlisting}
+  \end{minipage}
+\end{figure}

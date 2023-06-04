@@ -9,10 +9,10 @@ let double$^o$ x r = addo$^o$ x x r
 
 let rec add$^o$ x y z = conde [
   (x === O /\ y === z);
-  (fresh (x1 z1)
-    (x === S x1 /\
-     add$^o$ x1 y z1 /\
-     z === S z1)) ]
+  (fresh (x$_1$ z$_1$)
+    (x === S x$_1$ /\
+     add$^o$ x$_1$ y z$_1$ /\
+     z === S z$_1$)) ]
     \end{lstlisting}
   \end{minipage}
 \end{figure}

@@ -1,48 +1,74 @@
 \section{Functional Conversion in \mk}
 
-\begin{enumerate}
-    \item Discuss the motivation and importance of functional conversion in \mk.
-    \item Present the core contribution: an algorithm for functional conversion.
-    \item Explain the algorithm's steps and principles behind functional conversion.
-\end{enumerate}
-
-In this section, we describe the functional conversion algorithm. 
+In this section, we describe the functional conversion algorithm.
 The reader is encouraged to first read the paper \todo{(cite)} on the topic, which introduces the conversion scheme on a series of examples.
 
-Functional conversion is done for a relation with a concrete fixed direction. 
-The goal is to create a function which computes the same answers as \mk would, not necessarily in the same order. 
-Since the search in \mk is complete, both conjuncts and disjuncts can be reordered freely: interleaving makes sure that no answers would be lost this way. 
-Moreover, the original order of the subgoals is very often suboptimal for any direction but the one which the programmer had in mind when they encoded the relation. 
-When relational conversion is used to create a relation, the order of the subgoals only really suits the forward direction, whereas the relation is not intended to be run in it. 
+Functional conversion is done for a relation with a concrete fixed direction.
+The goal is to create a function which computes the same answers as \mk would, not necessarily in the same order.
+Since the search in \mk is complete, both conjuncts and disjuncts can be reordered freely: interleaving makes sure that no answers would be lost this way.
+Moreover, the original order of the subgoals is often suboptimal for any direction but the one which the programmer had in mind when they encoded the relation.
+When relational conversion is used to create a relation, the order of the subgoals only really suits the forward direction, whereas the relation is not intended to be run in it.
 
-We employ a simple version of mode analysis to order subgoals properly in the given direction. 
-The mode analysis makes sure that a variable is never used before it is associated with some value. 
-It also ensures that once a variable becomes ground, it never becomes free, thus the value of a variable is never lost. 
-These two considerations are enough to produce a function, but they do not really influence the performance. 
-
-While a relation is executed in the given direction, more and more variables become ground. 
-There are different ways a variable becomes ground. 
-For example, a unification $v \equiv t$, where $t$ is a ground term, and $v$ a free variable, serves as an assignment of the value $t$ to the variable $v$. 
-We translate this kind of unification into an assignment in a functional language, and it is a very cheap operation. 
-Another cheap kind of unification is $v \equiv t$, where both $v$ and $t$ are ground. 
-This is just an equality check, which is not costly at all, especially taking into the account that terms are flat. 
-Executing such kind of computations early on can only make the search space smaller and thus only improve the performance \todo{(is this even true?)}. 
-
-To the contrary, if we handle a unification $v \equiv t$ where $v$ is free, and $t$ contains some free variables, is a nightmare. 
-Since the resulting from the conversion function should return ground values which cannot contain any logic variables, we have to make some way to produce the ground values out of thin air. 
-Having a logic variable somewhere in a term means that it may be replaced by any possible value which makes sense in the context. 
-In case of the typed \mk embeddings, it means that it may be replaced by any value of the corresponding] type, and the free logic variable in reality corresponds to often infinite set of possible values. 
-We proposed to use the \emph{generators} to make a stream of all values. 
-Most of the data types are recursive, and thus produce an infinite stream of possible values. 
-Considering this early on in the computations does not limit the search space what so ever, and should be avoided if possible. 
-
-We decided to order conjunctions in such a way that they compute as many guards and assignments early, in hopes that this would allow us to avoid generators. 
-
-The whole other thing is relations. 
-Each relation can work as a generator, and even though for some relations it is clear, for other it is not. 
-We cannot judge the relation to be a generator solely by its mode: addoIOO generates an infinite stream, while addoOOI does not \todo{(check)}. 
-We can be sure that any relation with only input variables serves as guard and can be called earlier safely. 
+The mode inference results in the relational program with all variables annotated by their modes, and all base subgoals ordered in a way that further conversion makes sense.
+Conversion then produces functions in the intermediate language.
+It may be further pretty printed into concrete functional programming languages, in our case \haskell and \ocaml.
 
 
+\subsection{Mode Inference}
 
+We employ a simple version of mode analysis to order subgoals properly in the given direction.
+The mode analysis makes sure that a variable is never used before it is associated with some value.
+It also ensures that once a variable becomes ground, it never becomes free, thus the value of a variable is never lost.
+The mode inference pseudocode is presented in figure~\ref{fig:modeInference}.
 
+\input{fig/mode_inference}
+
+Mode inference starts by initializing modes for all variables in the body of the given relation according to the given direction.
+All variables which are among arguments are annotated with their \inm or \outm modes, while all other variables get only their initial instantiations specified as $f$.
+
+Then the body of the relation is analyzed (see line \todo{(reference)} in figure \todo{(reference)}).
+Since the body is normalized, it can only be a disjunction.
+Each disjunct is analyzed independently, because no data flow happens between them.
+
+Analyzing conjunctions involves analyzing subgoals and ordering them.
+Let us first consider mode analysis of unifications and calls and then circle back to the way we order them.
+Whenever a base goal is analyzed, all variables in it has some initial instantiation, and some of them also have some final instantiation.
+Mode analyzing a base goal boils down to making all final instantiations ground.
+
+When analyzing a unification, several situations may occur.
+Firstly, every variable in the unification can be ground, as in $x^{g \rightarrow g} \equiv O$ or in $y^{g \rightarrow ?} \equiv z^{g \rightarrow ?}$ (here $?$ is used to denote that a final instantiation is not yet known).
+We call this case \emph{guard}, since it is equivalent to checking that two values are the same.
+
+The second case is when one side of a unification only contains ground variables.
+Depending on which side is ground, we call this either \emph{assignment} or \emph{match}.
+The former corresponds to assigning the value to a variable, as in $x^{f \rightarrow ?} \equiv S \, x_1^{g \rightarrow g}$ or $x^{g \rightarrow g} \equiv y^{f \rightarrow ?}$.
+The latter --- to pattern matching with the variable as the scrutinee, as in $x^{g \rightarrow g} \equiv S \, x_1^{f \rightarrow ?}$.
+Notice that we allow some variables in the right-hand side to be ground in matches, given that at least one of them is free.
+
+The last case occurs when both the left-hand and right-hand sides contain free variables.
+This does not translate well into functional code.
+Any free logic variable corresponds to the possibly infinite number of ground values.
+To handle this kind of unifications, we propose to use \emph{generators} which produce all possible values a free variable may have.
+
+We base our ordering strategy for conjuncts on the fact that these four different unification types have different costs.
+The guards are just equality checks, which are inexpensive and can reduce the search space considerably.
+Assignments and matches are more involved, but they still take much less effort, than generators.
+Moreover, executing non-generator conjuncts first may make some of the variables of the prospective generator ground, thus avoiding generation in the end.
+
+This is the base reasoning which is behind our ordering strategy.
+The function \lstinline{pickConjunction} selects first guard unification it can find.
+If no guard is present, then it searches for the first assignment, then for the match.
+If all unifications in the conjunction are generators, then the search continues among relation calls.
+First it selects relation calls with all ground arguments, then with some ground arguments, and only if there are non of those, it picks a generator.
+
+Once one conjunct is picked, it is analyzed.
+The picked conjunct may instantiate new variables, thus this information is propagated onto the rest of the conjuncts.
+Then the rest of the conjuncts is mode analyzed as a new conjunction.
+If any new modes for any of the relations are encountered, they are also mode analyzed.
+
+It is worth noticing that any relation can be a generator.
+We cannot judge the relation to be a generator solely by its mode: the addition relation in the mode \lstinline{add$^o$ x$^{g \rightarrow g}$ y$^{f \rightarrow g}$ z$^{f \rightarrow g}$} generates an infinite stream, while \lstinline{add$^o$ x$^{f \rightarrow g}$ y$^{f \rightarrow g}$ z$^{g \rightarrow g}$} does not \todo{(check)}.
+
+\subsection{Conversion into Intermediate Representation}
+
+\subsection{Conversion into Concrete Languages}
