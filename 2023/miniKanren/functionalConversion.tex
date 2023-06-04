@@ -1,0 +1,48 @@
+\section{Functional Conversion in \mk}
+
+\begin{enumerate}
+    \item Discuss the motivation and importance of functional conversion in \mk.
+    \item Present the core contribution: an algorithm for functional conversion.
+    \item Explain the algorithm's steps and principles behind functional conversion.
+\end{enumerate}
+
+In this section, we describe the functional conversion algorithm. 
+The reader is encouraged to first read the paper \todo{(cite)} on the topic, which introduces the conversion scheme on a series of examples.
+
+Functional conversion is done for a relation with a concrete fixed direction. 
+The goal is to create a function which computes the same answers as \mk would, not necessarily in the same order. 
+Since the search in \mk is complete, both conjuncts and disjuncts can be reordered freely: interleaving makes sure that no answers would be lost this way. 
+Moreover, the original order of the subgoals is very often suboptimal for any direction but the one which the programmer had in mind when they encoded the relation. 
+When relational conversion is used to create a relation, the order of the subgoals only really suits the forward direction, whereas the relation is not intended to be run in it. 
+
+We employ a simple version of mode analysis to order subgoals properly in the given direction. 
+The mode analysis makes sure that a variable is never used before it is associated with some value. 
+It also ensures that once a variable becomes ground, it never becomes free, thus the value of a variable is never lost. 
+These two considerations are enough to produce a function, but they do not really influence the performance. 
+
+While a relation is executed in the given direction, more and more variables become ground. 
+There are different ways a variable becomes ground. 
+For example, a unification $v \equiv t$, where $t$ is a ground term, and $v$ a free variable, serves as an assignment of the value $t$ to the variable $v$. 
+We translate this kind of unification into an assignment in a functional language, and it is a very cheap operation. 
+Another cheap kind of unification is $v \equiv t$, where both $v$ and $t$ are ground. 
+This is just an equality check, which is not costly at all, especially taking into the account that terms are flat. 
+Executing such kind of computations early on can only make the search space smaller and thus only improve the performance \todo{(is this even true?)}. 
+
+To the contrary, if we handle a unification $v \equiv t$ where $v$ is free, and $t$ contains some free variables, is a nightmare. 
+Since the resulting from the conversion function should return ground values which cannot contain any logic variables, we have to make some way to produce the ground values out of thin air. 
+Having a logic variable somewhere in a term means that it may be replaced by any possible value which makes sense in the context. 
+In case of the typed \mk embeddings, it means that it may be replaced by any value of the corresponding] type, and the free logic variable in reality corresponds to often infinite set of possible values. 
+We proposed to use the \emph{generators} to make a stream of all values. 
+Most of the data types are recursive, and thus produce an infinite stream of possible values. 
+Considering this early on in the computations does not limit the search space what so ever, and should be avoided if possible. 
+
+We decided to order conjunctions in such a way that they compute as many guards and assignments early, in hopes that this would allow us to avoid generators. 
+
+The whole other thing is relations. 
+Each relation can work as a generator, and even though for some relations it is clear, for other it is not. 
+We cannot judge the relation to be a generator solely by its mode: addoIOO generates an infinite stream, while addoOOI does not \todo{(check)}. 
+We can be sure that any relation with only input variables serves as guard and can be called earlier safely. 
+
+
+
+

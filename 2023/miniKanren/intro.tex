@@ -1,0 +1,18 @@
+\section{Introduction}
+One of the most attractive applications of relational programming is program inversion.
+It comes in handy, when the program being inverted is a relational interpreter of some sorts: this way an interpreter for a programming language may be used for program synthesis, a type checker --- to solve type inhabitation problem \todo{(cite relational interpreters for search)}.
+Building relational interpreters out of functional implementations can be done automatically \todo{(Cite Lozov's conversion)}, but the resulting relations are often rather slow. 
+Expertise and effort are required to manually create a relational interpreter with optimal performance.
+Utilizing program transformations to improve performance of the generated relational interpreters may be a better way to achieve better inversions.  
+
+Relational programs do not exist on their own: they are a part of a host program, which utilizes query results in some way. 
+Since host languages are rarely logic, they are not expected to be able to process logic variables, nondeterminism and other aspects of relational computations. 
+The host program usually only deals with a finite subset of answers, which have been reified into a ground representation, meaning they do not include logic variables. 
+
+When a relation is expected to produce ground answers, and the direction in which it is intended to be run is known, then it becomes possible to convert it into a function which may execute significantly faster than its relational counterpart. 
+Performance improvement comes from replacing expensive unifications with considerably faster equality checks, assignments and pattern matches of a host language. 
+An informal functional conversion scheme was introduced in the paper \todo{(cite last year's \mk paper)}. 
+We are building upon this research effort, presenting a semi-automatic functional conversion algorithm and implementation for a minimal core relational programming language \micro. 
+This paper focuses on converting to the target languages of \haskell and \ocaml, although other languages can also be considered as potential target languages.
+
+\todo{(Some evaluation numbers)}

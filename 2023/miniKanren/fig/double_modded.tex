@@ -1,0 +1,36 @@
+\begin{figure}[h]
+  \centering
+  \begin{subfigure}[b]{0.45\textwidth}
+    \begin{lstlisting}[frame=tb]
+  let double$^o$ x$^{g \rightarrow g}$ r$^{f \rightarrow g}$ = 
+    addo$^o$ x1$^{g \rightarrow g}$ x2$^{g \rightarrow g}$ r$^{f \rightarrow g}$ /\ 
+    x1$^{g \rightarrow g}$ ===    x2$^{g \rightarrow g}$
+
+  let rec add$^o$ x$^{g \rightarrow g}$ y$^{g \rightarrow g}$ z$^{f \rightarrow g}$ =
+    (x$^{g \rightarrow g}$ ===    O /\ y$^{g \rightarrow g}$ ===    z$^{f \rightarrow g}$) \/
+    (x$^{g \rightarrow g}$ ===    S x1$^{f \rightarrow g}$ /\
+     add$^o$ x1$^{g \rightarrow g}$ y$^{g \rightarrow g}$ z1$^{f \rightarrow g}$ /\
+     z$^{f \rightarrow g}$ ===    S z1$^{g \rightarrow g}$) ]
+    \end{lstlisting}
+   \caption{Forward direction}
+    \label{fig:double_fwd}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.45\textwidth}
+    \begin{lstlisting}[frame=tb]
+  let double$^o$ x$^{f \rightarrow g}$ r$^{g \rightarrow g}$ = 
+    addo$^o$ x1$^{f \rightarrow g}$ x2$^{f \rightarrow g}$ r$^{g \rightarrow g}$ /\ 
+    x1$^{g \rightarrow g}$ ===    x2$^{g \rightarrow g}$
+
+  let rec add$^o$ x$^{f \rightarrow g}$ y$^{f \rightarrow g}$ z$^{g \rightarrow g}$ =
+    (x$^{f \rightarrow g}$ ===    O /\ y$^{f \rightarrow g}$ ===    z$^{g \rightarrow g}$) \/
+    (z$^{f \rightarrow g}$ ===    S z1$^{g \rightarrow g}$ /\
+     add$^o$ x1$^{f \rightarrow g}$ y$^{f \rightarrow g}$ z1$^{g \rightarrow g}$ /\
+     x$^{f \rightarrow g}$ ===    S x1$^{g \rightarrow g}$) ]
+    \end{lstlisting}
+    \caption{Backward direction}
+    \label{fig:double_bw}
+  \end{subfigure}
+  \caption{Normalized doubling and addition relations with mode annotations}
+  \label{fig:double_modded}
+\end{figure}

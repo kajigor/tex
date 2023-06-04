@@ -1,0 +1,70 @@
+\section{Background}
+
+In this section, we describe the abstract syntax of \mk version used in this paper and describe mode analysis --- one of the steps used in our conversion --- which was developed earlier for other languages.  
+
+\subsection{Abstract Syntax of \mk}
+
+To simplify the functional conversion scheme, we consider \mk relations to be in the normal form \todo{(find the proper name)}.  
+Converting an arbitrary \mk relation into the normal form is a simple syntactic transformation which me omit. 
+
+In the normal form, a term is either a variable or a constructor application which is flat and linear. 
+Linearity means that arguments of a constructor are distinct variables. 
+To be flat, a term should not contain any nested constructors. 
+Each constructor has a fixed arity $n$. 
+\todo{Below} is the abstract syntax of the term language over the set of variables $V$. 
+\[  \FlatTerm_{V} = V \cup \{\Cons_{i}\left( x_1, \ldots, x_{k_{i}} \right) \mid x_{j}\in V\} \]
+
+Whenever a term which does not adhere to this form is encountered in a unification or as an argument of a call, it is transformed into a conjunction of several unifications, as illustrated by the following examples: 
+\[ C\left( x_1, x_2 \right) \equiv C\left( C\left( y_1, y_2 \right), y_3 \right) \iff x_1 \equiv C\left( y_1, y_2 \right) \land x_2 \equiv y_3   \]
+\[ C\left( C\left( x_1, x_2 \right), x_3 \right) \equiv C\left( C\left( y_1, y_2 \right), y_3 \right) \iff x_1 \equiv y_1 \land x_2 \equiv y_2 \land x_3 \equiv y_3   \]
+\[add^o\left( x, x, z \right) \iff x_1 \equiv x_2 \land add^o\left( x_1, x_2, z \right) \]
+
+Unification in the normal form is restricted to always unify a variable with a term. 
+We also prohibit using conjunctions inside disjunctions. 
+The normalization procedure declares a new relation when this is encountered. 
+
+Inverse eta-delay is used in \mk to make sure that the computation is sufficiently lazy. 
+Usually, it is allowed to be used anywhere in a goal, but it is only needed to be used on calls. 
+This is why we decided to represent inverse eta-delay as a flag which accompanies calls. 
+
+The complete abstract syntax of the \mk language used in this paper is presented in figure~\ref{fig:miniKanren}. 
+
+\begin{figure}[h]
+    \begin{tabular}{llll}
+     $\Def_{V}^N$ & $=$ & $R_{i}\left( x_1, \ldots, x_{k_{i}} \right) \equiv \Disj_{V}, x_{j}\in V$ & normalized relation definition \\
+    $\Disj_{V}$ & $=$ & $\bigvee\left( c_1, \ldots, c_{n} \right), c_{i}\in \Conj_{V}$ & normal form \\
+    $\Conj_{V}$ & $=$ & $\bigwedge\left( g_1, \ldots, g_n \right), g_{i}\in \Base_{V}$ & normal conjunction \\
+    $\Base_{V}$ & $=$ & $V \equiv \FlatTerm_{V}$ & flat unification \\
+                & $\mid$ & $R_{i}^{d}\left( x_1, \ldots, x_{k_{i}} \right), d\in \Delay, x_{j}\in V$ & flat call\\
+    
+    $\Delay$ & $=$ &  $\{\text{Delay}, \text{NoDelay}\} $ &
+    \end{tabular}
+    \caption{Abstract syntax of \mk in the normal form}
+    \label{fig:miniKanren}
+\end{figure}
+
+\todo{example of some relation in the concrete syntax, query and result (?)}
+
+\subsection{Modes}
+
+A mode generalizes the concept of a direction and is the terminology most commonly used in the larger logic programming community. 
+In its most primitive form, a mode specifies which arguments of a relation are going to be known at runtime (input) and which are expected to be computed (output).
+Several logic programming languages has mode systems used for optimizations, with \merc standing out among them. 
+\merc is a modern functional-logic programming with a complicated mode system capable not only to describe a direction, but also whether the relation in the given mode is deterministic, among other things. 
+
+Given an annotation for a relation, mode inference determines modes of each variable of the relation. 
+For some modes, conjunctions in the body of a relation may need reordering to ensure that consumers of computed values come after the producers of said values so that a variable is never used before it is associated with some value. 
+In this project, we employed the least complicated mode system, in which variables may only have an \inm or \outm mode.
+A mode maps variables of a relation to a pair of the initial and final instantiations.
+The mode \inm stands for $g \rightarrow g$, while \outm~--- $f \rightarrow g$. 
+The instantiation $f$ represents an unbound, of free, variable, when no information about its possible values is available. 
+When the variable is known to be ground, its instantiation is $g$. 
+In this paper, we will call a pair of instantiations a mode of a variable, and annotate all variables with their modes, as can be seen in the example \todo{(stick some example)}.
+
+Figure~\ref{fig:double_modded} shows examples of \mk relation with mode inferenced for the forward direction and backward direction. 
+We use superscript annotation for variables to represent modes visually. 
+Notice the different order of conjuncts in the bodies of the \lstinline{add$^o$} relation in different modes. 
+
+\input{fig/double_modded}
+
+
