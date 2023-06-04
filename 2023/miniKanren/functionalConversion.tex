@@ -71,4 +71,48 @@ We cannot judge the relation to be a generator solely by its mode: the addition 
 
 \subsection{Conversion into Intermediate Representation}
 
+To represent nondeterminism, our functional conversion uses the basis of \mk --- the stream data structure.
+A relation is converted into a function with $n$ arguments which returns a stream of $m$-tuples, where $n$ is the number of the input arguments, and $m$ --- is the number of the output arguments of the relation.
+Since stream is a monad, functions can be written elegantly in \haskell using the do-notation \todo{(ref to some later code sample)}.
+We use an intermediate representation which draws inspiration from the \haskell's do-notation, but can then be pretty-printed into other functional languages.
+The abstract syntax of our intermediate language is shown in figure~\ref{fig:intermediate}.
+The conversion follows quite naturally from the modded relation and the syntax of the intermediate representation.
+
+\begin{figure}[h]
+\begin{tabular}{llll}
+    $\Fun_{V}$ & $=$ & $\Sum\LIST{\Fun_{V}}$ & concatenation of streams\\
+               & $\mid$ & $\Bind\LIST{\left(\LIST{V}, \Fun_{V}\right)} $ & monadic bind on streams\\
+               & $\mid$ & $\Rtrn \LIST{\Term_{V}}$ & return of a tuple of terms\\
+               & $\mid$ & $\Guard\left( V, V \right)$ & equality check\\
+               & $\mid$ & $\Match_{V} \left( \Term_{V}, \Fun_{V} \right)$ & match a variable against a pattern\\
+               & $\mid$ & $R_{i}^{d}(\LIST{V}, \LIST{G}), d\in \Delay $ & function call\\
+               & $\mid$ & $\Gen_{G}$ & generator
+\end{tabular}
+\caption{Abstract syntax of the intermediate language $\Fun$}
+\label{fig:intermediate}
+\end{figure}
+
+
+A body of a function is formed as an interleaving concatenation of streams ($\Sum$), each of which is constructed from one of the disjuncts of the relation.
+A conjunction is translated into a sequence of bind statements ($\Bind$): one for each of the conjuncts and a return statement ($\Rtrn$) in the end.
+A bind statement binds a tuple of variables (or nothing) with values taken from the stream in the right-hand side.
+
+A base goal is converted into a guard ($\Guard$), match ($\Match$), or function call, depending on the goal's type.
+Assignments are translated into binds with a single return statement on the right.
+Notice, that a match only has one branch.
+This branch correspond to a unification, and if the scrutinee does not match the term it is unified with, then an empty stream is returned in the catch-all branch.
+If a term in the right-hand side of a unification has both \outm and \inm variables, then additional guards are placed in the body of the branch to ensure the equality between values bound in the pattern and the actual ground values.
+
+Generators ($\Gen$) are used for unifications with free variables on both sides.
+A generator is a stream of possible values for the free variables and is used for each variable from the right-hand side of the unification.
+The variable from the left-hand side of the unification is then simply assigned the value constructed from the right-hand side.
+Our current implementation works with an untyped deeply embedded \mk, in which there is not enough information to produce generators automatically.
+We decided to delegate the responsibility to provide generators to the user: a generator for each free variable is added as an argument of the relation.
+When the user is to call the function, they have to provide the suitable generators.
+
 \subsection{Conversion into Concrete Languages}
+
+The intermediate representation is then translated into a concrete functional programming language.
+We provided two translations: into \haskell and \ocaml.
+The first one utilizes metaprogramming framework TemplateHaskell, while the second is a custom pretty-printer.
+There is no do-notation in \ocaml, however let-syntax provides a decent alternative.
