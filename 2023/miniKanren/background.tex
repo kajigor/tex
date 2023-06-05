@@ -11,7 +11,7 @@ In the normal form, a term is either a variable or a constructor application whi
 Linearity means that arguments of a constructor are distinct variables.
 To be flat, a term should not contain any nested constructors.
 Each constructor has a fixed arity $n$.
-\todo{Below} is the abstract syntax of the term language over the set of variables $V$.
+Below is the abstract syntax of the term language over the set of variables $V$.
 \[  \FlatTerm_{V} = V \cup \{\Cons_{n}\left( x_1, \ldots, x_{n} \right) \mid x_{i}\in V; i \neq j \Rightarrow x_i \neq x_j\} \]
 
 Whenever a term which does not adhere to this form is encountered in a unification or as an argument of a call, it is transformed into a conjunction of several unifications, as illustrated by the following examples:
