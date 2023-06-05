@@ -73,19 +73,19 @@ We cannot judge the relation to be a generator solely by its mode: the addition 
 
 To represent nondeterminism, our functional conversion uses the basis of \mk --- the stream data structure.
 A relation is converted into a function with $n$ arguments which returns a stream of $m$-tuples, where $n$ is the number of the input arguments, and $m$ --- is the number of the output arguments of the relation.
-Since stream is a monad, functions can be written elegantly in \haskell using the do-notation \todo{(ref to some later code sample)}.
-We use an intermediate representation which draws inspiration from the \haskell's do-notation, but can then be pretty-printed into other functional languages.
+Since stream is a monad, functions can be written elegantly in \haskell using do-notation \todo{(ref to some later code sample)}.
+We use an intermediate representation which draws inspiration from \haskell's do-notation, but can then be pretty-printed into other functional languages.
 The abstract syntax of our intermediate language is shown in figure~\ref{fig:intermediate}.
 The conversion follows quite naturally from the modded relation and the syntax of the intermediate representation.
 
 \begin{figure}[h]
 \begin{tabular}{llll}
     $\Fun_{V}$ & $=$ & $\Sum\LIST{\Fun_{V}}$ & concatenation of streams\\
-               & $\mid$ & $\Bind\LIST{\left(\LIST{V}, \Fun_{V}\right)} $ & monadic bind on streams\\
+               & $\mid$ & $\Bind\LIST{\left(\LIST{V}, \Fun_{V}\right)} $ & monadic bind for streams\\
                & $\mid$ & $\Rtrn \LIST{\Term_{V}}$ & return of a tuple of terms\\
                & $\mid$ & $\Guard\left( V, V \right)$ & equality check\\
                & $\mid$ & $\Match_{V} \left( \Term_{V}, \Fun_{V} \right)$ & match a variable against a pattern\\
-               & $\mid$ & $R_{i}^{d}(\LIST{V}, \LIST{G}), d\in \Delay $ & function call\\
+               & $\mid$ & $R_{n}^{d}(\LIST{V}, \LIST{G}), d\in \Delay $ & function call\\
                & $\mid$ & $\Gen_{G}$ & generator
 \end{tabular}
 \caption{Abstract syntax of the intermediate language $\Fun$}
@@ -110,9 +110,3 @@ Our current implementation works with an untyped deeply embedded \mk, in which t
 We decided to delegate the responsibility to provide generators to the user: a generator for each free variable is added as an argument of the relation.
 When the user is to call the function, they have to provide the suitable generators.
 
-\subsection{Conversion into Concrete Languages}
-
-The intermediate representation is then translated into a concrete functional programming language.
-We provided two translations: into \haskell and \ocaml.
-The first one utilizes metaprogramming framework TemplateHaskell, while the second is a custom pretty-printer.
-There is no do-notation in \ocaml, however let-syntax provides a decent alternative.

@@ -2,7 +2,7 @@
 
 In this section, we describe the abstract syntax of \mk version used in this paper and describe a concept of modes which was developed earlier for other logic languages.
 
-\subsection{Abstract Syntax of \mk}
+\subsection{Normal Form Abstract Syntax of \mk}
 
 To simplify the functional conversion scheme, we consider \mk relations to be in the normal form \todo{(find the proper name)}.
 Converting an arbitrary \mk relation into the normal form is a simple syntactic transformation which me omit.
@@ -12,7 +12,7 @@ Linearity means that arguments of a constructor are distinct variables.
 To be flat, a term should not contain any nested constructors.
 Each constructor has a fixed arity $n$.
 \todo{Below} is the abstract syntax of the term language over the set of variables $V$.
-\[  \FlatTerm_{V} = V \cup \{\Cons_{i}\left( x_1, \ldots, x_{k_{i}} \right) \mid x_{j}\in V\} \]
+\[  \FlatTerm_{V} = V \cup \{\Cons_{n}\left( x_1, \ldots, x_{n} \right) \mid x_{i}\in V; i \neq j \Rightarrow x_i \neq x_j\} \]
 
 Whenever a term which does not adhere to this form is encountered in a unification or as an argument of a call, it is transformed into a conjunction of several unifications, as illustrated by the following examples:
 \[ C\left( x_1, x_2 \right) \equiv C\left( C\left( y_1, y_2 \right), y_3 \right) \Rightarrow x_1 \equiv C\left( y_1, y_2 \right) \land x_2 \equiv y_3   \]
@@ -31,13 +31,13 @@ The complete abstract syntax of the \mk language used in this paper is presented
 
 \begin{figure}[h]
     \begin{tabular}{llll}
-     $\Def_{V}^N$ & $=$ & $R_{i}\left( x_1, \ldots, x_{k_{i}} \right) \equiv \Disj_{V}, x_{j}\in V$ & normalized relation definition \\
-    $\Disj_{V}$ & $=$ & $\bigvee\left( c_1, \ldots, c_{n} \right), c_{i}\in \Conj_{V}$ & normal form \\
-    $\Conj_{V}$ & $=$ & $\bigwedge\left( g_1, \ldots, g_n \right), g_{i}\in \Base_{V}$ & normal conjunction \\
-    $\Base_{V}$ & $=$ & $V \equiv \FlatTerm_{V}$ & flat unification \\
-                & $\mid$ & $R_{i}^{d}\left( x_1, \ldots, x_{k_{i}} \right), d\in \Delay, x_{j}\in V$ & flat call\\
+     $\Def_{V}^N$ & $:$ & $R_{n}\left( x_1, \ldots, x_{n} \right) = \Disj_{V}, x_{i}\in V$ & normalized relation definition \\
+    $\Disj_{V}$ & $:$ & $\bigvee\left( c_1, \ldots, c_{n} \right), c_{i}\in \Conj_{V}$ & normal form \\
+    $\Conj_{V}$ & $:$ & $\bigwedge\left( g_1, \ldots, g_n \right), g_{i}\in \Base_{V}$ & normal conjunction \\
+    $\Base_{V}$ & $:$ & $V \equiv \FlatTerm_{V}$ & flat unification \\
+                & $\mid$ & $R_{n}^{d}\left( x_1, \ldots, x_{n} \right), d\in \Delay, x_{i}\in V, i \neq j \Rightarrow x_i \neq x_j$ & flat call\\
 
-    $\Delay$ & $=$ &  $\{\text{Delay}, \text{NoDelay}\} $ &
+    $\Delay$ & $:$ &  $\text{Delay} \mid \text{NoDelay} $ &
     \end{tabular}
     \caption{Abstract syntax of \mk in the normal form}
     \label{fig:miniKanren}
