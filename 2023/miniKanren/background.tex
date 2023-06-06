@@ -23,9 +23,9 @@ Unification in the normal form is restricted to always unify a variable with a t
 We also prohibit using conjunctions inside disjunctions.
 The normalization procedure declares a new relation whenever this is encountered.
 
-Inverse eta-delay is used in \mk to make sure that the computation is sufficiently lazy.
-Usually, it is allowed to be used anywhere in a goal, but it is only needed to be used on calls.
-This is why we decided to represent inverse eta-delay as a flag which accompanies calls.
+% Inverse eta-delay is used in \mk to make sure that the computation is sufficiently lazy.
+% Usually, it is allowed to be used anywhere in a goal, but it is only needed to be used on calls.
+% This is why we decided to represent inverse eta-delay as a flag which accompanies calls.
 
 The complete abstract syntax of the \mk language used in this paper is presented in figure~\ref{fig:miniKanren}.
 
@@ -35,9 +35,9 @@ The complete abstract syntax of the \mk language used in this paper is presented
     $\Disj_{V}$ & $:$ & $\bigvee\left( c_1, \ldots, c_{n} \right), c_{i}\in \Conj_{V}$ & normal form \\
     $\Conj_{V}$ & $:$ & $\bigwedge\left( g_1, \ldots, g_n \right), g_{i}\in \Base_{V}$ & normal conjunction \\
     $\Base_{V}$ & $:$ & $V \equiv \FlatTerm_{V}$ & flat unification \\
-                & $\mid$ & $R_{n}^{d}\left( x_1, \ldots, x_{n} \right), d\in \Delay, x_{i}\in V, i \neq j \Rightarrow x_i \neq x_j$ & flat call\\
+                & $\mid$ & $R_{n}\left( x_1, \ldots, x_{n} \right), x_{i}\in V, i \neq j \Rightarrow x_i \neq x_j$ & flat call\\
 
-    $\Delay$ & $:$ &  $\text{Delay} \mid \text{NoDelay} $ &
+    % $\Delay$ & $:$ &  $\text{Delay} \mid \text{NoDelay} $ &
     \end{tabular}
     \caption{Abstract syntax of \mk in the normal form}
     \label{fig:miniKanren}
