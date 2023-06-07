@@ -1,12 +1,12 @@
-\begin{figure}[h]
+\begin{figure}[h!]
   \centering
   \begin{subfigure}[b]{0.45\textwidth}
     \begin{lstlisting}[frame=tb]
-let rec add$^o$ x$^{g \to g}$ y$^{f \to g}$ z$^{f \to g}$ =
-  (x$^{g \to g}$ ===    O /\ y$^{f \to g}$ ===    z$^{f \to g}$) \/
-  (x$^{g \to g}$ ===    S x$_1^{f \to g}$ /\
-   add$^o$ x$_1^{g \to g}$ y$^{f \to g}$ z$_1^{f \to g}$ /\
-   z$^{f \to g}$ ===    S z$_1^{g \to g}$)
+  let rec add$^o$ x$^{g \to g}$ y$^{f \to g}$ z$^{f \to g}$ =
+    (x$^{g \to g}$ ===    O /\ y$^{f \to g}$ ===    z$^{f \to g}$) \/
+    (x$^{g \to g}$ ===    S x$_1^{f \to g}$ /\
+     add$^o$ x$_1^{g \to g}$ y$^{f \to g}$ z$_1^{f \to g}$ /\
+     z$^{f \to g}$ ===    S z$_1^{g \to g}$)
     \end{lstlisting}
    \caption{Mode inference result}
     \label{fig:addo_modded}
@@ -14,12 +14,11 @@ let rec add$^o$ x$^{g \to g}$ y$^{f \to g}$ z$^{f \to g}$ =
   \hfill
   \begin{subfigure}[b]{0.45\textwidth}
     \begin{lstlisting}[frame=tb]
-genNat = msum
-  [ return O
-  , do { x <- genNat
-       ; return (S x) } ]
-
-runAddoIIO x = addoIIO x genNat
+  genNat = msum
+    [ return O
+    , do { x <- genNat
+         ; return (S x) } ]
+  runAddoIIO x = addoIIO x genNat
     \end{lstlisting}
    \caption{Generator of Peano numbers}
     \label{fig:addo_gen}
@@ -27,20 +26,15 @@ runAddoIIO x = addoIIO x genNat
 
   \hfill
 
-  \begin{subfigure}[b]{0.61\textwidth}
+  \begin{subfigure}[b]{0.91\textwidth}
     \begin{lstlisting}[frame=tb]
-addoIOO x0 gen_addoIOO_x2 = msum
-  [ do { guard (x0 == O)
-       ; (x1, x2) <- do { x2 <- gen_addoIOO_x2
-                         ; return (x2, x2) }
-       ; return (x1, x2) }
-  , do { x3 <- case x0 of
-          { S y3 -> return y3
-          ; _ -> mzero }
-       ; (x1, x4) <- addoIOO x3 gen_addoIOO_x2
-       ; let {x2 = S x4}
-       ; return (x1, x2) } ]
-
+  addoIOO x0 gen_addoIOO_x2 = msum
+    [ do { guard (x0 == O)
+         ; (x1, x2) <- do { x2 <- gen_addoIOO_x2 ; return (x2, x2) }
+         ; return (x1, x2) }
+    , do { x3 <- case x0 of { S y3 -> return y3 ; _ -> mzero }
+         ; (x1, x4) <- addoIOO x3 gen_addoIOO_x2
+         ; let {x2 = S x4} ; return (x1, x2) } ]
     \end{lstlisting}
     \caption{Functional conversion}
     \label{fig:addo_hsk}

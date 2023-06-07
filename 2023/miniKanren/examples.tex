@@ -1,10 +1,12 @@
+\input{fig/mult_modded}
+
 \section{Examples}
 
 In this section we provide a set of examples which demonstrate mode analysis and conversion results.
 
+
 \subsection{Multiplication Relation}
 
-\input{fig/mult_modded}
 
 Figure~\ref{fig:mult} shows the implementation of the multiplication relation \lstinline{mul$^o$}, the mode analysis result for mode \lstinline{mul$^o$ x$^{f \to g}$ y$^{g\to g}$ z$^{g\to g}$} , and the results of functional conversion into \haskell and \ocaml.
 
@@ -25,6 +27,8 @@ To check conditions, we use the function \lstinline{guard} which fails the monad
 Note that even though patterns for the variable \lstinline{x0} in the function \lstinline{addoIOI} are disjunct in two branches, we do not express them as a single pattern match.
 Doing so would improve readability, but it does not make a difference when it comes to the performance, according to our evaluation.
 
+\input{fig/add_IOO}
+
 \subsection{The Mode of Addition Relation which Needs a Generator}
 
 Consider the example of the addition relation in mode \lstinline{add$^o$ x$^{g \to g}$ y$^{f \to g}$ z$^{f \to g}$} presented in figure~\ref{fig:addo}.
@@ -38,16 +42,15 @@ Otherwise the function would not terminate trying to eagerly produce all possibl
 
 It is possible to automatically produce generators from the data type of a variable, but it is currently not implemented, as we work with an untyped version of \mk.
 
-\input{fig/add_IOO}
 
-\subsection{Propositional Evaluator}
-
+% \subsection{Propositional Evaluator}
 
 
-\subsection{Logic Riddles}
 
-Water Pouring Riddle
+% \subsection{Logic Riddles}
 
-Wolf-Goat-Cabbage Riddle
+% Water Pouring Riddle
 
-Trucks in Desert Riddle
+% Wolf-Goat-Cabbage Riddle
+
+% Trucks in Desert Riddle

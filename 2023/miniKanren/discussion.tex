@@ -1,0 +1,14 @@
+\section{Discussion}
+
+Our experiments showed that the functional conversion is capable to significantly improve performance of relational computations in the known directions.
+The improvement stems from eliminating costly unifications in favor of the cheaper equality checks and pattern matches.
+Beside this, we employed some heuristics which push lower-cost computations to happen sooner while delaying higher-cost ones.
+It is also possible to take into account determinism of some directions and improve performance of them even more by picking an appropriate monad.
+
+It is currently not unclear if the heuristics we used are universal enough.
+However, it is always safe to run any deterministic computations because they never increase the search space.
+We believe that it is necessary to integrate determinism check in the mode analysis so that the more efficient modes such as the one presented in figure~\ref{fig:mult_modded_good} could be achieved more justifiably.
+
+We also think that further integration with specialization techniques such as partial deduction may benefit the conversion even more.
+For example, the third argument of the propositional evaluator can be either \lstinline{true} or \lstinline{false}.
+Specializing the evaluator for these to values may help to shave off even more time.
