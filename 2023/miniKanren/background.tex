@@ -1,11 +1,11 @@
 \section{Background}
 
-In this section, we describe the abstract syntax of \mk version used in this paper and describe a concept of modes which was developed earlier for other logic languages.
+In this section, we describe the abstract syntax of \micro version used in this paper and describe a concept of modes which was developed earlier for other logic languages.
 
-\subsection{Normal Form Abstract Syntax of \mk}
+\subsection{Normal Form Abstract Syntax of \micro}
 
-To simplify the functional conversion scheme, we consider \mk relations to be in the superhomogeneous normal form used in the \merc programming language~\cite{somogyi1996execution}. 
-Converting an arbitrary \mk relation into the normal form is a simple syntactic transformation which me omit.
+To simplify the functional conversion scheme, we consider \micro relations to be in the superhomogeneous normal form used in the \merc programming language~\cite{somogyi1996execution}. 
+Converting an arbitrary \micro relation into the normal form is a simple syntactic transformation, which me omit.
 
 In the normal form, a term is either a variable or a constructor application which is flat and linear.
 Linearity means that arguments of a constructor are distinct variables.
@@ -23,11 +23,7 @@ Unification in the normal form is restricted to always unify a variable with a t
 We also prohibit using conjunctions inside disjunctions.
 The normalization procedure declares a new relation whenever this is encountered.
 
-% Inverse eta-delay is used in \mk to make sure that the computation is sufficiently lazy.
-% Usually, it is allowed to be used anywhere in a goal, but it is only needed to be used on calls.
-% This is why we decided to represent inverse eta-delay as a flag which accompanies calls.
-
-The complete abstract syntax of the \mk language used in this paper is presented in figure~\ref{fig:miniKanren}.
+The complete abstract syntax of the \micro language used in this paper is presented in figure~\ref{fig:miniKanren}.
 
 \begin{figure}[h]
     \begin{tabular}{llll}
@@ -39,7 +35,7 @@ The complete abstract syntax of the \mk language used in this paper is presented
 
     % $\Delay$ & $:$ &  $\text{Delay} \mid \text{NoDelay} $ &
     \end{tabular}
-    \caption{Abstract syntax of \mk in the normal form}
+    \caption{Abstract syntax of \micro in the normal form}
     \label{fig:miniKanren}
 \end{figure}
 
@@ -48,18 +44,18 @@ The complete abstract syntax of the \mk language used in this paper is presented
 A mode generalizes the concept of a direction and is the terminology most commonly used in the larger logic programming community.
 In its most primitive form, a mode specifies which arguments of a relation are going to be known at runtime (input) and which are expected to be computed (output).
 Several logic programming languages has mode systems used for optimizations, with \merc standing out among them.
-\merc is a modern functional-logic programming with a complicated mode system capable not only to describe a direction, but also whether the relation in the given mode is deterministic, among other things.
+\merc\footnote{Website of the \merc programming language: \url{https://mercurylang.org/}} is a modern functional-logic programming with a complicated mode system capable not only to describe a direction, but also whether the relation in the given mode is deterministic, among other things~\cite{overton2002constraint}.
 
 Given an annotation for a relation, mode inference determines modes of each variable of the relation.
 For some modes, conjunctions in the body of a relation may need reordering to ensure that consumers of computed values come after the producers of said values so that a variable is never used before it is bound to some value.
 In this project, we employed the least complicated mode system, in which variables may only have an \inm or \outm mode.
 A mode maps variables of a relation to a pair of the initial and final instantiations.
-The mode \inm stands for $g \rightarrow g$, while \outm~--- $f \rightarrow g$.
+The mode \inm stands for $g \rightarrow g$, while \outm~--- for $f \rightarrow g$.
 The instantiation $f$ represents an unbound, or free, variable, when no information about its possible values is available.
 When the variable is known to be ground, its instantiation is $g$.
 
 In this paper, we call a pair of instantiations a mode of a variable.
-Figure~\ref{fig:double_modded} shows examples of the normalized \mk relations with mode inferred for the forward and backward direction.
+Figure~\ref{fig:double_modded} shows examples of the normalized \micro relations with mode inferred for the forward and backward direction.
 We use superscript annotation for variables to represent their modes visually.
 Notice the different order of conjuncts in the bodies of the \lstinline{add$^o$} relation in different modes.
 

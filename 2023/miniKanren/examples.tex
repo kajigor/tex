@@ -2,7 +2,7 @@
 
 \section{Examples}
 
-In this section we provide a set of examples which demonstrate mode analysis and conversion results.
+In this section, we provide some examples which demonstrate mode analysis and conversion results.
 
 
 \subsection{Multiplication Relation}
@@ -14,14 +14,14 @@ Note that the unification comes last in the second disjunct.
 This is because before the two relation calls are done, both variables in the unification are free.
 Our version of mode inference puts the relation calls before the unification, but the order of the calls depends on their order in the original relation.
 There is nothing else our mode inference uses to prefer the order presented in the figure over the opposite: \lstinline{mul$^o$ x$_1^{f \to g}$ y$^{g \to g}$ z$_1^{f \to g}$ /\        add$^o$ y$^{g \to g}$ z$_1^{g \to g}$ z$^{g \to g}$}.
-However it is possible to derive this optimal order, if determinism analysis is employed: \lstinline{add$^o$ y$^{g \to g}$ z$_1^{f \to g}$ z$^{g \to g}$} is deterministic while \lstinline{mul$^o$ x$_1^{f \to g}$ y$^{g \to g}$ z$_1^{f \to g}$} is not.
-Putting nondeterministic computations first makes the search space larger and thus should be avoided if another order is possible.
+However, it is possible to derive this optimal order, if determinism analysis is employed: \lstinline{add$^o$ y$^{g \to g}$ z$_1^{f \to g}$ z$^{g \to g}$} is deterministic while \lstinline{mul$^o$ x$_1^{f \to g}$ y$^{g \to g}$ z$_1^{f \to g}$} is not.
+Putting nondeterministic computations first makes the search space larger, and thus should be avoided if another order is possible.
 
 Functional conversions in both languages are similar, modulo the syntax.
 The \haskell version employs do-notation, while we use let-syntax in the \ocaml code.
 Both are syntactic sugar for monadic computations over streams.
 We use the following convention to name the functions: we add a suffix to the relation's name whose length is the same as the number of the relation's arguments.
-The suffix consists of the letters \lstinline{I} and \lstinline{O} which denote whether the argument is \inm or \outm.
+The suffix consists of the letters \lstinline{I} and \lstinline{O} which denote whether the argument in the corresponding position is \inm or \outm.
 The function \lstinline{msum} uses the interleaving function \lstinline{mplus} to concatenate the list of streams constructed from disjuncts.
 To check conditions, we use the function \lstinline{guard} which fails the monadic computation if the condition does not hold.
 Note that even though patterns for the variable \lstinline{x0} in the function \lstinline{addoIOI} are disjunct in two branches, we do not express them as a single pattern match.
@@ -35,22 +35,9 @@ Consider the example of the addition relation in mode \lstinline{add$^o$ x$^{g \
 The unification in the first disjunct of this relation involves two free variables.
 We use a generator \lstinline{gen_addoIIO_x2} to generate a stream of ground values for the variable \lstinline{z} which is passed into the function \lstinline{addIIO} as an argument.
 It is up to the user to provide a suitable generator.
-One of the possible generators which produces all Peano numbers in order and an example of its usage is presented in figure~\ref{fig:addo_gen}.
+One of the possible generators which produces all Peano numbers in order and an example of its usage are presented in figure~\ref{fig:addo_gen}.
 
 The generators which produce an infinite stream should be inverse eta-delayed in \ocaml and other non-lazy languages.
-Otherwise the function would not terminate trying to eagerly produce all possible ground values before using any of them.
+Otherwise, the function would not terminate trying to eagerly produce all possible ground values before using any of them.
 
-It is possible to automatically produce generators from the data type of a variable, but it is currently not implemented, as we work with an untyped version of \mk.
-
-
-% \subsection{Propositional Evaluator}
-
-
-
-% \subsection{Logic Riddles}
-
-% Water Pouring Riddle
-
-% Wolf-Goat-Cabbage Riddle
-
-% Trucks in Desert Riddle
+It is possible to automatically produce generators from the data type of a variable, but it is currently not implemented, as we work with an untyped version of \micro.

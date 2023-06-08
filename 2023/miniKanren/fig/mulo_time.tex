@@ -27,8 +27,7 @@ let rec mul$^o$ x$^{g \rightarrow g}$ y$^{f \rightarrow g}$ z$^{f \rightarrow g}
   (x$^{g \rightarrow g}$ ===    O /\ z$^{f \rightarrow g}$ ===    O) \/
   (x$^{g \rightarrow g}$ ===    S x$_1^{f \rightarrow g}$ /\
    add$^o$ y$^{f \rightarrow g}$ z$_1^{f \rightarrow g}$ z$^{f \rightarrow g}$ /\
-   mul$^o$ x$_1^{g \rightarrow g}$ y$^{g \rightarrow g}$ z$_1^{g \rightarrow g}$
-   )
+   mul$^o$ x$_1^{g \rightarrow g}$ y$^{g \rightarrow g}$ z$_1^{g \rightarrow g}$ )
     \end{lstlisting}
     \caption{Inefficient mode}
     \label{fig:mult_modded_bad}
@@ -41,7 +40,7 @@ let rec mul$^o$ x$^{g \rightarrow g}$ y$^{f \rightarrow g}$ z$^{f \rightarrow g}
   (x$^{g \rightarrow g}$ ===    O /\ z$^{f \rightarrow g}$ ===    O) \/
   (x$^{g \rightarrow g}$ ===    S x$_1^{f \rightarrow g}$) /\
    mul$^o$ x$_1^{g \rightarrow g}$ y$^{f \rightarrow g}$ z$_1^{f \rightarrow g}$ /\
-   add$^o$ y$^{g \rightarrow g}$ z$_1^{g \rightarrow g}$ z$^{f \rightarrow g}$
+   add$^o$ y$^{g \rightarrow g}$ z$_1^{g \rightarrow g}$ z$^{f \rightarrow g}$ )
     \end{lstlisting}
     \caption{Efficient mode}
     \label{fig:mult_modded_good}

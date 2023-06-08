@@ -1,7 +1,7 @@
 \section{Evaluation}
 
 To evaluate our functional conversion scheme, we implemented the proposed algorithm in \haskell.
-We compared execution time of several relations in different directions against their functional counterparts in the \ocaml language.
+We compared execution time of several \ocanren relations in different directions against their functional counterparts in the \ocaml language.
 Here we showcase two relational programs and their conversions.
 The implementation of the functional conversion\footnote{The repository of the functional conversion project \url{https://github.com/kajigor/uKanren_transformations}} as well as the execution code\footnote{Evaluation code \url{https://github.com/kajigor/miniKanren-func}} can be found on Github.
 
@@ -12,7 +12,7 @@ The implementation of the functional conversion\footnote{The repository of the f
 In this example, we converted a relational evaluator of propositional formulas: see figure~\ref{fig:prop}.
 It evaluates a propositional formula \lstinline{fm} in the environment \lstinline{st} to get the result \lstinline{u}.
 A formula is either a boolean literal, a numbered variable, a negation of another formula, a conjunction or a disjunction of two formulas.
-Converting it in the direction when everything but the formula is \inm (see figure~\ref{fig:prop_modded}), allows one to synthesize formulas which can be evaluated to the given number.
+Converting it in the direction when everything but the formula is \inm (see figure~\ref{fig:prop_modded}), allows one to synthesize formulas which can be evaluated to the given value.
 The conversion of this relation does not involve any generators and is presented in figure~\ref{fig:prop_hsk}.
 
 We run an experiment to compare execution time of the relational interpreter vs. its functional conversion.
@@ -26,23 +26,23 @@ The functional conversion improved execution time of the query about $2.5$ times
 
 \subsection{Multiplication}
 
-In this example, we converted the multiplication relation in several directions and compared it to the relational counterparts: see figure~\ref{fig:mulo_time}.
+In this example, we converted the multiplication relation in several directions and compared them to the relational counterparts: see figure~\ref{fig:mulo_time}.
 Functional conversion significantly reduced execution time in most directions.
 
-In the forward direction we run the query \lstinline{mul$^o$ n 10 q} with \lstinline{n} in the range from $100$ to $1000$, and the functional conversion was $2$ degrees of magnitude faster: $927ms$ vs $9.4ms$ for the largest \lstinline{n}.
+In the forward direction, we run the query \lstinline{mul$^o$ n 10 q} with \lstinline{n} in the range from $100$ to $1000$, and the functional conversion was $2$ degrees of magnitude faster: $927ms$ vs $9.4ms$ for the largest \lstinline{n}, see figure~\ref{fig:mulo_IIO}.
 In the direction which serves as division we run the query \lstinline{mul$^o$ (n/10) q n} with \lstinline{n} ranging from $100$ to $1000$.
-Here performance improved 3 degrees of magnitude: from $24s$ to $1.7s$ for the largest \lstinline{n}.
+Here, performance improved 3 degrees of magnitude: from $24s$ to $1.7s$ for the largest \lstinline{n}, see figure~\ref{fig:mulo_IOI}.
 Even more impressive was the backward direction \lstinline{mul$^o$ x$^{f \to g}$ y$^{f \to g}$ z$^{g \to g}$}.
 Querying for all $16$ pairs of divisors of $1000$ (\lstinline{mul$^o$ q r 1000}) took \ocanren about $32.9s$, while the functional conversion succeeded in $1.1s$.
 
 What was surprising is the mode \lstinline{mul$^o$ x$^{g \to g}$ y$^{f \to g}$ z$^{f \to g}$}.
-In this case the functional conversion was not only worse than its relational source, its performance degraded exponentially with the amount of answers asked.
-It took almost $1450ms$ to find the first $7$ pairs of numbers \lstinline{q} and \lstinline{r} such that \lstinline{10 * q = r}, while \ocanren was able to execute the query in $0.74ms$ (see figure~\ref{fig:mult_modded}).
+In this case, the functional conversion was not only worse than its relational source, its performance degraded exponentially with the amount of answers asked.
+It took almost $1450ms$ to find the first $7$ pairs of numbers \lstinline{q} and \lstinline{r} such that \lstinline{10 * q = r}, while \ocanren was able to execute the query in $0.74ms$ (see figure~\ref{fig:mulo_IOO}).
 The source of this terrible behavior was the suboptimal order of the calls in the second disjunct of the \lstinline{mul$^o$} relation in the corresponding mode (see figure~\ref{fig:mult_modded_bad}).
-In this case the call \lstinline{add$^o$ y$^{f \to g}$ z$_1^{f \to g}$ z$^{f \to g}$} is put first, which generates all possible triples in the addition relation before filtering them by means of the call \lstinline{mul$^o$ x$_1^{g \to g}$ y$^{g \to g}$ z$_1^{g \to g}$}.
+In this case, the call \lstinline{add$^o$ y$^{f \to g}$ z$_1^{f \to g}$ z$^{f \to g}$} is put first, which generates all possible triples in the addition relation before filtering them by means of the call \lstinline{mul$^o$ x$_1^{g \to g}$ y$^{g \to g}$ z$_1^{g \to g}$}.
 The other order of calls is much better (see figure~\ref{fig:mult_modded_good}): it is an order of magnitude faster than its relational source.
 To achieve the better of these two orders automatically, we  delay picking any call with all arguments free.
-It is not clear if this heuristics is universal.
+It is not clear if these heuristics are universal.
 
 
 \subsection{Deterministic Directions}
@@ -52,10 +52,10 @@ For example, any forward direction of a relation created by the relational conve
 The guard directions are semi-deterministic: they may fail, but if they succeed, they produce a single unit value.
 If the addition relation is run with one of the first two arguments \outm, it acts as subtraction and is also deterministic.
 
-For such directions, there is no need to model nondeterminism with stream monad.
-Semi-determinism can be expressed with a Maybe monad while deterministic directions can be converted into simple functions.
-Our implementation of functional conversion only restricts the computations to be monadic, it does not specify which monad it is.
+For such directions, there is no need to model nondeterminism with the Stream monad.
+Semi-determinism can be expressed with a Maybe monad, while deterministic directions can be converted into simple functions.
+Our implementation of functional conversion only restricts the computations to be monadic, it does not specify which monad to use.
 By picking other monads, we can achieve performance improvement. 
-For example, using Maybe for division reduces its execution time by $30$ times in addition to the 2 orders of magnitude improvement from the functional conversion itself: see figure~\ref{fig:maybe}
+For example, using Maybe for division reduces its execution time $30$ times in addition to the 2 orders of magnitude improvement from the functional conversion itself: see figure~\ref{fig:maybe}
 
 \input{fig/maybe}
