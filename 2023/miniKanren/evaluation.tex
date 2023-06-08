@@ -1,15 +1,15 @@
 \section{Evaluation}
 
-To evaluate our functional conversion scheme, we implemented the proposed algorithm in \haskell \todo{(footnote)}.
+To evaluate our functional conversion scheme, we implemented the proposed algorithm in \haskell.
 We compared execution time of several relations in different directions against their functional counterparts in the \ocaml language.
 Here we showcase two relational programs and their conversions.
-The implementation of the functional conversion \todo{(footnote)} as well as the execution code \todo{(footnote)} can be found on github.
+The implementation of the functional conversion\footnote{The repository of the functional conversion project \url{https://github.com/kajigor/uKanren_transformations}} as well as the execution code\footnote{Evaluation code \url{https://github.com/kajigor/miniKanren-func}} can be found on Github.
 
 \input{fig/prop}
 
 \subsection{Evaluator of Propositional Formulas}
 
-In this example we converted a relational evaluator of propositional formulas: see figure~\ref{fig:prop}.
+In this example, we converted a relational evaluator of propositional formulas: see figure~\ref{fig:prop}.
 It evaluates a propositional formula \lstinline{fm} in the environment \lstinline{st} to get the result \lstinline{u}.
 A formula is either a boolean literal, a numbered variable, a negation of another formula, a conjunction or a disjunction of two formulas.
 Converting it in the direction when everything but the formula is \inm (see figure~\ref{fig:prop_modded}), allows one to synthesize formulas which can be evaluated to the given number.
@@ -20,7 +20,9 @@ In the experiment, we generated from $1000$ to $10000$ formulas which evaluate t
 The results are presented in figure~\ref{fig:prop_time}.
 The functional conversion improved execution time of the query about $2.5$ times from $724ms$ to $291ms$ for retrieving $10000$ formulas.
 
-\input{fig/prop_time}
+\input{fig/prop_time} 
+
+\input{fig/mulo_time}
 
 \subsection{Multiplication}
 
@@ -42,7 +44,6 @@ The other order of calls is much better (see figure~\ref{fig:mult_modded_good}):
 To achieve the better of these two orders automatically, we  delay picking any call with all arguments free.
 It is not clear if this heuristics is universal.
 
-\input{fig/mulo_time.tex}
 
 \subsection{Deterministic Directions}
 
@@ -54,5 +55,7 @@ If the addition relation is run with one of the first two arguments \outm, it ac
 For such directions, there is no need to model nondeterminism with stream monad.
 Semi-determinism can be expressed with a Maybe monad while deterministic directions can be converted into simple functions.
 Our implementation of functional conversion only restricts the computations to be monadic, it does not specify which monad it is.
-By picking other monads, we can achieve performance improvement: for example, using Maybe for subtraction reduces execution time by \todo{(number)}.
+By picking other monads, we can achieve performance improvement. 
+For example, using Maybe for division reduces its execution time by $30$ times in addition to the 2 orders of magnitude improvement from the functional conversion itself: see figure~\ref{fig:maybe}
 
+\input{fig/maybe}
