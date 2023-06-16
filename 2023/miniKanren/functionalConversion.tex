@@ -1,4 +1,4 @@
-\section{Functional Conversion of \micro}
+\section{Functional Conversion for \micro}
 
 In this section, we describe the functional conversion algorithm.
 The reader is encouraged to first read the paper~\cite{verbitskaia2022direction} on the topic, which introduces the conversion scheme on a series of examples.
@@ -7,7 +7,7 @@ Functional conversion is done for a relation with a concrete fixed direction.
 The goal is to create a function which computes the same answers as \micro would, not necessarily in the same order.
 Since the search in \micro is complete, both conjuncts and disjuncts can be reordered freely: interleaving makes sure that no answers would be lost this way.
 Moreover, the original order of the subgoals is often suboptimal for any direction but the one which the programmer had in mind when they encoded the relation.
-When the relational conversion is used to create a relation, the order of the subgoals only really suits the forward direction, whereas the relation is often not intended to be run in it (in this case, it is better to run the original function).
+When the relational conversion is used to create a relation, the order of the subgoals only really suits the forward direction, in which the relation is often not intended to be run (in this case, it is better to run the original function).
 
 The mode inference results in the relational program with all variables annotated by their modes, and all base subgoals ordered in a way that further conversion makes sense.
 Conversion then produces functions in the intermediate language.
@@ -28,12 +28,12 @@ All variables which are among arguments are annotated with their \inm or \outm m
 
 Then the body of the relation is analyzed (see line~\ref{line:body}).
 Since the body is normalized, it can only be a disjunction.
-Each disjunct is analyzed independently (see line~\ref{line:disj}), because no data flow happens between them.
+Each disjunct is analyzed independently (see line~\ref{line:disj}) because no data flow happens between them.
 
 Analyzing conjunctions involves analyzing subgoals and ordering them.
 Let us first consider mode analysis of unifications and calls, and then circle back to the way we order them.
 Whenever a base goal is analyzed, all variables in it have some initial instantiation, and some of them also have some final instantiation.
-Mode analyzing a base goal boils down to making all final instantiations ground.
+Mode analysis of a base goal boils down to making all final instantiations ground.
 
 When analyzing a unification, several situations may occur.
 Firstly, every variable in the unification can be ground, as in $x^{g \rightarrow g} \equiv O$ or in $y^{g \rightarrow ?} \equiv z^{g \rightarrow ?}$ (here $?$ is used to denote that a final instantiation is not yet known).
@@ -43,7 +43,7 @@ The second case is when one side of a unification only contains ground variables
 Depending on which side is ground, we call this either \emph{assignment} or \emph{match}.
 The former corresponds to assigning the value to a variable, as in $x^{f \rightarrow ?} \equiv S \, x_1^{g \rightarrow g}$ or $x^{g \rightarrow g} \equiv y^{f \rightarrow ?}$.
 The latter --- to pattern matching with the variable as the scrutinee, as in $x^{g \rightarrow g} \equiv S \, x_1^{f \rightarrow ?}$.
-Notice that we allow for some variables in the right-hand side to be ground in matches, given that at least one of them is free.
+Notice that we allow for some variables on the right-hand side to be ground in matches, given that at least one of them is free.
 
 The last case occurs when both the left-hand and right-hand sides contain free variables.
 This does not translate well into functional code.
