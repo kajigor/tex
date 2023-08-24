@@ -1,0 +1,20 @@
+\begin{figure}[!t]
+  \centering
+  \begin{minipage}{\columnwidth}
+    \begin{lstlisting}[label={topsort_pred}, caption={Functional intepreter for topologic sort of a graph}, captionpos=b, frame=tb]
+topsort graph numbering =
+    let n = S (numberOfNodes graph) in
+    go graph numbering n
+  where
+    go graph numbering n =
+      case graph of
+        [] -> True
+        (b, e) : graph' ->
+          let nb = lookup numbering b in
+          let ne = lookup numbering e in
+          less nb ne &&
+          less ne n &&
+          topsort graph' numbering
+    \end{lstlisting}
+  \end{minipage}
+\end{figure}

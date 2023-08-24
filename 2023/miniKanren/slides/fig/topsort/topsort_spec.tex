@@ -1,0 +1,23 @@
+\begin{figure}[!t]
+  \centering
+  \begin{minipage}{0.49\textwidth}
+    \begin{lstlisting}[label={topsort_spec}, caption={Specialized relational intepreter for topologic sort of a graph}, captionpos=b, frame=tb]
+let topsort$^o$True graph numbering =
+  let rec topsort$^o$ graph numbering n = conde [
+    (graph === []);
+    (fresh (b e graph')
+      (graph === (b, e) : graph' /\
+      (fresh (x y nb ne)
+        (lookup$^o$ numbering b nb /\
+         lookup$^o$ numbering e ne /\
+         less$^o$ nb ne x /\
+         x === true      /\
+         less$^o$ ne n y /\
+         y === true      /\
+         topsort$^o$ graph' numbering n))))] in
+  (fresh (n n')
+    (n' === s n /\ numberOfNodes$^o$ graph n
+     /\ topsort$^o$True graph numbering n'))
+    \end{lstlisting}
+  \end{minipage}
+\end{figure}

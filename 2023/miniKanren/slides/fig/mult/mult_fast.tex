@@ -1,0 +1,15 @@
+\begin{figure}[!t]
+  \centering
+  \begin{minipage}{\columnwidth}
+    \begin{lstlisting}[label={mult_fast},
+                      %  caption={Efficient implementation of \lstinline{multo in in out} direciton},
+                       captionpos=b,
+                       frame=tb]
+multIIO :: Nat -> Nat -> Stream Nat
+...
+multIIO (S x$_1$) y = do
+  r' <- multIIO x$_1$ y
+  addXY y r'
+    \end{lstlisting}
+  \end{minipage}
+\end{figure}

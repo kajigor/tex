@@ -1,0 +1,17 @@
+\begin{figure}[!t]
+  \centering
+  \begin{minipage}{\columnwidth}
+    \begin{lstlisting}[label={mult},
+                      %  caption={Multiplication relation},
+                       captionpos=b,
+                       frame=tb]
+let rec mult$^o$ x y z = conde [
+  ...
+  (fresh (x$_1$ r')
+    (x === S x$_1$) /\
+    (add$^o$ y r' z) /\
+    (mult$^o$ x$_1$ y r')
+  )]
+    \end{lstlisting}
+  \end{minipage}
+\end{figure}
