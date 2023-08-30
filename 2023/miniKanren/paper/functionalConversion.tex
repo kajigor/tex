@@ -1,0 +1,113 @@
+\section{Functional Conversion for \micro}
+
+In this section, we describe the functional conversion algorithm.
+The reader is encouraged to first read the paper~\cite{verbitskaia2022direction} on the topic, which introduces the conversion scheme on a series of examples.
+
+Functional conversion is done for a relation with a concrete fixed direction.
+The goal is to create a function which computes the same answers as \micro would, not necessarily in the same order.
+Since the search in \micro is complete, both conjuncts and disjuncts can be reordered freely: interleaving makes sure that no answers would be lost this way.
+Moreover, the original order of the subgoals is often suboptimal for any direction but the one which the programmer had in mind when they encoded the relation.
+When the relational conversion is used to create a relation, the order of the subgoals only really suits the forward direction, in which the relation is often not intended to be run (in this case, it is better to run the original function).
+
+The mode inference results in the relational program with all variables annotated by their modes, and all base subgoals ordered in a way that further conversion makes sense.
+Conversion then produces functions in the intermediate language.
+It may then be pretty printed into concrete functional programming languages, in our case \haskell and \ocaml.
+
+
+\subsection{Mode Inference}
+
+We employ a simple version of mode analysis to order subgoals properly in the given direction.
+The mode analysis makes sure that a variable is never used before it is associated with some value.
+It also ensures that once a variable becomes ground, it never becomes free, thus the value of a variable is never lost.
+The mode inference pseudocode is presented in listing~\ref{fig:modeInference}.
+
+\input{fig/mode_inference}
+
+Mode inference starts by initializing modes for all variables in the body of the given relation according to the given direction.
+All variables that are among arguments are annotated with their \inm or \outm modes, while all other variables get only their initial instantiations specified as $f$.
+
+Then the body of the relation is analyzed (see line~\ref{line:body}).
+Since the body is normalized, it can only be a disjunction.
+Each disjunct is analyzed independently (see line~\ref{line:disj}) because no data flow happens between them.
+
+Analyzing conjunctions involves analyzing subgoals and ordering them.
+Let us first consider mode analysis of unifications and calls, and then circle back to the way we order them.
+Whenever a base goal is analyzed, all variables in it have some initial instantiation, and some of them also have some final instantiation.
+Mode analysis of a base goal boils down to making all final instantiations ground.
+
+When analyzing a unification, several situations may occur.
+Firstly, every variable in the unification can be ground, as in $x^{g \rightarrow g} \equiv O$ or in $y^{g \rightarrow ?} \equiv z^{g \rightarrow ?}$ (here $?$ is used to denote that a final instantiation is not yet known).
+We call this case \emph{guard}, since it is equivalent to checking that two values are the same.
+
+The second case is when one side of a unification only contains ground variables.
+Depending on which side is ground, we call this either \emph{assignment} or \emph{match}.
+The former corresponds to assigning the value to a variable, as in $x^{f \rightarrow ?} \equiv S \, x_1^{g \rightarrow g}$ or $x^{g \rightarrow g} \equiv y^{f \rightarrow ?}$.
+The latter --- to pattern matching with the variable as the scrutinee, as in $x^{g \rightarrow g} \equiv S \, x_1^{f \rightarrow ?}$.
+Notice that we allow for some variables on the right-hand side to be ground in matches, given that at least one of them is free.
+
+The last case occurs when both the left-hand and right-hand sides contain free variables.
+This does not translate well into functional code.
+Any free logic variable corresponds to the possibly infinite number of ground values.
+To handle this kind of unification, we propose to use \emph{generators} which produce all possible ground values a free variable may have.
+
+We base our ordering strategy for conjuncts on the fact that these four different unification types have different costs.
+The guards are just equality checks which are inexpensive and can reduce the search space considerably.
+Assignments and matches are more involved, but they still take much less effort than generators.
+Moreover, executing non-generator conjuncts first can make some of the variables of the prospective generator ground thus avoiding generation in the end.
+
+This is the base reasoning which is behind our ordering strategy.
+The function \lstinline{pickConjunction} selects the first guard unification it can find.
+If no guard is present, then it searches for the first assignment (the function \lstinline{<|>} in lines~\ref{line:alt} through~\ref{line:alt2} is responsible for this), then for the match.
+If all unifications in the conjunction are generators, then the search continues among relation calls.
+First it selects relation calls with all ground arguments, then with some ground arguments, and only if there are none of those, it picks a generator.
+
+Once one conjunct is picked, it is analyzed (see line~\ref{line:pick_analyze}).
+The picked conjunct may instantiate new variables, thus this information is propagated onto the rest of the conjuncts.
+Then the rest of the conjuncts is mode analyzed as a new conjunction (see line~\ref{line:conj}).
+If any new modes for any of the relations are encountered, they are also mode analyzed.
+
+It is worth noticing that any relation can be a generator.
+We cannot judge the relation to be a generator solely by its mode: for example, the addition relation in the mode \lstinline{add$^o$ x$^{g \rightarrow g}$ y$^{f \rightarrow g}$ z$^{f \rightarrow g}$} generates an infinite stream, while \lstinline{add$^o$ x$^{f \rightarrow g}$ y$^{f \rightarrow g}$ z$^{g \rightarrow g}$} does not.
+
+\subsection{Conversion into Intermediate Representation}
+
+To represent nondeterminism, our functional conversion uses the basis of \micro~--- the stream data structure.
+A relation is converted into a function with $n$ arguments which returns a stream of $m$-tuples, where $n$ is the number of the input arguments, and $m$ --- the number of the output arguments of the relation.
+Since stream is a monad, functions can be written elegantly in \haskell using do-notation (see figure~\ref{fig:mult}).
+We use an intermediate representation which draws inspiration from \haskell's do-notation, but can then be pretty-printed into other functional languages.
+The abstract syntax of our intermediate language is shown in figure~\ref{fig:intermediate}.
+The conversion follows quite naturally from the modded relation and the syntax of the intermediate representation.
+
+\begin{figure}[h]
+\begin{tabular}{llll}
+    $\Fun_{V}$ & $=$ & $\Sum\LIST{\Fun_{V}}$ & concatenation of streams\\
+               & $\mid$ & $\Bind\LIST{\left(\LIST{V}, \Fun_{V}\right)} $ & monadic bind for streams\\
+               & $\mid$ & $\Rtrn \LIST{\Term_{V}}$ & return of a tuple of terms\\
+               & $\mid$ & $\Guard\left( V, V \right)$ & equality check\\
+               & $\mid$ & $\Match_{V} \left( \Term_{V}, \Fun_{V} \right)$ & match a variable against a pattern\\
+               & $\mid$ & $R_{n}(\LIST{V}, \LIST{G})$ & function call\\
+               & $\mid$ & $\Gen_{G}$ & generator
+\end{tabular}
+\caption{Abstract syntax of the intermediate language $\Fun$}
+\label{fig:intermediate}
+\end{figure}
+
+
+A body of a function is formed as an interleaving concatenation of streams ($\Sum$), each of which is constructed from one of the disjuncts of the relation.
+A conjunction is translated into a sequence of bind statements ($\Bind$): one for each of the conjuncts and a return statement ($\Rtrn$) in the end.
+A bind statement binds a tuple of variables (or nothing) with values taken from the stream in the right-hand side.
+
+A base goal is converted into a guard ($\Guard$), match ($\Match$), or function call, depending on the goal's type.
+Assignments are translated into binds with a single return statement on the right.
+Notice, that a match only has one branch.
+This branch corresponds to a unification.
+If the scrutinee does not match the term it is unified with, then an empty stream is returned in the catch-all branch.
+If a term in the right-hand side of a unification has both \outm and \inm variables, then additional guards are placed in the body of the branch to ensure the equality between values bound in the pattern and the actual ground values.
+
+Generators ($\Gen$) are used for unifications with free variables on both sides.
+A generator is a stream of possible values for the free variables, and it is used for each variable from the right-hand side of the unification.
+The variable from the left-hand side of the unification is then simply assigned the value constructed from the right-hand side.
+Our current implementation works with an untyped deeply embedded \micro, in which there is not enough information to produce generators automatically.
+We decided to delegate the responsibility to provide generators to the user: a generator for each free variable is added as an argument of the relation.
+When the user is to call the function, they have to provide the suitable generators.
+
