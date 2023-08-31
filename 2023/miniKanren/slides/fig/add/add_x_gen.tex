@@ -1,0 +1,18 @@
+\begin{figure}[!t]
+  \centering
+  \begin{minipage}{\columnwidth}
+    \begin{lstlisting}[label={add_x_gen},
+                      %  caption={Function for \lstinline{addo in out out} direction},
+                       captionpos=b,
+                       frame=tb]
+addIOO :: Nat -> Stream Nat -> Stream (Nat, Nat)
+addIOO x gen$_z$ = case x of
+           O -> do
+             z <- gen$_z$
+             return (z, z)
+           S x$_1$ -> do
+             (y, z$_1$) <- addIOO x$_1$ gen$_z$
+             return (y, S z$_1$)
+    \end{lstlisting}
+  \end{minipage}
+\end{figure}

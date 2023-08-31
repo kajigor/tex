@@ -474,7 +474,21 @@ Pick a conjunct according to the priority, propagate groundness
   \item Unification $\rightarrow \Rtrn \LIST{\Term_{V}}$ or $\Match_{V} \left( \Term_{V}, \Fun_{V} \right)$ or $\Guard\left( V, V \right)$ or $\Gen_{G}$
 \end{itemize}
 \end{frame}
-
+\begin{frame}[fragile]
+    \frametitle{Functional Conversion: Generators}
+    \begin{itemize}
+        \item Untyped version of miniKanren --- the only natural generator is <<all terms>>
+        \item Solution --- pass generators like additional arguments of a function
+    \end{itemize}
+  \input{fig/add/add_x_gen.tex}
+\end{frame}
+\begin{frame}[fragile]
+    \begin{itemize}
+        \item A generator is required for every unification containing $free$ terms on both sides, as well as transitive requirements, for passing to other calls
+        \item In a typed version, it should be possible to automatically derive generators producing all elements of a type
+    \end{itemize}
+    \input{fig/mult/mult_y_gen.tex}
+\end{frame}
 \begin{frame}[fragile]
   \frametitle{Functional Conversion into Haskell}
   \begin{itemize}
