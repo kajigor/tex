@@ -275,7 +275,7 @@ Both inputs and outputs are expected to be ground
 \lstset{basicstyle=\small}
 
 \begin{frame}[fragile]
-  \frametitle{Example: Addition in Forward Direction}
+  \frametitle{Example: Addition in the Forward Direction}
 \input{fig/add/add.tex}
 
 \input{fig/add/add_x_y.tex}
@@ -326,18 +326,20 @@ Flat terms: a var or a constructor which takes \emph{distinct} vars as arguments
 
 Examples:
 
-\[ C\left( x_1, x_2 \right) \equiv C\left( C\left( y_1, y_2 \right), y_3 \right) \iff x_1 \equiv C\left( y_1, y_2 \right) \land x_2 \equiv y_3   \]
-
-\[ C\left( C\left( x_1, x_2 \right), x_3 \right) \equiv C\left( C\left( y_1, y_2 \right), y_3 \right) \iff x_1 \equiv y_1 \land x_2 \equiv y_2 \land x_3 \equiv y_3   \]
-
-\[x \equiv C\left( y, y \right) \iff x \equiv C\left( y_1, y_2 \right)\land y_1 \equiv y_2 \]
+\begin{equation*}
+\begin{split}
+ C\left( x_1, x_2 \right) \equiv C\left( C\left( y_1, y_2 \right), y_3 \right) & \iff x_1 \equiv C\left( y_1, y_2 \right) \land x_2 \equiv y_3 \\
+ C\left( C\left( x_1, x_2 \right), x_3 \right) \equiv C\left( C\left( y_1, y_2 \right), y_3 \right) & \iff x_1 \equiv y_1 \land x_2 \equiv y_2 \land x_3 \equiv y_3 \\
+ x \equiv C\left( y, y \right) & \iff x \equiv C\left( y_1, y_2 \right)\land y_1 \equiv y_2
+\end{split}
+\end{equation*}
 \end{frame}
 
 
 
 \begin{frame}[fragile]
   \frametitle{Normalization: Goal}
-\begin{tabular}{llll}
+\begin{tabular}{lcll}
 $\KanN_{V}$ & $=$ & $\bigvee\left( c_1, \ldots, c_{n} \right), c_{i}\in \Conj_{V}$ & normal form \\
 $\Conj_{V}$ & $=$ & $\bigwedge\left( g_1, \ldots, g_n \right), g_{i}\in \Base_{V}$ & normal conjunction \\
 $\Base_{V}$ & $=$ & $V \equiv \FlatTerm_{V}$ & flat unification \\
@@ -352,9 +354,11 @@ Mode of a variable: mapping between its instantiations
 
 \vfill
 
-\emph{Ground} term contains no variables
+\emph{Ground} term contains no fresh variables
 
-\emph{Free} variable: fresh variable, no info about its instantiation
+\emph{Free} variable: a fresh variable, no info about its instantiation
+
+\vfill
 
 Once we know that a variable is \emph{ground}, it stays \emph{ground} in subsequent conjuncts
 
@@ -376,22 +380,26 @@ Assign mode to every variable, make sure they are consistent
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Modded Unification}
+  \frametitle{Modded Unification Types}
 
-\begin{itemize}
-    \item Assignments: $x^{\outmode}  \equiv \Term^{\inmode}$ and $x^{\inmode} \equiv y^{\outmode}$
-    \item Guards: $x^{\inmode} \equiv \Term^{\inmode}$
-    \item Match: $x^{\inmode} \equiv \Term$ ($\Term$ contains both \emph{in} and \emph{out} variables)
-    \item Generators: $x^{\outmode} \equiv \Term$
-\end{itemize}
+
+\begin{equation*}
+\begin{split}
+  assignment &: x^{\outmode}  \equiv \Term^{\inmode}$ and $x^{\inmode} \equiv y^{\outmode} \\
+  guard &: x^{\inmode} \equiv \Term^{\inmode} \\
+  match &: x^{\inmode} \equiv \Term$ ($\Term$ contains both \emph{in} and \emph{out} variables) \\
+  generator &: x^{\outmode} \equiv \Term
+\end{split}
+\end{equation*}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Mode Inference: Initialization }
 
 \begin{itemize}
-  \item For all input variables: $ground \rightarrow \ ?$
-  \item For all other variables: $free \rightarrow \ ?$
+  \item Input variables: $ground \rightarrow ground $
+  \item Output variables: $free \rightarrow ground$
+  \item Other variables: $free \rightarrow \ ?$
 \end{itemize}
 
 \input{fig/add/addInit.tex}
@@ -419,18 +427,21 @@ Propagate the groundness information according to the 4 types of modded unificat
   \frametitle{Mode Inference: Conjunction}
 Pick a conjunct according to the priority, propagate groundness
 \begin{itemize}
-  \item Guards
-  \item Assignments
-  \item Matches
-  \item Calls with at least one ground argument
-  \item Generators
+  \item Always deterministic
+    \item Guard
+    \item Assignment
+    \item Matches
+    \item Calls with some ground arguments
+    \item Unifications-generators
+    \item Calls with all free arguments
+
 \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Mode Inference: Conjunction}
-\input{fig/add/addConj1.tex}
-\input{fig/add/addConj2.tex}
+\input{fig/add/addConj1.tex} \pause
+\input{fig/add/addConj2.tex} \pause
 \input{fig/add/addConj3.tex}
 \end{frame}
 
@@ -471,7 +482,13 @@ Pick a conjunct according to the priority, propagate groundness
   \item Disjunction $\rightarrow \Sum\LIST{\Fun_{V}}$
   \item Conjunction $\rightarrow \Bind\LIST{\left(\LIST{V}, \Fun_{V}\right)}$
   \item Relation call $\rightarrow R_{i}(\LIST{V}, \LIST{G})$
-  \item Unification $\rightarrow \Rtrn \LIST{\Term_{V}}$ or $\Match_{V} \left( \Term_{V}, \Fun_{V} \right)$ or $\Guard\left( V, V \right)$ or $\Gen_{G}$
+  \item Unification $\rightarrow$
+    \begin{itemize}
+      \item $\Rtrn \LIST{\Term_{V}}$
+      \item $\Match_{V} \left( \Term_{V}, \Fun_{V} \right)$
+      \item $\Guard\left( V, V \right)$
+      \item $\Gen_{G}$
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -547,12 +564,6 @@ Pick a conjunct according to the priority, propagate groundness
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Data Types}
-We generate weird data type declarations:
-\input{fig/data_type.tex}
-\end{frame}
-
-\begin{frame}[fragile]
   \frametitle{Need for Determinism Check: \lstinline[basicstyle=\Large]{mulo q 10 1000}}
   \begin{center}
     \includegraphics[height=0.85\textheight]{figures/maybe.pdf}
@@ -562,8 +573,11 @@ We generate weird data type declarations:
 \begin{frame}[fragile]
   \frametitle{Need for Determinism Check}
   \begin{itemize}
-    \item Replacing Stream with Maybe improves performance about 10 times for relations on natural numbers
-    \item Functional (no monad) version is still faster
+    \item Just replacing the monad Stream with the monad Maybe improves performance about 10 times for relations on natural numbers
+    \begin{itemize}
+      \item The implementation stays the same!
+    \end{itemize}
+    \item Pure (no monad) version is even faster
     \item Use determinism check to figure out when replacing Stream is feasible
     \item How to combine different monads naturally?
   \end{itemize}
@@ -594,18 +608,18 @@ We generate weird data type declarations:
   \frametitle{Conclusion}
 Conclusion
   \begin{itemize}
-    \item We presented a functional conversion scheme as a series of examples
+    \item We presented a functional conversion scheme
     \item The conversion speeds up implementations considerably
     \item We implemented the conversion scheme in Haskell
-    \item Found some way to order conjuncts
+    \item We found some way to order conjuncts
   \end{itemize}
 
 \vfill
 
-Future work
+We are currently working on
   \begin{itemize}
-    \item Integration with partial deduction
-    \item Integration into a relational interpreters for solving framework
+    \item The integration with partial deduction
+    \item The integration into the framework of using relational interpreters for solving
   \end{itemize}
 \end{frame}
 
