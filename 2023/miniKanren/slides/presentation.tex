@@ -164,9 +164,7 @@ miniKanren workshop @ ICFP 2023
     \end{center}
   \titlepage
 \end{frame}
- }
-
-
+}
 \begin{frame}[fragile]
   \frametitle{Relational Programming}
 \begin{center}
@@ -335,15 +333,13 @@ Examples:
 \end{equation*}
 \end{frame}
 
-
-
 \begin{frame}[fragile]
   \frametitle{Normalization: Goal}
 \begin{tabular}{lcll}
 $\KanN_{V}$ & $=$ & $\bigvee\left( c_1, \ldots, c_{n} \right), c_{i}\in \Conj_{V}$ & normal form \\
 $\Conj_{V}$ & $=$ & $\bigwedge\left( g_1, \ldots, g_n \right), g_{i}\in \Base_{V}$ & normal conjunction \\
 $\Base_{V}$ & $=$ & $V \equiv \FlatTerm_{V}$ & flat unification \\
-            & $\mid$ & $R_{i}\left( x_1, \ldots, x_{k_{i}} \right), x_{j}\in V, x_j - distinct$ & flat call\\
+            & $\mid$ & $R_{i}\left( x_1, \ldots, x_{k_{i}} \right), x_{j}\in V, x_j - distinct$ & flat call \\
 \end{tabular}
 \end{frame}
 
@@ -381,8 +377,6 @@ Assign mode to every variable, make sure they are consistent
 
 \begin{frame}[fragile]
   \frametitle{Modded Unification Types}
-
-
 \begin{equation*}
 \begin{split}
   assignment &: x^{\outmode}  \equiv \Term^{\inmode}$ and $x^{\inmode} \equiv y^{\outmode} \\
@@ -402,12 +396,16 @@ Assign mode to every variable, make sure they are consistent
   \item Other variables: $free \rightarrow \ ?$
 \end{itemize}
 
+\vfill
+
 \input{fig/add/addInit.tex}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Mode Inference: Disjunction }
 Run inference on each disjunct independently
+
+\vfill
 
 \input{fig/add/addDisj1.tex}
 \input{fig/add/addDisj2.tex}
@@ -418,6 +416,7 @@ Run inference on each disjunct independently
   \frametitle{Mode Inference: Unification}
 Propagate the groundness information according to the 4 types of modded unifications
 
+\vfill
 
 \input{fig/add/addUnif1.tex}
 \input{fig/add/addUnif2.tex}
@@ -426,16 +425,17 @@ Propagate the groundness information according to the 4 types of modded unificat
 \begin{frame}[fragile]
   \frametitle{Mode Inference: Conjunction}
 Pick a conjunct according to the priority, propagate groundness
-\begin{itemize}
-  \item Always deterministic
-    \item Guard
-    \item Assignment
-    \item Matches
-    \item Calls with some ground arguments
-    \item Unifications-generators
-    \item Calls with all free arguments
 
-\end{itemize}
+\vfill
+
+\begin{enumerate}
+  \item Guard
+  \item Assignment
+  \item Match
+  \item Call with some ground arguments
+  \item Unification-generator
+  \item Call with all free arguments
+\end{enumerate}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -454,7 +454,7 @@ Pick a conjunct according to the priority, propagate groundness
   \frametitle{Order in Conjunctions: Slow Version}
   \input{fig/mult/mult_slow.tex}
 
-  Premature grounding of \lstinline{z$_1$} leads to generate-and-test behavior
+  Premature grounding of \lstinline{z$_1$} leads to \emph{generate-and-test} behavior
 \end{frame}
 
 
@@ -490,6 +490,28 @@ Pick a conjunct according to the priority, propagate groundness
       \item $\Gen_{G}$
     \end{itemize}
 \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Functional Conversion: Generators}
+\begin{itemize}
+  \item In the untyped miniKanren it's only possible to generated \emph{all terms}
+  \item Instead pass generators to functions as additional arguments
+  \begin{itemize}
+    \item It's up to the user which generator to pass
+  \end{itemize}
+\end{itemize}
+\input{fig/add/add_x_gen.tex}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Functional Conversion: Generators}
+    \begin{itemize}
+        \item We pass a generator for every variable in a unification-generator
+        \item Generators used in calls should be passed to the parent function
+        \item In a typed version, it should be possible to automatically derive generators based on the type
+    \end{itemize}
+    \input{fig/mult/mult_y_gen.tex}
 \end{frame}
 
 \begin{frame}[fragile]

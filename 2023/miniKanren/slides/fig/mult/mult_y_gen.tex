@@ -1,0 +1,17 @@
+\begin{figure}[!t]
+  \centering
+  \begin{minipage}{\columnwidth}
+    \begin{lstlisting}[label={mult_x_gen},
+                      %  caption={Efficient implementation of \lstinline{multo in in out} direciton},
+                       captionpos=b,
+                       frame=tb]
+multOIO :: Nat -> Stream Nat -> Stream Nat
+multOIO y gen_add$_z$ =
+  return (O, O) `mplus`
+  do
+    (z$_1$, z) <- addIOO y gen_add$_z$
+    x <- muloOII y z$_1$
+    return (S x, z)
+    \end{lstlisting}
+  \end{minipage}
+\end{figure}

@@ -1,10 +1,7 @@
 \begin{figure}[!t]
   \centering
   \begin{minipage}{\columnwidth}
-    \begin{lstlisting}[label={add_z},
-                      %  caption={Function for \lstinline{addo out out in} direction},
-                       captionpos=b,
-                       frame=tb]
+    \begin{lstlisting}[frame=tb]
 addOOI :: Nat -> Stream (Nat, Nat)
 addOOI z =
   return (O, z) `mplus`
