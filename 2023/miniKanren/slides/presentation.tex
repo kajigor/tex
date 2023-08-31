@@ -26,7 +26,7 @@
 \usepackage{makecell}
 \usepackage{ stmaryrd }
 
-\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{itemize item}[circle]
 \setbeamertemplate{enumerate items}[circle]
 
 \lstdefinelanguage{ocanren}{
@@ -141,7 +141,7 @@ language=ocanren
 
 \beamertemplatenavigationsymbolsempty
 
-\title[Functional Conversion for microKanren]{Semi-Automated Direction-Driven Functional Conversion}
+\title[Direction-Driven Functional Conversion]{Semi-Automated Direction-Driven Functional Conversion}
 \institute[JetBrains Research]{
 JetBrains Research, Programming Languages and Tools Lab
 
@@ -165,6 +165,7 @@ miniKanren workshop @ ICFP 2023
   \titlepage
 \end{frame}
 }
+
 \begin{frame}[fragile]
   \frametitle{Relational Programming}
 \begin{center}
@@ -197,42 +198,50 @@ generate miniKanren relation
   Every argument of a relation can be either \lstinline{in} or \lstinline{out}
 \end{center}
 
+\vfill
+
 \begin{center}
-  For addition relation \lstinline{add$^o$ x y z} there are 8 directions:
+  The 8 directions of the addition relation \lstinline{add$^o$ x y z}:
 \end{center}
 
-\begin{itemize}
-  \item \emph{Forward} direction: \lstinline{add$^o$ in in out} --- addition
-  \item \emph{Backward} direction: \lstinline{add$^o$ out out in} --- decomposition
-  \item \emph{Predicate}: \lstinline{add$^o$ in in in}
-  \item \emph{Generator}: \lstinline{add$^o$ out out out}
-  \item \lstinline{add$^o$ in out in} --- subtraction
-  \item \lstinline{add$^o$ out in in} --- subtraction
-  \item \lstinline{add$^o$ out in out}
-  \item \lstinline{add$^o$ in out out}
-\end{itemize}
+\begin{center}
+\begin{tabular}{rll}
+  \emph{Forward} direction  & \lstinline|add$^o$ in in out|   & addition      \\
+  \emph{Backward} direction & \lstinline|add$^o$ out out in|  & decomposition \\
+  \emph{Predicate}          & \lstinline|add$^o$ in in in|    &               \\
+  \emph{Generator}          & \lstinline|add$^o$ out out out| &               \\
+                            & \lstinline|add$^o$ in out in|   & subtraction   \\
+                            & \lstinline|add$^o$ out in in|   & subtraction   \\
+                            & \lstinline|add$^o$ out in out|  &               \\
+                            & \lstinline|add$^o$ in out out|  &
+\end{tabular}
+\end{center}
 \end{frame}
 
 
 \begin{frame}[fragile]
   \frametitle{Each Direction is a Function \pause (kind of)}
-Straightforward functions:
-\begin{itemize}
-  \item \emph{Forward} direction: \lstinline{add$^o$ in in out} --- addition
-  \item \lstinline{add$^o$ in out in} --- subtraction
-  \item \lstinline{add$^o$ out in in} --- subtraction
-  \item \emph{Predicate}: \lstinline{add$^o$ in in in}
-\end{itemize}
+Functions:
+\begin{center}
+\begin{tabular}{rll}
+  \emph{Forward} direction  & \lstinline|add$^o$ in in out|   & addition      \\
+                            & \lstinline|add$^o$ in out in|   & subtraction   \\
+                            & \lstinline|add$^o$ out in in|   & subtraction   \\
+  \emph{Predicate}          & \lstinline|add$^o$ in in in|    &
+\end{tabular}
+\end{center}
 
 \vfill
 
 Relations:
-\begin{itemize}
-  \item \emph{Backward} direction: \lstinline{add$^o$ out out in} --- decomposition
-  \item \emph{Generator}: \lstinline{add$^o$ out out out}
-  \item \lstinline{add$^o$ out in out}
-  \item \lstinline{add$^o$ in out out}
-\end{itemize}
+\begin{center}
+\begin{tabular}{rll}
+  \emph{Backward} direction & \lstinline|add$^o$ out out in|  & decomposition \\
+  \emph{Generator}          & \lstinline|add$^o$ out out out| &               \\
+                            & \lstinline|add$^o$ out in out|  &               \\
+                            & \lstinline|add$^o$ in out out|  &
+\end{tabular}
+\end{center}
 These relations are functions which return multiple answers (list monad)
 \end{frame}
 
@@ -254,13 +263,13 @@ These relations are functions which return multiple answers (list monad)
 \begin{frame}[fragile]
   \frametitle{Functional Conversion}
 \begin{center}
-  Given a relation and a principal direction, construct a functional program which generates the same answers as \mk would
+  Given a relation and a principal direction, construct a functional program that generates the same answers as \mk would
 \end{center}
 
 \vfill
 
 \begin{center}
-  Preserve completeness of the search
+  Preserve the completeness of the search
 \end{center}
 
 \vfill
@@ -289,10 +298,10 @@ Both inputs and outputs are expected to be ground
 \begin{frame}[fragile]
   \frametitle{Free Variables in Answers: Generators}
 \input{fig/add/add_one_line.tex}
-% \end{frame}
+\end{frame}
 
-% \begin{frame}[fragile]
-%   \frametitle{Free Variables in Answers: Generators}
+\begin{frame}[fragile]
+  \frametitle{Free Variables in Answers: Generators}
 \input{fig/add/add_x.tex}
 \end{frame}
 
@@ -379,9 +388,9 @@ Assign mode to every variable, make sure they are consistent
   \frametitle{Modded Unification Types}
 \begin{equation*}
 \begin{split}
-  assignment &: x^{\outmode}  \equiv \Term^{\inmode}$ and $x^{\inmode} \equiv y^{\outmode} \\
+  assignment &: x^{\outmode}  \equiv \Term^{\inmode} \text{and } x^{\inmode} \equiv y^{\outmode} \\
   guard &: x^{\inmode} \equiv \Term^{\inmode} \\
-  match &: x^{\inmode} \equiv \Term$ ($\Term$ contains both \emph{in} and \emph{out} variables) \\
+  match &: x^{\inmode} \equiv \Term \ (\Term \text{contains both \emph{in} and \emph{out} variables}) \\
   generator &: x^{\outmode} \equiv \Term
 \end{split}
 \end{equation*}
@@ -393,7 +402,7 @@ Assign mode to every variable, make sure they are consistent
 \begin{itemize}
   \item Input variables: $ground \rightarrow ground $
   \item Output variables: $free \rightarrow ground$
-  \item Other variables: $free \rightarrow \ ?$
+  \item Other variables: $free \rightarrow \ ? $
 \end{itemize}
 
 \vfill
@@ -465,7 +474,7 @@ Pick a conjunct according to the priority, propagate groundness
 
 \begin{frame}[fragile]
   \frametitle{Functional Conversion: Intermediate Language}
-\begin{tabular}{llll}
+\begin{tabular}{lcll}
     $\Fun_{V}$ & $=$ &  $\Rtrn \LIST{\Term_{V}}$ & return a tuple of terms\\
                & $\mid$ &  $\Match_{V} \left( \Term_{V}, \Fun_{V} \right)$& match a variable against a pattern\\
                & $\mid$ & $\Bind\LIST{\left(\LIST{V}, \Fun_{V}\right)} $ & monadic bind on streams\\
@@ -495,10 +504,10 @@ Pick a conjunct according to the priority, propagate groundness
 \begin{frame}[fragile]
   \frametitle{Functional Conversion: Generators}
 \begin{itemize}
-  \item In the untyped miniKanren it's only possible to generated \emph{all terms}
+  \item In the untyped miniKanren it is only possible to generate \emph{all terms}
   \item Instead pass generators to functions as additional arguments
   \begin{itemize}
-    \item It's up to the user which generator to pass
+    \item It is up to the user what generator to pass
   \end{itemize}
 \end{itemize}
 \input{fig/add/add_x_gen.tex}
@@ -507,7 +516,7 @@ Pick a conjunct according to the priority, propagate groundness
 \begin{frame}[fragile]
   \frametitle{Functional Conversion: Generators}
     \begin{itemize}
-        \item We pass a generator for every variable in a unification-generator
+        \item We pass a generator for every variable in \emph{rhs} of a unification-generator
         \item Generators used in calls should be passed to the parent function
         \item In a typed version, it should be possible to automatically derive generators based on the type
     \end{itemize}
@@ -579,9 +588,20 @@ Pick a conjunct according to the priority, propagate groundness
 
 
 \begin{frame}[fragile]
+  \frametitle{\lstinline[basicstyle=\Large]{Maybe} for Semi-Determinism}
+\input{fig/mult/mult_y_z.tex}
+\end{frame}
+
+
+\begin{frame}[noframenumbering]
+  \frametitle{\lstinline[basicstyle=\Large]{Maybe} for Semi-Determinism}
+\input{fig/mult/mult_y_z_maybe.tex}
+\end{frame}
+
+\begin{frame}[fragile]
   \frametitle{Multiplication Generation: \lstinline[basicstyle=\Large]{take n (mulo 10 q r)}}
   \begin{center}
-    \includegraphics[height=0.85\textheight]{figures/muloIOI.pdf}
+    \includegraphics[height=0.85\textheight]{figures/muloIOO.pdf}
   \end{center}
 \end{frame}
 
@@ -606,7 +626,7 @@ Pick a conjunct according to the priority, propagate groundness
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Need for Partial deduction}
+  \frametitle{Need for Partial Deduction}
 
 \begin{center}
 \mk can run a verifier backwards to get solver
