@@ -15,14 +15,14 @@ Below is the abstract syntax of the term language over the set of variables $V$.
 \[  \FlatTerm_{V} = V \cup \{\Cons_{n}\left( x_1, \ldots, x_{n} \right) \mid x_{i}\in V; i \neq j \Rightarrow x_i \neq x_j\} \]
 
 Whenever a term which does not adhere to this form is encountered in a unification or as an argument of a call, it is transformed into a conjunction of several unifications, as illustrated by the following examples:
-\begin{equation}
+\begin{equation*}
 \begin{split}
 C\left( x_1, x_2 \right) \equiv C\left( C\left( y_1, y_2 \right), y_3 \right) & \Rightarrow x_1 \equiv C\left( y_1, y_2 \right) \land x_2 \equiv y_3 \\
 C\left( C\left( x_1, x_2 \right), x_3 \right) \equiv C\left( C\left( y_1, y_2 \right), y_3 \right) & \Rightarrow  x_1 \equiv y_1 \land x_2 \equiv y_2 \land x_3 \equiv y_3 \\
 x \equiv C \left(y, y \right) & \Rightarrow x \equiv C \left(y_1, y_2\right) \land y_1 \equiv y_2 \\
 add^o\left( x, x, z \right) & \Rightarrow add^o\left( x_1, x_2, z \right) \land x_1 \equiv x_2
 \end{split}
-\end{equation}
+\end{equation*}
 
 Unification in the normal form is restricted to always unify a variable with a term.
 We also prohibit using disjunctions inside conjunctions.
@@ -60,7 +60,7 @@ The instantiation $f$ represents an unbound, or \emph{free}, variable, when no i
 When the variable is known to be \emph{ground}, its instantiation is $g$.
 
 In this paper, we call a pair of instantiations a mode of a variable.
-Figure~\ref{fig:double_modded} shows examples of the normalized \micro relations with modes inferred for the forward and backward directions.
+figure~\ref{fig:double_modded} shows examples of the normalized \micro relations with modes inferred for the forward and backward directions.
 We use superscript annotation for variables to represent their modes visually.
 Notice the different order of conjuncts in the bodies of the \lstinline{add$^o$} relation in different modes.
 
