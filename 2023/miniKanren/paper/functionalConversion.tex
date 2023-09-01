@@ -54,20 +54,24 @@ We base our ordering strategy for conjuncts on the fact that these four differen
 The guards are just equality checks which are inexpensive and can reduce the search space considerably.
 Assignments and matches are more involved, but they still take much less effort than generators.
 Moreover, executing non-generator conjuncts first can make some of the variables of the prospective generator ground thus avoiding generation in the end.
-
 This is the base reasoning which is behind our ordering strategy.
-The function \lstinline{pickConjunction} selects the first guard unification it can find.
-If no guard is present, then it searches for the first assignment (the function \lstinline{<|>} in lines~\ref{line:alt} through~\ref{line:alt2} is responsible for this), then for the match.
-If all unifications in the conjunction are generators, then the search continues among relation calls.
-First it selects relation calls with all ground arguments, then with some ground arguments, and only if there are none of those, it picks a generator.
+
+The function \lstinline{pickConjunct} selects the base goal which is least likely to blow up the search space.
+The right-associative function \lstinline{<|>} used in lines~\ref{line:alt} through~\ref{line:alt2} is responsible for selecting the base goals in the order described.
+The function first attempts to pick a base goal with its first argument, and only if it fails, the second argument is called.
+As a result, \lstinline{pickConjunct} first picks the first guard unification it can find (\lstinline{pickGuard}).
+If no guard is present, then it searches for the first assignment (\lstinline{pickAssignment}), and then for the match (\lstinline{pickMatch}).
+If all unifications in the conjunction are generators, then we search for relation calls with some ground arguments (\lstinline{pickCallWithGroundArguments}).
+If there are none, then we have no choice but selecting a generating unification (\lstinline{pickUnificationGenerator}) and then a call with all arguments free (\lstinline{pickCallGenerator}).
+
 
 Once one conjunct is picked, it is analyzed (see line~\ref{line:pick_analyze}).
 The picked conjunct may instantiate new variables, thus this information is propagated onto the rest of the conjuncts.
 Then the rest of the conjuncts is mode analyzed as a new conjunction (see line~\ref{line:conj}).
 If any new modes for any of the relations are encountered, they are also mode analyzed.
 
-It is worth noticing that any relation can be a generator.
-We cannot judge the relation to be a generator solely by its mode: for example, the addition relation in the mode \lstinline{add$^o$ x$^{g \rightarrow g}$ y$^{f \rightarrow g}$ z$^{f \rightarrow g}$} generates an infinite stream, while \lstinline{add$^o$ x$^{f \rightarrow g}$ y$^{f \rightarrow g}$ z$^{g \rightarrow g}$} does not.
+It is worth noticing that any relation can generate infinitely many answers.
+We cannot judge the relation to be such generator solely by its mode: for example, the addition relation in the mode \lstinline{add$^o$ x$^{g \rightarrow g}$ y$^{f \rightarrow g}$ z$^{f \rightarrow g}$} generates an infinite stream, while \lstinline{add$^o$ x$^{f \rightarrow g}$ y$^{f \rightarrow g}$ z$^{g \rightarrow g}$} does not.
 
 \subsection{Conversion into Intermediate Representation}
 
