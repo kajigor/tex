@@ -1,17 +1,13 @@
-\begin{figure}[!t]
+\begin{figure}[h]
   \centering
-  \begin{minipage}{\columnwidth}
-    \begin{lstlisting}[label={mult},
-                      %  caption={Multiplication relation},
-                       captionpos=b,
-                       frame=tb]
-let rec mult$^o$ x y z = conde [
-  ...
-  (fresh (x$_1$ r$_1$)
-    (x === S x$_1$) /\
-    (add$^o$ y r$_1$ z) /\
-    (mult$^o$ x$_1$ y r$_1$)
-  )]
+  \begin{minipage}{0.87\columnwidth}
+    \begin{lstlisting}[frame=tb]
+ let rec mult$^o$ x y z = conde [
+   (fresh (x$_1$ r$_1$)
+     (x === S x$_1$) /\
+     (add$^o$ y r$_1$ z) /\
+     (mult$^o$ x$_1$ y r$_1$));
+  ...]
     \end{lstlisting}
   \end{minipage}
 \end{figure}

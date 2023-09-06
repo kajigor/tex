@@ -2,7 +2,7 @@
 % -- Augments variables with the initial mode information:
 % -- * input variables have initial instantiation g
 % -- * all other variables have initial instantiation f
-% initModes :: $\Def_{V}^N$ -> $\Def_{(V, M)}^N$
+% initModes $::$ $\Def_{V}^N$ -> $\Def_{(V, M)}^N$
 
 
 \begin{figure}[h]
@@ -11,18 +11,18 @@
     \begin{lstlisting}[label={fig:modeInference},
                        caption={Mode inference pseudocode},
                        captionpos=b,
-                       frame=tb, 
-                       escapechar=|, 
-                       numbers=left, 
+                       frame=tb,
+                       escapechar=|,
+                       numbers=left,
                        numberstyle={\footnotesize}]
-modeInfer ($R_{i}\left( x_1, \ldots, x_{k_{i}} \right) \equiv body$) = ($R_{i}\left( x_1, \ldots, x_{k_{i}} \right) \equiv$ (modeInferDisj body)) |\label{line:body}| 
+modeInfer ($R_{i}\left( x_1, \ldots, x_{k_{i}} \right) \equiv body$) = ($R_{i}\left( x_1, \ldots, x_{k_{i}} \right) \equiv$ (modeInferDisj body)) |\label{line:body}|
 
-modeInferDisj ($\bigvee\left( c_1, \ldots, c_{n} \right)$) = $\bigvee( $modeInferConj $ c_1, \ldots, $ modeInferConj $ c_{n})$ |\label{line:disj}| 
+modeInferDisj ($\bigvee\left( c_1, \ldots, c_{n} \right)$) = $\bigvee( $modeInferConj $ c_1, \ldots, $ modeInferConj $ c_{n})$ |\label{line:disj}|
 
 modeInferConj ($\bigwedge\left( g_1, \ldots, g_n \right)$) =
-  let (picked, theRest) = pickConjunction($\left[ g_1, \ldots, g_n \right]$) in |\label{line:pick}| 
-  let moddedPicked = modeInferBase picked in |\label{line:pick_analyze}| 
-  let moddedConjs = modeInferConj ($\bigwedge$ theRest) in |\label{line:conj}| 
+  let (picked, theRest) = pickConjunction($\left[ g_1, \ldots, g_n \right]$) in |\label{line:pick}|
+  let moddedPicked = modeInferBase picked in |\label{line:pick_analyze}|
+  let moddedConjs = modeInferConj ($\bigwedge$ theRest) in |\label{line:conj}|
   $\bigwedge($moddedPicked : moddedConjs) |\label{line:result}|
 
 pickConjunction goals =

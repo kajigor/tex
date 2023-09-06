@@ -1,15 +1,15 @@
 \begin{figure}[!t]
   \centering
-  \begin{minipage}{\columnwidth}
+  \begin{minipage}{0.85\columnwidth}
     \begin{lstlisting}[frame=tb]
-addOOI :: Nat -> Stream (Nat, Nat)
-addOOI z =
-  return (O, z) `mplus`
-  case z of
-    O -> Empty
-    S z$_1$ -> do
-      (x$_1$, y) <- addOOI z$_1$
-      return (S x$_1$, y)
+ addOOI $::$ Nat -> Stream (Nat, Nat)
+ addOOI z =
+   return (O, z) `mplus`
+   case z of
+     O -> Empty
+     S z$_1$ -> do
+       (x$_1$, y) <- addOOI z$_1$
+       return (S x$_1$, y)
     \end{lstlisting}
   \end{minipage}
 \end{figure}

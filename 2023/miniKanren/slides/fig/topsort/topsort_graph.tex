@@ -2,7 +2,7 @@
   \centering
   \begin{minipage}{0.49\textwidth}
     \begin{lstlisting}[label={topsort_graph}, caption={Functional implementation for a \lstinline{topsortoTrue in out} direction}, captionpos=b, frame=tb]
-topsortGraph :: Graph -> Stream [Nat]
+topsortGraph $::$ Graph -> Stream [Nat]
 topsortGraph graph = do
     n <- numberOfNodesG graph
     go graph (n + 1) n (n + 1)

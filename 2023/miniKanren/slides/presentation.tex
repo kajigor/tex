@@ -1,4 +1,4 @@
-\documentclass[xcolor=table]{beamer}
+\documentclass[xcolor=table, aspectratio=169]{beamer}
 \usepackage{beamerthemesplit}
 \usepackage{wrapfig}
 \usetheme{SPbGU}
@@ -25,22 +25,34 @@
 \usepackage{adjustbox}
 \usepackage{makecell}
 \usepackage{ stmaryrd }
+\usepackage{ulem}
+
+
+\newcommand{\makenote}[1]{\hfill \footnotesize{#1}}
+\newcommand{\strikeoutnote}[1]{\makenote{\strikethrough{#1}}}
+\newcommand{\strikethrough}[1]{\sout{#1}}
+
+\newcommand{\lststrikethrough}[1]{\ttfamily\sout{#1}}
+
+\newcolumntype{A}{>{\hb@xt@\z@\bgroup\hss}r<{\egroup}}
+\newcolumntype{B}{>{\hb@xt@\z@\bgroup}l<{\hss\egroup}}
 
 \setbeamertemplate{itemize item}[circle]
 \setbeamertemplate{enumerate items}[circle]
 
 \lstdefinelanguage{ocanren}{
-keywords={run, conde, fresh, let, match, with, when, class, type,
+keywords={where, case, run, conde, fresh, let, match, with, when, class, type,
 object, method, of, rec, repeat, until, while, \begin{comment}not,\end{comment} do, done, as, val, inherit,
 new, module, sig, deriving, datatype, struct, if, then, else, open, private, virtual, include, success, failure,
-true, false},
+true, false, mplus},
 sensitive=true,
 commentstyle=\small\itshape\ttfamily,
-keywordstyle=\textbf,%\ttfamily\underline,
+keywordstyle=\color{blue},
 identifierstyle=\ttfamily,
 basewidth={0.5em,0.5em},
-columns=fixed,
+columns=flexible,
 mathescape=true,
+escapechar=~,
 fontadjust=true,
 literate={fun}{{$\lambda$}}1 {function}{function}8 {->}{{$\to$}}3 {<-}{{$\leftarrow$}}3 {===}{{$\equiv$}}1 {=/=}{{$\not\equiv$}}1 {|>}{{$\triangleright$}}3 {\\/}{{$\vee$}}2 {/\\}{{$\wedge$}}2 {^}{{$\uparrow$}}1,
 morecomment=[s]{(*}{*)},
@@ -123,8 +135,9 @@ language=ocanren
 \DeclareMathOperator{\Gen}{\mathbf{Gen}}
 \DeclareMathOperator{\Stream}{\mathit{Stream}}
 \DeclareMathOperator{\vars}{vars}
-\DeclareMathOperator{\inmode}{in}
-\DeclareMathOperator{\outmode}{out}
+\DeclareMathOperator{\inmode}{\mathtt{I}}
+\DeclareMathOperator{\outmode}{\mathtt{O}}
+\DeclareMathOperator{\whatmode}{\mathtt{?}}
 % \DeclareMathOperator{\inmode}{g \rightarrow g}
 % \DeclareMathOperator{\outmode}{f \rightarrow g}
 % \DeclareMathOperator{\mode1}{mode}
@@ -183,19 +196,26 @@ Completeness of search
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Relational Conversion: Easy}
-Given a function
-\input{fig/add/add_fun.tex}
+  \frametitle{Relational Interpreters for Search Problems}
+  \begin{center}
 
-generate miniKanren relation
-\input{fig/add/add.tex}
+Given a function
+\input{fig/prop/prop_fun_short.tex}
+
+Generate miniKanren relation
+\input{fig/prop/prop_rel_short.tex}
+
+Run it to solve a search problem:
+\lstinline{run q (eval$^o$ st q true)}
+\end{center}
+
 \end{frame}
 
 
 \begin{frame}[fragile]
   \frametitle{Principal Directions of \mk Relations}
 \begin{center}
-  Every argument of a relation can be either \lstinline{in} or \lstinline{out}
+  Every argument of a relation can be either input (\lstinline{I}) or output (\lstinline{O})
 \end{center}
 
 \vfill
@@ -206,14 +226,14 @@ generate miniKanren relation
 
 \begin{center}
 \begin{tabular}{rll}
-  \emph{Forward} direction  & \lstinline|add$^o$ in in out|   & addition      \\
-  \emph{Backward} direction & \lstinline|add$^o$ out out in|  & decomposition \\
-  \emph{Predicate}          & \lstinline|add$^o$ in in in|    &               \\
-  \emph{Generator}          & \lstinline|add$^o$ out out out| &               \\
-                            & \lstinline|add$^o$ in out in|   & subtraction   \\
-                            & \lstinline|add$^o$ out in in|   & subtraction   \\
-                            & \lstinline|add$^o$ out in out|  &               \\
-                            & \lstinline|add$^o$ in out out|  &
+  \emph{Forward}   & \lstinline|add$^o$ I I O| & addition      \\
+  \emph{Backward}  & \lstinline|add$^o$ O O I| & decomposition \\
+  \emph{Predicate} & \lstinline|add$^o$ I I I| &               \\
+  \emph{Generator} & \lstinline|add$^o$ O O O| &               \\
+                   & \lstinline|add$^o$ I O I| & subtraction   \\
+                   & \lstinline|add$^o$ O I I| & subtraction   \\
+                   & \lstinline|add$^o$ O I O| &               \\
+                   & \lstinline|add$^o$ I O O| &
 \end{tabular}
 \end{center}
 \end{frame}
@@ -224,29 +244,37 @@ generate miniKanren relation
 \end{frame}
 
 \begin{frame}[noframenumbering]
-  \frametitle{Each Direction is a Function (kind of)}
-Functions:
+  \frametitle{Each Direction is a Function (Kind of)}
 \begin{center}
-\begin{tabular}{rll}
-  \emph{Forward} direction  & \lstinline|add$^o$ in in out|   & addition      \\
-                            & \lstinline|add$^o$ in out in|   & subtraction   \\
-                            & \lstinline|add$^o$ out in in|   & subtraction   \\
-  \emph{Predicate}          & \lstinline|add$^o$ in in in|    &
+Functions
+
+\vfill
+
+\begin{tabular}{rcl}
+ ~~~ \emph{Forward} & \lstinline|add$^{o\,\,}$ I I O| & addition    \\
+                    & \lstinline|add$^{o\,\,}$ I O I| & subtraction \\
+                    & \lstinline|add$^{o\,\,}$ O I I| & subtraction \\
+  \emph{Predicate}  & \lstinline|add$^{o\,\,}$ I I I| &
 \end{tabular}
 \end{center}
 
 \vfill
 
-Relations:
 \begin{center}
-\begin{tabular}{rll}
-  \emph{Backward} direction & \lstinline|add$^o$ out out in|  & decomposition \\
-  \emph{Generator}          & \lstinline|add$^o$ out out out| &               \\
-                            & \lstinline|add$^o$ out in out|  &               \\
-                            & \lstinline|add$^o$ in out out|  &
+Relations
+
+\vfill
+
+\begin{tabular}{rcl}
+ ~~~~~ \emph{Backward}  & \lstinline|add$^{o\,\,}$ O O I| & decomposition \\
+       \emph{Generator} & \lstinline|add$^{o\,\,}$ O O O| &               \\
+                        & \lstinline|add$^{o\,\,}$ O I O| &               \\
+                        & \lstinline|add$^{o\,\,}$ I O O| &
 \end{tabular}
 \end{center}
-These relations are functions which return multiple answers (list monad)
+
+\makenote{Relations are functions which return multiple answers}
+
 \end{frame}
 
 \begin{frame}[fragile]
@@ -287,127 +315,184 @@ Both inputs and outputs are expected to be ground
 
 \begin{frame}[fragile]
   \frametitle{Example: Addition in the Forward Direction}
-\input{fig/add/add.tex}
-
-\input{fig/add/add_x_y.tex}
+\begin{columns}
+  \begin{column}[t]{0.49\textwidth}
+    \input{fig/add/add.tex}
+  \end{column}
+  \begin{column}[t]{0.49\textwidth}
+    \input{fig/add/add_x_y.tex}
+  \end{column}
+\end{columns}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Addition in the Backward Direction: Nondeterminism}
-\input{fig/add/add.tex}
-
-\input{fig/add/add_z.tex}
+\begin{columns}
+  \begin{column}[t]{0.49\textwidth}
+    \input{fig/add/add.tex}
+  \end{column}
+  \begin{column}[t]{0.49\textwidth}
+    \input{fig/add/add_z.tex}
+  \end{column}
+\end{columns}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Free Variables in Answers: Generators}
-\input{fig/add/add_one_line.tex}
+\begin{columns}
+  \begin{column}[t]{0.49\textwidth}
+    \input{fig/add/add.tex}
+  \end{column}
+  \begin{column}[t]{0.49\textwidth}
+    \input{fig/add/add_x.tex}
+  \end{column}
+\end{columns}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Free Variables in Answers: Generators}
-\input{fig/add/add_x.tex}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Predicates}
-  \input{fig/add/add.tex}
-
-  \input{fig/add/add_x_y_z.tex}
-\end{frame}
-
-
+% \begin{frame}[fragile]
+%   \frametitle{Predicates}
+% \begin{columns}
+%   \begin{column}[t]{0.48\textwidth}
+%     \input{fig/add/add.tex}
+%   \end{column}
+%   \begin{column}[t]{0.5\textwidth}
+%     \input{fig/add/add_x_y_z.tex}
+%   \end{column}
+% \end{columns}
+% \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Conversion Scheme}
-  \begin{itemize}
-    \item Normalization
-    \item Mode analysis
-    \item Functional conversion
-  \end{itemize}
+
+\begin{center}
+  Normalization
+\end{center}
+
+\begin{center}
+  Mode analysis
+\end{center}
+
+\begin{center}
+  Functional conversion
+\end{center}
 \end{frame}
 
 
 \begin{frame}[fragile]
   \frametitle{Normalization: Flat Term}
+\begin{center}
+Flat terms: a variable or a constructor with \emph{distinct} variables for arguments
+\end{center}
 
-Flat terms: a var or a constructor which takes \emph{distinct} vars as arguments:
+  \[  \FlatTerm_{V} = V \cup \{\Cons \, x_0 \ldots \, x_{k} \mid x_{j}\in V, x_j - distinct \} \]
 
-  \[  \FlatTerm_{V} = V \cup \{\Cons_{i}\left( x_1, \ldots, x_{k_{i}} \right) \mid x_{j}\in V, x_j - distinct \} \]
+\vfill
 
-Examples:
+\begin{center}
+\begin{tabular}{rcl}
+ $C\left( x_1, x_2 \right) \equiv C\left( C\left( y_1, y_2 \right), y_3 \right)$ & $\iff$ &  $x_1 \equiv C\left( y_1, y_2 \right) \land x_2 \equiv y_3$ \\
+ $C\left( C\left( x_1, x_2 \right), x_3 \right) \equiv C\left( C\left( y_1, y_2 \right), y_3 \right)$ & $\iff$ & $x_1 \equiv y_1 \land x_2 \equiv y_2 \land x_3 \equiv y_3$ \\
+ $x \equiv C\left( y, y \right)$ & $\iff$ & $x \equiv C\left( y_1, y_2 \right)\land y_1 \equiv y_2$
+\end{tabular}
+\end{center}
 
-\begin{equation*}
-\begin{split}
- C\left( x_1, x_2 \right) \equiv C\left( C\left( y_1, y_2 \right), y_3 \right) & \iff x_1 \equiv C\left( y_1, y_2 \right) \land x_2 \equiv y_3 \\
- C\left( C\left( x_1, x_2 \right), x_3 \right) \equiv C\left( C\left( y_1, y_2 \right), y_3 \right) & \iff x_1 \equiv y_1 \land x_2 \equiv y_2 \land x_3 \equiv y_3 \\
- x \equiv C\left( y, y \right) & \iff x \equiv C\left( y_1, y_2 \right)\land y_1 \equiv y_2
-\end{split}
-\end{equation*}
+\vfill
+
+\strikeoutnote{Constructors inside constructors}
+
+\strikeoutnote{Repeating variables}
+
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Normalization: Goal}
-\begin{tabular}{lcll}
-$\KanN_{V}$ & $=$ & $\bigvee\left( c_1, \ldots, c_{n} \right), c_{i}\in \Conj_{V}$ & normal form \\
-$\Conj_{V}$ & $=$ & $\bigwedge\left( g_1, \ldots, g_n \right), g_{i}\in \Base_{V}$ & normal conjunction \\
-$\Base_{V}$ & $=$ & $V \equiv \FlatTerm_{V}$ & flat unification \\
-            & $\mid$ & $R_{i}\left( x_1, \ldots, x_{k_{i}} \right), x_{j}\in V, x_j - distinct$ & flat call \\
+\begin{center}
+\begin{tabular}{rclll}
+$\KanN_{V}$ & $=$ & $c_1 \vee \ldots \vee c_{n}$ & $c_{i}\in \Conj_{V}$ & normal form \\
+$\Conj_{V}$ & $=$ & $g_1 \wedge \ldots \wedge g_n$ & $ g_{i}\in \Base_{V}$ & normal conjunction \\
+$\Base_{V}$ & $=$ & $V \equiv \FlatTerm_{V}$ & & flat unification \\
+            & $\mid$ & $R \, x_1 \ldots \, x_{k} $ & $ x_{j}\in V, x_j - distinct$ & flat call \\
 \end{tabular}
+\end{center}
+
+
+\vfill
+
+\strikeoutnote{Disjunctions within conjunctions}
+
+\strikeoutnote{Empty disjunctions and conjunctions}
+
+\strikeoutnote{Constructors as arguments of relation calls}
+
 \end{frame}
 
 
 \begin{frame}[fragile]
   \frametitle{Mode of a Variable}
+\begin{center}
+\begin{tabular}{rll}
+  \emph{Ground} term & no fresh variables & \lstinline|Cons O (Cons (S O) Nil)| \\
+  \emph{Free} variable & a fresh variable & \lstinline|_.0|
+\end{tabular}
+
+\vfill
+
+Once we know that a variable is \emph{ground}, it stays \emph{ground} in later conjuncts
+\end{center}
+
+\vfill
+
+\begin{center}
 Mode of a variable: mapping between its instantiations
 
 \vfill
 
-\emph{Ground} term contains no fresh variables
-
-\emph{Free} variable: a fresh variable, no info about its instantiation
-
-\vfill
-
-Once we know that a variable is \emph{ground}, it stays \emph{ground} in subsequent conjuncts
+\begin{tabular}{rl}
+  Mode \lstinline|I|: & \lstinline|ground| $\rightarrow$ \lstinline|ground| \\
+  Mode \lstinline|O|: & \lstinline|free| $\rightarrow$ \lstinline|ground|
+\end{tabular}
+\end{center}
 
 \vfill
 
-Mode $in$: $ground \rightarrow ground$
-
-Mode $out$: $free \rightarrow ground$
-
-\vfill
-
-Mercury uses more complicated modes
+\hfill \footnotesize Mercury uses more complicated modes
 
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Modded Goal}
+  \begin{center}
 Assign mode to every variable, make sure they are consistent
+  \end{center}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Modded Unification Types}
-\begin{equation*}
-\begin{split}
-  assignment &: x^{\outmode}  \equiv \Term^{\inmode} \text{and } x^{\inmode} \equiv y^{\outmode} \\
-  guard &: x^{\inmode} \equiv \Term^{\inmode} \\
-  match &: x^{\inmode} \equiv \Term \ (\Term \text{contains both \emph{in} and \emph{out} variables}) \\
-  generator &: x^{\outmode} \equiv \Term
-\end{split}
-\end{equation*}
+
+\begin{center}
+\begin{tabular}{rl}
+  assignment & $x^{\outmode} \equiv \Term^{\inmode} $ \\
+             & $x^{\inmode}  \equiv y^{\outmode}    $ \\
+  guard      & $x^{\inmode}  \equiv \Term^{\inmode} $ \\
+  match      & $x^{\inmode}  \equiv \Term           $ \\
+  generator  & $x^{\outmode} \equiv \Term           $
+\end{tabular}
+\end{center}
+
+\hfill \footnotesize $\Term$ contains both $g$ and $f$ variables
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Mode Inference: Initialization }
 
-\begin{itemize}
-  \item Input variables: $ground \rightarrow ground $
-  \item Output variables: $free \rightarrow ground$
-  \item Other variables: $free \rightarrow \ ? $
-\end{itemize}
+
+\begin{center}
+\begin{tabular}{rcl}
+  Input variables:  & $\mathtt{I}$ & g $\rightarrow$ g \\
+  Output variables: & $\mathtt{O}$ & f $\rightarrow$ g \\
+  Other variables:  & $\mathtt{?}$ & f $\rightarrow$ ?
+\end{tabular}
+\end{center}
 
 \vfill
 
@@ -416,68 +501,134 @@ Assign mode to every variable, make sure they are consistent
 
 \begin{frame}[fragile]
   \frametitle{Mode Inference: Disjunction }
+
+\begin{center}
 Run inference on each disjunct independently
+\end{center}
 
-\vfill
-
-\input{fig/add/addDisj1.tex}
-\input{fig/add/addDisj2.tex}
+\begin{columns}
+  \begin{column}[t]{0.15\textwidth}
+  \end{column}
+  \begin{column}[t]{0.34\textwidth}
+    \input{fig/add/addDisj1.tex}
+  \end{column}
+  \begin{column}[t]{0.34\textwidth}
+    \input{fig/add/addDisj2.tex}
+  \end{column}
+  \begin{column}[t]{0.15\textwidth}
+  \end{column}
+\end{columns}
 \end{frame}
 
 
 \begin{frame}[fragile]
   \frametitle{Mode Inference: Unification}
+\begin{center}
 Propagate the groundness information according to the 4 types of modded unifications
+\end{center}
 
-\vfill
+\begin{columns}
+  \begin{column}[t]{0.3\textwidth}
+  \end{column}
+  \begin{column}[t]{0.2\textwidth}
+    \input{fig/add/addUnif_x_1.tex}
+  \end{column}
+  \begin{column}[t]{0.2\textwidth}
+    \input{fig/add/addUnif_x_2.tex}
+  \end{column}
+  \begin{column}[t]{0.3\textwidth}
+  \end{column}
+\end{columns}
 
-\input{fig/add/addUnif1.tex}
-\input{fig/add/addUnif2.tex}
+\begin{columns}
+  \begin{column}[t]{0.3\textwidth}
+  \end{column}
+  \begin{column}[t]{0.2\textwidth}
+    \input{fig/add/addUnif_z_1.tex}
+  \end{column}
+  \begin{column}[t]{0.2\textwidth}
+    \input{fig/add/addUnif_z_2.tex}
+  \end{column}
+  \begin{column}[t]{0.3\textwidth}
+  \end{column}
+\end{columns}
+
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Mode Inference: Conjunction}
+\begin{center}
 Pick a conjunct according to the priority, propagate groundness
+\end{center}
 
 \vfill
 
-\begin{enumerate}
-  \item Guard
-  \item Assignment
-  \item Match
-  \item Call with some ground arguments
-  \item Unification-generator
-  \item Call with all free arguments
-\end{enumerate}
+\begin{center}
+  \begin{minipage}{0.4\textwidth}
+    \begin{enumerate}
+      \item Guard
+      \item Assignment
+      \item Match
+      \item Call with some ground arguments
+      \item Unification-generator
+      \item Call with all free arguments
+    \end{enumerate}
+  \end{minipage}
+\end{center}
+
+
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Mode Inference: Conjunction}
-\input{fig/add/addConj1.tex} \pause
-\input{fig/add/addConj2.tex} \pause
-\input{fig/add/addConj3.tex}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Order in Conjunctions}
-  \input{fig/mult/mult.tex}
+\begin{columns}
+  \begin{column}[t]{0.33\textwidth}
+    \input{fig/add/addConj1.tex} \pause
+  \end{column}
+  \begin{column}[t]{0.33\textwidth}
+    \input{fig/add/addConj2.tex} \pause
+  \end{column}
+  \begin{column}[t]{0.33\textwidth}
+    \input{fig/add/addConj3.tex}
+  \end{column}
+\end{columns}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Order in Conjunctions: Slow Version}
-  \input{fig/mult/mult_slow.tex}
 
-  Premature grounding of \lstinline{z$_1$} leads to \emph{generate-and-test} behavior
+\begin{columns}
+  \begin{column}[t]{0.4\textwidth}
+    \input{fig/mult/mult.tex}
+  \end{column}
+  \begin{column}[t]{0.55\textwidth}
+    \input{fig/mult/mult_slow.tex}
+  \end{column}
+\end{columns}
+
+\begin{center}
+  Premature grounding of \lstinline{z$_1$} leads to the \emph{generate-and-test} behavior
+\end{center}
+
 \end{frame}
 
 
 \begin{frame}[fragile]
   \frametitle{Order in Conjunctions: Faster Version}
-  \input{fig/mult/mult_fast.tex}
+
+\begin{columns}
+  \begin{column}[t]{0.4\textwidth}
+    \input{fig/mult/mult.tex}
+  \end{column}
+  \begin{column}[t]{0.55\textwidth}
+    \input{fig/mult/mult_fast.tex}
+  \end{column}
+\end{columns}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Functional Conversion: Intermediate Language}
+\begin{center}
 \begin{tabular}{lcll}
     $\Fun_{V}$ & $=$ &  $\Rtrn \LIST{\Term_{V}}$ & return a tuple of terms\\
                & $\mid$ &  $\Match_{V} \left( \Term_{V}, \Fun_{V} \right)$& match a variable against a pattern\\
@@ -487,84 +638,125 @@ Pick a conjunct according to the priority, propagate groundness
                & $\mid$ & $\Gen_{G}$ & generator\\
                & $\mid$ & $R_{i}(\LIST{V}, \LIST{G})$ & function call
 \end{tabular}
+\end{center}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Functional Conversion into Intermediate Language}
-\begin{itemize}
-  \item Disjunction $\rightarrow \Sum\LIST{\Fun_{V}}$
-  \item Conjunction $\rightarrow \Bind\LIST{\left(\LIST{V}, \Fun_{V}\right)}$
-  \item Relation call $\rightarrow R_{i}(\LIST{V}, \LIST{G})$
-  \item Unification $\rightarrow$
-    \begin{itemize}
-      \item $\Rtrn \LIST{\Term_{V}}$
-      \item $\Match_{V} \left( \Term_{V}, \Fun_{V} \right)$
-      \item $\Guard\left( V, V \right)$
-      \item $\Gen_{G}$
-    \end{itemize}
-\end{itemize}
+\begin{center}
+\begin{tabular}{rcl}
+  Disjunction   & $\rightarrow$ & $\Sum\LIST{\Fun_{V}}$ \\ && \\
+  Conjunction   & $\rightarrow$ & $ \Bind\LIST{\left(\LIST{V}, \Fun_{V}\right)}$ \\ && \\
+  Relation call & $\rightarrow$ & $ R_{i}(\LIST{V}, \LIST{G})$ \\ && \\
+  Unification   & $\rightarrow$ & $\Rtrn \LIST{\Term_{V}}$ \\
+                & $|$           & $\Match_{V} \left( \Term_{V}, \Fun_{V} \right)$ \\
+                & $|$           & $\Guard\left( V, V \right)$ \\
+                & $|$           & $\Gen_{G}$
+\end{tabular}
+\end{center}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Functional Conversion: Generators}
-\begin{itemize}
-  \item In the untyped miniKanren it is only possible to generate \emph{all terms}
-  \item Instead pass generators to functions as additional arguments
-  \begin{itemize}
-    \item It is up to the user what generator to pass
-  \end{itemize}
-\end{itemize}
+\begin{center}
+  In the untyped miniKanren it is only possible to generate \emph{all terms}
+\end{center}
+
+\vfill
+
+\begin{center}
+  Instead pass generators to functions as additional arguments
+
+
+  It is up to the user what generator to pass
+\end{center}
+
 \input{fig/add/add_x_gen.tex}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Functional Conversion: Generators}
-    \begin{itemize}
-        \item We pass a generator for every variable in \emph{rhs} of a unification-generator
-        \item Generators used in calls should be passed to the parent function
-        \item In a typed version, it should be possible to automatically derive generators based on the type
-    \end{itemize}
+\begin{center}
+We pass a generator for every variable in \emph{rhs} of a unification-generator
+\end{center}
+
+\begin{center}
+Generators used in calls should be passed to the parent function
+\end{center}
+
+\begin{center}
+In a typed version, it should be possible to automatically derive generators from types
+\end{center}
+
     \input{fig/mult/mult_y_gen.tex}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Functional Conversion into Haskell}
-  \begin{itemize}
-    \item TemplateHaskell to generate code
-    \item Stream monad
-    \item do-notation
-  \end{itemize}
+\begin{center}
+  TemplateHaskell to generate code
+\end{center}
+
+\begin{center}
+  Stream monad
+\end{center}
+
+\begin{center}
+  do-notation
+\end{center}
+
+\begin{center}
+
+\end{center}
+
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Functional Conversion into OCaml}
-  \begin{itemize}
-    \item Hand-crafted (not so) pretty-printer
-    \item Stream monad
-    \item let*
-    \item Taking extra care to employ laziness
-  \end{itemize}
+\begin{center}
+  Hand-crafted (not so) pretty-printer
+\end{center}
+
+\begin{center}
+  Stream monad
+\end{center}
+
+\begin{center}
+  let*
+\end{center}
+
+\begin{center}
+  Taking extra care to ensure laziness
+\end{center}
+
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Evaluation}
   \begin{center}
     We converted relational interpreters and measured execution time
-  \end{center}
 
-  \begin{itemize}
-    \item Logic formulas generation
+\vfill
+
+  \begin{minipage}{0.65\textwidth}
     \begin{itemize}
-      \item Inverse computation of an evaluator of logic formulas
-      \item Generating formulas which evaluate to \lstinline{true}
+      \item Logic formulas generation
+      \begin{itemize}
+        \item Inverse computation of an evaluator of logic formulas
+        \item Generating formulas which evaluate to \lstinline{true}
+      \end{itemize}
+      \item Multiplication relation
+      \begin{itemize}
+        \item Forward direction: multiplication
+        \item Backward direction: division
+        \item Generation
+      \end{itemize}
     \end{itemize}
-    \item Multiplication relation
-    \begin{itemize}
-      \item Forward direction: multiplication
-      \item Backward direction: division
-      \item Generation
-    \end{itemize}
-  \end{itemize}
+  \end{minipage}
+\end{center}
+
+
+
 \end{frame}
 
 \begin{frame}[fragile]
@@ -590,18 +782,6 @@ Pick a conjunct according to the priority, propagate groundness
   \end{center}
 \end{frame}
 
-
-\begin{frame}[fragile]
-  \frametitle{\lstinline[basicstyle=\Large]{Maybe} for Semi-Determinism}
-\input{fig/mult/mult_y_z.tex}
-\end{frame}
-
-
-\begin{frame}[noframenumbering]
-  \frametitle{\lstinline[basicstyle=\Large]{Maybe} for Semi-Determinism}
-\input{fig/mult/mult_y_z_maybe.tex}
-\end{frame}
-
 \begin{frame}[fragile]
   \frametitle{Multiplication Generation: \lstinline[basicstyle=\Large]{take n (mulo 10 q r)}}
   \begin{center}
@@ -609,8 +789,28 @@ Pick a conjunct according to the priority, propagate groundness
   \end{center}
 \end{frame}
 
+
 \begin{frame}[fragile]
-  \frametitle{Need for Determinism Check: \lstinline[basicstyle=\Large]{mulo q 10 1000}}
+  \frametitle{\lstinline[basicstyle=\Large]{Maybe} for Semi-Determinism}
+\begin{center}
+  \begin{minipage}{0.43\textwidth}
+    \input{fig/mult/mult_y_z.tex}
+  \end{minipage}
+\end{center}
+\end{frame}
+
+
+\begin{frame}[noframenumbering]
+  \frametitle{\lstinline[basicstyle=\Large]{Maybe} for Semi-Determinism}
+  \begin{center}
+  \begin{minipage}{0.43\textwidth}
+    \input{fig/mult/mult_y_z_maybe.tex}
+  \end{minipage}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\lstinline[basicstyle=\Large]{Maybe} for Semi-Determinism: \lstinline[basicstyle=\Large]{mulo q 10 1000}}
   \begin{center}
     \includegraphics[height=0.85\textheight]{figures/maybe.pdf}
   \end{center}
@@ -618,28 +818,35 @@ Pick a conjunct according to the priority, propagate groundness
 
 \begin{frame}[fragile]
   \frametitle{Need for Determinism Check}
-  \begin{itemize}
-    \item Just replacing the monad Stream with the monad Maybe improves performance about 10 times for relations on natural numbers
-    \begin{itemize}
-      \item The implementation stays the same!
-    \end{itemize}
-    \item Pure (no monad) version is even faster
-    \item Use determinism check to figure out when replacing Stream is feasible
-    \item How to combine different monads naturally?
-  \end{itemize}
+\begin{center}
+  Simply replacing the type of monad from \texttt{Stream} to \texttt{Maybe} improves performance 10 times for~relations on natural numbers
+\end{center}
+
+\begin{center}
+  Pure (no monad) version is even faster
+\end{center}
+
+\vfill
+
+\begin{center}
+  Use determinism check to figure out when replacing \texttt{Stream} is feasible
+\end{center}
+
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Need for Partial Deduction}
 
 \begin{center}
-\mk can run a verifier backwards to get solver
+Running a relational interpreter backwards fixes some arguments
 \end{center}
 
 \begin{center}
 \begin{minipage}{0.3\textwidth}
   \lstinline{run q (eval$^o$ q true)}
 \end{minipage}
+
+\vfill
 
 \begin{center}
   Augmenting functional conversion with partial deduction must be beneficial
@@ -668,7 +875,5 @@ We are currently working on
     \item The integration into the framework of using relational interpreters for solving
   \end{itemize}
 \end{frame}
-
-
 
 \end{document}

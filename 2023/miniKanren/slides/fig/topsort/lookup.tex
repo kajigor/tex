@@ -2,7 +2,7 @@
   \centering
   \begin{minipage}{0.49\textwidth}
     \begin{lstlisting}[label={lookup}, caption={Functional implementations for a \lstinline{lookupo out in out} and \lstinline{lookupo in in out} directions}, captionpos=b, frame=tb]
-lookupKey :: Int -> Int -> Int
+lookupKey $::$ Int -> Int -> Int
   -> Stream (Int, [Int])
 lookupKey key maxInt maxListLength =
   case key of
@@ -18,7 +18,7 @@ lookupKey key maxInt maxListLength =
       fromList [(value, y : tl)
                 | y <- genInt maxInt]
     _ -> Empty
-lookupXsKey :: [Int] -> Int -> Stream Int
+lookupXsKey $::$ [Int] -> Int -> Stream Int
 lookupXsKey xs key =
   case xs of
     [] -> Empty

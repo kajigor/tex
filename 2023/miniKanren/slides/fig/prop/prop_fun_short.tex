@@ -1,0 +1,13 @@
+
+
+\begin{figure}[!t]
+  \centering
+  \begin{minipage}{0.82\textwidth}
+    \begin{lstlisting}[frame=tb]
+ eval st fm =
+   match fm with
+   | Conj (x, y) -> and (eval st x) (eval st y)
+   | ...
+    \end{lstlisting}
+  \end{minipage}
+\end{figure}

@@ -1,16 +1,20 @@
+\lstset{moredelim=[is][\sout]{|}{|}}
+
 \begin{figure}[!t]
   \centering
   \begin{minipage}{\columnwidth}
-    \begin{lstlisting}[frame=tb]
-muloOII :: Nat -> Nat -> Maybe Nat
-muloOII x1 x2 = zero `mplus` positive
-  where
-    zero = do
-      guard (x2 == O)
-      return O
-    positive = do
-      x4 <- addoIOI x1 x2
-      S <$\$$> muloOII x1 x4
+    \begin{lstlisting}[]
+ ~\texttt{muloOII $::$ Nat $\to$ Nat $\to$ Maybe Nat}~
+ ~\lststrikethrough{muloOII $::$ Nat $\to$ Nat $\to$ Stream Nat}~
+ muloOII x1 x2 =
+     zero `mplus` positive
+   where
+     zero = do
+       guard (x2 == O)
+       return O
+     positive = do
+       x4 <- addoIOI x1 x2
+       S <$\$$> muloOII x1 x4
     \end{lstlisting}
   \end{minipage}
 \end{figure}

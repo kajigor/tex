@@ -4,7 +4,7 @@
   \centering
   \begin{minipage}{0.49\textwidth}
     \begin{lstlisting}[label={eval_r}, caption={Functional implementation of the direction \lstinline{evalo out out in}}, captionpos=b, frame=tb]
-evalR :: Bool -> Int -> Stream (Term, [Bool])
+evalR $::$ Bool -> Int -> Stream (Term, [Bool])
 evalR result maxListLength =
     lit  result `mplus`
     var  result `mplus`

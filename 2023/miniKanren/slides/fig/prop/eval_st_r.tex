@@ -4,7 +4,7 @@
   \centering
   \begin{minipage}{0.49\textwidth}
     \begin{lstlisting}[label={eval_st_r}, caption={Functional implementation of the direction \lstinline{evalo out in in}}, captionpos=b, frame=tb]
-evalStR :: [Bool] -> Bool -> Stream Term
+evalStR $::$ [Bool] -> Bool -> Stream Term
 evalStR st result =
       lit  st result `mplus`
       var  st result `mplus`

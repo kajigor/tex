@@ -1,18 +1,19 @@
-\begin{figure}[!t]
-  \centering
-  \begin{minipage}{\columnwidth}
-    \begin{lstlisting}[frame=tb]
-addIOO :: Nat -> Stream (Nat, Nat)
-addIOO x = case x of
-  O -> do
-    z <- genNat
-    return (z, z)
-  S x$_1$ -> do
-    (y, z$_1$) <- addIOO x$_1$
-    return (y, S z$_1$)
+\begin{figure}[h]
+\centering
+\begin{minipage}{0.85\columnwidth}
+  \begin{lstlisting}[frame=tb]
+ addIOO $::$ Nat -> Stream (Nat, Nat)
+ addIOO x =
+   case x of
+     O -> do
+       z <- genNat
+       return (z, z)
+     S x$_1$ -> do
+       (y, z$_1$) <- addIOO x$_1$
+       return (y, S z$_1$)
 
-genNat :: Stream Nat
-genNat = Mature O (S <$\$$> genNat)
-    \end{lstlisting}
-  \end{minipage}
+ genNat $::$ Stream Nat
+ genNat = Mature O (S <$\$$> genNat)
+  \end{lstlisting}
+\end{minipage}
 \end{figure}
