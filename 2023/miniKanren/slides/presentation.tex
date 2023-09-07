@@ -28,6 +28,14 @@
 \usepackage{ulem}
 
 
+\newcommand{\backupbegin}{
+   \newcounter{finalframe}
+   \setcounter{finalframe}{\value{framenumber}}
+}
+\newcommand{\backupend}{
+   \setcounter{framenumber}{\value{finalframe}}
+}
+
 \newcommand{\makenote}[1]{\hfill \footnotesize{#1}}
 \newcommand{\strikeoutnote}[1]{\makenote{\strikethrough{#1}}}
 \newcommand{\strikethrough}[1]{\sout{#1}}
@@ -875,5 +883,74 @@ We are currently working on
     \item The integration into the framework of using relational interpreters for solving
   \end{itemize}
 \end{frame}
+
+\appendix
+\backupbegin
+
+\begin{frame}[fragile]
+  \frametitle{Relational Sort}
+\begin{columns}
+  \begin{column}[t]{0.49\textwidth}
+    \input{fig/sort/sort_sort.tex}
+
+    \vfill
+
+    \begin{center}
+      Only good for sorting:
+
+      \lstinline{run q (sort$^o$ xs q)}
+    \end{center}
+
+  \end{column}
+  \begin{column}[t]{0.49\textwidth}
+    \input{fig/sort/sort_perm.tex}
+
+    \vfill
+
+    \begin{center}
+      Only good permutation generation:
+
+      \lstinline{run q (sort$^o$ q xs)}
+    \end{center}
+
+
+  \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Relational Sort: Sorting}
+
+\begin{table}[]
+\begin{tabular}{l||c|r||r}
+                & \multicolumn{2}{c||}{Relation} & \multicolumn{1}{c}{\multirow[t]{2}{*}{Function}} \\ \cline{2-3}
+                & \multicolumn{1}{l|}{\begin{tabular}[c]{@{}l@{}}\texttt{sorto}\\ \texttt{smallesto}\end{tabular}} & \multicolumn{1}{l||}{\begin{tabular}[c]{@{}l@{}}\texttt{smallesto}\\ \text{sorto}\end{tabular}} & \multicolumn{1}{c}{}                            \\ \hline
+\texttt{{[}3;2;1;0{]}}   & \multicolumn{1}{r|}{0.077s}                                                    & 0.004s                                                                         & 0.000s                                          \\
+\texttt{{[}4;3;2;1;0{]}} & timeout                                                                       & 0.005s                                                                         & 0.000s                                          \\
+\texttt{{[}31;...;0{]}}  & timeout                                                                       & 1.058s                                                                         & 0.006s                                          \\
+\texttt{{[}262;...;0{]}} & timeout                                                                       & \multicolumn{1}{c||}{timeout}                                                   & 1.045s
+\end{tabular}
+\end{table}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Relational Sort: Generating Permutations}
+
+\begin{table}[]
+\begin{tabular}{l||c|r||r}
+                & \multicolumn{2}{c||}{Relation} & \multicolumn{1}{c}{\multirow[t]{2}{*}{Function}} \\ \cline{2-3}
+                & \multicolumn{1}{l|}{\begin{tabular}[c]{@{}l@{}}\texttt{smallesto}\\ \texttt{sorto}\end{tabular}} & \multicolumn{1}{l||}{\begin{tabular}[c]{@{}l@{}}\texttt{sorto}\\ \text{smallesto}\end{tabular}} & \multicolumn{1}{c}{}                            \\ \hline
+\texttt{{[}0;1;2{]}}   & \multicolumn{1}{r|}{0.013s}                                                    & 0.004s                                                                         & 0.004s                                          \\
+\texttt{{[}0;1;2;3{]}} & timeout                                                                       & 0.005s                                                                         & 0.005s                                          \\
+\texttt{{[}0;...;6{]}}  & timeout                                                                       & 0.999s                                                                         & 0.021s                                          \\
+\texttt{{[}0;...;8{]}} & timeout                                                                       & \multicolumn{1}{c||}{timeout}                                                   & 1.543s
+\end{tabular}
+\end{table}
+
+\end{frame}
+
+\backupend
 
 \end{document}
