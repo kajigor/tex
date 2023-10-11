@@ -1,0 +1,18 @@
+\section{Introduction}
+One of the most attractive applications of relational programming is \emph{inverse computation}.
+It is helpful, when the program being inverted is a relational interpreter of some sort: this way an interpreter for a programming language may be used for program synthesis, a type checker --- to solve type inhabitation problem and so on~\cite{Untagged, lozov2019relational}.
+Constructing relational interpreters out of functional implementations can be done automatically by relational conversion~\cite{lozov2018typed}.
+\mk along with relational conversion are capable of inverse computations.
+However, it is important to note that inverse computations exhibit lower performance compared to directly executing an inversion of the original program due to the interpretation overhead~\cite{RevURA,SemanticsModifiers1}.
+% As an alternative, we propose employing a direction-driven functional conversion for creating inversions instead of relying on an inverter.
+
+Relational programs do not exist on their own: they are a part of a host program, which utilizes query results in some way.
+The host languages are not expected to be able to process logic variables, nondeterminism and other aspects of relational computations.
+The host program usually only deals with a finite subset of answers, which have been reified into a ground representation, meaning they do not include any logic variables.
+
+When a relation is expected to produce ground answers, and the direction in which it is intended to be run is known, then it becomes possible to convert it into a function which may execute significantly faster than its relational counterpart.
+Performance improvement comes from reducing interpretation overhead as well as replacing expensive unifications with considerably faster equality checks, assignments and pattern matches of a host language.
+An informal functional conversion scheme was introduced in the paper~\cite{verbitskaia2022direction}.
+We are building upon this research effort, presenting a semi-automatic functional conversion algorithm and implementation for a minimal core relational programming language \micro.
+This paper focuses on converting to the target languages of \haskell and \ocaml, although other languages can also be considered as potential target languages.
+Our evaluation showed performance improvement of $2.5$ times for propositional formulas synthesis and up to $3$ orders of magnitude improvement for relations over Peano numbers.
