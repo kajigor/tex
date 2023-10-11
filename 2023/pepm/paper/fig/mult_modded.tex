@@ -1,4 +1,4 @@
-\begin{figure}[!t]
+\begin{figure*}[t]
   \centering
   \begin{subfigure}[b]{0.45\textwidth}
     \begin{lstlisting}[frame=tb]
@@ -9,7 +9,7 @@ let rec mul$^o$ x y z = conde [
      add$^o$ y z$_1$ z /\
      mul$^o$ x$_1$ y z$_1$)) ]
     \end{lstlisting}
-   \caption{Implementation in \mk}
+    \caption{Implementation in \mk}
     \label{fig:mult_mk}
   \end{subfigure}
   \hfill
@@ -53,7 +53,7 @@ addoIOI x0 x2 = msum
     \caption{Functional conversion into \haskell}
     \label{fig:mult_haskell}
   \end{subfigure}
-\hfill
+  \hfill
   \begin{subfigure}[b]{0.45\textwidth}
     \begin{lstlisting}[frame=tb]
 let rec muloOII x1 x2 = msum
@@ -83,4 +83,4 @@ and addoIOI x0 x2 = msum
 
   \caption{Multiplication relation}
   \label{fig:mult}
-\end{figure}
+\end{figure*}

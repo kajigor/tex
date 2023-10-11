@@ -14,35 +14,37 @@ Each constructor has a fixed arity $n$.
 Below is the abstract syntax of the term language over the set of variables $V$.
 \[  \FlatTerm_{V} = V \cup \{\Cons_{n}\left( x_1, \ldots, x_{n} \right) \mid x_{i}\in V; i \neq j \Rightarrow x_i \neq x_j\} \]
 
+\begin{figure*}[t]
+    \begin{tabular}{llll}
+        $\Def_{V}^N$ & $:$    & $R_{n}\left( x_1, \ldots, x_{n} \right) = \Disj_{V}, x_{i}\in V$                        & normalized relation definition \\
+        $\Disj_{V}$  & $:$    & $\bigvee\left( c_1, \ldots, c_{n} \right), c_{i}\in \Conj_{V}$                          & normal form                    \\
+        $\Conj_{V}$  & $:$    & $\bigwedge\left( g_1, \ldots, g_n \right), g_{i}\in \Base_{V}$                          & normal conjunction             \\
+        $\Base_{V}$  & $:$    & $V \equiv \FlatTerm_{V}$                                                                & flat unification               \\
+                     & $\mid$ & $R_{n}\left( x_1, \ldots, x_{n} \right), x_{i}\in V, i \neq j \Rightarrow x_i \neq x_j$ & flat call                      \\
+
+        % $\Delay$ & $:$ &  $\text{Delay} \mid \text{NoDelay} $ &
+    \end{tabular}
+    \caption{Abstract syntax of \micro in the normal form}
+    \label{fig:miniKanren}
+\end{figure*}
+
 Whenever a term which does not adhere to this form is encountered in a unification or as an argument of a call, it is transformed into a conjunction of several unifications, as illustrated by the following examples:
-\begin{equation*}
-\begin{split}
-C\left( x_1, x_2 \right) \equiv C\left( C\left( y_1, y_2 \right), y_3 \right) & \Rightarrow x_1 \equiv C\left( y_1, y_2 \right) \land x_2 \equiv y_3 \\
-C\left( C\left( x_1, x_2 \right), x_3 \right) \equiv C\left( C\left( y_1, y_2 \right), y_3 \right) & \Rightarrow  x_1 \equiv y_1 \land x_2 \equiv y_2 \land x_3 \equiv y_3 \\
-x \equiv C \left(y, y \right) & \Rightarrow x \equiv C \left(y_1, y_2\right) \land y_1 \equiv y_2 \\
-add^o\left( x, x, z \right) & \Rightarrow add^o\left( x_1, x_2, z \right) \land x_1 \equiv x_2
-\end{split}
-\end{equation*}
+\[
+    \begin{array}{rll}
+        C\left( x_1, x_2 \right)                      & \equiv C\left( C\left( y_1, y_2 \right), y_3 \right)                                          & \Rightarrow \\
+                                                      & \multicolumn{2}{l}{\quad\Rightarrow x_1 \equiv C\left( y_1, y_2 \right) \land x_2 \equiv y_3}               \\
+        C\left( C\left( x_1, x_2 \right), x_3 \right) & \equiv C\left( C\left( y_1, y_2 \right), y_3 \right)                                          & \Rightarrow \\
+                                                      & \multicolumn{2}{l}{\quad\Rightarrow x_1 \equiv y_1 \land x_2 \equiv y_2 \land x_3 \equiv y_3}               \\
+        x \equiv C \left(y, y \right)                 & \multicolumn{2}{l}{\quad\Rightarrow x \equiv C \left(y_1, y_2\right) \land y_1 \equiv y_2}                  \\
+        add^o\left( x, x, z \right)                   & \multicolumn{2}{l}{\quad\Rightarrow add^o\left( x_1, x_2, z \right) \land x_1 \equiv x_2}
+    \end{array}
+\]
 
 Unification in the normal form is restricted to always unify a variable with a term.
 We also prohibit using disjunctions inside conjunctions.
 The normalization procedure declares a new relation whenever this is encountered.
 
 The complete abstract syntax of the \micro language used in this paper is presented in figure~\ref{fig:miniKanren}.
-
-\begin{figure}[h]
-    \begin{tabular}{llll}
-     $\Def_{V}^N$ & $:$ & $R_{n}\left( x_1, \ldots, x_{n} \right) = \Disj_{V}, x_{i}\in V$ & normalized relation definition \\
-    $\Disj_{V}$ & $:$ & $\bigvee\left( c_1, \ldots, c_{n} \right), c_{i}\in \Conj_{V}$ & normal form \\
-    $\Conj_{V}$ & $:$ & $\bigwedge\left( g_1, \ldots, g_n \right), g_{i}\in \Base_{V}$ & normal conjunction \\
-    $\Base_{V}$ & $:$ & $V \equiv \FlatTerm_{V}$ & flat unification \\
-                & $\mid$ & $R_{n}\left( x_1, \ldots, x_{n} \right), x_{i}\in V, i \neq j \Rightarrow x_i \neq x_j$ & flat call\\
-
-    % $\Delay$ & $:$ &  $\text{Delay} \mid \text{NoDelay} $ &
-    \end{tabular}
-    \caption{Abstract syntax of \micro in the normal form}
-    \label{fig:miniKanren}
-\end{figure}
 
 \subsection{Modes}
 
