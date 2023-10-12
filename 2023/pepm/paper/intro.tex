@@ -1,18 +1,28 @@
 \section{Introduction}
-One of the most attractive applications of relational programming is \emph{inverse computation}.
-It is helpful, when the program being inverted is a relational interpreter of some sort: this way an interpreter for a programming language may be used for program synthesis, a type checker --- to solve type inhabitation problem and so on~\cite{Untagged, lozov2019relational}.
-Constructing relational interpreters out of functional implementations can be done automatically by relational conversion~\cite{lozov2018typed}.
-\mk along with relational conversion are capable of inverse computations.
-However, it is important to note that inverse computations exhibit lower performance compared to directly executing an inversion of the original program due to the interpretation overhead~\cite{RevURA,SemanticsModifiers1}.
-% As an alternative, we propose employing a direction-driven functional conversion for creating inversions instead of relying on an inverter.
 
-Relational programs do not exist on their own: they are a part of a host program, which utilizes query results in some way.
+\emph{Inverse computation} is the technique in which a program can be automatically inverted to solve problems different from its original purpose.
+For example, by inverting a sorting function, one can generate permutations; by inverting multiplication, one achieves division.
+In the context of software development, inverse computations open the door to verifier-to-solver approach.
+In it, a verifier, whose primary purpose is to check whether a candidate solution is indeed a solution to a problem, is inverted to become a solver.
+This way, an interpreter for a programming language can be used for program synthesis, a type checker---to solve type inhabitation problem and so on~\cite{Untagged, lozov2019relational}.
+
+There are multiple approaches to inverse computations such as universal resolving algorithm~\cite{RevURA} and semantics modifiers~\cite{SemanticsModifiers1}.
+The one, which we are considering in this paper, employs \emph{relational programming}.
+It is a powerful paradigm which, akin to logic programming, is based on Horn clauses.
+Contrary to such languages as \prolog, the relational paradigm discourages the use of extra-logic features such as cut and instead employs interleaving search strategy to guarantee the completeness of search.
+Thanks to the latter, it is also not expected that a program is deterministic, i.e. produces at most one result, which plays an important role in enabling verifier-to-solver approach.
+
+In a narrow sense, relational programming means programming in a \mk language\todo{footnote}.
+It is a family of small yet powerful embedded DSLs whose aim is to bring the benefits of logic programming into a general-purpose programming language.
+A relational program exist as a part of a host program, which utilizes query results in some way.
 The host languages are not expected to be able to process logic variables, nondeterminism and other aspects of relational computations.
-The host program usually only deals with a finite subset of answers, which have been reified into a ground representation, meaning they do not include any logic variables.
+The host program usually only deals with a finite subset of answers, which have been reified into a ground representation, meaning the answer do not contain any logic variables.
 
 When a relation is expected to produce ground answers, and the direction in which it is intended to be run is known, then it becomes possible to convert it into a function which may execute significantly faster than its relational counterpart.
-Performance improvement comes from reducing interpretation overhead as well as replacing expensive unifications with considerably faster equality checks, assignments and pattern matches of a host language.
-An informal functional conversion scheme was introduced in the paper~\cite{verbitskaia2022direction}.
-We are building upon this research effort, presenting a semi-automatic functional conversion algorithm and implementation for a minimal core relational programming language \micro.
+Performance improvement comes from reducing inherent interpretation overhead as well as replacing expensive unifications with considerably faster equality checks, assignments and pattern matches of the host language.
+An informal functional conversion scheme was introduced in the paper~\cite{verbitskaia2022direction}and a semi-automatic functional conversion algorithm and implementation for a minimal core relational programming language \micro was described in~\footnote{cite mk 2023}.
+
+\todo{What's the contribution?}
+
 This paper focuses on converting to the target languages of \haskell and \ocaml, although other languages can also be considered as potential target languages.
 Our evaluation showed performance improvement of $2.5$ times for propositional formulas synthesis and up to $3$ orders of magnitude improvement for relations over Peano numbers.

@@ -1,0 +1,15 @@
+\section{Related Work}
+
+Functional logic programming languages such as \merc translate the logic subset of the language into a functional programming language much like we do.
+\merc utilizes a strong system of modes and types to guide the compilation\todo{cite mode system paper}.
+Many \mk languages are embedded into host languages which are not typed and thus we cannot rely on type information in our conversion.
+
+It is hard to compare our implementation with \merc because of the difference in semantics.
+\merc uses a system of prescriptive modes which means that the semantics is defined by the mode assigned to a program.
+We use modes in a descriptive fashion, and the semantics of a \mk program is the same set of answers regardless of the order of subgoals.
+This allows us to compare runtime of differently modded relational programs.
+
+There are two papers which mention doing mode analysis in the same fashion we do.
+
+
+
