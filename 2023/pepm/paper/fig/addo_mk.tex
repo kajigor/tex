@@ -1,0 +1,13 @@
+\begin{figure}[t]
+  \centering
+    \begin{lstlisting}[frame=tb]
+  let rec add$^o$ x y z =
+    (x === O /\ y === z) \/
+    (fresh x$_1$, z$_1$ in
+       x === S x$_1$ /\
+       add$^o$ x$_1$ y z$_1$ /\
+       z === S z$_1$)
+    \end{lstlisting}
+  \caption{Addition relation in \mk}
+  \label{fig:addo_mk}
+\end{figure}

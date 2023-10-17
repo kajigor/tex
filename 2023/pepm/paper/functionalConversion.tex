@@ -65,24 +65,7 @@ If all unifications in the conjunction are generators, then we search for relati
 If there are none, then we have no choice but selecting a generating unification (\lstinline{pickUnificationGenerator}) and then a call with all arguments free (\lstinline{pickCallGenerator}).
 
 
-Once one conjunct is picked, it is analyzed (see line~\ref{line:pick_analyze}).
-The picked conjunct may instantiate new variables, thus this information is propagated onto the rest of the conjuncts.
-Then the rest of the conjuncts is mode analyzed as a new conjunction (see line~\ref{line:conj}).
-If any new modes for any of the relations are encountered, they are also mode analyzed.
-
-It is worth noticing that any relation can generate infinitely many answers.
-We cannot judge the relation to be such generator solely by its mode: for example, the addition relation in the mode \lstinline{add$^o$ x$^{g \rightarrow g}$ y$^{f \rightarrow g}$ z$^{f \rightarrow g}$} generates an infinite stream, while \lstinline{add$^o$ x$^{f \rightarrow g}$ y$^{f \rightarrow g}$ z$^{g \rightarrow g}$} does not.
-
-\subsection{Conversion into Intermediate Representation}
-
-To represent nondeterminism, our functional conversion uses the basis of \micro~--- the stream data structure.
-A relation is converted into a function with $n$ arguments which returns a stream of $m$-tuples, where $n$ is the number of the input arguments, and $m$ --- the number of the output arguments of the relation.
-Since stream is a monad, functions can be written elegantly in \haskell using do-notation (see figure~\ref{fig:mult}).
-We use an intermediate representation which draws inspiration from \haskell's do-notation, but can then be pretty-printed into other functional languages.
-The abstract syntax of our intermediate language is shown in figure~\ref{fig:intermediate}.
-The conversion follows quite naturally from the modded relation and the syntax of the intermediate representation.
-
-\begin{figure}[h]
+\begin{figure*}[t!]
 \begin{tabular}{llll}
     $\Fun_{V}$ & $=$ & $\Sum\LIST{\Fun_{V}}$ & concatenation of streams\\
                & $\mid$ & $\Bind\LIST{\left(\LIST{V}, \Fun_{V}\right)} $ & monadic bind for streams\\
@@ -94,8 +77,26 @@ The conversion follows quite naturally from the modded relation and the syntax o
 \end{tabular}
 \caption{Abstract syntax of the intermediate language $\Fun$}
 \label{fig:intermediate}
-\end{figure}
+\end{figure*}
 
+
+Once one conjunct is picked, it is analyzed (see line~\ref{line:pick_analyze}).
+The picked conjunct may instantiate new variables, thus this information is propagated onto the rest of the conjuncts.
+Then the rest of the conjuncts is mode analyzed as a new conjunction (see line~\ref{line:conj}).
+If any new modes for any of the relations are encountered, they are also mode analyzed.
+
+It is worth noticing that any relation can generate infinitely many answers.
+We cannot judge the relation to be such generator solely by its mode: for example, the addition relation in the mode \lstinline{add$^o$ x$^{g \rightarrow g}$ y$^{f \rightarrow g}$ z$^{f \rightarrow g}$} generates an infinite stream, while \lstinline{add$^o$ x$^{f \rightarrow g}$ y$^{f \rightarrow g}$ z$^{g \rightarrow g}$} does not.
+
+
+\subsection{Conversion into Intermediate Representation}
+
+To represent nondeterminism, our functional conversion uses the basis of \micro~--- the stream data structure.
+A relation is converted into a function with $n$ arguments which returns a stream of $m$-tuples, where $n$ is the number of the input arguments, and $m$ --- the number of the output arguments of the relation.
+Since stream is a monad, functions can be written elegantly in \haskell using do-notation (see figure~\ref{fig:mult}).
+We use an intermediate representation which draws inspiration from \haskell's do-notation, but can then be pretty-printed into other functional languages.
+The abstract syntax of our intermediate language is shown in figure~\ref{fig:intermediate}.
+The conversion follows quite naturally from the modded relation and the syntax of the intermediate representation.
 
 A body of a function is formed as an interleaving concatenation of streams ($\Sum$), each of which is constructed from one of the disjuncts of the relation.
 A conjunction is translated into a sequence of bind statements ($\Bind$): one for each of the conjuncts and a return statement ($\Rtrn$) in the end.

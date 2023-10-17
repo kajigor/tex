@@ -2,12 +2,12 @@
   \centering
   \begin{subfigure}[b]{0.45\textwidth}
     \begin{lstlisting}[frame=tb]
-let rec mul$^o$ x y z = conde [
-  (x === O /\ z === O);
-  (fresh (x$_1$ z$_1$)
+let rec mul$^o$ x y z =
+  (x === O /\ z === O) \/
+  (fresh x$_1$, z$_1$ in
     (x === S x$_1$ /\
      add$^o$ y z$_1$ z /\
-     mul$^o$ x$_1$ y z$_1$)) ]
+     mul$^o$ x$_1$ y z$_1$))
     \end{lstlisting}
     \caption{Implementation in \mk}
     \label{fig:mult_mk}
