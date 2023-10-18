@@ -1,0 +1,13 @@
+\begin{figure}[h!]
+  \centering
+    \begin{lstlisting}[frame=tb]
+  let rec sort$^o$ xs sorted =
+    (xs === [] /\ sorted === []) \/
+    (fresh smallest others sorted$_1$ in
+       xs === smallest : sorted$_1$ /\
+       sort$^o$ others sorted$_1$ /\
+       smallest$^o$ xs smallest others)
+    \end{lstlisting}
+  \caption{Relational sorting in \mk}
+  \label{fig:sorto}
+\end{figure}

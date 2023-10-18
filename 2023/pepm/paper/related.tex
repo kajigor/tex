@@ -1,30 +1,33 @@
 \section{Related Work}
 
-Mode systems are used in both logic and functional logic programming languages.
-They are intended to guide the optimization of a program.
-Cite acquarius.
+A mode generalizes the concept of a direction; this terminology is commonly used in the conventional logic programming community.
+In its most primitive form, a mode specifies which arguments of a relation will be known at runtime (input) and which are expected to be computed (output).
+Several logic programming languages have mode systems used for optimizations, with \merc\footnote{Website of the \merc programming language: \url{https://mercurylang.org/}} standing out among them.
+\merc is a modern functional-logic programming language with a complicated mode system capable not only of describing directions, but also specifying if a relation in the given mode is deterministic, among other things~\cite{overton2002constraint}.
 
 Functional logic programming languages such as \merc translate the logic subset of the language into a functional programming language much like we do.
-\merc utilizes a strong system of modes and types to guide the compilation. Cite mode system paper.
+\merc utilizes a strong system of modes and types to guide the compilation.
+The first version of mode analysis was based on the abstract interpretation~\cite{somogyi1987system}.
+It is still the one used in the implementation.
+They also researched the use of constraint systems for mode inference~\cite{overton2002constraint}.
+While being more precise, this system proved to be too slow to be used in the compiler.
+
+Mercury's mode system is tight into a type system.
 Many \mk languages are embedded into host languages which are not typed and thus we cannot rely on type information in our conversion.
 
 It is hard to compare our implementation with \merc because of the difference in semantics.
 \merc uses a system of prescriptive modes which means that the semantics is defined by the mode assigned to a program.
-We use modes in a descriptive fashion, and the semantics of a \mk program is the same set of answers regardless of the order of subgoals.
+We use modes in a prescriptive fashion, and the semantics of a \mk program is the same set of answers regardless of the order of subgoals.
 This allows us to compare runtime of differently modded relational programs.
 
-There are two papers which mention doing mode analysis in the same fashion we do.
+Even though using abstract interpretation is a standard for doing many kinds of program analysis~\cite{seminal paper}, we decided to abstain from using it for mode analysis.
+This is done in order to simplify the implementation of the functional conversion in the spirit of \mk language family.
 
-Mention the seminal paper on using abstract interpretation for mode inference
 
 
 \label{sec:mode}
 \subsection{Modes}
 
-A mode generalizes the concept of a direction; this terminology is commonly used in the conventional logic programming community.
-In its most primitive form, a mode specifies which arguments of a relation will be known at runtime (input) and which are expected to be computed (output).
-Several logic programming languages have mode systems used for optimizations, with \merc standing out among them.
-\merc\footnote{Website of the \merc programming language: \url{https://mercurylang.org/}} is a modern functional-logic programming language with a complicated mode system capable not only of describing directions, but also specifying if a relation in the given mode is deterministic, among other things~\cite{overton2002constraint}.
 
 Given an annotation for a relation, mode inference determines modes of each variable of the relation.
 For some modes, conjunctions in the body of a relation may need reordering to ensure that consumers of computed values come after the producers of said values so that a variable is never used before it is bound to some value.

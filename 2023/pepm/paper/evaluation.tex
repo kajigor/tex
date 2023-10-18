@@ -47,11 +47,26 @@ It is a reasonable heuristics to postpone their execution until its arguments be
 
 \subsection{Relational Sorting}
 
-This is a truly relational program.
-It is derived from the definition of a sorted list.
-It can be used for both sorting and generating permutations.
-There is no way to implement the program in such a way that it works in both directions with decent performance.
-Mode analysis is capable of reordering the conjuncts in each of the directions and thus make it runnable.
+\input{fig/sort.tex}
+\input{fig/tblsort.tex}
+
+This program is written in truly relational style.
+By definition, a sorted list has its smallest element in its head followed by a sorted list.
+The implementation of the \lstinline{sort$^o$} corresponds to this definition literally: see figure~\ref{fig:sorto}.
+
+This relation can be used for both sorting a list and generating permutations, depending on which argument is passed into it.
+One drawback this implementation has is that its performance in the two directions is drastically different and hinges on the order of two relation calls to \lstinline{smallest$^o$} and \lstinline{sort$^o$}.
+When the call to \lstinline{smallest$^o$} comes first, sorting works fine while permutation generation times out on lists of length $4$.
+Reordering two calls makes it possible to generate permutations for longer lists, however sorting direction starts to time out on lists of length $5$.
+
+The only way a programmer can implement the relation in such a way that both directions work well, is by duplicating a conjunction with the two orders mentioned.
+Even though it leads to somewhat decent performance, it is far from elegant and also increases the amount of work to be done to compute any answer.
+Mode analysis is a better approach to reordering the conjuncts according to the direction needed.
+Accompanied by the functional conversion, it also improves the performance significantly: see table~\ref{tbl:sort}.
+
+It is worth noting that this relation executes too slowly to be practical even after the functional conversion.
+It comes from the properties of the algorithm as well as using Peano numbers.
+However this relation is illustrative of the ways relational programs are supposed to be written and that their execution in the reverse direction can be improved by using sophisticated analyses rather than resorting to inelegant software engineering practices.
 
 
 \subsection{Deterministic Directions}
