@@ -1,7 +1,7 @@
 \section{Introduction}
 
 
-There is a well-known observation\cite{lozov2019relational,SemanticsModifiers1} that programs solving certain problems can be acquired by inverting programs solving some other, much simpler, problems.
+There is a well-known observation~\cite{lozov2019relational,SemanticsModifiers1} that programs solving certain problems can be acquired by inverting programs solving some other, much simpler, problems.
 Sometimes the difference in the ``simplicity'' can be characterized in precise complexity-theoretic terms: for example, type checking for simple typed lambda calculus (STLC) is known to be linear-time (and rather straightforward to implement), while type inference (its inversion) is PTIME-complete~\cite{mairson2004linear}, and type inhabitation problem (its another inversion) is PSPACE-complete~\cite{urzyczyn1997inhabitation}.
 
 In the scope of this paper we will be interested in a more concrete scenario of this generic idea, namely, of turning \emph{verifiers} into \emph{solvers}.
@@ -15,7 +15,7 @@ We focus on the application of \emph{relational programming}~\cite{TheReasonedSc
 
 Relational programming can be considered as a subfield of conventional logic programming focused on study of implementation techniques and applications of \emph{purely relational} specifications.
 In a narrow sense, relational programming amounts to writing programs in \mk\footnote{Website of the \mk programming language: \url{http://minikanren.org}}~--- an embedded DSL initially developed for \textsc{Scheme} and later ported for dozens of other host languages.
-Based on the same theory of first-order Horn clauses as, for example, \prolog, \mk employs a complete \emph{interleaving search}\cite{kiselyov2005backtracking, rozplokhas2020certified} and discourages the use of extra-logical features such as knowledge of concrete search order, ``cuts'', side-effects, efficient, but non-relational arithmetic, etc.
+Based on the same theory of first-order Horn clauses as, for example, \prolog, \mk employs a complete \emph{interleaving search}~\cite{kiselyov2005backtracking, rozplokhas2020certified} and discourages the use of extra-logical features such as knowledge of concrete search order, ``cuts'', side-effects, efficient, but non-relational arithmetic, etc.
 In conventional logic programming the specification provided by the end-user usually encodes a certain concrete way to solve a problem.
 Contrary to this, \mk shifts the focus onto the specification of the problem itself with no certain hints on how to solve its various instances.
 % Thus, contrary to conventional logic programming, where the specification provided by an end-user as a rule encodes a certain concrete way to solve a problem, in \mk the focus is shifted even more into the specification of the problem itself with no certain hints of how to solve its various instances.
@@ -24,14 +24,14 @@ This makes the specifications written in \mk short, elegant and expressive.
 It is possible to directly employ the verifier-to-solver approach~\cite{byrd2017unified,kosarev2020relational} with \mk.
 It has been successfully applied in a few non-trivial projects~\cite{kosarev2022declarative,lozov2023relational}.
 On the other hand, many useful optimization techniques cannot be applied for \mk programs directly since these programs lack an important part of information~--- the \emph{direction} under which relational verifier turns into a solver.
-By taking this information into account, it is possible to make the approach more universally practically applicable.
+By taking this information into account, it is possible to make the approach more universally practical.
 
 In this paper we present the results of our exploration in the area of \emph{mode inference} and \emph{functional conversion} for \mk.
 Mode analysis and inference is a relevant technique for conventional logic programming~\cite{debray1988automatic,somogyi1987system,overton2002constraint}.
 A mode can be considered as an implicit specification of a direction in which a relation is intended to be evaluated.
 Given a user-defined description of \emph{modes} for (some) relations, mode analysis propagates the mode information through the rest of the logic program thus defining more concrete evaluation strategy for the rest of its relations.
 
-Various notions and concrete approaches are employed for mode analysis in different settings, and we give a survey in Section~\ref{sec:mode}.
+Various notions and concrete approaches are employed for mode analysis in different settings, and we give a survey in Section~\ref{sec:related}.
 In our setting we consider user-defined mode specification for the top-level goal as the prescription of the direction in which relational specification has to be evaluated to provide a solver for the problem in question.
 However, such a prescription cannot be directly employed in \mk as it contradicts the very nature of relational programming.
 Instead, we accompany mode inference with \emph{functional conversion}~--- a transformation which, given a relational specification, a top-level goal, user-defined modes for this goal and the results of mode inference provides a regular functional program which delivers exactly the same answers as the top-level goal being evaluated in the direction prescribed by the modes.
@@ -41,15 +41,15 @@ The contribution of this paper is as follows:
 
 \begin{itemize}
 \item We reiterate on mode inference for \mk, specifying concrete requirements specific for both \mk and our ultimate goal of putting verifier-to-solver idea to work.
-\item We describe a concrete approach to mode inference which takes the aforementioned requirements into account. As mode inference in general is known to be undecidable we   develop a number of heuristics specific to our case.
+\item We describe a concrete approach to mode inference which takes the aforementioned requirements into account. As mode inference in general is known to be undecidable, we develop a number of heuristics specific to our case.
 \item We implement both mode inference and functional conversion for a reference \mk implementation.
 \item We evaluate our implementation on several benchmarks, to investigate the advantages, drawbacks, and potential areas for improvement in our approach.
 \end{itemize}
 
 The rest of the paper is structured as follows.
 Section~\ref{sec:mk} describes the main ideas behind relational programming as well as the object language used in this paper.
-Related work including inverse computations and mode analysis is discussed in section~\ref{sec:related}.
+Related work including inverse computations and mode analysis is discussed in Section~\ref{sec:related}.
 Section~\ref{sec:conversion} describes the scheme of functional conversion.
-The conversion is illustrated by examples in section~\ref{sec:examples}.
-The evaluation of the approach is presented in section~\ref{sec:evaluation}, followed by the discussion in section~\ref{sec:discussion}.
-We conclude and sketch the directions for future work in section~\ref{sec:conclusion}.
+The conversion is illustrated by examples in Section~\ref{sec:examples}.
+The evaluation of the approach is presented in Section~\ref{sec:evaluation}, followed by the discussion in Section~\ref{sec:discussion}.
+We conclude and sketch the directions for future work in Section~\ref{sec:conclusion}.

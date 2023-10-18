@@ -7,7 +7,7 @@ In this section, we give the abstract syntax of \mk version used in this paper a
 In this paper we use core \mk usually referred to as \micro.
 In its syntax, a relation is a goal comprised of disjunctions or conjunctions of other goals.
 A base goal can be either an explicit unification of two terms or a call to a relation.
-An example program in \mk is shown in figure~\ref{fig:addo_mk}.
+An example program in \mk is shown in Figure~\ref{fig:addo_mk}.
 It relates triples of Peano natural numbers \lstinline{x}, \lstinline{y}, \lstinline{z} such that \lstinline{x + y = z}.
 We use identifiers which start with the upper-case letters as constructors, and identifiers which start with the lower-case letters as variable names.
 A superscript \lstinline{$^o$} denotes a relation name while the keyword \lstinline{fresh} introduces fresh variables into the scope.
@@ -45,7 +45,7 @@ We also prohibit using disjunctions inside conjunctions.
 The normalization procedure declares a new relation whenever this is encountered.
 This is done to limit the number of possible permutations one has to consider when doing the mode inference.
 
-The complete abstract syntax of the \mk language used in this paper is presented in figure~\ref{fig:miniKanren}.
+The complete abstract syntax of the \mk language used in this paper is presented in Figure~\ref{fig:miniKanren}.
 
 \label{sec:mode}
 \subsection{Modes}
@@ -67,7 +67,7 @@ The instantiation $f$ represents an unbound, or \emph{free}, variable, when no i
 When the variable is known to be \emph{ground}, its instantiation is $g$.
 
 In this paper, we call a pair of instantiations a mode of a variable.
-figure~\ref{fig:double_modded} shows examples of the normalized \mk relations with modes inferred for the forward and backward directions.
+Figure~\ref{fig:double_modded} shows examples of the normalized \mk relations with modes inferred for the forward and backward directions.
 We use superscript annotation for variables to represent their modes visually.
 Notice the different order of conjuncts in the bodies of the \lstinline{add$^o$} relation in different modes.
 

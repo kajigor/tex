@@ -32,11 +32,11 @@ There is nothing else our mode inference uses to prefer the order presented in t
 
     \subsection{The Mode of Addition Relation which Needs a Generator}
 
-    Consider the example of the addition relation in mode \lstinline[breaklines=true]{add$^o$ x$^{g \to g}$ y$^{f \to g}$ z$^{f \to g}$} presented in figure~\ref{fig:addo}.
+    Consider the example of the addition relation in the mode \lstinline{add$^o$ x$^{g \to g}$ y$^{f \to g}$ z$^{f \to g}$} presented in Figure~\ref{fig:addo}.
 The unification in the first disjunct of this relation involves two free variables.
 We use a generator \lstinline{gen_addoIIO_x2} to generate a stream of ground values for the variable \lstinline{z} which is passed into the function \lstinline{addIIO} as an argument.
 It is up to the user to provide a suitable generator.
-One of the possible generators which produces all Peano numbers in order and an example of its usage are presented in figure~\ref{fig:addo_gen}.
+One of the possible generators which produces all Peano numbers in order and an example of its usage are presented in Figure~\ref{fig:addo_gen}.
 
 The generators which produce an infinite stream should be inverse eta-delayed in \ocaml and other non-lazy languages.
 Otherwise, the function would not terminate trying to eagerly produce all possible ground values before using any of them.

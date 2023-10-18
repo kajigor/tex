@@ -12,13 +12,14 @@ Since the search in \mk is complete~\cite{kiselyov2005backtracking,rozplokhas202
 It also means that the way in which a program is structured has no effect on which answers are found, only on the order in which they are computed.
 
 In this paper we use core \mk language usually referred to as \micro.
-In its syntax, a relation is a goal comprised of disjunctions or conjunctions of other goals.
-A base goal can be either an explicit unification of two terms or a call to a relation.
-An example program in \mk is shown in figure~\ref{fig:addo_mk}.
+In its syntax, a relation is a goal comprised of disjunctions (\lstinline{\/}) or conjunctions (\lstinline{/\}) of other goals.
+A base goal can be either an explicit unification of two terms (\lstinline{===}) or a call of a relation.
+An example program in \mk is shown in Figure~\ref{fig:addo_mk}.
 It relates triples of Peano natural numbers \lstinline{x}, \lstinline{y}, \lstinline{z} such that \lstinline{x + y = z}.
-We use syntax notation that identifiers which start with the upper-case letters are constructors, while identifiers which start with the lower-case letters are variable names.
-A superscript \lstinline{$^o$} denotes a relation name while the keyword \lstinline{fresh} introduces fresh variables into the scope.
-To execute a relation, one should provide a query to run, for example the query \lstinline{run q (add$^o$ q q (S (S O)))} finds a number which, doubled, is 2 in Peano representation, namely \lstinline{S O}.
+We use syntax notation that constructors are denoted by identifiers which start with the upper-case letters, while identifiers which start with the lower-case letters are used as variable names.
+The~superscript \lstinline{$^o$} denotes a relation name while the keyword \lstinline{fresh} introduces fresh variables into the scope.
+To execute a relation, one should provide a query to run.
+For example, the query \lstinline{run q (add$^o$ q q (S (S O)))} finds a number which, doubled, is 2 in Peano representation, namely \lstinline{S O}.
 Some queries can compute values of several variables, and there may be infinitely many of them.
 For example, the query \lstinline{run q (fresh y,z in q == (y, z) /\ add$^o$ (S O) y z)} finds all \lstinline{y} and \lstinline{z} such that $1 + y = z$.
 These answers are \lstinline{(O, S O)}, \lstinline{(S O, S (S O))} and so forth.
@@ -35,11 +36,11 @@ Below is the abstract syntax of the term language over the set of variables $V$.
 \[  \FlatTerm_{V} = V \cup \{\Cons_{n}\left( x_1, \ldots, x_{n} \right) \mid x_{i}\in V; i \neq j \Rightarrow x_i \neq x_j\} \]
 
 
-Whenever a term which does not adhere to this form is encountered in a unification or as an argument of a call, it is transformed into a conjunction of several unifications, as illustrated by the examples in figure~\ref{fig:superhomo}.
+Whenever a term which does not adhere to this form is encountered in a unification or as an argument of a call, it is transformed into a conjunction of several unifications, as illustrated by the examples in Figure~\ref{fig:superhomo}.
 
 Unification in the normal form is restricted to always unify a variable with a term.
 We also prohibit using disjunctions inside conjunctions.
 The normalization procedure declares a new relation whenever this is encountered.
 This is done to limit the number of possible permutations one has to consider when doing the mode inference.
 
-The complete abstract syntax of the \mk language used in this paper is presented in figure~\ref{fig:miniKanren}.
+The complete abstract syntax of the \mk language used in this paper is presented in Figure~\ref{fig:miniKanren}.

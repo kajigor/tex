@@ -8,7 +8,8 @@ Functional conversion is done for a relation with a concrete fixed direction.
 The goal is to create a function which computes the same answers as \mk would, not necessarily in the same order.
 Since the search in \mk is complete, both conjuncts and disjuncts can be reordered freely: interleaving makes sure that no answers would be lost this way.
 Moreover, the original order of the subgoals is often suboptimal for any direction but the one which the programmer had in mind when they encoded the relation.
-When the relational conversion is used to create a relation, the order of the subgoals only really suits the forward direction, in which the relation is often not intended to be run (in this case, it is better to run the original function).
+In verifiers-to-solvers approach, a relational verifier is usually created automatically from an interpreter written in a functional language by means of typed relational conversion~\cite{lozov2018typed}.
+When it is used to create a relation, the order of the subgoals only really suits the forward direction, in which the relation is often not intended to be run (in this case, it is better to run the original function).
 
 The mode inference results in the relational program with all variables annotated by their modes, and all base subgoals ordered in a way that further conversion makes sense.
 Conversion then produces functions in the intermediate language.
@@ -27,7 +28,7 @@ The instantiation $f$ represents an unbound, or \emph{free}, variable, when no i
 When the variable is known to be \emph{ground}, its instantiation is $g$.
 
 In this paper, we call a pair of instantiations a mode of a variable.
-figure~\ref{fig:double_modded} shows examples of the normalized \mk relations with modes inferred for the forward and backward directions.
+Figure~\ref{fig:double_modded} shows examples of the normalized \mk relations with modes inferred for the forward and backward directions.
 We use superscript annotation for variables to represent their modes visually.
 Notice the different order of conjuncts in the bodies of the \lstinline{add$^o$} relation in different modes.
 
@@ -35,7 +36,7 @@ Notice the different order of conjuncts in the bodies of the \lstinline{add$^o$}
 We employ a simple version of mode analysis to order subgoals properly in the given direction.
 The mode analysis makes sure that a variable is never used before it is associated with some value.
 It also ensures that once a variable becomes ground, it never becomes free, thus the value of a variable is never lost.
-The mode inference pseudocode is presented in listing~\ref{fig:modeInference}.
+The mode inference pseudocode is presented in Listing~\ref{fig:modeInference}.
 
 \input{fig/mode_inference}
 
@@ -97,9 +98,9 @@ We cannot judge the relation to be such generator solely by its mode: for exampl
 
 To represent nondeterminism, our functional conversion uses the basis of \mk~--- the stream data structure.
 A relation is converted into a function with $n$ arguments which returns a stream of $m$-tuples, where $n$ is the number of the input arguments, and $m$ --- the number of the output arguments of the relation.
-Since stream is a monad, functions can be written elegantly in \haskell using do-notation (see figure~\ref{fig:mult}).
+Since stream is a monad, functions can be written elegantly in \haskell using do-notation (see Figure~\ref{fig:mult}).
 We use an intermediate representation which draws inspiration from \haskell's do-notation, but can then be pretty-printed into other functional languages.
-The abstract syntax of our intermediate language is shown in figure~\ref{fig:intermediate}.
+The abstract syntax of our intermediate language is shown in Figure~\ref{fig:intermediate}.
 The conversion follows quite naturally from the modded relation and the syntax of the intermediate representation.
 
 A body of a function is formed as an interleaving concatenation of streams ($\Sum$), each of which is constructed from one of the disjuncts of the relation.
