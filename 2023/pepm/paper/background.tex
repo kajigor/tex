@@ -50,6 +50,9 @@ The complete abstract syntax of the \mk language used in this paper is presented
 \label{sec:mode}
 \subsection{Modes}
 
+\input{fig/double_modded}
+
+
 A mode generalizes the concept of a direction; this terminology is commonly used in the conventional logic programming community.
 In its most primitive form, a mode specifies which arguments of a relation will be known at runtime (input) and which are expected to be computed (output).
 Several logic programming languages have mode systems used for optimizations, with \merc standing out among them.
@@ -68,6 +71,5 @@ figure~\ref{fig:double_modded} shows examples of the normalized \mk relations wi
 We use superscript annotation for variables to represent their modes visually.
 Notice the different order of conjuncts in the bodies of the \lstinline{add$^o$} relation in different modes.
 
-\input{fig/double_modded}
 
 

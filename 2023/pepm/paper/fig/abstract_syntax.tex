@@ -1,0 +1,13 @@
+\begin{figure*}[t!]
+    \begin{tabular}{llll}
+        $\Def_{V}^N$ & $:$    & $R_{n}\left( x_1, \ldots, x_{n} \right) = \Disj_{V}, x_{i}\in V$                        & normalized relation definition \\
+        $\Disj_{V}$  & $:$    & $\bigvee\left( c_1, \ldots, c_{n} \right), c_{i}\in \Conj_{V}$                          & normal form                    \\
+        $\Conj_{V}$  & $:$    & $\bigwedge\left( g_1, \ldots, g_n \right), g_{i}\in \Base_{V}$                          & normal conjunction             \\
+        $\Base_{V}$  & $:$    & $V \equiv \FlatTerm_{V}$                                                                & flat unification               \\
+                     & $\mid$ & $R_{n}\left( x_1, \ldots, x_{n} \right), x_{i}\in V, i \neq j \Rightarrow x_i \neq x_j$ & flat call                      \\
+
+        % $\Delay$ & $:$ &  $\text{Delay} \mid \text{NoDelay} $ &
+    \end{tabular}
+    \caption{Abstract syntax of \micro in the normal form}
+    \label{fig:miniKanren}
+\end{figure*}

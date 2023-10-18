@@ -1,46 +1,29 @@
 \section{Related Work}
+\label{sec:related}
 
 A mode generalizes the concept of a direction; this terminology is commonly used in the conventional logic programming community.
 In its most primitive form, a mode specifies which arguments of a relation will be known at runtime (input) and which are expected to be computed (output).
-Several logic programming languages have mode systems used for optimizations, with \merc\footnote{Website of the \merc programming language: \url{https://mercurylang.org/}} standing out among them.
-\merc is a modern functional-logic programming language with a complicated mode system capable not only of describing directions, but also specifying if a relation in the given mode is deterministic, among other things~\cite{overton2002constraint}.
+Several logic programming languages have mode systems used for optimizations~\cite{warren1977implementing, van1992high, thom1986nu}, with \merc\footnote{Website of the \merc programming language: \url{https://mercurylang.org/}} standing out among them.
+\merc is a modern functional-logic programming language with a complicated mode system capable not only of describing directions, but also specifying if a relation in the given mode is deterministic, among other things~\cite{somogyi1987system,overton2002constraint}.
 
-Functional logic programming languages such as \merc translate the logic subset of the language into a functional programming language much like we do.
-\merc utilizes a strong system of modes and types to guide the compilation.
-The first version of mode analysis was based on the abstract interpretation~\cite{somogyi1987system}.
-It is still the one used in the implementation.
-They also researched the use of constraint systems for mode inference~\cite{overton2002constraint}.
+The mode system of \merc is \emph{prescriptive} which means that the mode dictates the data flow.
+\merc translates the logic subset of the language into a functional programming language according to the mode assigned to the relation.
+The semantics of a \merc program exists only when the mode is assigned.
+This is not the case for a \mk program whose semantics is the bag of answers it produces~\cite{rozplokhas2020certified} regardless of the direction, data flow or the order of subgoals within the definition.
+In our paper we aim to create a \emph{descriptive} mode system for \mk which does not impose constraints on its final execution.
+As another consequence, we are free to compare the execution time of programs with and without any optimizations, which \merc papers do not do.
+
+There are multiple papers describing automatic mode inference of logic programs~\cite{debray1988automatic, ridoux1999typed, smaus2000mode}
+The most common way to implement mode inference is by abstract interpretation first introduced in~\cite{janssens1992deriving}.
+\merc utilizes this approach~\cite{somogyi1987system} in its implementation to guide the compilation.
+This mode system proved to be not expressive enough in the context of mode polymorphism, so they researched the use of constraint systems for mode inference~\cite{overton2002constraint}.
 While being more precise, this system proved to be too slow to be used in the compiler.
 
-Mercury's mode system is tight into a type system.
+Thus the compiler of \merc is highly complicated and demands many annotations from the end-user.
+They include type, mode, uniqueness, and determinism specifications.
 Many \mk languages are embedded into host languages which are not typed and thus we cannot rely on type information in our conversion.
-
-It is hard to compare our implementation with \merc because of the difference in semantics.
-\merc uses a system of prescriptive modes which means that the semantics is defined by the mode assigned to a program.
-We use modes in a prescriptive fashion, and the semantics of a \mk program is the same set of answers regardless of the order of subgoals.
-This allows us to compare runtime of differently modded relational programs.
-
-Even though using abstract interpretation is a standard for doing many kinds of program analysis~\cite{seminal paper}, we decided to abstain from using it for mode analysis.
-This is done in order to simplify the implementation of the functional conversion in the spirit of \mk language family.
-
-
-
-\label{sec:mode}
-\subsection{Modes}
-
-
-Given an annotation for a relation, mode inference determines modes of each variable of the relation.
-For some modes, conjunctions in the body of a relation may need reordering to ensure that consumers of computed values come after the producers of said values so that a variable is never used before it is bound to some value.
-In this project, we employed the least complicated mode system, in which variables may only have an \inm or \outm mode.
-A mode maps variables of a relation to a pair of the initial and final instantiations.
-The mode \inm stands for $g \rightarrow g$, while \outm stands for $f \rightarrow g$.
-The instantiation $f$ represents an unbound, or \emph{free}, variable, when no information about its possible values is available.
-When the variable is known to be \emph{ground}, its instantiation is $g$.
-
-In this paper, we call a pair of instantiations a mode of a variable.
-figure~\ref{fig:double_modded} shows examples of the normalized \mk relations with modes inferred for the forward and backward directions.
-We use superscript annotation for variables to represent their modes visually.
-Notice the different order of conjuncts in the bodies of the \lstinline{add$^o$} relation in different modes.
+It is also impossible to do what \merc compiler does as a light-weight embedded DSL which is one of the design principles of the \mk family.
+Our goal then is come up with the simplest approach to mode analysis which is capable of improving the performance of the verifier-to-solver approach with the least amount of annotations needed from the user --- ideally, only the top-level relation call should be annotated.
 
 \input{fig/double_modded}
 

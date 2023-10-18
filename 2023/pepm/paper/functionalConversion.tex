@@ -1,11 +1,12 @@
-\section{Functional Conversion for \micro}
+\section{Functional Conversion for \mk}
+\label{sec:conversion}
 
 In this section, we describe the functional conversion algorithm.
 The reader is encouraged to first read the paper~\cite{verbitskaia2022direction} on the topic, which introduces the conversion scheme on a series of examples.
 
 Functional conversion is done for a relation with a concrete fixed direction.
-The goal is to create a function which computes the same answers as \micro would, not necessarily in the same order.
-Since the search in \micro is complete, both conjuncts and disjuncts can be reordered freely: interleaving makes sure that no answers would be lost this way.
+The goal is to create a function which computes the same answers as \mk would, not necessarily in the same order.
+Since the search in \mk is complete, both conjuncts and disjuncts can be reordered freely: interleaving makes sure that no answers would be lost this way.
 Moreover, the original order of the subgoals is often suboptimal for any direction but the one which the programmer had in mind when they encoded the relation.
 When the relational conversion is used to create a relation, the order of the subgoals only really suits the forward direction, in which the relation is often not intended to be run (in this case, it is better to run the original function).
 
@@ -16,12 +17,30 @@ It may then be pretty printed into concrete functional programming languages, in
 
 \subsection{Mode Inference}
 
+
+Given an annotation for a relation, mode inference determines modes of each variable of the relation.
+For some modes, conjunctions in the body of a relation may need reordering to ensure that consumers of computed values come after the producers of said values so that a variable is never used before it is bound to some value.
+In this project, we employed the least complicated mode system, in which variables may only have an \inm or \outm mode.
+A mode maps variables of a relation to a pair of the initial and final instantiations.
+The mode \inm stands for $g \rightarrow g$, while \outm stands for $f \rightarrow g$.
+The instantiation $f$ represents an unbound, or \emph{free}, variable, when no information about its possible values is available.
+When the variable is known to be \emph{ground}, its instantiation is $g$.
+
+In this paper, we call a pair of instantiations a mode of a variable.
+figure~\ref{fig:double_modded} shows examples of the normalized \mk relations with modes inferred for the forward and backward directions.
+We use superscript annotation for variables to represent their modes visually.
+Notice the different order of conjuncts in the bodies of the \lstinline{add$^o$} relation in different modes.
+
+
 We employ a simple version of mode analysis to order subgoals properly in the given direction.
 The mode analysis makes sure that a variable is never used before it is associated with some value.
 It also ensures that once a variable becomes ground, it never becomes free, thus the value of a variable is never lost.
 The mode inference pseudocode is presented in listing~\ref{fig:modeInference}.
 
 \input{fig/mode_inference}
+
+
+\input{fig/intermediate_lang.tex}
 
 Mode inference starts by initializing modes for all variables in the body of the given relation according to the given direction.
 All variables that are among arguments are annotated with their \inm or \outm modes, while all other variables get only their initial instantiations specified as $f$.
@@ -64,22 +83,6 @@ If no guard is present, then it searches for the first assignment (\lstinline{pi
 If all unifications in the conjunction are generators, then we search for relation calls with some ground arguments (\lstinline{pickCallWithGroundArguments}).
 If there are none, then we have no choice but selecting a generating unification (\lstinline{pickUnificationGenerator}) and then a call with all arguments free (\lstinline{pickCallGenerator}).
 
-
-\begin{figure*}[t!]
-\begin{tabular}{llll}
-    $\Fun_{V}$ & $=$ & $\Sum\LIST{\Fun_{V}}$ & concatenation of streams\\
-               & $\mid$ & $\Bind\LIST{\left(\LIST{V}, \Fun_{V}\right)} $ & monadic bind for streams\\
-               & $\mid$ & $\Rtrn \LIST{\Term_{V}}$ & return of a tuple of terms\\
-               & $\mid$ & $\Guard\left( V, V \right)$ & equality check\\
-               & $\mid$ & $\Match_{V} \left( \Term_{V}, \Fun_{V} \right)$ & match a variable against a pattern\\
-               & $\mid$ & $R_{n}(\LIST{V}, \LIST{G})$ & function call\\
-               & $\mid$ & $\Gen_{G}$ & generator
-\end{tabular}
-\caption{Abstract syntax of the intermediate language $\Fun$}
-\label{fig:intermediate}
-\end{figure*}
-
-
 Once one conjunct is picked, it is analyzed (see line~\ref{line:pick_analyze}).
 The picked conjunct may instantiate new variables, thus this information is propagated onto the rest of the conjuncts.
 Then the rest of the conjuncts is mode analyzed as a new conjunction (see line~\ref{line:conj}).
@@ -88,10 +91,11 @@ If any new modes for any of the relations are encountered, they are also mode an
 It is worth noticing that any relation can generate infinitely many answers.
 We cannot judge the relation to be such generator solely by its mode: for example, the addition relation in the mode \lstinline{add$^o$ x$^{g \rightarrow g}$ y$^{f \rightarrow g}$ z$^{f \rightarrow g}$} generates an infinite stream, while \lstinline{add$^o$ x$^{f \rightarrow g}$ y$^{f \rightarrow g}$ z$^{g \rightarrow g}$} does not.
 
+\input{fig/mult_modded.tex}
 
 \subsection{Conversion into Intermediate Representation}
 
-To represent nondeterminism, our functional conversion uses the basis of \micro~--- the stream data structure.
+To represent nondeterminism, our functional conversion uses the basis of \mk~--- the stream data structure.
 A relation is converted into a function with $n$ arguments which returns a stream of $m$-tuples, where $n$ is the number of the input arguments, and $m$ --- the number of the output arguments of the relation.
 Since stream is a monad, functions can be written elegantly in \haskell using do-notation (see figure~\ref{fig:mult}).
 We use an intermediate representation which draws inspiration from \haskell's do-notation, but can then be pretty-printed into other functional languages.
@@ -112,7 +116,7 @@ If a term in the right-hand side of a unification has both \outm and \inm variab
 Generators ($\Gen$) are used for unifications with free variables on both sides.
 A generator is a stream of possible values for the free variables, and it is used for each variable from the right-hand side of the unification.
 The variable from the left-hand side of the unification is then simply assigned the value constructed from the right-hand side.
-Our current implementation works with an untyped deeply embedded \micro, in which there is not enough information to produce generators automatically.
+Our current implementation works with an untyped deeply embedded \mk, in which there is not enough information to produce generators automatically.
 We decided to delegate the responsibility to provide generators to the user: a generator for each free variable is added as an argument of the relation.
 When the user is to call the function, they have to provide the suitable generators.
 

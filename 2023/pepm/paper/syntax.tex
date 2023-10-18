@@ -1,16 +1,27 @@
-\section{Normal Form Abstract Syntax of \mk}
+\section{Relational Programming and \mk}
+\label{sec:mk}
 
-In this paper we use core \mk usually referred to as \micro.
+\input{fig/addo_mk.tex}
+
+\input{fig/superhomo.tex}
+
+
+Relational programming as a subfield of conventional logic programming is focused on only using purely relational specifications.
+Using extra-logical features such as ``cuts'' and side-effects common in \prolog as well as the knowledge of the particular direction the relation is supposed to be run is discouraged.
+Since the search in \mk is complete~\cite{kiselyov2005backtracking,rozplokhas2020certified}, all answers to the query will eventually be found without the programmer taking into account a particular search strategy used in the language implementation.
+It also means that the way in which a program is structured has no effect on which answers are found, only on the order in which they are computed.
+
+In this paper we use core \mk language usually referred to as \micro.
 In its syntax, a relation is a goal comprised of disjunctions or conjunctions of other goals.
 A base goal can be either an explicit unification of two terms or a call to a relation.
 An example program in \mk is shown in figure~\ref{fig:addo_mk}.
 It relates triples of Peano natural numbers \lstinline{x}, \lstinline{y}, \lstinline{z} such that \lstinline{x + y = z}.
-We use identifiers which start with the upper-case letters as constructors, and identifiers which start with the lower-case letters as variable names.
+We use syntax notation that identifiers which start with the upper-case letters are constructors, while identifiers which start with the lower-case letters are variable names.
 A superscript \lstinline{$^o$} denotes a relation name while the keyword \lstinline{fresh} introduces fresh variables into the scope.
-To execute a relation, one should provide a query to run, for example the query \lstinline{run q (add$^o$ q q (S (S O)))} finds a number which, doubled, is 2 in Peano representation.
-
-
-\input{fig/addo_mk.tex}
+To execute a relation, one should provide a query to run, for example the query \lstinline{run q (add$^o$ q q (S (S O)))} finds a number which, doubled, is 2 in Peano representation, namely \lstinline{S O}.
+Some queries can compute values of several variables, and there may be infinitely many of them.
+For example, the query \lstinline{run q (fresh y,z in q == (y, z) /\ add$^o$ (S O) y z)} finds all \lstinline{y} and \lstinline{z} such that $1 + y = z$.
+These answers are \lstinline{(O, S O)}, \lstinline{(S O, S (S O))} and so forth.
 
 
 To simplify the functional conversion scheme, we consider \mk relations to be in the superhomogeneous normal form used in the \merc programming language~\cite{somogyi1996execution}.
@@ -24,17 +35,7 @@ Below is the abstract syntax of the term language over the set of variables $V$.
 \[  \FlatTerm_{V} = V \cup \{\Cons_{n}\left( x_1, \ldots, x_{n} \right) \mid x_{i}\in V; i \neq j \Rightarrow x_i \neq x_j\} \]
 
 
-Whenever a term which does not adhere to this form is encountered in a unification or as an argument of a call, it is transformed into a conjunction of several unifications, as illustrated by the following examples:
-\[
-    \begin{array}{rll}
-        C\left( x_1, x_2 \right)                      & \equiv C\left( C\left( y_1, y_2 \right), y_3 \right)                                          & \Rightarrow \\
-                                                      & \multicolumn{2}{l}{\quad\Rightarrow x_1 \equiv C\left( y_1, y_2 \right) \land x_2 \equiv y_3}               \\
-        C\left( C\left( x_1, x_2 \right), x_3 \right) & \equiv C\left( C\left( y_1, y_2 \right), y_3 \right)                                          & \Rightarrow \\
-                                                      & \multicolumn{2}{l}{\quad\Rightarrow x_1 \equiv y_1 \land x_2 \equiv y_2 \land x_3 \equiv y_3}               \\
-        x \equiv C \left(y, y \right)                 & \multicolumn{2}{l}{\quad\Rightarrow x \equiv C \left(y_1, y_2\right) \land y_1 \equiv y_2}                  \\
-        add^o\left( x, x, z \right)                   & \multicolumn{2}{l}{\quad\Rightarrow add^o\left( x_1, x_2, z \right) \land x_1 \equiv x_2}
-    \end{array}
-\]
+Whenever a term which does not adhere to this form is encountered in a unification or as an argument of a call, it is transformed into a conjunction of several unifications, as illustrated by the examples in figure~\ref{fig:superhomo}.
 
 Unification in the normal form is restricted to always unify a variable with a term.
 We also prohibit using disjunctions inside conjunctions.

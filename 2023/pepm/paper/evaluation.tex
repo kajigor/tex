@@ -1,4 +1,5 @@
 \section{Evaluation}
+\label{sec:evaluation}
 
 To evaluate our functional conversion scheme, we implemented the proposed algorithm in \haskell.
 We compared execution time of several \ocanren relations in different directions against their functional counterparts in the \ocaml language.
@@ -23,6 +24,7 @@ The functional conversion improved execution time of the query about $2.5$ times
 \input{fig/prop_time}
 
 \input{fig/mulo_time}
+\input{fig/tblsort.tex}
 
 \subsection{Multiplication}
 
@@ -48,7 +50,6 @@ It is a reasonable heuristics to postpone their execution until its arguments be
 \subsection{Relational Sorting}
 
 \input{fig/sort.tex}
-\input{fig/tblsort.tex}
 
 This program is written in truly relational style.
 By definition, a sorted list has its smallest element in its head followed by a sorted list.

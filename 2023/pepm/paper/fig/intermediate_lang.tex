@@ -1,0 +1,13 @@
+\begin{figure*}[t!]
+\begin{tabular}{llll}
+    $\Fun_{V}$ & $=$ & $\Sum\LIST{\Fun_{V}}$ & concatenation of streams\\
+               & $\mid$ & $\Bind\LIST{\left(\LIST{V}, \Fun_{V}\right)} $ & monadic bind for streams\\
+               & $\mid$ & $\Rtrn \LIST{\Term_{V}}$ & return of a tuple of terms\\
+               & $\mid$ & $\Guard\left( V, V \right)$ & equality check\\
+               & $\mid$ & $\Match_{V} \left( \Term_{V}, \Fun_{V} \right)$ & match a variable against a pattern\\
+               & $\mid$ & $R_{n}(\LIST{V}, \LIST{G})$ & function call\\
+               & $\mid$ & $\Gen_{G}$ & generator
+\end{tabular}
+\caption{Abstract syntax of the intermediate language $\Fun$}
+\label{fig:intermediate}
+\end{figure*}

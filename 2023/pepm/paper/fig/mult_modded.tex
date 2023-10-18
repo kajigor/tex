@@ -1,13 +1,13 @@
-\begin{figure*}[t]
+\begin{figure*}[t!]
   \centering
   \begin{subfigure}[b]{0.45\textwidth}
     \begin{lstlisting}[frame=tb]
-let rec mul$^o$ x y z =
-  (x === O /\ z === O) \/
-  (fresh x$_1$, z$_1$ in
-    (x === S x$_1$ /\
-     add$^o$ y z$_1$ z /\
-     mul$^o$ x$_1$ y z$_1$))
+  let rec mul$^o$ x y z =
+    (x === O /\ z === O) \/
+    (fresh x$_1$, z$_1$ in
+      (x === S x$_1$ /\
+      add$^o$ y z$_1$ z /\
+      mul$^o$ x$_1$ y z$_1$))
     \end{lstlisting}
     \caption{Implementation in \mk}
     \label{fig:mult_mk}
@@ -15,11 +15,11 @@ let rec mul$^o$ x y z =
   \hfill
   \begin{subfigure}[b]{0.45\textwidth}
     \begin{lstlisting}[frame=tb]
-let rec mul$^o$ x$^{f \rightarrow g}$ y$^{g \rightarrow g}$ z$^{g \rightarrow g}$ =
-  (x$^{f \rightarrow g}$ ===    O /\ z$^{g \rightarrow g}$ ===    O) \/
-  (add$^o$ y$^{g \rightarrow g}$ z$_1^{f \rightarrow g}$ z$^{g \rightarrow g}$ /\
-   mul$^o$ x$_1^{f \rightarrow g}$ y$^{g \rightarrow g}$ z$_1^{g \rightarrow g}$ /\
-   x$^{f \rightarrow g}$ ===    S x$_1^{g \rightarrow g}$)
+  let rec mul$^o$ x$^{f \rightarrow g}$ y$^{g \rightarrow g}$ z$^{g \rightarrow g}$ =
+    (x$^{f \rightarrow g}$ ===    O /\ z$^{g \rightarrow g}$ ===    O) \/
+    (add$^o$ y$^{g \rightarrow g}$ z$_1^{f \rightarrow g}$ z$^{g \rightarrow g}$ /\
+    mul$^o$ x$_1^{f \rightarrow g}$ y$^{g \rightarrow g}$ z$_1^{g \rightarrow g}$ /\
+    x$^{f \rightarrow g}$ ===    S x$_1^{g \rightarrow g}$)
     \end{lstlisting}
     \caption{Mode inference result}
     \label{fig:mult_modded}
@@ -29,26 +29,26 @@ let rec mul$^o$ x$^{f \rightarrow g}$ y$^{g \rightarrow g}$ z$^{g \rightarrow g}
 
   \begin{subfigure}[b]{0.45\textwidth}
     \begin{lstlisting}[frame=tb]
-muloOII x1 x2 = msum
-  [ do { let {x0 = O}
-       ; guard (x2 == O)
-       ; return x0 }
-  , do { x4 <- addoIOI x1 x2
-       ; x3 <- muloOII x1 x4
-       ; let {x0 = S x3}
-       ; return x0 } ]
-addoIOI x0 x2 = msum
-  [ do { guard (x0 == O)
-       ; let {x1 = x2}
-       ; return x1 }
-  , do { x3 <- case x0 of
-            { S y3 -> return y3
-            ; _ -> mzero }
-       ; x4 <- case x2 of
-            { S y4 -> return y4
-            ; _ -> mzero }
-       ; x1 <- addoIOI x3 x4
-       ; return x1 } ]
+  muloOII x1 x2 = msum
+    [ do { let {x0 = O}
+        ; guard (x2 == O)
+        ; return x0 }
+    , do { x4 <- addoIOI x1 x2
+        ; x3 <- muloOII x1 x4
+        ; let {x0 = S x3}
+        ; return x0 } ]
+  addoIOI x0 x2 = msum
+    [ do { guard (x0 == O)
+        ; let {x1 = x2}
+        ; return x1 }
+    , do { x3 <- case x0 of
+              { S y3 -> return y3
+              ; _ -> mzero }
+        ; x4 <- case x2 of
+              { S y4 -> return y4
+              ; _ -> mzero }
+        ; x1 <- addoIOI x3 x4
+        ; return x1 } ]
     \end{lstlisting}
     \caption{Functional conversion into \haskell}
     \label{fig:mult_haskell}
@@ -56,26 +56,26 @@ addoIOI x0 x2 = msum
   \hfill
   \begin{subfigure}[b]{0.45\textwidth}
     \begin{lstlisting}[frame=tb]
-let rec muloOII x1 x2 = msum
-  [ ( let* x0 = return O in
-      let* _ = guard (x2 = O) in
-      return x0 )
-  ; ( let* x4 = addoIOI x1 x2 in
-      let* x3 = muloOII x1 x4 in
-      let* x0 = return (S x3) in
-      return x0 ) ]
-and addoIOI x0 x2 = msum
-  [ ( let* _ = guard (x0 = O) in
-      let* x1 = return x2 in
-      return x1 )
-  ; ( let* x3 = match x0 with
-        | S y3 -> return y3
-        | _ -> mzero in
-      let* x4 = match x2 with
-        | S y4 ->  return y4
-        | _ -> mzero in
-      let* x1 = addoIOI x3 x4 in
-      return x1 ) ]
+  let rec muloOII x1 x2 = msum
+    [ ( let* x0 = return O in
+        let* _ = guard (x2 = O) in
+        return x0 )
+    ; ( let* x4 = addoIOI x1 x2 in
+        let* x3 = muloOII x1 x4 in
+        let* x0 = return (S x3) in
+        return x0 ) ]
+  and addoIOI x0 x2 = msum
+    [ ( let* _ = guard (x0 = O) in
+        let* x1 = return x2 in
+        return x1 )
+    ; ( let* x3 = match x0 with
+          | S y3 -> return y3
+          | _ -> mzero in
+        let* x4 = match x2 with
+          | S y4 ->  return y4
+          | _ -> mzero in
+        let* x1 = addoIOI x3 x4 in
+        return x1 ) ]
     \end{lstlisting}
     \caption{Functional conversion into \ocaml}
     \label{fig:mult_ocaml}
