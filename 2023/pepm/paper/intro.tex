@@ -4,14 +4,15 @@
 There is a well-known observation~\cite{lozov2019relational,SemanticsModifiers1} that programs solving certain problems can be acquired by inverting programs solving some other, much simpler, problems.
 Sometimes the difference in the ``simplicity'' can be characterized in precise complexity-theoretic terms: for example, type checking for simple typed lambda calculus (STLC) is known to be linear-time (and rather straightforward to implement), while type inference (its inversion) is PTIME-complete~\cite{mairson2004linear}, and type inhabitation problem (its another inversion) is PSPACE-complete~\cite{urzyczyn1997inhabitation}.
 
+\input{fig/superhomo.tex}
+
+
 In the scope of this paper we will be interested in a more concrete scenario of this generic idea, namely, in turning \emph{verifiers} into \emph{solvers}.
 A verifier is a procedure that, given an instance of the problem and some \emph{sample}, verifies if this sample is a solution.
 A solver takes an instance of the problem and returns such a sample which makes the verifier to succeed.
 For the variety of search problems, the implementation of a verifier is straightforward; on the other hand its inversion is a solver, which as a rule is much harder to implement in an explicit manner.
 There are a few approaches to program inversion~\cite{RevURA,aman2020foundations}, and the properties of the solver produced by inversion greatly depend on the approach utilized.
 We focus on the application of \emph{relational programming}~\cite{TheReasonedSchemer} as a way to run programs in the reverse direction.
-
-\input{fig/abstract_syntax.tex}
 
 Relational programming can be considered as a subfield of conventional logic programming focused on the study of implementation techniques and applications of \emph{purely relational} specifications.
 In a narrow sense, relational programming amounts to writing programs in \mk\footnote{Website of the \mk programming language: \url{http://minikanren.org}}~--- an embedded DSL initially developed for \textsc{Scheme} and later ported for dozens of other host languages.
@@ -36,6 +37,7 @@ In our setting we consider user-defined mode specification for the top-level goa
 However, such a prescription cannot be directly employed in \mk as it contradicts the very nature of relational programming.
 Instead, we accompany mode inference with \emph{functional conversion}~--- a transformation which, given a relational specification, a top-level goal, user-defined modes for this goal and the results of mode inference provides a regular functional program which delivers exactly the same answers as the top-level goal being evaluated in the direction prescribed by the modes.
 In addition, functional conversion can sometimes eliminate the interpretation overhead introduced by \mk implementation as a shallow DSL: it is capable of replacing unification with pattern-matching, make use of deterministic order of evaluation if such an order is discovered by mode inference, etc.
+
 
 The contribution of this paper is as follows:
 
