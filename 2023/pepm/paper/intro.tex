@@ -4,7 +4,7 @@
 There is a well-known observation~\cite{lozov2019relational,SemanticsModifiers1} that programs solving certain problems can be acquired by inverting programs solving some other, much simpler, problems.
 Sometimes the difference in the ``simplicity'' can be characterized in precise complexity-theoretic terms: for example, type checking for simple typed lambda calculus (STLC) is known to be linear-time (and rather straightforward to implement), while type inference (its inversion) is PTIME-complete~\cite{mairson2004linear}, and type inhabitation problem (its another inversion) is PSPACE-complete~\cite{urzyczyn1997inhabitation}.
 
-In the scope of this paper we will be interested in a more concrete scenario of this generic idea, namely, of turning \emph{verifiers} into \emph{solvers}.
+In the scope of this paper we will be interested in a more concrete scenario of this generic idea, namely, in turning \emph{verifiers} into \emph{solvers}.
 A verifier is a procedure that, given an instance of the problem and some \emph{sample}, verifies if this sample is a solution.
 A solver takes an instance of the problem and returns such a sample which makes the verifier to succeed.
 For the variety of search problems, the implementation of a verifier is straightforward; on the other hand its inversion is a solver, which as a rule is much harder to implement in an explicit manner.
@@ -13,7 +13,7 @@ We focus on the application of \emph{relational programming}~\cite{TheReasonedSc
 
 \input{fig/abstract_syntax.tex}
 
-Relational programming can be considered as a subfield of conventional logic programming focused on study of implementation techniques and applications of \emph{purely relational} specifications.
+Relational programming can be considered as a subfield of conventional logic programming focused on the study of implementation techniques and applications of \emph{purely relational} specifications.
 In a narrow sense, relational programming amounts to writing programs in \mk\footnote{Website of the \mk programming language: \url{http://minikanren.org}}~--- an embedded DSL initially developed for \textsc{Scheme} and later ported for dozens of other host languages.
 Based on the same theory of first-order Horn clauses as, for example, \prolog, \mk employs a complete \emph{interleaving search}~\cite{kiselyov2005backtracking, rozplokhas2020certified} and discourages the use of extra-logical features such as knowledge of concrete search order, ``cuts'', side-effects, efficient, but non-relational arithmetic, etc.
 In conventional logic programming the specification provided by the end-user usually encodes a certain concrete way to solve a problem.
@@ -43,7 +43,7 @@ The contribution of this paper is as follows:
 \item We reiterate on mode inference for \mk, specifying concrete requirements specific for both \mk and our ultimate goal of putting verifier-to-solver idea to work.
 \item We describe a concrete approach to mode inference which takes the aforementioned requirements into account. As mode inference in general is known to be undecidable, we develop a number of heuristics specific to our case.
 \item We implement both mode inference and functional conversion for a reference \mk implementation.
-\item We evaluate our implementation on several benchmarks, to investigate the advantages, drawbacks, and potential areas for improvement in our approach.
+\item We evaluate our implementation on several benchmarks to investigate the advantages, drawbacks, and potential areas for improvement in our approach.
 \end{itemize}
 
 The rest of the paper is structured as follows.
