@@ -3,7 +3,8 @@
 \label{sec:conversion}
 
 In this section, we describe the functional conversion algorithm.
-The reader is encouraged to first read the paper~\cite{verbitskaia2022direction} on the topic, which introduces the conversion scheme on a series of examples.
+While it is not strictly necessary for understanding our current work, the reader is encouraged to first read the paper~\cite{verbitskaia2022direction} on the topic, which introduces the conversion scheme on a series of examples.
+
 
 Functional conversion is done for a relation with a concrete fixed direction.
 The goal is to create a function which computes the same answers as \mk would, not necessarily in the same order.
@@ -18,17 +19,18 @@ It may then be pretty printed into concrete functional programming languages, in
 
 \subsection{Mode Inference}
 
+\input{fig/mode_inference}
 
 Given an annotation for a relation, mode inference determines modes of each variable of the relation.
 For some modes, conjunctions in the body of a relation may need reordering to ensure that consumers of computed values come after the producers of said values so that a variable is never used before it is bound to some value.
-In this project, we employed the least complicated mode system, in which variables may only have an \inm or \outm mode.
+In this project, we employed a straightforward mode system, in which variables may only have an \inm or \outm mode.
 A mode maps variables of a relation to a pair of the initial and final instantiations.
 The mode \inm stands for $g \rightarrow g$, while \outm stands for $f \rightarrow g$.
 The instantiation $f$ represents an unbound, or \emph{free}, variable, when no information about its possible values is available.
-When the variable is known to be \emph{ground}, its instantiation is $g$.
+When the variable is \emph{ground}, its instantiation is $g$.
 
 In this paper, we call a pair of instantiations a mode of a variable.
-Figure~\ref{fig:double_modded} shows examples of the normalized \mk relations with modes inferred for the forward and backward directions.
+Figure~\ref{fig:double_modded} shows examples of the normalized relations with modes inferred for the forward and backward directions.
 We use superscript annotation for variables to represent their modes visually.
 Notice the different order of conjuncts in the bodies of the \lstinline{add$^o$} relation in different modes.
 
@@ -38,22 +40,21 @@ The mode analysis makes sure that a variable is never used before it is associat
 It also ensures that once a variable becomes ground, it never becomes free, thus the value of a variable is never lost.
 The mode inference pseudocode is presented in Listing~\ref{fig:modeInference}.
 
-\input{fig/mode_inference}
 
 
 \input{fig/intermediate_lang.tex}
 
-Mode inference starts by initializing modes for all variables in the body of the given relation according to the given direction.
+Mode inference starts by initializing modes for all variables in the body of the given relation according to the given direction (see line~\ref{line:init}).
 All variables that are among arguments are annotated with their \inm or \outm modes, while all other variables get only their initial instantiations specified as $f$.
 
-Then the body of the relation is analyzed (see line~\ref{line:body}).
+Then, the body of the relation is analyzed (line~\ref{line:body}), and the inferred modes of the variables are propagated into the definition (line~\ref{line:modeUpd}).
 Since the body is normalized, it can only be a disjunction.
 Each disjunct is analyzed independently (see line~\ref{line:disj}) because no data flow happens between them.
 
 Analyzing conjunctions involves analyzing subgoals and ordering them.
 Let us first consider mode analysis of unifications and calls, and then circle back to the way we order them.
 Whenever a base goal is analyzed, all variables in it have some initial instantiation, and some of them also have some final instantiation.
-Mode analysis of a base goal boils down to making all final instantiations ground.
+Mode analysis of a base goal (the function \lstinline{modeInferBase}, omitted from the pseudocode) boils down to making all final instantiations ground.
 
 When analyzing a unification, several situations may occur.
 Firstly, every variable in the unification can be ground, as in $x^{g \rightarrow g} \equiv O$ or in $y^{g \rightarrow ?} \equiv z^{g \rightarrow ?}$ (here $?$ is used to denote that a final instantiation is not yet known).
@@ -63,12 +64,12 @@ The second case is when one side of a unification only contains ground variables
 Depending on which side is ground, we call this either \emph{assignment} or \emph{match}.
 The former corresponds to assigning the value to a variable, as in $x^{f \rightarrow ?} \equiv S \, x_1^{g \rightarrow g}$ or $x^{g \rightarrow g} \equiv y^{f \rightarrow ?}$.
 The latter --- to pattern matching with the variable as the scrutinee, as in $x^{g \rightarrow g} \equiv S \, x_1^{f \rightarrow ?}$.
-Notice that we allow for some variables on the right-hand side to be ground in matches, given that at least one of them is free.
+Note that we allow for some variables on the right-hand side to be ground in matches, given that at least one of them is free.
 
 The last case occurs when both the left-hand and right-hand sides contain free variables.
 This does not translate well into functional code.
 Any free logic variable corresponds to the possibly infinite number of ground values.
-To handle this kind of unification, we propose to use \emph{generators} which produce all possible ground values a free variable may have.
+To handle this kind of unification, we use \emph{generators}~\cite{antoy2006overlapping} which produce all possible ground values a free variable may have.
 
 We base our ordering strategy for conjuncts on the fact that these four different unification types have different costs.
 The guards are just equality checks which are inexpensive and can reduce the search space considerably.

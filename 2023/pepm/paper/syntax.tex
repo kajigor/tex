@@ -3,6 +3,9 @@
 
 \input{fig/addo_mk.tex}
 
+\input{fig/superhomo.tex}
+
+
 \input{fig/abstract_syntax.tex}
 
 
@@ -11,11 +14,11 @@
 
 
 Relational programming as a subfield of conventional logic programming which is focused on using purely relational specifications only.
-Using extra-logical features such as ``cuts'' and side-effects common in \prolog as well as the knowledge of the particular direction the relation is supposed to be run is discouraged.
+Using extra-logical features such as ``cuts'' and side effects common in \prolog as well as the knowledge of the particular direction the relation is supposed to be run is discouraged.
 Since the search in \mk is complete~\cite{kiselyov2005backtracking,rozplokhas2020certified}, all answers to the query will eventually be found without the programmer taking into account a particular search strategy used in the language implementation.
 It also means that the way in which a program is structured has no effect on which answers are found, only on the order in which they are computed.
 
-In this paper we use a core \mk language usually referred to as \micro.
+In this paper we use a core \mk language, usually referred to as \micro.
 In its syntax, a relation is a goal comprised of disjunctions (\lstinline{\/}) or conjunctions (\lstinline{/\}) of other goals.
 A base goal can be either an explicit unification of two terms (\lstinline{===}) or a call of a relation.
 An example program in \mk is shown in Figure~\ref{fig:addo_mk}.
@@ -25,7 +28,8 @@ The~superscript ``\lstinline{$^o$}'' denotes a relation name while the keyword \
 To execute a relation, one should provide a query to run.
 For example, the query \lstinline{run q (add$^o$ q q (S (S O)))} finds a number which, doubled, is 2 in Peano representation, namely \lstinline{S O}.
 Some queries can compute values of several variables, and there may be infinitely many of them.
-For example, the query \lstinline{run q (fresh y,z in q == (y, z) /\ add$^o$ (S O) y z)} finds all \lstinline{y} and \lstinline{z} such that $1 + y = z$.
+For example, the query \lstinline{run q (fresh y, z in q==(y, z) /\ add$^o$ (S O) y z)}
+\\ finds all \lstinline{y} and \lstinline{z} such that $1 + y = z$.
 These answers are \lstinline{(O, S O)}, \lstinline{(S O, S (S O))} and so forth.
 
 

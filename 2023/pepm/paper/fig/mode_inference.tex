@@ -5,9 +5,9 @@
 % initModes :: $\Def_{V}^N$ -> $\Def_{(V, M)}^N$
 
 
-\begin{figure}[h]
+\begin{figure*}[t]
   \centering
-  \begin{minipage}{\columnwidth}
+  \begin{minipage}{0.55\textwidth}
     \begin{lstlisting}[label={fig:modeInference},
                        caption={Mode inference pseudocode},
                        captionpos=b,
@@ -15,25 +15,28 @@
                        escapechar=|,
                        numbers=left,
                        numberstyle={\footnotesize}]
-modeInfer ($R_{i}\left( x_1, \ldots, x_{k_{i}} \right) \equiv body$) =
-  ($R_{i}\left( x_1, \ldots, x_{k_{i}} \right) \equiv$ (modeInferDisj body)) |\label{line:body}|
-
-modeInferDisj ($\bigvee\left( c_1, \ldots, c_{n} \right)$) =
-  $\bigvee( $modeInferConj $ c_1, \ldots, $ modeInferConj $ c_{n})$ |\label{line:disj}|
-
-modeInferConj ($\bigwedge\left( g_1, \ldots, g_n \right)$) =
-  let (picked, others) = pickConjunct $\left[ g_1, \ldots, g_n \right]$ |\label{line:pick}|
-  in let moddedPicked = modeInferBase picked |\label{line:pick_analyze}|
-  in let moddedConjs = modeInferConj ($\bigwedge$others) |\label{line:conj}|
-  in $\bigwedge($moddedPicked : moddedConjs) |\label{line:result}|
-
-pickConjunct goals =
-  pickGuard goals <|> |\label{line:alt}|
-  pickAssignment goals <|>
-  pickMatch goals <|>
-  pickCallWithGroundArguments goals <|>
-  pickUnificationGenerator goals <|> |\label{line:alt2}|
-  pickCallGenerator goals
+  modeInfer ($R_{i}\left( x_1, \ldots, x_{k_{i}} \right) \equiv$ body) =
+    let bodyInitM = initializeModes body in |\label{line:init}| 
+    let bodyM = modeInferDisj bodyInitM in |\label{line:body}|
+    let $\left(x_1^{m_1}, \ldots, x_{k_{i}}^{m_i}\right)$ = updateModes($\left(x_1, \ldots, x_{k_{i}}\right)$, bodyM) |\label{line:modeUpd}|
+    ($R_{i}\left(x_1^{m_1}, \ldots, x_{k_{i}}^{m_i} \right) \equiv$ moddedBody) 
+  
+  modeInferDisj ($\bigvee\left( c_1, \ldots, c_{n} \right)$) =
+    $\bigvee( $modeInferConj $ c_1, \ldots, $ modeInferConj $ c_{n})$ |\label{line:disj}|
+  
+  modeInferConj ($\bigwedge\left( g_1, \ldots, g_n \right)$) =
+    let (picked, others) = pickConjunct $\left[ g_1, \ldots, g_n \right]$ in |\label{line:pick}|
+    let moddedPicked = modeInferBase picked in |\label{line:pick_analyze}|
+    let moddedConjs = modeInferConj ($\bigwedge$others) in |\label{line:conj}|
+    $\bigwedge($moddedPicked : moddedConjs) |\label{line:result}|
+  
+  pickConjunct goals =
+    pickGuard goals <|> |\label{line:alt}|
+    pickAssignment goals <|>
+    pickMatch goals <|>
+    pickCallWithGroundArguments goals <|>
+    pickUnificationGenerator goals <|> |\label{line:alt2}|
+    pickCallGenerator goals
     \end{lstlisting}
   \end{minipage}
-\end{figure}
+\end{figure*}

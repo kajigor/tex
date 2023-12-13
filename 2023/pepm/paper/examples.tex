@@ -25,7 +25,7 @@ There is nothing else our mode inference uses to prefer the order presented in t
     We use the following convention to name the functions: we add a suffix to the relation's name whose length is the same as the number of the relation's arguments.
     The suffix consists of the letters \lstinline{I} and \lstinline{O} which denote whether the argument in the corresponding position is \inm or \outm.
     The function \lstinline{msum} uses the interleaving function \lstinline{mplus} to concatenate the list of streams constructed from disjuncts.
-    To check conditions, we use the function \lstinline{guard} which fails the monadic computation if the condition does not hold.
+    To check conditions, we use the function \lstinline{guard}, which fails the monadic computation if the condition does not hold.
     Note that even though patterns for the variable \lstinline{x0} in the function \lstinline{addoIOI} are disjunct in two branches, we do not express them as a single pattern match.
     Doing so would improve readability, but it does not make a difference when it comes to the performance, according to our evaluation.
 
