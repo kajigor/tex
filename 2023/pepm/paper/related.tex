@@ -10,7 +10,7 @@ The mode system of \merc is \emph{prescriptive} which means that the mode dictat
 \merc translates the logic subset of the language into a functional programming language according to the mode assigned to the relation.
 The semantics of a \merc program exists only when the mode is assigned.
 This is not the case for a \mk program whose semantics is the bag of answers it produces~\cite{rozplokhas2020certified} regardless of the direction, data flow or the order of subgoals within the definition.
-In our paper we aim to create a \emph{descriptive} mode system for \mk which does not impose constraints on its execution.
+In our paper we aimed to create a \emph{descriptive} mode system for \mk which does not impose constraints on its execution.
 As another consequence, we are free to compare the execution time of programs with and without any optimizations, which \merc papers do not usually do.
 
 There are multiple papers describing automatic mode inference of logic programs~\cite{debray1988automatic, ridoux1999typed, smaus2000mode}.
@@ -23,7 +23,7 @@ Moreover, the compiler of \merc is highly complicated and demands many annotatio
 They include type, mode, uniqueness, and determinism specifications.
 Many \mk languages are embedded into host languages which are not typed and thus we cannot rely on type information in our conversion.
 It is also impossible to do what \merc compiler does as a light-weight embedded DSL which is one of the design principles of the \mk family.
-Thus, our goal is to develop the simplest approach to mode analysis which is capable of improving the performance of the verifier-to-solver approach with the least amount of annotations needed from the user --- ideally, only the top-level relation call should be annotated.
+Thus, our goal is to develop a simpler approach to mode analysis which is capable of improving the performance of the verifier-to-solver approach with as few annotations as possible needed from the user --- ideally, only the top-level relation call should be annotated.
 
 % \input{fig/double_modded}
 

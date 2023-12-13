@@ -19,7 +19,7 @@ The conversion of this relation does not involve any generators and is presented
 We ran an experiment to compare the execution time of the relational interpreter vs. its functional conversion.
 In the experiment, we generated from $1000$ to $10000$ formulas which evaluate to true and contain up to $3$ variables with known values.
 The results are presented in Figure~\ref{fig:prop_time}.
-The functional conversion improved execution time of the query about $2.5$ times from $724ms$ to $291ms$ for retrieving $10000$ formulas.
+The functional conversion improved execution time of the query about $2.5$ times from \SI{724}{ms} to \SI{291}{ms} for retrieving $10000$ formulas.
 
 \input{fig/prop_time}
 
@@ -31,15 +31,15 @@ The functional conversion improved execution time of the query about $2.5$ times
 In this example, we converted the multiplication relation in several directions and compared them to the relational counterparts: see Figure~\ref{fig:mulo_time}.
 Functional conversion significantly reduced execution time in most directions.
 
-In the forward direction, we run the query \lstinline{mul$^o$ n 10 q} with \lstinline{n} in the range from $100$ to $1000$, and the functional conversion was $2$ orders of magnitude faster: $927ms$ vs $9.4ms$ for the largest \lstinline{n}, see Figure~\ref{fig:mulo_IIO}.
+In the forward direction, we run the query \lstinline{mul$^o$ n 10 q} with \lstinline{n} in the range from $100$ to $1000$, and the functional conversion was $2$ orders of magnitude faster: \SI{927}{ms} vs \SI{9.4}{ms} for the largest \lstinline{n}, see Figure~\ref{fig:mulo_IIO}.
 In the direction which serves as division, we run the query \lstinline{mul$^o$ (n/10) q n} with \lstinline{n} ranging from $100$ to $1000$.
-Here, performance improved 3 orders of magnitude: from $24s$ to $0.17s$ for the largest \lstinline{n}, see Figure~\ref{fig:mulo_IOI}.
+Here, performance improved 3 orders of magnitude: from \SI{24}{s} to \SI{0.17}{s} for the largest \lstinline{n}, see Figure~\ref{fig:mulo_IOI}.
 Even more impressive was the backward direction \lstinline{mul$^o$ x$^{f \to g}$ y$^{f \to g}$ z$^{g \to g}$}.
-Querying for all $16$ pairs of divisors of $1000$ (\lstinline{mul$^o$ q r 1000}) took \ocanren about $32.9s$, while the functional conversion succeeded in $1.1s$.
+Querying for all $16$ pairs of divisors of $1000$ (\lstinline{mul$^o$ q r 1000}) took \ocanren about \SI{32.9}{s}, while the functional conversion succeeded in \SI{1.1}{s}.
 
 What was surprising was the mode \lstinline{mul$^o$ x$^{g \to g}$ y$^{f \to g}$ z$^{f \to g}$}.
 In this case, the functional conversion was not only worse than its relational counterpart, its performance degraded exponentially with the number of answers asked.
-It took almost $1450ms$ to find the first $7$ pairs of numbers \lstinline{q} and \lstinline{r} such that \lstinline{10 * q = r}, while \ocanren was able to execute the query in $0.74ms$ (see Figure~\ref{fig:mulo_IOO}).
+It took almost \SI{1450}{ms} to find the first $7$ pairs of numbers \lstinline{q} and \lstinline{r} such that \lstinline{10 * q = r}, while \ocanren was able to execute the query in \SI{0.74}{ms} (see Figure~\ref{fig:mulo_IOO}).
 The source of this terrible behavior was the suboptimal order of the calls in the second disjunct of the \lstinline{mul$^o$} relation in the corresponding mode (see Figure~\ref{fig:mult_modded_bad}).
 In this case, the call \lstinline{add$^o$ y$^{f \to g}$ z$_1^{f \to g}$ z$^{f \to g}$} is put first, which generates all possible triples in the addition relation before filtering them by the call \lstinline{mul$^o$ x$_1^{g \to g}$ y$^{g \to g}$ z$_1^{g \to g}$}.
 The other order of calls is much better (see Figure~\ref{fig:mult_modded_good}): it is an order of magnitude faster than its relational source.
@@ -51,14 +51,15 @@ It is a reasonable heuristics to postpone their execution until its arguments be
 
 \input{fig/sort.tex}
 
-This program is written in truly relational style.
-By definition, a sorted list has its smallest element in its head followed by a sorted list.
+This program is written in a truly relational style.
+By definition, a sorted list is either empty or it has its smallest element in its head followed by a sorted list.
 The implementation of the \lstinline{sort$^o$} corresponds to this definition literally: see Figure~\ref{fig:sorto}.
+The helper function \lstinline{smallest$^o$} finds the smallest element \lstinline{smallest} of the input list \lstinline{xs} and associates the rest of the elements with the list \lstinline{others}.
 
 This relation can be used for both sorting a list and generating permutations, depending on which argument is passed into it.
 One drawback this implementation has is that its performance in the two directions is drastically different and hinges on the order of two relation calls to \lstinline{smallest$^o$} and \lstinline{sort$^o$}.
-When the call to \lstinline{smallest$^o$} comes first, sorting works fine while permutation generation times out on lists of length $4$.
-Reordering two calls makes it possible to generate permutations for longer lists, however sorting direction starts to time out on lists of length $5$.
+When the call to \lstinline{smallest$^o$} comes first, the sorting works fine while the permutation generation times out on lists of length $4$.
+Reordering the two calls makes it possible to generate permutations for longer lists, however the sorting direction starts to time out on lists of length $5$.
 
 The only way a programmer can implement the relation in such a way that both directions work well, is by duplicating a conjunction with the two orders mentioned.
 Even though it leads to somewhat decent performance, it is far from elegant and also increases the amount of work to be done to compute any answer.

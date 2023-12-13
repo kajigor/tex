@@ -276,3 +276,5 @@ TSWLatexianTemp*
 *.lpz
 
 *.pag
+
+.DS_Store

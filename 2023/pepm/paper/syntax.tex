@@ -8,11 +8,6 @@
 
 \input{fig/abstract_syntax.tex}
 
-
-\input{fig/double_modded}
-
-
-
 Relational programming as a subfield of conventional logic programming which is focused on using purely relational specifications only.
 Using extra-logical features such as ``cuts'' and side effects common in \prolog as well as the knowledge of the particular direction the relation is supposed to be run is discouraged.
 Since the search in \mk is complete~\cite{kiselyov2005backtracking,rozplokhas2020certified}, all answers to the query will eventually be found without the programmer taking into account a particular search strategy used in the language implementation.
@@ -41,9 +36,7 @@ Linearity means that arguments of a constructor are distinct variables.
 To be flat, a term should not contain any nested constructors.
 Each constructor has a fixed arity $n$.
 Below is the abstract syntax of the term language over the set of variables $V$:
-
 \[  \FlatTerm_{V} = V \cup \{\Cons_{n}\left( x_1, \ldots, x_{n} \right) \mid x_{i}\in V; i \neq j \Rightarrow x_i \neq x_j\} \]
-
 
 Whenever a term which does not adhere to this form is encountered in a unification or as an argument of a call, it is transformed into a conjunction of several unifications, as illustrated by the examples in Figure~\ref{fig:superhomo}.
 

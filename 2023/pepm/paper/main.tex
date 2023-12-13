@@ -1,8 +1,4 @@
 \documentclass[sigplan,screen]{acmart}
-\setcopyright{none}
-\copyrightyear{2023}
-\acmYear{2023}
-\acmDOI{}
 
 \usepackage{fancyhdr}
 
@@ -14,8 +10,20 @@
   \providecommand\BibTeX{{%
     \normalfont B\kern-0.5em{\scshape i\kern-0.25em b}\kern-0.8em\TeX}}}
 
-
-
+%%% The following is specific to PEPM '24 and the paper
+%%% 'A Case Study in Functional Conversion and Mode Inference in miniKanren'
+%%% by Ekaterina Verbitskaia, Igor Engel, and Daniil Berezun.
+%%%
+\setcopyright{acmlicensed}
+\acmDOI{10.1145/3635800.3636966}
+\acmYear{2024}
+\copyrightyear{2024}
+\acmSubmissionID{poplws24pepmmain-id9-p}
+\acmISBN{979-8-4007-0487-1/24/01}
+\acmConference[PEPM '24]{Proceedings of the 2024 ACM SIGPLAN International Workshop on Partial Evaluation and Program Manipulation}{January 16, 2024}{London, UK}
+\acmBooktitle{Proceedings of the 2024 ACM SIGPLAN International Workshop on Partial Evaluation and Program Manipulation (PEPM '24), January 16, 2024, London, UK}
+\received{2023-10-20}
+\received[accepted]{2023-11-20}
 
 \begin{document}
 \title{A Case Study in Functional Conversion and Mode Inference in miniKanren}
@@ -64,21 +72,6 @@
 
 \renewcommand{\shortauthors}{Verbitskaia, Engel, Berezun}
 
-\settopmatter{printacmref=false}
-\settopmatter{printfolios=true}
-\renewcommand\footnotetextcopyrightpermission[1]{}
-\pagestyle{fancy}
-\fancyfoot{}
-\fancyfoot[R]{PEPM'24}
-\fancypagestyle{firstfancy}{
-  \fancyhead{}
-  \fancyhead[R]{PEPM'24}
-  \fancyfoot{}
-}
-% \makeatletter
-% \let\@authorsaddresses\@empty
-% \makeatother
-
 \input{abstract}
 
 %%
@@ -100,7 +93,6 @@
 \keywords{program inversion, inverse computations, relational programming, functional programming, conversion}
 
 \maketitle
-\thispagestyle{firstfancy}
 
 \input{intro}
 \input{syntax}

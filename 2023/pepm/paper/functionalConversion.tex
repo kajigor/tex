@@ -2,6 +2,10 @@
 \section{Functional Conversion for \mk}
 \label{sec:conversion}
 
+
+\input{fig/double_modded}
+
+
 In this section, we describe the functional conversion algorithm.
 While it is not strictly necessary for understanding our current work, the reader is encouraged to first read the paper~\cite{verbitskaia2022direction} on the topic, which introduces the conversion scheme on a series of examples.
 
@@ -9,8 +13,8 @@ While it is not strictly necessary for understanding our current work, the reade
 Functional conversion is done for a relation with a concrete fixed direction.
 The goal is to create a function which computes the same answers as \mk would, not necessarily in the same order.
 Since the search in \mk is complete, both conjuncts and disjuncts can be reordered freely: interleaving makes sure that no answers would be lost this way.
-Moreover, the original order of the subgoals is often suboptimal for any direction but the one which the programmer had in mind when they encoded the relation.
-In verifiers-to-solvers approach, a relational verifier is usually created automatically from an interpreter written in a functional language by means of typed relational conversion~\cite{lozov2018typed}.
+Moreover, the original order of the subgoals is often suboptimal for any direction except the one which the programmer had in mind when they encoded the relation.
+In the verifiers-to-solvers approach, a relational verifier is usually created automatically from an interpreter written in a functional language by means of typed relational conversion~\cite{lozov2018typed}.
 When it is used to create a relation, the order of the subgoals only really suits the forward direction, in which the relation is often not intended to be run (in this case, it is better to run the original function).
 
 The mode inference results in the relational program with all variables annotated by their modes, and all base subgoals ordered in a way that further conversion makes sense.
@@ -45,7 +49,7 @@ The mode inference pseudocode is presented in Listing~\ref{fig:modeInference}.
 \input{fig/intermediate_lang.tex}
 
 Mode inference starts by initializing modes for all variables in the body of the given relation according to the given direction (see line~\ref{line:init}).
-All variables that are among arguments are annotated with their \inm or \outm modes, while all other variables get only their initial instantiations specified as $f$.
+All variables that are among arguments are annotated with their \inm or \outm modes, while all other variables get their initial instantiations specified as $f$ and their final instantiations are left unknown (we denote it by the question mark \lstinline{$?$}).
 
 Then, the body of the relation is analyzed (line~\ref{line:body}), and the inferred modes of the variables are propagated into the definition (line~\ref{line:modeUpd}).
 Since the body is normalized, it can only be a disjunction.
