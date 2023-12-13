@@ -49,12 +49,13 @@ It is a reasonable heuristics to postpone their execution until its arguments be
 
 \subsection{Relational Sorting}
 
-\input{fig/sort.tex}
 
 This program is written in a truly relational style.
 By definition, a sorted list is either empty or it has its smallest element in its head followed by a sorted list.
 The implementation of the \lstinline{sort$^o$} corresponds to this definition literally: see Figure~\ref{fig:sorto}.
 The helper function \lstinline{smallest$^o$} finds the smallest element \lstinline{smallest} of the input list \lstinline{xs} and associates the rest of the elements with the list \lstinline{others}.
+
+\input{fig/sort.tex}
 
 This relation can be used for both sorting a list and generating permutations, depending on which argument is passed into it.
 One drawback this implementation has is that its performance in the two directions is drastically different and hinges on the order of two relation calls to \lstinline{smallest$^o$} and \lstinline{sort$^o$}.
