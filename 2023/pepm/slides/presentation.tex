@@ -27,7 +27,6 @@
 \usepackage{ stmaryrd }
 \usepackage{ulem}
 
-
 \newcommand{\backupbegin}{
    \newcounter{finalframe}
    \setcounter{finalframe}{\value{framenumber}}
@@ -174,7 +173,7 @@ PEPM @ POPL 2024
 
 \author[Igor]{Kate Verbitskaia, \emph{Igor Engel}, Daniil Berezun}
 
-\date{16.01.2024}
+\date{January 16, 2024}
 
 \definecolor{orange}{RGB}{179,36,31}
 
@@ -187,6 +186,15 @@ PEPM @ POPL 2024
   \titlepage
 \end{frame}
 }
+
+\input{fig/badBadge.tex}
+\input{fig/goodBadge.tex}
+
+\begin{frame}[fragile]
+    \frametitle{Program inversion}
+\goodBadge{10}
+\badBadge{$\Omega(n!)$}
+\end{frame}
 \begin{frame}[fragile]
     \frametitle{Program inversion}
     \begin{center}
@@ -475,6 +483,12 @@ Taken together, modes represent data flow.
 
 
 \begin{frame}[fragile]
+  \frametitle{Order in Conjunctions}
+\input{fig/mult/order.tex}
+\end{frame}
+
+
+\begin{frame}[fragile]
   \frametitle{Order in Conjunctions: Slow Version}
 \begin{columns}
   \begin{column}[t]{0.4\textwidth}
@@ -525,9 +539,9 @@ Priority:
       \item Assignment
       \item Match
       \item Recursion, same direction
-      \item Call, some ground
+      \item Call, some args ground
       \item Unification-generator
-      \item Call, all free
+      \item Call, all args free
     \end{enumerate}
   \end{minipage}
 \end{center}

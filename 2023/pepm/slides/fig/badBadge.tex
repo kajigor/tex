@@ -1,0 +1,17 @@
+\definecolor{badRed}{RGB}{225,0,0}
+\definecolor{darkFastGreen}{RGB}{10,46,54}
+
+\newcommand{\badBadge}[1]
+{
+  \begin{tikzpicture}
+    \node[circle,
+          scale=0.8,
+          text width=1cm,
+          fill=badRed,
+          draw=darkFastGreen,
+          line width=0.4mm,
+          inner sep=1pt,
+          align=center]
+        {\textbf{#1}};
+  \end{tikzpicture}
+}
