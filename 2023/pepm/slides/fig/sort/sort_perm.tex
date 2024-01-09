@@ -1,0 +1,13 @@
+\begin{figure}[h]
+  \centering
+  \begin{minipage}{0.87\columnwidth}
+    \begin{lstlisting}[frame=tb]
+ let rec sort$^o$ x y = conde [
+    (x === [] /\ y === []);
+    (fresh (s xs xs$_1$)
+      y === s :: xs$_1$ /\
+      sort$^o$ xs xs$_1$ /\
+      smallest$^o$ x s xs)]
+    \end{lstlisting}
+  \end{minipage}
+\end{figure}
