@@ -1,0 +1,54 @@
+\tikzset{
+    block/.style={
+      rectangle, draw, minimum width = 2.5cm, minimum height=1.5cm, align=center
+        },
+}
+
+\newcommand{\fTo}[2]{
+  \draw[-Stealth,thick,color=teal] (#1) -- (#2);
+}
+
+\begin{center}
+  \begin{tikzpicture}[
+    every node/.style = {
+        inner sep=0pt
+      , shape=rectangle
+      }
+  ]
+      \node[block] (int) at (0,0) {Inverse \\ interpreter};
+
+      \node[] (p) at ($(int.west)+(-1cm,0.3cm)$) {p};
+      \node[] (y) at ($(int.west)+(-1cm,-0.3cm)$) {y};
+
+      \node[] (x) at ($(int.east)+(1cm,0cm)$) {x};
+     
+      \fTo{p}{$(p)+(1,0)$};
+      \fTo{y}{$(y)+(1,0)$};
+      \fTo{$(x)-(1,0)$}{x};
+
+  \end{tikzpicture}
+  \end{center}
+
+
+\begin{center}
+  \begin{tikzpicture}[
+    every node/.style = {
+        inner sep=0pt
+      , shape=rectangle
+      }
+  ]
+      \node[block] (int) at (0,0) {miniKanren};
+
+      \node[] (p) at ($(int.west)+(-1cm,0.3cm)$) {p};
+      \node[] (y) at ($(int.west)+(-1cm,-0.3cm)$) {y};
+
+      \node[] (x) at ($(int.east)+(1cm,0cm)$) {x};
+     
+      \fTo{p}{$(p)+(1,0)$};
+      \fTo{y}{$(y)+(1,0)$};
+      \fTo{$(x)-(1,0)$}{x};
+
+  \end{tikzpicture}
+  \end{center}
+  
+  

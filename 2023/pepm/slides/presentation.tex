@@ -28,7 +28,9 @@
 \usepackage{ulem}
 \usepackage{wasysym}
 
-\newcommand{\subdued}[1]{\color{gray}{#1}}
+\newcommand{\todelete}[1]{{\color{red}{#1}}}
+
+\newcommand{\subdued}[1]{{\color{gray}{#1}}}
 
 \newcommand{\backupbegin}{
    \newcounter{finalframe}
@@ -201,7 +203,53 @@ PEPM @ POPL 2024
 
 \begin{frame}[fragile]
   \frametitle{Program Inversion}
-\input{fig/inverse/simple_inverse.tex}
+  \input{fig/inverse/simple_inverse.tex}
+
+  \todelete{We can view programs as functions. Functions can be inversed. Some inversions solve more complicated tasks than the original programs.}
+
+  \lstinline{program evaluation$^{-1} \approx$ program syntesis}
+
+  \lstinline{type checking$^{-1} \approx$ type inference}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Inverse Interpreter}
+\[ 
+\llbracket p \rrbracket (x) = y
+\]
+
+\[ 
+\llbracket p^{-1} \rrbracket (y) = x
+\]
+
+\[
+\llbracket invInt \rrbracket (p, y) = x  
+\]
+
+\input{fig/inverse/inverse_interpreter.tex}
+
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Verifiers for Search}
+\begin{center}
+  \lstinline{verify :: a -> Bool}
+
+  \lstinline{verify x $\equiv$ True}, if x -- solution
+\end{center}
+
+\begin{center}
+  \lstinline{verify$^{-1}$ :: Bool -> [a]}
+
+  \lstinline{findSolution = verify$^{-1}$ True}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Relational Programming for Inversion}
+
 \end{frame}
 
 \begin{frame}[fragile]
