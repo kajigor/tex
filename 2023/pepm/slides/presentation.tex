@@ -11,7 +11,7 @@
 \usepackage[english]{babel}
 \usepackage{indentfirst}
 \usepackage{tikz}
-\usetikzlibrary{shapes,arrows,automata,positioning,quotes,backgrounds,decorations.text,decorations.pathmorphing}
+\usetikzlibrary{shapes,arrows,arrows.meta,automata,positioning,quotes,backgrounds,decorations.text,decorations.pathmorphing}
 \usepackage{multirow}
 \usepackage[noend]{algpseudocode}
 \usepackage{algorithm}
@@ -26,6 +26,9 @@
 \usepackage{makecell}
 \usepackage{ stmaryrd }
 \usepackage{ulem}
+\usepackage{wasysym}
+
+\newcommand{\subdued}[1]{\color{gray}{#1}}
 
 \newcommand{\backupbegin}{
    \newcounter{finalframe}
@@ -36,7 +39,7 @@
 }
 
 \newcommand{\happyCheck}{\color{green}{\checkmark}}
-\newcommand{\sadCross}{\color{red}{$\times$}}
+\newcommand{\timeout}{\color{red}{\clock}}
 
 \newcommand{\makenote}[1]{\hfill \footnotesize{#1}}
 \newcommand{\strikeoutnote}[1]{\makenote{\strikethrough{#1}}}
@@ -195,6 +198,17 @@ PEPM @ POPL 2024
 \input{fig/badBadge.tex}
 \input{fig/goodBadge.tex}
 
+
+\begin{frame}[fragile]
+  \frametitle{Program Inversion}
+\input{fig/inverse/simple_inverse.tex}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Nondeterministic Inversion}
+\input{fig/inverse/nondet_inverse.tex}
+\end{frame}
+
 \begin{frame}[fragile]
     \frametitle{Program inversion}
 \goodBadge{10}
@@ -283,7 +297,7 @@ PEPM @ POPL 2024
 \begin{columns}
   \begin{column}[t]{0.49\textwidth}
     \input{fig/add/add.tex}
-    \[ \text{add}^{\circ}\ 1\ 2\ z = \{z \to 3\}\]
+    \[ \text{add}^{\circ}\ 1\ 2\ z = \{z \mapsto 3\}\]
   \end{column}
   \begin{column}[t]{0.49\textwidth}
     \input{fig/add/add_x_y.tex}
@@ -396,14 +410,14 @@ Eliminate nested constructors and repeated variables
 
 \end{center}
 
-  \[  \FlatTerm_{V} = V \cup \{\Cons \, x_0 \ldots \, x_{k} \mid x_{j}\in V, x_j - distinct \} \]
+  \[  \FlatTerm = V \cup \{\Cons \, x_0 \ldots \, x_{k} \mid x_{j}\in V, x_j - distinct \} \]
 
 \vfill
 
 \begin{center}
 \begin{tabular}{rcl}
- $C\left( x, y \right) \equiv C\left( C\left( a, b \right), c \right)$ & $\iff$ &  $x \equiv C\left( a, b \right) \land y \equiv c$ \\
- $add^{\circ}(x, x, z)$ & $\iff$ & $add^{\circ}\left( x_1, x_2, z \right) \land x_1 \equiv x_2$
+ $C\left( x, y \right) \equiv C\left( C\left( v, u \right), w \right)$ & $\iff$ &  $x \equiv C\left(v, u \right) \land y \equiv w$ \\
+ $add^{\circ}(x, x, z)$ & $\iff$ & $add^{\circ}\left( x, y, z \right) \land x \equiv y$
 \end{tabular}
 \end{center}
 
@@ -412,23 +426,20 @@ Eliminate nested constructors and repeated variables
 \begin{frame}[fragile]
   \frametitle{Normalization: Goal}
 \begin{center}
-\begin{tabular}{rclll}
-$\KanN_{V}$ & $=$ & $c_1 \vee \ldots \vee c_{n}$ & $c_{i}\in \Conj_{V}$ & normal form \\
-$\Conj_{V}$ & $=$ & $g_1 \wedge \ldots \wedge g_n$ & $ g_{i}\in \Base_{V}$ & normal conjunction \\
-$\Base_{V}$ & $=$ & $V \equiv \FlatTerm_{V}$ & & flat unification \\
-            & $\mid$ & $R \, x_1 \ldots \, x_{k} $ & $ x_{j}\in V, x_j - distinct$ & flat call \\
-\end{tabular}
+  Eliminate disjunctions within conjunctions
 \end{center}
-
 
 \vfill
 
-\strikeoutnote{Disjunctions within conjunctions}
-
-\strikeoutnote{Empty disjunctions and conjunctions}
-
-\strikeoutnote{Constructors as arguments of relation calls}
-
+\begin{center}
+\setlength{\tabcolsep}{12pt}
+\begin{tabular}{rclll}
+$\KanN$ & $::=$ & $c_1 \vee \ldots \vee c_{n}$ & $c_{i}\in \Conj$ & \subdued{normal form} \\
+$\Conj$ & $::=$ & $g_1 \wedge \ldots \wedge g_n$ & $ g_{i}\in \Base$ & \subdued{normal conjunction} \\
+$\Base$ & $::=$ & $V \equiv \FlatTerm$ & & \subdued{flat unification} \\
+        & $\mid$ & $R \, x_1 \ldots \, x_{k} $ & $ x_{j}\in V, x_j - distinct$ & \subdued{flat call} \\
+\end{tabular}
+\end{center}
 \end{frame}
 
 
@@ -681,7 +692,7 @@ In a typed version, it should be possible to automatically derive generators fro
     \begin{center}
       \begin{itemize}
         \item[\happyCheck] sorting
-        \item[\sadCross] permutations
+        \item[\timeout] permutations
       \end{itemize}
       Only good for sorting:
 
@@ -696,7 +707,7 @@ In a typed version, it should be possible to automatically derive generators fro
 
     \begin{center}
       \begin{itemize}
-        \item[\sadCross] sorting
+        \item[\timeout] sorting
         \item[\happyCheck] permutations
       \end{itemize}
       Only good permutation generation:
