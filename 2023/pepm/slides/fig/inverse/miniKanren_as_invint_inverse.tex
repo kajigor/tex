@@ -1,0 +1,28 @@
+\tikzset{
+    block/.style={
+      rectangle, draw, minimum width = 2.5cm, minimum height=1.5cm, align=center
+        },
+}
+
+\begin{center}
+  \begin{tikzpicture}[
+    every node/.style = {
+        inner sep=0pt
+      , shape=rectangle
+      }
+  ]
+      \node[block] (int) at (0,0) {miniKanren \\ interpreter};
+
+      \node[] (p) at ($(int.west)+(-1cm,0.3cm)$) {add$^o$};
+      \node[] (z) at ($(int.west)+(-1cm,-0.3cm)$) {z};
+
+      \node[] (xy) at ($(int.east)+(1cm,0cm)$) {(x, y)};
+     
+      \fTo{p}{$(p)+(1,0)$};
+      \fTo{z}{$(z)+(1,0)$};
+      \fTo{$(xy)-(1,0)$}{xy};
+
+  \end{tikzpicture}
+  \end{center}
+  
+  

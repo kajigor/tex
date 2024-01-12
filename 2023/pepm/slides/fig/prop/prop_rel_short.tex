@@ -3,9 +3,11 @@
   \begin{minipage}{0.75\textwidth}
     \begin{lstlisting}[frame=tb]
  eval$^o$ fm u = fresh (x y v w)
-   (conde [
-     (fm === Conj x y /\ and$^o$ v w u /\ eval$^o$ x v /\ eval$^o$ y w);
-     ...])
+     (fm === Conj x y /\ 
+      and$^o$ v w u /\ 
+      eval$^o$ x v /\ 
+      eval$^o$ y w);
+     ...
     \end{lstlisting}
   \end{minipage}
 \end{figure}

@@ -2,12 +2,11 @@
 
 \begin{figure}[!t]
   \centering
-  \begin{minipage}{0.75\textwidth}
+  \begin{minipage}{0.55\textwidth}
     \begin{lstlisting}[frame=tb]
- eval fm =
-   match fm with
-   | Conj (x, y) -> and (eval x) (eval y)
-   | ...
+ eval (Conj x y) =
+   eval x && eval y
+ ...
     \end{lstlisting}
   \end{minipage}
 \end{figure}
