@@ -296,7 +296,6 @@ PEPM @ POPL 2024
 
 \begin{frame}[fragile]
   \frametitle{Functional Conversion to the Rescue}
-
 \begin{center}
   \input{fig/inverse/funConversion.tex}
 \end{center}
@@ -313,96 +312,13 @@ PEPM @ POPL 2024
     \end{itemize}
   \end{minipage}
 \end{center}
-
-\end{frame}
-
-
-\begin{frame}[fragile]
-  \frametitle{Nondeterministic Inversion}
-\input{fig/inverse/nondet_inverse.tex}
 \end{frame}
 
 \begin{frame}[fragile]
-    \frametitle{Program inversion}
-\goodBadge{10}
-\badBadge{$\Omega(n!)$}
-\end{frame}
-\begin{frame}[fragile]
-    \frametitle{Program inversion}
-    \begin{center}
-        Many complicated programgs are inverse of simple ones
-    \end{center}
-    \vfill
-    \begin{center}
-        Type inference or habitation is inverse of type checking
-    \end{center}
-    \vfill
-    \begin{center}
-        Program inversion: Given a program $f$, produce inverse porgram  $f^{-1}$
-    \end{center}
-    \vfill
-    \begin{center}
-        Given $\text{typecheck}(\text{program}, \text{types}) = true$, produce $\text{typecheck}^{-1}(\text{program}, true) = \text{types}$.
-    \end{center}
-\end{frame}
-\begin{frame}[fragile]
-    \frametitle{Relational inversion}
-    \begin{center}
-        A program is a relation between its inputs and outputs
-    \end{center}
-    \vfill
-    \begin{center}
-        miniKanren can evaluate relations in both directions
-    \end{center}
-    \vfill
-    \begin{center}
-        Write a simple verifier, convert to miniKanren, get a solver
-    \end{center}
-    \vfill
-    \begin{center}
-        Problem: miniKanren may be slow. So convert it back!
-    \end{center}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Relational Programming}
-
-    \begin{center}
-        Subset of logic programming, focus on pure relations
-    \end{center}
-    \vfill
-    \begin{center}
-        Extra-logical features (cuts, side-effects, search order manipulation) discouraged
-    \end{center}
-    \vfill
-    \begin{center}
-        Interleaving search guarantees that all answers are found
-    \end{center}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{miniKanren}
-    \begin{center}
-        miniKanren is a simple relational language designed to be implemented as shallow embedding.
-    \end{center}
-    \input{fig/kanrenIntro}
-\end{frame}
-
-\begin{frame}[fragile]
-    \frametitle{Stream}
-    \begin{center}
-        \emph{Stream} is a list-like structure, representing nondetermistic computation with interleaving search
-    \end{center}
-    \begin{center}
-        \[ \left[1, 2, 3\right] >>= f = f(1) \left<\mid\right> f(2) \left<\mid\right> f(3)\] 
-        \[ \left[1, 2, 3\right] \left<\mid\right> \left[a, b, c\right] = \left[1, a, 2, b, 3, c\right] \] 
-    \end{center}
-
-    \begin{center}
-        miniKanren implementation - \emph{Stream} of substitutions
-
-        Conversion to functional language - $\emph{Stream}$ of values
-    \end{center}
+  \frametitle{\mk Syntax}
+\begin{center}
+  \input{fig/kanrenIntro.tex}
+\end{center}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -420,63 +336,182 @@ PEPM @ POPL 2024
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Functional Conversion}
-\begin{center}
-  Given a relation and a principal direction, construct a functional program that generates the same answers as \mk would
-\end{center}
+  \frametitle{Nondeterministic Inversion}
+\input{fig/inverse/nondet_inverse.tex}
 
 \vfill
 
 \begin{center}
-  Preserve the completeness of the search
+  \lstinline{run x, y (add$^o$ x y 1) = [$\{$x $\mapsto$ 0, y $\mapsto$ 1$\}$, $\{$x $\mapsto$ 1, y $\mapsto$ 0$\}$]}
 \end{center}
-
-\vfill
-
-\begin{center}
-Both inputs and outputs are expected to be ground
-\end{center}
-
-\vfill
-
-\begin{center}
-    Speed improvement: up to $3$ orders of magnitude on benchmark of mulltiplication
-\end{center}
-
 \end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Stream}
+
+  \begin{center}
+    \begin{minipage}{0.4\textwidth}
+      \begin{itemize}
+          \item Represents nondeterminism
+          \item List-like
+          \item Interleaving search
+      \end{itemize}
+    \end{minipage}
+  \end{center}
+
+\vfill
+
+  \begin{center}
+      \[ \left[1, 2, 3\right] >>= f = f(1) < \mid > f(2) < \mid > f(3)\] 
+      \[ \left[1, 2, 3\right] < \mid > \left[a, b, c\right] = \left[1, a, 2, b, 3, c\right] \] 
+  \end{center}
+
+  \vfill
+
+  \begin{center}
+    \begin{minipage}{0.5\textwidth}
+      \begin{itemize}
+          \item \mk: \lstinline{Stream} of substitutions
+          \item Functional conversion: \lstinline{Stream} of values
+      \end{itemize}
+    \end{minipage}
+  \end{center}
+\end{frame}
+
 
 \begin{frame}[fragile]
   \frametitle{Addition in the Backward Direction: Nondeterminism}
 \begin{columns}
   \begin{column}[t]{0.49\textwidth}
     \input{fig/add/add.tex}
-    \begin{equation*}
-        \begin{split}        
-        \left<\text{fresh}\ x,y\ \text{in}\right.&\left.\text{add}^{\circ}\ x\ y\ 2\right> = [\\
-            &\{x \to 0, y \to 2\},\\
-            &\{x \to 1, y \to 1\},\\
-            &\{x \to 2, y \to 0\}\\
-            &]
-        \end{split}
-    \end{equation*}
   \end{column}
   \begin{column}[t]{0.49\textwidth}
     \input{fig/add/add_z.tex}
-    \begin{equation*}
-        \text{addOOI}\ 2 = [\left( 0, 2 \right),\left( 1, 1 \right),\left( 2, 0 \right)]
-    \end{equation*}
   \end{column}
 \end{columns}
+
+\vfill
+
+\lstinline{run x, y (add$^o$ x y 1) = [$\{$x $\mapsto$ 0, y $\mapsto$ 1$\}$, $\{$x $\mapsto$ 1, y $\mapsto$ 0$\}$]}
+
+\vfill
+
+\lstinline{addOOI x y 1 = [(0, 1), (1, 0)]}
+
 \end{frame}
+
+
+
+% \begin{frame}[fragile]
+%     \frametitle{Program inversion}
+% \goodBadge{10}
+% \badBadge{$\Omega(n!)$}
+% \end{frame}
+% \begin{frame}[fragile]
+%     \frametitle{Program inversion}
+%     \begin{center}
+%         Many complicated programgs are inverse of simple ones
+%     \end{center}
+%     \vfill
+%     \begin{center}
+%         Type inference or habitation is inverse of type checking
+%     \end{center}
+%     \vfill
+%     \begin{center}
+%         Program inversion: Given a program $f$, produce inverse porgram  $f^{-1}$
+%     \end{center}
+%     \vfill
+%     \begin{center}
+%         Given $\text{typecheck}(\text{program}, \text{types}) = true$, produce $\text{typecheck}^{-1}(\text{program}, true) = \text{types}$.
+%     \end{center}
+% \end{frame}
+% \begin{frame}[fragile]
+%     \frametitle{Relational inversion}
+%     \begin{center}
+%         A program is a relation between its inputs and outputs
+%     \end{center}
+%     \vfill
+%     \begin{center}
+%         miniKanren can evaluate relations in both directions
+%     \end{center}
+%     \vfill
+%     \begin{center}
+%         Write a simple verifier, convert to miniKanren, get a solver
+%     \end{center}
+%     \vfill
+%     \begin{center}
+%         Problem: miniKanren may be slow. So convert it back!
+%     \end{center}
+% \end{frame}
+
+% \begin{frame}[fragile]
+%   \frametitle{Relational Programming}
+
+%     \begin{center}
+%         Subset of logic programming, focus on pure relations
+%     \end{center}
+%     \vfill
+%     \begin{center}
+%         Extra-logical features (cuts, side-effects, search order manipulation) discouraged
+%     \end{center}
+%     \vfill
+%     \begin{center}
+%         Interleaving search guarantees that all answers are found
+%     \end{center}
+% \end{frame}
+
+% \begin{frame}[fragile]
+%   \frametitle{miniKanren}
+%     \begin{center}
+%         miniKanren is a simple relational language designed to be implemented as shallow embedding.
+%     \end{center}
+%     \input{fig/kanrenIntro}
+% \end{frame}
+
+
+% \begin{frame}[fragile]
+%   \frametitle{Functional Conversion}
+% \begin{center}
+%   Given a relation and a principal direction, construct a functional program that generates the same answers as \mk would
+% \end{center}
+
+% \vfill
+
+% \begin{center}
+%   Preserve the completeness of the search
+% \end{center}
+
+% \vfill
+
+% \begin{center}
+% Both inputs and outputs are expected to be ground
+% \end{center}
+
+% \vfill
+
+% \begin{center}
+%     Speed improvement: up to $3$ orders of magnitude on benchmark of mulltiplication
+% \end{center}
+
+% \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Free Variables in Answers: Generators}
 \begin{columns}
   \begin{column}[t]{0.49\textwidth}
     \input{fig/add/add.tex}
-    \[ \left<\text{fresh}\ y,z\ \text{in}\ \text{add}^{\circ}\ 1\ y\ z\right> = \left[\{z \to S\ y\}\right]\]
-    \[ \text{genNat} = \left[0, 1, 2, 3, \ldots\right] \] 
-    \[ \text{addIOO}\ 1 = \left[(0, 1), (1, 2), (2, 3), \ldots\right] \] 
+
+    \vspace{0.5cm}
+    
+    \lstinline{run y, z (add$^o$ 1 y z) = $\{$z $\mapsto$ S y$\}$}
+
+    \vspace{0.5cm}
+
+    \lstinline{genNat = [0, 1, 2,$\ldots$]}
+
+    \vspace{0.5cm}
+
+    \lstinline{addIOO 1 = [(0,1), (1,2), (2,3),$\ldots$]} 
   \end{column}
   \begin{column}[t]{0.49\textwidth}
     \input{fig/add/add_x.tex}
@@ -617,44 +652,44 @@ Taken together, modes represent data flow.
 \end{frame}
 
 
+% \begin{frame}[fragile]
+%   \frametitle{Order in Conjunctions: Slow Version}
+% \begin{columns}
+%   \begin{column}[t]{0.4\textwidth}
+%     \input{fig/mult/mult.tex}
+%   \end{column}
+%   \begin{column}[t]{0.55\textwidth}
+%     \input{fig/mult/mult_slow.tex}
+%   \end{column}
+% \end{columns}
+
+% \begin{center}
+%   Premature grounding of \lstinline{z$_1$} leads to the \emph{generate-and-test} behavior
+
+%   $\Omega(x!)$ complexity.
+% \end{center}
+
+% \end{frame}
+
+
+% \begin{frame}[fragile]
+%   \frametitle{Order in Conjunctions: Faster Version}
+
+% \begin{columns}
+%   \begin{column}[t]{0.4\textwidth}
+%     \input{fig/mult/mult.tex}
+%   \end{column}
+%   \begin{column}[t]{0.55\textwidth}
+%     \input{fig/mult/mult_fast.tex}
+%   \end{column}
+% \end{columns}
+% \begin{center}
+%     $O(xy)$ complexity, $10$x faster than relational version
+% \end{center}
+% \end{frame}
+
 \begin{frame}[fragile]
-  \frametitle{Order in Conjunctions: Slow Version}
-\begin{columns}
-  \begin{column}[t]{0.4\textwidth}
-    \input{fig/mult/mult.tex}
-  \end{column}
-  \begin{column}[t]{0.55\textwidth}
-    \input{fig/mult/mult_slow.tex}
-  \end{column}
-\end{columns}
-
-\begin{center}
-  Premature grounding of \lstinline{z$_1$} leads to the \emph{generate-and-test} behavior
-
-  $\Omega(x!)$ complexity.
-\end{center}
-
-\end{frame}
-
-
-\begin{frame}[fragile]
-  \frametitle{Order in Conjunctions: Faster Version}
-
-\begin{columns}
-  \begin{column}[t]{0.4\textwidth}
-    \input{fig/mult/mult.tex}
-  \end{column}
-  \begin{column}[t]{0.55\textwidth}
-    \input{fig/mult/mult_fast.tex}
-  \end{column}
-\end{columns}
-\begin{center}
-    $O(xy)$ complexity, $10$x faster than relational version
-\end{center}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Mode Inference: Conjunction}
+  \frametitle{Mode Inference: Ordering Heuristic}
 \begin{center}
 Priority:
 \end{center}
@@ -711,35 +746,35 @@ Priority:
 
 \begin{frame}[fragile]
   \frametitle{Functional Conversion: Generators}
-\begin{center}
-  In the untyped miniKanren it is only possible to generate \emph{all terms}
-\end{center}
+% \begin{center}
+%   In the untyped miniKanren it is only possible to generate \emph{all terms}
+% \end{center}
 
-\vfill
+% \vfill
 
-\begin{center}
-  Instead pass generators to functions as additional arguments
+% \begin{center}
+%   Instead pass generators to functions as additional arguments
 
 
-  It is up to the user what generator to pass
-\end{center}
+%   It is up to the user what generator to pass
+% \end{center}
 
 \input{fig/add/add_x_gen.tex}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Functional Conversion: Generators}
-\begin{center}
-We pass a generator for every variable in \emph{rhs} of a unification-generator
-\end{center}
+% \begin{center}
+% We pass a generator for every variable in \emph{rhs} of a unification-generator
+% \end{center}
 
-\begin{center}
-Generators used in calls should be passed to the parent function
-\end{center}
+% \begin{center}
+% Generators used in calls should be passed to the parent function
+% \end{center}
 
-\begin{center}
-In a typed version, it should be possible to automatically derive generators from types
-\end{center}
+% \begin{center}
+% In a typed version, it should be possible to automatically derive generators from types
+% \end{center}
 
     \input{fig/mult/mult_y_gen.tex}
 \end{frame}
@@ -803,13 +838,12 @@ In a typed version, it should be possible to automatically derive generators fro
     \vfill
 
     \begin{center}
-      \begin{itemize}
-        \item[\happyCheck] sorting
-        \item[\timeout] permutations
-      \end{itemize}
-      Only good for sorting:
-
-      \lstinline{run q (sort$^o$ xs q)}
+      \begin{minipage}{0.4\textwidth}
+        \begin{itemize}
+          \item[\happyCheck] sorting
+          \item[\timeout] permutations
+        \end{itemize}
+      \end{minipage}
     \end{center}
 
   \end{column}
@@ -819,13 +853,12 @@ In a typed version, it should be possible to automatically derive generators fro
     \vfill
 
     \begin{center}
-      \begin{itemize}
-        \item[\timeout] sorting
-        \item[\happyCheck] permutations
-      \end{itemize}
-      Only good permutation generation:
-
-      \lstinline{run q (sort$^o$ q xs)}
+      \begin{minipage}{0.4\textwidth}
+        \begin{itemize}
+          \item[\timeout] sorting
+          \item[\happyCheck] permutations
+        \end{itemize}
+      \end{minipage}
     \end{center}
 
 

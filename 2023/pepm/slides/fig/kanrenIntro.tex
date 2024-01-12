@@ -11,34 +11,36 @@
   node distance=1.3em,
   anchor=center
 ]
-  \node[inner sep=10pt] (code) at (0,0) {\begin{lstlisting}
- let rec add$^o$ x y z = conde [
-   (x === O /\ y === z);
-   (fresh (x$_1$ z$_1$)
-     (x === S x$_1$ /\
-      add$^o$ x$_1$ y z$_1$ /\
-      z === S z$_1$) ) ]
+  \node[inner sep=10pt,draw=none] (code) at (0,0) {\begin{lstlisting}
+let rec add$^o$ x y z =
+  (x === O /\ y === z) \/
+  (fresh (x$_1$ z$_1$)
+    (x === S x$_1$ /\
+     add$^o$ x$_1$ y z$_1$ /\
+     z === S z$_1$) )
     \end{lstlisting}};
     \node (rel) [draw=none, above=of code, xshift=1cm] {relation};
-    \draw [red,<-] ($(code.north)+(-0.45,-0.4)$) to [out=90,in=180] node[below, draw=none, red] {} ($(rel.west)+(0,0)$);
+    \draw [teal,<-] ($(code.north)+(-0.2,-0.45)$) to [out=90,in=180] node[below, draw=none, teal] {} ($(rel.west)+(0,0)$);
+    
+    \pause
+    \node (call) [draw=none, below=of code, xshift=-2cm] {relation call};
+    \draw [teal,<-] ($(code.south)+(-1.2,1.1)$) to [out=-180,in=90] node[below, draw=none, teal] {} ($(call.north)+(0,0)$);
+    
+    \pause
+    \node (uni) [draw=none, left=of code, yshift=1.2cm] {term unification};
+    \draw [teal,<-] ($(code.west)+(1.45,0.8)$) to [out=150,in=-45] node[below, draw=none, teal] {} ($(uni.east)+(0,0)$);
+    
+    \pause
+    \node (conj) [draw=none, right=of code, yshift=-0.5cm] {conjunction};
+    \draw [teal,<-] ($(code.east)+(-0.8,-0.75)$) to [out=0,in=-180] node[below, draw=none, teal] {} ($(conj.west)+(0,0)$);
+    \draw [teal,<-] ($(code.east)+(-1.4,-0.3)$) to [out=0,in=-190] node[below, draw=none, teal] {} ($(conj.west)+(0,0)$);
+    
     \pause
     \node (disj) [draw=none, right=of code, yshift=2cm] {disjunction};
-    \node (conj) [draw=none, right=of code, yshift=-0.5cm] {conjunction};
-    \node (uni) [draw=none, left=of code, yshift=1.2cm] {term unification};
+    \draw [teal,<-] ($(code.east)+(-0.55,0.85)$) to [out=90,in=-180] node[below, draw=none, teal] {} ($(disj.west)+(0,0)$);
+    
+    \pause
     \node (fresh) [draw=none, left=of code, yshift=-1cm] {variable introduction};
-    \node (call) [draw=none, below=of code, xshift=-2cm] {relation call};
-
-    \draw [red,<-] ($(code.south)+(-1.7,1.1)$) to [out=-180,in=90] node[below, draw=none, red] {} ($(call.north)+(0,0)$);
-
-    \draw [red,<-] ($(code.west)+(1.65,0.8)$) to [out=150,in=-45] node[below, draw=none, red] {} ($(uni.east)+(0,0)$);
-
-    \draw [red,<-] ($(code.west)+(1.4,0)$) to [out=230,in=0] node[below, draw=none, red] {} ($(fresh.east)+(0,0)$);
-
-
-    \draw [red,<-] ($(code.east)+(-1.2,1.5)$) to [out=90,in=-180] node[below, draw=none, red] {} ($(disj.west)+(0,0)$);
-
-    \draw [red,<-] ($(code.east)+(-2,-0.75)$) to [out=0,in=-180] node[below, draw=none, red] {} ($(conj.west)+(0,0)$);
-    \draw [red,<-] ($(code.east)+(-2.65,-0.3)$) to [out=0,in=-190] node[below, draw=none, red] {} ($(conj.west)+(0,0)$);
-
+    \draw [teal,<-] ($(code.west)+(1.1,0)$) to [out=230,in=0] node[below, draw=none, teal] {} ($(fresh.east)+(0,0)$);
 \end{tikzpicture}
 \end{center}
