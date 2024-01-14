@@ -245,15 +245,13 @@ PEPM @ POPL 2024
       \input{fig/add/add.tex}
    \end{column}
     \begin{column}{0.49\textwidth}
-      \lstinline{run z (add$^o$ 0 1 z) = $\{$z $\mapsto$ 1$\}$}
-
+      \input{fig/inverse/miniKanren_query_1.tex}
       \input{fig/inverse/miniKanren_as_invint.tex}
 
       \vspace{0.5cm}
 
-      \lstinline{run x, y (add$^o$ x y 1) =} 
-      \lstinline{       [$\{$x $\mapsto$ 0, y $\mapsto$ 1$\}$, $\{$x $\mapsto$ 1, y $\mapsto$ 0$\}$]}
-
+    
+      \input{fig/inverse/miniKanren_query_2.tex}
       \input{fig/inverse/miniKanren_as_invint_inverse.tex}
     \end{column}
   \end{columns}
@@ -342,7 +340,7 @@ PEPM @ POPL 2024
 \vfill
 
 \begin{center}
-  \lstinline{run x, y (add$^o$ x y 1) = [$\{$x $\mapsto$ 0, y $\mapsto$ 1$\}$, $\{$x $\mapsto$ 1, y $\mapsto$ 0$\}$]}
+    \[ \text{add}^{\circ}\ x\ y\ 1 = \left[\{x \mapsto  0, y \mapsto 1\}, \{x \mapsto  1, y \mapsto  0\} \right] \] 
 \end{center}
 \end{frame}
 
@@ -391,12 +389,11 @@ PEPM @ POPL 2024
 \end{columns}
 
 \vfill
-
-\lstinline{run x, y (add$^o$ x y 1) = [$\{$x $\mapsto$ 0, y $\mapsto$ 1$\}$, $\{$x $\mapsto$ 1, y $\mapsto$ 0$\}$]}
+$\text{add}^{\circ}\ x\ y\ 1 = \left[\{x \mapsto  0, y \mapsto  1\}, \{x \mapsto  1, y \mapsto  0\} \right]$
 
 \vfill
 
-\lstinline{addOOI x y 1 = [(0, 1), (1, 0)]}
+\lstinline{addOOI 1 = [(0, 1), (1, 0)]}
 
 \end{frame}
 
@@ -502,8 +499,7 @@ PEPM @ POPL 2024
     \input{fig/add/add.tex}
 
     \vspace{0.5cm}
-    
-    \lstinline{run y, z (add$^o$ 1 y z) = $\{$z $\mapsto$ S y$\}$}
+    $\text{add}^{\circ}\ 1\ y\ z = \{z \mapsto S\ y\}$
 
     \vspace{0.5cm}
 
@@ -592,39 +588,30 @@ $\Base$ & $::=$ & $V \equiv \FlatTerm$ & & \subdued{flat unification} \\
 
 
 \begin{frame}[fragile]
-  \frametitle{Mode of a Variable}
+  \frametitle{Modes --- Data Flow}
 \begin{center}
 
-Instantiation describes whether at a given point a variable has a known value:
-
-\begin{tabular}{rll}
-  \emph{Ground} term & no fresh variables & \lstinline|Cons O (Cons (S O) Nil)| \\
-  \emph{Free} variable & a fresh variable & \lstinline|_.0|
+\begin{tabular}{rl}
+    \emph{Ground} term & \lstinline|S (S O)| \\
+  \emph{Free} variable & \lstinline|x|
 \end{tabular}
 
 \vfill
 
-Once we know that a variable is \emph{ground}, it stays \emph{ground} in later conjuncts
+Once a variable is \emph{ground}, it stays \emph{ground}
 \end{center}
 
 \vfill
 
 \begin{center}
-Mode is a transition between instantiations, associated with each use of a variable
-
+\[ \text{Mode} : \text{Inst} \mapsto \text{Inst} \] 
 \vfill
 
 \begin{tabular}{rl}
   Mode \lstinline|I|: & \lstinline|ground| $\rightarrow$ \lstinline|ground| \\
   Mode \lstinline|O|: & \lstinline|free| $\rightarrow$ \lstinline|ground|
 \end{tabular}
-
-Taken together, modes represent data flow.
 \end{center}
-
-\vfill
-
-\hfill \footnotesize Mercury uses more complicated modes
 
 \end{frame}
 
@@ -634,14 +621,12 @@ Taken together, modes represent data flow.
 \begin{center}
 \begin{tabular}{rl}
   assignment & $x^{\outmode} \equiv \Term^{\inmode} $ \\
-  assignment & $x^{\inmode}  \equiv y^{\outmode}    $ \\
   guard      & $x^{\inmode}  \equiv \Term^{\inmode} $ \\
   match      & $x^{\inmode}  \equiv \Term           $ \\
   generator  & $x^{\outmode} \equiv \Term           $
 \end{tabular}
 \end{center}
 
-\hfill \footnotesize $\Term$ contains at least one $f$ variable
 \end{frame}
 
 
@@ -714,15 +699,20 @@ Priority:
 \end{frame}
 
 \begin{frame}[fragile]
+  \frametitle{Ordering Heuristic: Example}
+\input{fig/mult/order_no_badge.tex}
+\end{frame}
+
+\begin{frame}[fragile]
   \frametitle{Functional Conversion: Intermediate Language}
 \begin{center}
 \begin{tabular}{lcll}
-    $\Fun_{V}$ & $=$ & $\Fun_{V} <|> \dots <|> \Fun_{V}$ & interleaving\\
-               & $\mid$ & $\LIST{\left(\overline{V} \leftarrow \Fun_{V}\right)} $ & monadic bind on streams\\
-               & $\mid$ & $\Rtrn \LIST{\Term_{V}}$ & return a tuple of terms\\
-               & $\mid$ & $V == \Term_{V}$ & equality check\\
-               & $\mid$ &  $case \ V \ of \ \Term_{V} \rightarrow \Fun_{V}$& match a variable against a pattern\\
-               & $\mid$ & $R_i \ \overline{V} \ \overline{Gen_{G}}$ & function call\\
+    $\Fun$ & $=$ & $\Fun <|> \dots <|> \Fun$ & interleaving\\
+               & $\mid$ & $\LIST{\left(\overline{V} \leftarrow \Fun\right)} $ & monadic bind on streams\\
+               & $\mid$ & $\Rtrn \LIST{\Term}$ & return a tuple of terms\\
+               & $\mid$ & $V == \Term$ & equality check\\
+               & $\mid$ &  $case \ V \ of \ \Term \rightarrow \Fun$& match a variable against a pattern\\
+               & $\mid$ & $R \ \overline{V} \ \overline{Gen_{G}}$ & function call\\
                & $\mid$ & $\Gen_{G}$ & generator
 \end{tabular}
 \end{center}
@@ -732,12 +722,12 @@ Priority:
   \frametitle{Functional Conversion into Intermediate Language}
 \begin{center}
 \begin{tabular}{rcl}
-  Disjunction   & $\rightarrow$ & $\Sum\LIST{\Fun_{V}}$ \\ && \\
-  Conjunction   & $\rightarrow$ & $ \Bind\LIST{\left(\LIST{V}, \Fun_{V}\right)}$ \\ && \\
-  Relation call & $\rightarrow$ & $ R_{i}(\LIST{V}, \LIST{G})$ \\ && \\
-  Unification   & $\rightarrow$ & $\Rtrn \LIST{\Term_{V}}$ \\
-                & $|$           & $\Match_{V} \left( \Term_{V}, \Fun_{V} \right)$ \\
-                & $|$           & $\Guard\left( V, \Term_{V}\right)$ \\
+  Disjunction   & $\rightarrow$ & $\Fun \Sum \ldots \Sum \Fun$ \\ && \\
+  Conjunction   & $\rightarrow$ & $ \LIST{\left(\overline{V} \leftarrow \Fun\right)}$ \\ && \\
+  Relation call & $\rightarrow$ & $ R\ \overline{V}\ \overline{Gen_{G}}$ \\ && \\
+  Unification   & $\rightarrow$ & $\Rtrn \LIST{\Term}$ \\
+                & $|$           & $case\ V\ of\ \Term \to \Fun$ \\
+                & $|$           & $V \equiv \Term$ \\
                 & $|$           & $\Gen_{G}$
 \end{tabular}
 \end{center}
@@ -760,6 +750,8 @@ Priority:
 % \end{center}
 
 \input{fig/add/add_x_gen.tex}
+TODO: Arrows
+\[ add^{\circ}\ 1\ y\ z = \left[\{z \to S\ y\} \right] \] 
 \end{frame}
 
 \begin{frame}[fragile]
@@ -777,6 +769,7 @@ Priority:
 % \end{center}
 
     \input{fig/mult/mult_y_gen.tex}
+    TODO: Arrows
 \end{frame}
 
 \begin{frame}[fragile]
@@ -878,6 +871,56 @@ Priority:
 \end{frame}
 
 \begin{frame}[fragile]
+    \frametitle{Possible speedups}
+
+    \begin{center}
+        \begin{minipage}{0.4\textwidth}
+            \begin{itemize}
+                \item Determinism
+                \item Partial deduction
+            \end{itemize}
+        \end{minipage}
+    \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\lstinline[basicstyle=\Large]{Maybe} for Semi-Determinism}
+\begin{center}
+  \begin{minipage}{0.43\textwidth}
+    \input{fig/mult/mult_y_z.tex}
+  \end{minipage}
+\end{center}
+\end{frame}
+
+
+\begin{frame}[noframenumbering]
+  \frametitle{\lstinline[basicstyle=\Large]{Maybe} for Semi-Determinism}
+  \begin{center}
+  \begin{minipage}{0.43\textwidth}
+    \input{fig/mult/mult_y_z_maybe.tex}
+  \end{minipage}
+  TODO: 10x faster badge
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Need for Partial Deduction}
+
+\begin{center}
+\begin{minipage}{0.3\textwidth}
+  \lstinline{run q (eval$^o$ q true)}
+  \lstinline{run q (eval_true$^o$ q)}
+
+  TODO: Badge?
+\end{minipage}
+
+
+\end{center}
+
+
+\end{frame}
+
+\begin{frame}[fragile]
   \frametitle{Conclusion}
 Conclusion
   \begin{itemize}
@@ -903,64 +946,6 @@ We are currently working on
 \appendix
 \backupbegin
 
-\begin{frame}[fragile]
-  \frametitle{\lstinline[basicstyle=\Large]{Maybe} for Semi-Determinism}
-\begin{center}
-  \begin{minipage}{0.43\textwidth}
-    \input{fig/mult/mult_y_z.tex}
-  \end{minipage}
-\end{center}
-\end{frame}
-
-
-\begin{frame}[noframenumbering]
-  \frametitle{\lstinline[basicstyle=\Large]{Maybe} for Semi-Determinism}
-  \begin{center}
-  \begin{minipage}{0.43\textwidth}
-    \input{fig/mult/mult_y_z_maybe.tex}
-  \end{minipage}
-\end{center}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Need for Determinism Check}
-\begin{center}
-  Simply replacing the type of monad from \texttt{Stream} to \texttt{Maybe} improves performance 10 times for~relations on natural numbers
-\end{center}
-
-\begin{center}
-  Pure (no monad) version is even faster
-\end{center}
-
-\vfill
-
-\begin{center}
-  Use determinism check to figure out when replacing \texttt{Stream} is feasible
-\end{center}
-
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Need for Partial Deduction}
-
-\begin{center}
-Running a relational interpreter backwards fixes some arguments
-\end{center}
-
-\begin{center}
-\begin{minipage}{0.3\textwidth}
-  \lstinline{run q (eval$^o$ q true)}
-\end{minipage}
-
-\vfill
-
-\begin{center}
-  Augmenting functional conversion with partial deduction must be beneficial
-\end{center}
-\end{center}
-
-
-\end{frame}
 \begin{frame}[fragile]
     \frametitle{Functional Conversion: Example}
     \begin{columns}

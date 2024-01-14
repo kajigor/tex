@@ -1,0 +1,46 @@
+\tikzset{
+    block/.style={
+      rectangle, draw, minimum width = 2.5cm, minimum height=1.5cm, align=center
+        },
+}
+
+\newcommand{\fTo}[2]{
+  \draw[-Stealth,thick,color=teal] (#1) -- (#2)
+}
+
+\begin{center}
+    \begin{tikzpicture}[
+    every node/.style = 
+        { inner sep=0pt
+        , shape=rectangle
+        }
+    ]
+    \node[block] (int) at (0,0) {Relational \\ expansion};
+
+    \node[] (p) at ($(int.west)+(-1cm,0cm)$) {$p(x)$};
+
+    \node[] (rel) at ($(int.east)+(1.5cm,0cm)$) {$p^{\circ}(x, y)$};
+    \node[] (reldef) at ($(rel.north)+(0cm,0.5cm)$) {$p(x) = y$}; 
+    \fTo{p}{$(int.west)$};
+    \fTo{$(int.east)$}{rel};
+
+    \node[block] (conv) at ($(rel.east)+(2cm,0cm)$) {Functional \\ Conversion};
+    
+    \fTo{rel}{$(conv.west)$};
+
+    \node[] (fun) at ($(conv.east)+(1cm, 0cm)$) {$p^{-1}(y)$};
+
+    \fTo{$(conv.east)$}{fun};
+
+    \node[block] (kan) at ($(fun.south)+(0cm,-2cm)$) {Haskell};
+    \fTo{$(fun.south)$}{kan};
+
+    \node[] (y) at ($(kan.west)+(-1cm,0cm)$) {y};
+    \node[] (x) at ($(kan.east)+(1cm,0cm)$) {x};
+    \fTo{y}{$(kan.west)$};
+    \fTo{$(kan.east)$}{x};
+    
+    \end{tikzpicture}
+\end{center}
+
+

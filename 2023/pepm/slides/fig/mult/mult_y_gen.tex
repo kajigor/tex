@@ -3,10 +3,10 @@
   \begin{minipage}{0.52\columnwidth}
     \begin{lstlisting}[frame=tb]
  multOIO $::$ Nat -> Stream Nat -> Stream Nat
- multOIO y gen_add$_z$ =
+ multOIO y gen_add$_y$ =
    return (O, O) <$\mid$>
    do
-     (z$_1$, z) <- addIOO y gen_add$_z$
+     (z$_1$, z) <- addIOO y gen_add$_y$
      x <- muloOII y z$_1$
      return (S x, z)
     \end{lstlisting}
