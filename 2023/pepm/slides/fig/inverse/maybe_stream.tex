@@ -1,0 +1,31 @@
+\begin{center}
+  \begin{tikzpicture}[
+    every node/.style = {
+      shape=rectangle,
+      rounded corners=0.05cm,
+      draw,
+      align=center,
+      minimum size=5mm},
+    node distance=1.3em,
+    anchor=center
+  ]
+    \node[inner sep=10pt,draw=none] (code) at (0,0) {
+      \begin{minipage}{\columnwidth}
+      \begin{lstlisting}[]
+
+ ~\texttt{muloOII $::$ Nat $\to$ Nat $\to$ Stream Nat}~
+ muloOII x1 x2 =
+     zero <$\mid$> positive
+   where
+     zero = do
+       guard (x2 == O)
+       return O
+     positive = do
+       x4 <- addoIOI x1 x2
+       S <$\$$> muloOII x1 x4
+       \end{lstlisting}
+      \end{minipage}
+    };
+  \end{tikzpicture}
+  \end{center}
+  

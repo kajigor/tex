@@ -1,0 +1,57 @@
+\tikzset{
+    block/.style={
+      rectangle, draw, minimum width = 2.5cm, minimum height=1.5cm, align=center
+        },
+}
+
+\newcommand{\fTo}[2]{
+  \draw[-Stealth,thick,color=teal] (#1) -- (#2);
+}
+
+\begin{center}
+  \begin{tikzpicture}[
+    every node/.style = {
+        inner sep=0pt
+      , shape=rectangle
+      }
+  ]
+
+      \coordinate (shift) at (2.8,-1.5);  
+
+      \node[block] (norm) at ($(relInt)+(shift)$) {normalization};
+      \node[block] (mode) at ($(norm)+(shift)$) {mode \\ analysis};
+      \node[block] (inter) at ($(mode)+(shift)$) {conversion to \\ intermediate \\ language};
+      \node[block] (target) at ($(inter)+(shift)$) {conversion to \\ target \\ language};
+
+      \node[] (p_o) at ($(norm.west)+(-0.6,0)$) {f$^o$};
+      \node[] (p_n) at ($(norm.west)!(mode.north)!(norm.east)$) {f$^n$};
+      \node[] (p_m) at ($(mode.west)!(inter.north)!(mode.east)$) {f$^m$};
+      \node[] (p_i) at ($(inter.west)!(target.north)!(inter.east)$) {f$^i$};
+
+      \node[] (dir) at ($(mode.west)!(norm.south)!(mode.east)$) {direction};
+    
+      \node[anchor=west] (haskell) at ($(target.north east)+(1,0)$) {Haskell};
+      \node[anchor=west] (ocaml) at ($(target.east)+(1,0)$) {OCaml};
+      \node[anchor=west] (dots) at ($(target.south east)+(1,0)$) { $\ \dots$};
+
+      \fTo{p_o}{$(norm.west)$};
+
+      \fTo{$(norm.east)$}{p_n};
+      \fTo{p_n}{mode.north};
+
+      \fTo{$(mode.east)$}{p_m};
+      \fTo{p_m}{inter.north};
+
+      \fTo{$(inter.east)$}{p_i};
+      \fTo{p_i}{target.north};
+
+      \fTo{dir}{$(mode.west)$};
+
+      \fTo{target.east}{$(haskell.west)$};
+      \fTo{target.east}{$(ocaml.west)$};
+      \fTo{target.east}{$(dots.west)$};
+
+  \end{tikzpicture}
+  \end{center}
+  
+  

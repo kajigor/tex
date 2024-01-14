@@ -393,7 +393,7 @@ $\text{add}^{\circ}\ x\ y\ 1 = \left[\{x \mapsto  0, y \mapsto  1\}, \{x \mapsto
 
 \vfill
 
-\lstinline{addOOI 1 = [(0, 1), (1, 0)]}
+\lstinline{addOOI 1 = [(0,1), (1,0)]}
 
 \end{frame}
 
@@ -535,13 +535,15 @@ $\text{add}^{\circ}\ x\ y\ 1 = \left[\{x \mapsto  0, y \mapsto  1\}, \{x \mapsto
 \begin{frame}[fragile]
   \frametitle{Conversion Scheme}
   \begin{center}
-    \begin{minipage}{0.4\textwidth}
-      \begin{enumerate}
-          \item Normalization
-          \item Mode analysis
-          \item Functional conversion
-      \end{enumerate}
-    \end{minipage}
+    \input{fig/inverse/conversion.tex}
+
+    % \begin{minipage}{0.4\textwidth}
+    %   \begin{enumerate}
+    %       \item Normalization
+    %       \item Mode analysis
+    %       \item Functional conversion
+    %   \end{enumerate}
+    % \end{minipage}
   \end{center}
 \end{frame}
 
@@ -749,8 +751,8 @@ Priority:
 %   It is up to the user what generator to pass
 % \end{center}
 
-\input{fig/add/add_x_gen.tex}
-TODO: Arrows
+% \input{fig/add/add_x_gen.tex}
+\input{fig/inverse/gen_add.tex}
 \[ add^{\circ}\ 1\ y\ z = \left[\{z \to S\ y\} \right] \] 
 \end{frame}
 
@@ -768,60 +770,60 @@ TODO: Arrows
 % In a typed version, it should be possible to automatically derive generators from types
 % \end{center}
 
-    \input{fig/mult/mult_y_gen.tex}
-    TODO: Arrows
+% \input{fig/mult/mult_y_gen.tex}
+\input{fig/inverse/gen_mult.tex}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Functional Conversion into the Target Languages}
-\begin{columns}
-  \begin{column}[t]{0.45\textwidth}
+% \begin{frame}[fragile]
+%   \frametitle{Functional Conversion into the Target Languages}
+% \begin{columns}
+%   \begin{column}[t]{0.45\textwidth}
 
-\begin{center}
-  \haskell
-\end{center}
+% \begin{center}
+%   \haskell
+% \end{center}
 
-\begin{center}
-  TemplateHaskell to generate code
-\end{center}
+% \begin{center}
+%   TemplateHaskell to generate code
+% \end{center}
 
-\begin{center}
-  Stream monad
-\end{center}
+% \begin{center}
+%   Stream monad
+% \end{center}
 
-\begin{center}
-  do-notation
-\end{center}
+% \begin{center}
+%   do-notation
+% \end{center}
 
-\begin{center}
+% \begin{center}
 
-\end{center}
+% \end{center}
 
-  \end{column}
-  \begin{column}[t]{0.45\textwidth}
-\begin{center}
-  \ocaml
-\end{center}
-\begin{center}
-  Hand-crafted (not so) pretty-printer
-\end{center}
+%   \end{column}
+%   \begin{column}[t]{0.45\textwidth}
+% \begin{center}
+%   \ocaml
+% \end{center}
+% \begin{center}
+%   Hand-crafted (not so) pretty-printer
+% \end{center}
 
-\begin{center}
-  Stream monad
-\end{center}
+% \begin{center}
+%   Stream monad
+% \end{center}
 
-\begin{center}
-  let*
-\end{center}
+% \begin{center}
+%   let*
+% \end{center}
 
-\begin{center}
-  Taking extra care to ensure laziness
-\end{center}
+% \begin{center}
+%   Taking extra care to ensure laziness
+% \end{center}
 
-  \end{column}
-\end{columns}
+%   \end{column}
+% \end{columns}
+% \end{frame}
 
-\end{frame}
 \begin{frame}[fragile]
   \frametitle{Relational Sort}
 \begin{columns}
@@ -887,7 +889,8 @@ TODO: Arrows
   \frametitle{\lstinline[basicstyle=\Large]{Maybe} for Semi-Determinism}
 \begin{center}
   \begin{minipage}{0.43\textwidth}
-    \input{fig/mult/mult_y_z.tex}
+    \input{fig/inverse/maybe_stream.tex}
+    % \input{fig/mult/mult_y_z.tex}
   \end{minipage}
 \end{center}
 \end{frame}
@@ -897,9 +900,9 @@ TODO: Arrows
   \frametitle{\lstinline[basicstyle=\Large]{Maybe} for Semi-Determinism}
   \begin{center}
   \begin{minipage}{0.43\textwidth}
-    \input{fig/mult/mult_y_z_maybe.tex}
+    \input{fig/inverse/maybe.tex}
+    % \input{fig/mult/mult_y_z_maybe.tex}
   \end{minipage}
-  TODO: 10x faster badge
 \end{center}
 \end{frame}
 
@@ -909,9 +912,10 @@ TODO: Arrows
 \begin{center}
 \begin{minipage}{0.3\textwidth}
   \lstinline{run q (eval$^o$ q true)}
-  \lstinline{run q (eval_true$^o$ q)}
 
-  TODO: Badge?
+  \vspace{0.5cm}
+
+  \lstinline{run q (eval_true$^o$ q)}
 \end{minipage}
 
 
