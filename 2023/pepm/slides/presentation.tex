@@ -706,14 +706,15 @@ Priority:
 \begin{frame}[fragile]
   \frametitle{Functional Conversion: Intermediate Language}
 \begin{center}
-\begin{tabular}{lcll}
-    $\Fun$ & $=$ & $\Fun <|> \dots <|> \Fun$ & interleaving\\
-               & $\mid$ & $\LIST{\left(\overline{V} \leftarrow \Fun\right)} $ & monadic bind on streams\\
-               & $\mid$ & $\Rtrn \LIST{\Term}$ & return a tuple of terms\\
-               & $\mid$ & $V == \Term$ & equality check\\
-               & $\mid$ &  $case \ V \ of \ \Term \rightarrow \Fun$& match a variable against a pattern\\
-               & $\mid$ & $R \ \overline{V} \ \overline{Gen_{G}}$ & function call\\
-               & $\mid$ & $\Gen_{G}$ & generator
+
+\begin{tabular}{lcl @{\hspace{3\tabcolsep}} l }
+    $\Fun$ & $=$ & $\Fun <|> \dots <|> \Fun$ & \subdued{interleaving}\\
+               & $\mid$ & $\LIST{\left(\overline{V} \leftarrow \Fun\right)} $ & \subdued{monadic bind of streams}\\
+               & $\mid$ & $\Rtrn \LIST{\Term}$ & \subdued{return a tuple of terms}\\
+               & $\mid$ & $V == \Term$ & \subdued{equality check}\\
+               & $\mid$ &  $case \ V \ of \ \Term \rightarrow \Fun$& \subdued{match a variable against a pattern}\\
+               & $\mid$ & $R \ \overline{V} \ \overline{Gen_{G}}$ & \subdued{function call}\\
+               & $\mid$ & $\Gen_{G}$ & \subdued{generator}
 \end{tabular}
 \end{center}
 \end{frame}
