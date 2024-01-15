@@ -12,23 +12,20 @@
     \node[inner sep=10pt,draw=none] (code) at (0,0) {
       \begin{minipage}{\columnwidth}
       \begin{lstlisting}[]
- ~\texttt{muloIIO $::$ Nat $\to$ Nat $\to$ Maybe Nat}~
- ~\lststrikethrough{muloIIO $::$ Nat $\to$ Nat $\to$ Stream Nat}~
- muloIIO x y =
+ ~\texttt{muloOII $::$ Nat $\to$ Nat $\to$ Maybe Nat}~
+ ~\lststrikethrough{muloOII $::$ Nat $\to$ Nat $\to$ Stream Nat}~
+ muloOII x1 x2 =
      zero <$\mid$> positive
    where
      zero = do
-       guard (x == O)
+       guard (x2 == O)
        return O
      positive = do
-       (S $x_1$) <- return x
-       $z_1$ <- muloIIO $x_1$ y
-       z <- addoIIO $z_1$ y
-       return z
+       x4 <- addoIOI x1 x2
+       S <$\$$> muloOII x1 x4
        \end{lstlisting}
       \end{minipage}
     };
     \node [draw=none, above=of code.south, xshift=2.5cm, yshift=2.5cm] {\goodBadge{10x \linebreak faster}};
   \end{tikzpicture}
   \end{center}
-  
