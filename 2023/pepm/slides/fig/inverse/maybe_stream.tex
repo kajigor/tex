@@ -13,16 +13,18 @@
       \begin{minipage}{\columnwidth}
       \begin{lstlisting}[]
 
- ~\texttt{muloOII $::$ Nat $\to$ Nat $\to$ Stream Nat}~
- muloOII x1 x2 =
+ ~\texttt{muloIIO $::$ Nat $\to$ Nat $\to$ Stream Nat}~
+ muloIIO x y =
      zero <$\mid$> positive
    where
      zero = do
-       guard (x2 == O)
+       guard (x == O)
        return O
      positive = do
-       x4 <- addoIOI x1 x2
-       S <$\$$> muloOII x1 x4
+       (S $x_1$) <- return x
+       $z_1$ <- muloIIO $x_1$ y
+       z <- addoIIO $z_1$ y
+       return z
        \end{lstlisting}
       \end{minipage}
     };
