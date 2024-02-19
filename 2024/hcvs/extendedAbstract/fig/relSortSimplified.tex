@@ -1,0 +1,32 @@
+\begin{figure}[!t]
+  \centering
+  \begin{subfigure}[b]{0.45\textwidth}
+    \begin{lstlisting}[frame=tb, mathescape=true]
+let rec sort$^o$ x y =
+    (x === [] /\ y === []) \/
+    (fresh s, xs, xs$_1$ in
+        (smallest$^o$ x s xs /\
+         sort$^o$ xs xs$_1$ /\
+         y === (s :: xs$_1$)))
+    \end{lstlisting}
+   \caption{Implementation in \mk}
+    \label{fig:sortIn}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.45\textwidth}
+    \begin{lstlisting}[frame=tb, mathescape=true]
+let sort$^o$_OI x =
+    (x === (0 :: 1 :: 2 :: []) \/
+     x === (0 :: 2 :: 1 :: []) \/
+     x === (1 :: 2 :: 0 :: []) \/ ...) 
+   
+   
+    \end{lstlisting}
+    \caption{Result of the partial deduction of the call \lstinline{sorto x (0 :: 1 :: 2 :: [])}}
+    \label{fig:sortDeduced}
+  \end{subfigure}
+
+
+  \caption{Sorting relation}
+  \label{fig:sort}
+\end{figure}

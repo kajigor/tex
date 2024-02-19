@@ -1,0 +1,17 @@
+\begin{figure*}[t!]
+  \centering
+  % \begin{subfigure}[b]{0.48\textwidth}
+      \begin{tabular}{l|l||c||c||c}
+      && \multicolumn{2}{c||}{Translation with CPD} & \multicolumn{1}{c}{\multirow[t]{2}{*}{Functional Conversion}} \\ 
+      && Online & Offline & \multicolumn{1}{c}{} \\ \hline
+      sorto &\texttt{{[}0;1;2;3{]}(5 answers)} & \SI{174.00}{\micro\second} & \SI{0.15}{\micro\second} & \SI{26.90}{\micro\second} \\
+      sorto &\texttt{{[}0;...;4{]}(5 answers)} & \SI{20 600.00}{\micro\second} & \SI{0.19}{\micro\second} & \SI{183.00}{\micro\second} \\ \hline
+      hanoi &\texttt{{[}3 disks{]}(5 answers)} & \SI{125000.00}{\micro\second} & \SI{1.67}{\micro\second} & \SI{153000.00}{\micro\second} \\
+      hanoi & \texttt{{[}4 disks{]}(5 answers)} & timeout & \SI{3.12}{\micro\second} & timeout 
+      \end{tabular}
+  %   \caption{Permutation generation direction}
+  % \end{subfigure}
+  \caption{Evaluation results of relational sorting}
+  \label{tbl:times}
+\end{figure*}
+

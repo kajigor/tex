@@ -1,0 +1,80 @@
+\begin{figure}[!t]
+  \centering
+  \begin{subfigure}[b]{0.45\textwidth}
+    \begin{lstlisting}[frame=tb, mathescape=true]
+let rec sort$^o$ x y =
+    (x === Nil /\ y === Nil) \/
+    (fresh s, xs, xs$_1$ in
+      (smallest$^o$ x s xs /\
+       sort$^o$ xs xs$_1$ /\
+       y === (s :: xs$_1$)))
+let rec smallest$^o$ l s l$_1$ =
+  (l === [s] /\ l$_1$ ===  Nil) \/
+  (fresh  h, t, s$_1$, t$_1$, max in
+      l === (h :: t) /\
+      smallest$^o$ t s$_1$ t$_1$ /\
+      minmax$^o$ h s$_1$ s max /\
+      l$_1$ ===  (max :: t$_1$) 
+    );
+    \end{lstlisting}
+   \caption{Implementation in \mk}
+    \label{fig:sortIn}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.45\textwidth}
+    \begin{lstlisting}[frame=tb, mathescape=true]
+
+let rec sort$^o$ x$^{f \rightarrow g}$ y$^{g \rightarrow g}$ =
+    (x$^{f \rightarrow g}$ ===    Nil /\ y$^{g \rightarrow g}$ ===    Nil) \/
+    (fresh s, xs, xs$_1$ in
+      (y$^{g \rightarrow g}$ ===    (s$^{f \rightarrow g}$ :: xs$_1$$^{f \rightarrow g}$) /\
+       Unfold sort$^o$ xs$^{f \rightarrow g}$ xs$_1$$^{g \rightarrow g}$ /\
+       Unfold smallest$^o$ x$^{f \rightarrow g}$ s$^{g \rightarrow g}$ xs$^{g \rightarrow g}$))
+let rec smallest$^o$ l$^{f \rightarrow g}$ s$^{g \rightarrow g}$ l$_1$$^{g \rightarrow g}$ =
+  (l$^{f \rightarrow g}$ ===    [s$^{g \rightarrow g}$] /\ l$_1$$^{g \rightarrow g}$ ===       Nil) \/
+  (fresh  h, t, s$_1$, t$_1$, max in
+      l$_1$$^{g \rightarrow g}$ ===     (max$^{f \rightarrow g}$ :: t$_1$$^{f \rightarrow g}$) /\
+      Unfold minmax$^o$ h$^{f \rightarrow g}$ s$_1$$^{f \rightarrow g}$ s$^{g \rightarrow g}$ max$^{g \rightarrow g}$ /\
+      Unfold smallest$^o$ t$^{f \rightarrow g}$ s$_1$$^{g \rightarrow g}$ t$_1$$^{g \rightarrow g}$ /\
+      l$^{f \rightarrow g}$ ===    (h$^{g \rightarrow g}$ :: t$^{g \rightarrow g}$) 
+    );
+    \end{lstlisting}
+    \caption{Mode inference and Binding time analysis result}
+    \label{fig:sortModded}
+  \end{subfigure}
+
+  \hfill
+
+  \begin{subfigure}[b]{0.45\textwidth}
+    \begin{lstlisting}[frame=tb, mathescape=true]
+let sort$^o$ y0 =
+  (y0 === (O :: (S (O) :: 
+    [S (S (O))])) \/
+   y0 === (O :: (S (S (O))
+    :: [S (O)])) \/
+   y0 === (S (O) :: 
+    (Zero :: [S (S (O))])) ...
+   
+    \end{lstlisting}
+    \caption{Conjunction Partial Deduction result}
+    \label{fig:sortDeduced}
+  \end{subfigure}
+\hfill
+  \begin{subfigure}[b]{0.45\textwidth}
+    \begin{lstlisting}[frame=tb, mathescape=true]
+sortoO = msum 
+    [do { let {x1 = Zero}
+        ; let {x4 = Zero}
+        ; let {x3 = Succ x4}
+        ; let {x8 = Zero}
+        ...
+        ; let {x0 = Cons x15 x16}
+        ; return x0},...
+    \end{lstlisting}
+    \caption{Functional conversion into \haskell}
+    \label{fig:sortHaskell}
+  \end{subfigure}
+
+  \caption{Multiplication relation}
+  \label{fig:sort}
+\end{figure}
