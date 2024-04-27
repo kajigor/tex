@@ -1,0 +1,23 @@
+\begin{figure}[h]
+\centering
+\begin{minipage}{0.9\columnwidth}
+  \begin{lstlisting}[frame=tb]
+data Term = O | S Term
+addoIIO :: Term -> Term -> Stream Term
+addoIIO x y = msum [
+    do {
+        guard (x == O);
+        z <- return y;
+        return z
+    },
+    do {
+        S $x_1$ <- return x;
+        $z_1$ <- addoIIO $x_1$ y;
+        z <- return (S $z_1$);
+        return z
+    }
+]
+  \end{lstlisting}
+\end{minipage}
+\end{figure}
+

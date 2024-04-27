@@ -1,0 +1,13 @@
+\begin{table}[]
+  \begin{tabular}{l||r||r|r}
+        & \multicolumn{1}{c||}{\multirow[t]{2}{*}{\begin{tabular}[c]{@{}l@{}}\texttt{Functional}\\ \text{conversion}\end{tabular}}} & \multicolumn{2}{c}{\begin{tabular}[c]{@{}l@{}}\texttt{Translation with}\\ \text{partial deduction}\end{tabular}} \\ \cline{3-4} & 
+        \multicolumn{1}{c||}{} & \multicolumn{1}{c|}{Online} & \multicolumn{1}{c}{Offline} \\ \hline
+      \texttt{appLast} & \SI{1.13}{\micro\second} & \SI{0.08}{\micro\second} & \SI{0.09}{\micro\second} \\
+      \texttt{contains} & \SI{14.70}{\micro\second}  & \SI{0.78}{\micro\second} & \SI{0.77}{\micro\second} \\
+      \texttt{doubleAppend} & \timeout timeout  & \SI{2910.00}{\micro\second} & \SI{2.00}{\micro\second} \\
+      \texttt{exDepth} & \timeout timeout  & \timeout timeout & \SI{3.09}{\micro\second} \\
+      \texttt{nthOpt} & \SI{0.10}{\micro\second}  & \SI{0.08}{\micro\second} & \SI{0.10}{\micro\second} \\
+      ... &  &  &   \\
+
+  \end{tabular}
+\end{table}

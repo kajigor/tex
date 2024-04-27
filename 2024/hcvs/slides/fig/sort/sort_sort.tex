@@ -1,0 +1,13 @@
+\begin{figure}[h]
+  \centering
+  \begin{minipage}{0.65\columnwidth}
+    \begin{lstlisting}[frame=tb]
+ let rec sort$^o$ x y =
+    (x === [] /\ y === []) \/ 
+    (fresh (s xs xs$_1$)
+      y === s :: xs$_1$ /\
+      [*smallest$^o$ x s xs /\
+      sort$^o$ xs xs$_1$*])
+    \end{lstlisting}
+  \end{minipage}
+\end{figure}

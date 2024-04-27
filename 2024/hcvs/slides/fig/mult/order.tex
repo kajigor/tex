@@ -1,0 +1,30 @@
+\begin{center}
+  \begin{tikzpicture}[
+    every node/.style = {
+        inner sep=0pt
+      , shape=rectangle
+      % , draw
+      }
+  ]
+      % \draw[help lines] (-7.75,-3.5) grid (7.75,3.5);
+      \node[inner sep=10pt, anchor=north west] (func) at (-7.75,3.5) {\input{fig/mult/mult_bare.tex}};
+
+      \node[inner sep=10pt, anchor=north east] (slow) at (7.75,3.5) {\input{fig/mult/mult_slow_bare.tex}};
+
+      \node [draw=none, above=of slow.south, xshift=2.3cm] {\badBadge{$\Omega(x!)$}};
+
+      \node[ellipse, scale=0.8,
+          fill=badRed!75,
+          draw=darkFastGreen,
+          line width=0.4mm,
+          inner sep=1pt,
+          align=center, above=of slow.south, xshift=2.5cm, yshift=4cm]
+        {\textbf{generate-and-test}};
+
+      \node[inner sep=10pt, anchor=south west] (fast) at (-7.75,-3.5) {\input{fig/mult/mult_fast_bare.tex}};
+
+      \node [draw=none, anchor=south west] at ($(fast.south)+(0.5,0.8)$) {\goodBadge{$O(xy)$}};
+      \node [draw=none, above=of fast.south, xshift=2.3cm] {\goodBadge{10x \linebreak faster}};
+  \end{tikzpicture}
+  \end{center}
+  

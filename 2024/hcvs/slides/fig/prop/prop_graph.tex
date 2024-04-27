@@ -1,0 +1,120 @@
+\tikzset{
+    block/.style={
+      rectangle, minimum width = 2cm, minimum height=1cm, align=center
+      %, rounded corners=0.5cm
+      %,draw
+    },
+    block1/.style={
+      align=center
+    },
+}
+
+\newcommand{\fTO}[2]{
+  \draw[-Stealth,thick,color=teal] (#1) -- (#2);
+}
+
+  % decoration = {
+  %   snake,
+  %   pre length=2pt,
+  %   post length=4pt,
+  %   amplitude=0.5pt,
+  %   segment length=4pt,
+  % },
+  
+\begin{center}
+  \begin{tikzpicture}[
+    every node/.style = {
+        inner sep=10pt
+      , shape=rectangle
+      }
+  ]
+
+      \coordinate (shift) at (1.5,0);  
+      \coordinate (shift1) at (3,0);
+      \coordinate (shift2) at (2,0);
+      \coordinate (shift3) at (1,0);
+      \coordinate (shift4) at (1,0);
+      \coordinate (down) at (0,1.8);
+      
+
+      \node[block] (main) at ($(0,1)$) {$?\ eval^o([], v_0, True)$};
+
+      \pause
+
+
+      % $(main)  - (shift1) - (down) - (shift)+(0,0.25)$ 
+      % $(main)  - (down) - (shift)$
+      % $(main)  - (down) + (shift)$
+      % $(main) + (shift1) + (shift) - (down)+(0,0.25)$
+
+      \node[block] (conj) at ($(main)  - (shift1) - (down) - (shift)-(0,0.2)$) {$v_0 \rightarrow Conj(v_1, v_2) $ \\ $eval^o([], v_1, v_3)$ \\ ...};
+
+      \fTO{main.south}{$(conj.north)$};
+
+      
+      \node[block] (lit) at ($(main)  - (down) - (shift) +(0,0.2)$) {\underline{$v_0 \rightarrow Lit(True)$}};
+      
+      \fTO{main.south}{$(lit.north)$};
+
+      
+      \node[block] (elem) at ($(main)  - (down) + (shift)$) {$v_0 \rightarrow Var(v_1) $ \\ $elem^o(v_1, [], True)$};
+
+
+      \fTO{main.south}{$(elem.north)$};
+
+      
+      \node[block] (other) at ($(main) + (shift1) + (shift) - (down)+(0,0.25)$) {$...$};
+
+      \fTO{main.south}{$(other.north)$};
+
+      \pause 
+      
+      \node[block] (conj1) at ($(main)  - (shift1) - (down) - (shift) -(1.0,2.8)$) {$v_0 \rightarrow Conj(v_1, v_2) $ \\ $v_1 \rightarrow Conj(v_5, v_6) $ \\ $eval^o([], v_5, v_7) $ \\ ...};
+
+      \fTO{conj.south}{$(conj1.north)$};
+      
+      \node[block] (other) at ($(main) - (shift) - (down) -(1.5,2.1)$) {$...$};
+      
+      \fTO{conj.south}{$(other.north)$};
+
+      \pause 
+
+      \node[block] (fail) at ($(main)  - (down) + (shift)-(0,2.1)$) {$Fail$};
+
+      \fTO{elem.south}{$(fail.north)$};
+
+            
+      \pause 
+
+      \node[block] (stop) at ($(main)  - (down) - (down) + (shift)-(0,2.1)$) {\textcolor{red}{\Large When to stop?} \par};
+
+
+  \end{tikzpicture}
+\end{center}
+  
+
+%   \begin{tikzpicture}[
+%   processTree,
+%   sibling distance=10em,
+%   level distance=8em]
+%   \node {
+%     \underline{\rel{eval}{$fm \ s \ true$}}}
+%     child { node {
+%       \rel{lookup}{$x \ s \ true$} \\
+%       \subst{$fm \to var \ v$}}}
+%     child { node {
+%       \rel{eval}{$x \ s \ a$} \and \\
+%       \rel{not}{$a \ true$} \\
+%       \subst{$fm \to neg \ x$}}}
+%     child { node {
+%       \rel{eval}{$x \ s \ a$} \and \\
+%       \rel{eval}{$y \ s \ b$} \and \\
+%       \rel{or}{a \ b \ true} \\
+%       \subst{$fm \to disj \ x \ y$}}}
+%     child { node {
+%       \rel{eval}{$x \ s \ a$} \and \\
+%       \rel{eval}{$y \ s \ b$} \and \\
+%       \rel{and}{a \ b \ true} \\
+%       \subst{$fm \to conj \ x \ y$}}}
+%   ;
+% \end{tikzpicture}

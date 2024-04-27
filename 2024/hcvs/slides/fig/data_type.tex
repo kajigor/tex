@@ -1,0 +1,35 @@
+\begin{figure}[!t]
+  \centering
+  \begin{minipage}{\columnwidth}
+    \begin{lstlisting}[label={add},
+                      %  caption={Addition relation},
+                       captionpos=b,
+                       frame=tb]
+type term =
+  | Conj of (term * term)
+  | Cons of (term * term)
+  | Disj of (term * term)
+  | Falso
+  | Neg of term
+  | Succ of term
+  | Trueo
+  | Var of term
+  | Zero
+        \end{lstlisting}
+  \end{minipage}
+\end{figure}
+
+\begin{figure}[!t]
+  \centering
+  \begin{minipage}{\columnwidth}
+    \begin{lstlisting}[label={add},
+                      %  caption={Addition relation},
+                       captionpos=b,
+                       frame=tb]
+elem$^o$ i st v =
+  fresh (h t i$_1$) conde [
+    (i === Zero /\ st === Cons (v, t));
+    (i === Succ i$_1$ /\ st === Cons (h, t) /\ elem$^o$ i$_1$ t v)]
+      \end{lstlisting}
+  \end{minipage}
+\end{figure}

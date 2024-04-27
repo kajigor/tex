@@ -1,0 +1,40 @@
+\tikzset{
+    block/.style={
+      rectangle, draw, minimum width = 2.5cm, minimum height=1.5cm, align=center
+        },
+}
+
+\newcommand{\fTo}[2]{
+  \draw[-Stealth,thick,color=teal] (#1) -- (#2);
+}
+
+\begin{center}
+  \begin{tikzpicture}[
+    every node/.style = {
+        inner sep=0pt
+      , shape=rectangle
+      }
+  ]
+
+      \node[block] (int) at (0,0) {functional \\ conversion};
+
+      \node[] (p_o) at ($(int.west)+(-1.2cm,0.3cm)$) {eval$^o$};
+
+      \node[] (dir) at ($(int.west)+(-1.2cm,-0.3cm)$) {direction};
+
+      \node[] (eval1) at ($(int.east)+(1.3cm,0cm)$) {eval$^{-1}$};
+      
+      \node[block] (relInt) at ($(p_o.center)+(-2.8,0)$) {relational \\ conversion};
+
+      \node[] (p) at ($(relInt.west)+(-1cm,0cm)$) {eval};
+
+      \fTo{p}{$(p)+(1,0)$};
+      \fTo{$(p_o)+(-1.5,0)$}{p_o};
+      \fTo{p_o}{$(p_o)+(1.2,0)$};
+      \fTo{dir}{$(dir)+(1.2,0)$};
+      \fTo{$(eval1)-(1.2,0)$}{eval1};
+
+  \end{tikzpicture}
+  \end{center}
+  
+  

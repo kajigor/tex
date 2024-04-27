@@ -1,0 +1,16 @@
+\begin{figure}[!t]
+  \centering
+  \begin{minipage}{\columnwidth}
+    \begin{lstlisting}[frame=tb]
+ addIII $::$ Nat -> Nat -> Nat -> Stream ()
+ addIII x y z =
+   case x of
+     O | y == z -> return ()
+       | otherwise -> Empty
+     S x$_1$ ->
+       case z of
+         O -> Empty
+         S z$_1$ -> addIII x$_1$ y z$_1$
+    \end{lstlisting}
+  \end{minipage}
+\end{figure}

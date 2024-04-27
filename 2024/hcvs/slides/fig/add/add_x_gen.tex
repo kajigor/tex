@@ -1,0 +1,16 @@
+\begin{figure}[!t]
+  \centering
+  \begin{minipage}{0.59\columnwidth}
+    \begin{lstlisting}[frame=tb]
+ addIOO $::$ Nat -> Stream Nat -> Stream (Nat, Nat)
+ addIOO x gen$_y$ =
+   case x of
+     O -> do
+       y <- gen$_y$
+       return (y, y)
+     S x$_1$ -> do
+       (y, z$_1$) <- addIOO x$_1$ gen$_y$
+       return (y, S z$_1$)
+    \end{lstlisting}
+  \end{minipage}
+\end{figure}

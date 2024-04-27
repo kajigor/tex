@@ -1,0 +1,1350 @@
+\documentclass[xcolor=table, aspectratio=169]{beamer}
+\usepackage{beamerthemesplit}
+\usepackage{wrapfig}
+\usetheme{SPbGU}
+\usepackage{pdfpages}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{cmap}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{indentfirst}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,arrows.meta,automata,positioning,quotes,backgrounds,decorations.text,decorations.pathmorphing}
+\usepackage{multirow}
+\usepackage[noend]{algpseudocode}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{fancyvrb}
+\usepackage[linguistics]{forest}
+\usepackage{listings}
+\usepackage{multicol}
+\usepackage{comment}
+\usepackage{xspace}
+\usepackage{adjustbox}
+\usepackage{makecell}
+\usepackage{ stmaryrd }
+\usepackage{ulem}
+\usepackage{wasysym}
+\usepackage{amssymb}% http://ctan.org/pkg/amssymb
+\usepackage{pifont}% http://ctan.org/pkg/pifont
+\usepackage{animate}
+\definecolor{ForestGreen}{RGB}{34,139,34}
+
+\input{packages}
+
+
+\newcommand{\cmark}{\textcolor{green}{\ding{51}}}
+\newcommand{\xmark}{\textcolor{red}{\ding{55}}}
+
+\newcommand{\todelete}[1]{{\color{red}{#1}}}
+
+\newcommand{\subdued}[1]{{\color{gray}{#1}}}
+
+\newcommand{\backupbegin}{
+   \newcounter{finalframe}
+   \setcounter{finalframe}{\value{framenumber}}
+}
+\newcommand{\backupend}{
+   \setcounter{framenumber}{\value{finalframe}}
+}
+
+\newcommand{\happyCheck}{\color{green}{\checkmark}}
+\newcommand{\timeout}{\color{red}{\clock}}
+
+\newcommand{\makenote}[1]{\hfill \footnotesize{#1}}
+\newcommand{\strikeoutnote}[1]{\makenote{\strikethrough{#1}}}
+\newcommand{\strikethrough}[1]{\sout{#1}}
+
+\newcommand{\lststrikethrough}[1]{\ttfamily\sout{#1}}
+
+\newcolumntype{A}{>{\hb@xt@\z@\bgroup\hss}r<{\egroup}}
+\newcolumntype{B}{>{\hb@xt@\z@\bgroup}l<{\hss\egroup}}
+
+\setbeamertemplate{itemize item}[circle]
+\setbeamertemplate{enumerate items}[circle]
+
+\lstdefinelanguage{ocanren}{
+keywords=[1]{return, do, where, case, run, conde, fresh, let, match, with, when, class, type,
+object, method, of, rec, repeat, until, while, \begin{comment}not,\end{comment} do, done, as, val, inherit,
+new, module, sig, deriving, datatype, struct, if, then, else, open, private, virtual, include, success, failure,
+true, false, mplus},
+keywords=[2]{safe},
+keywords=[3]{unsafe},
+sensitive=true,
+commentstyle=\small\itshape\ttfamily,
+keywordstyle=[1]\color{blue},
+keywordstyle=[2]\color{ForestGreen},
+keywordstyle=[3]\color{violet},
+identifierstyle=\ttfamily,
+basewidth={0.5em,0.5em},
+columns=flexible,
+mathescape=true,
+escapechar=~,
+fontadjust=true,
+literate={fun}{{$\lambda$}}1 {function}{function}8 {->}{{$\to$}}3 {<-}{{$\leftarrow$}}3 {===}{{$\equiv$}}1 {=/=}{{$\not\equiv$}}1 {|>}{{$\triangleright$}}3 {\\/}{{$\vee$}}2 {/\\}{{$\wedge$}}2 {^}{{$\uparrow$}}1,
+morecomment=[s]{(*}{*)},
+ moredelim=**[is][\color{red}]{@!}{@}
+}
+
+\tikzstyle{processTree} = [
+  ->,
+  sibling distance=15em,
+  scale=0.6,
+  every node/.style = {
+    shape=rectangle,
+    rounded corners=0.05cm,
+    draw,
+    align=center,
+    minimum size=5mm,
+    scale=0.6,},
+  %level 1/.style={sibling distance=100em}
+  ]
+
+
+\tikzstyle{program} = [
+  draw=black,
+  thick,
+  rectangle,
+  rounded corners=1pt,
+  inner sep=5pt,
+  inner ysep=5pt
+  ]
+
+\tikzstyle{goal} = [
+  draw=black,
+  rectangle,
+  rounded corners=1pt,
+  inner ysep=0pt,
+  ]
+
+\tikzstyle{input} = [
+  draw=none,
+  rectangle,
+  rounded corners=1pt,
+  inner sep=2pt,
+  inner ysep=2pt,
+  fill=green!10,
+  minimum height=5mm
+  ]
+
+
+\tikzstyle{transparent} = [
+  draw=none,
+  inner ysep=3pt
+  ]
+
+\lstset{
+language=ocanren
+}
+
+
+\DeclareMathOperator{\Term}{\mathcal{T}}
+\DeclareMathOperator{\FlatTerm}{\mathcal{FT}}
+\DeclareMathOperator{\Var}{\mathbf{Var}}
+\DeclareMathOperator{\Cons}{\mathcal{C}}
+\DeclareMathOperator{\Kan}{\mathcal{G}}
+\DeclareMathOperator{\Fresh}{\mathbf{Fresh}}
+\DeclareMathOperator{\Delay}{\mathbf{Delay}}
+\DeclareMathOperator{\Cll}{\mathbf{Call}}
+\DeclareMathOperator{\Def}{\mathcal{D}}
+\DeclareMathOperator{\Base}{\mathbf{Base}}
+\DeclareMathOperator{\Conj}{\mathbf{Conj}}
+\DeclareMathOperator{\free}{\mathbf{free}}
+\DeclareMathOperator{\ground}{\mathbf{ground}}
+\DeclareMathOperator{\In}{\mathbf{In}}
+\DeclareMathOperator{\Out}{\mathbf{Out}}
+\DeclareMathOperator{\Fun}{\mathcal{F}}
+\DeclareMathOperator{\Rtrn}{\mathbf{return}}
+\DeclareMathOperator{\Bind}{\mathbf{Bind}}
+\DeclareMathOperator{\Match}{\mathbf{Match}}
+\DeclareMathOperator{\Sum}{\mathbf{<|>}}
+\DeclareMathOperator{\Guard}{\mathbf{Guard}}
+\DeclareMathOperator{\Gen}{\mathbf{Gen}}
+\DeclareMathOperator{\Stream}{\mathit{Stream}}
+\DeclareMathOperator{\vars}{vars}
+\DeclareMathOperator{\inmode}{\mathtt{I}}
+\DeclareMathOperator{\outmode}{\mathtt{O}}
+\DeclareMathOperator{\whatmode}{\mathtt{?}}
+% \DeclareMathOperator{\inmode}{g \rightarrow g}
+% \DeclareMathOperator{\outmode}{f \rightarrow g}
+% \DeclareMathOperator{\mode1}{mode}
+% \DeclareMathOperator{\Mode1}{\mathcal{M}}
+\newcommand{\KanN}{\mathcal{K}^{N}}
+\newcommand{\tran}[1]{\left\llbracket #1 \right\rrbracket}
+\newcommand{\LIST}[1]{ #1^*}
+\renewcommand{\emptyset}{\varnothing}
+\newcommand{\mk}{\textsc{miniKanren}\xspace}
+\newcommand{\ocaml}{\textsc{OCaml}\xspace}
+\newcommand{\haskell}{\textsc{Haskell}\xspace}
+\renewcommand{\and}{$\&$\xspace}
+\newcommand{\rel}[2]{\texttt{#1}$^o$ #2}
+\newcommand{\subst}[1]{$\langle$#1$\rangle$}
+\newcommand{\sem}[1]{\llbracket #1 \rrbracket}
+
+\lstset{moredelim=[is][\bfseries]{[*}{*]}}
+
+\beamertemplatenavigationsymbolsempty
+
+\title[Functional Conversion for miniKanren]{Integration of Offline Partial Deduction and \\ Functional Conversion for miniKanren}
+\institute[Jetbrains Research]{
+JetBrains Research, Programming Lanuages and Program Analysis Lab
+}
+
+\author[Aleksandr Shefer]{Aleksandr Shefer, Ekaterina Verbitskaia}
+
+\date{April 7, 2024}
+
+\definecolor{orange}{RGB}{179,36,31}
+
+\begin{document}
+{
+\begin{frame}[fragile]
+   \begin{center}
+      \includegraphics[height=1.5cm]{pictures/jetbrainsResearch.pdf}
+    \end{center}
+  \titlepage
+\end{frame}
+}
+
+\input{fig/badBadge.tex}
+\input{fig/goodBadge.tex}
+
+\begin{frame}[fragile]
+  \frametitle{Search is More Complicated than Verification}
+     % \hfill 
+    
+    \begin{center}
+      \animategraphics[loop,width=4cm]{10}{fig/hanoi/frame_}{0}{26}
+    \vfill
+         The Tower of Hanoi Puzzle
+    \end{center}
+
+    \vfill 
+
+    \lstinline{verify [1->2, 1->3, 2->3] $\Rightarrow$ True }
+    
+    \lstinline{verify [1->2, 1->2] $\Rightarrow$ False }
+
+    \vfill 
+    
+    \lstinline{solve True $\Rightarrow$ [1 -> 2, 1->3, 2->3, ...] }
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Search is Dual to Verification}
+    \begin{center} 
+      solve \approx verify$^{-1}$
+    \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Logic Programming Highlights the Duality}
+
+\lstinline{hanoi$^o$ candidate result}
+
+\vfill
+
+\lstinline{verify = run q (hanoi$^o$ [1->2,1->3,2->3] q) $\Rightarrow$ q = True} 
+
+\vfill
+
+\lstinline{solve  = run q (hanoi$^o$ q True) $\Rightarrow$ q = [1 ->2,1->3,2->3,...]}
+
+\end{frame}
+
+% \begin{frame}[fragile]
+%     \frametitle{Verifier-to-Solver}
+
+%     \input{figures/verifier_example}
+% \end{frame}
+
+
+% \begin{frame}[fragile]
+%     \frametitle{Logic Programming}
+
+%     \begin{columns}[T]
+%         \begin{column}{0.49\textwidth}
+%             \lstinline{run res (append$^o$ [0] [1] res)} \\
+%             \vspace{0.5cm}
+%             \lstinline{$\langle$ res $\to$ [0, 1] $\rangle$}
+%         \end{column}
+
+%         \begin{column}{0.49\textwidth}
+%             \lstinline{run x,y (append$^o$ x y [0, 1])} \\
+%             \vspace{0.5cm}
+%             \lstinline{$\langle$ x $\to$ [], y $\to$ [0, 1] $\rangle$} \\
+%             \lstinline{$\langle$ x $\to$ [0],   y $\to$ [1] $\rangle$} \\
+%             \lstinline{$\langle$ x $\to$ [0, 1], y $\to$ [] $\rangle$}
+%         \end{column}
+%     \end{columns}
+% \end{frame}
+
+
+
+\begin{frame}[fragile]
+    \frametitle{Program Interpretation and Synthesis}
+
+    \input{figures/verifier_example}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Relational Interpreters for Search}
+
+\begin{columns}[T]
+  \begin{column}{0.49\textwidth}
+    \input{fig/prop/prop_fun_short.tex}
+  \end{column}
+
+  \begin{column}{0.49\textwidth}
+    \input{fig/prop/prop_rel_short.tex}
+  \end{column}
+\end{columns}
+
+\input{fig/inverse/relInt_for_search.tex} 
+\end{frame}
+
+% \begin{frame}[fragile]
+%     \frametitle{Verifier-to-Solver}
+    
+%     \input{fig/prop/prop.tex}
+    
+%     \vfill
+    
+%     \begin{center}
+%       \begin{tabular}{c|c} 
+%         verifier & solver \\ \hline
+%         \lstinline[]$run res (eval$^o$ $[]$ (Disj Trueo Falseo) res)$ & 
+%         \lstinline[]$run fm (eval$^o$ $[]$ fm Trueo)$
+%       \end{tabular}
+%     \end{center}
+% \end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Relational Interpreters for Search: the Issue}
+\begin{center}
+  It is slow
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Relational Programming in \mk}
+
+\begin{itemize}
+    \item Pure logic programming
+    \item Complete search: interleaving
+    % \item Easily extensible 
+    % \item Embedded
+\end{itemize}    
+\end{frame}
+
+
+\begin{frame}[fragile]
+    \frametitle{\mk Syntax}
+
+    \input{fig/kanrenIntro}
+    
+\end{frame}
+
+
+% \begin{frame}[fragile]
+%     \frametitle{Approximation of the Search Strategy}
+
+%     \input{fig/prop/prop_graph}
+% \end{frame}
+
+
+\begin{frame}[fragile]
+    \frametitle{Sources of Inefficiency}
+
+    \begin{itemize}
+        \item Running backwards is slow
+        \item Order of clauses influences performance
+        \item Constant arguments (\lstinline{eval$^{o}$ [] q True)
+    \end{itemize}
+
+    \vspace{1cm}
+
+    Solution: specialization
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+  \frametitle{Specialization Scheme}
+  \begin{center}
+    \input{fig/inverse/conversion.tex}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Mode Analysis}
+  \begin{center}
+    \begin{minipage}{0.5\textwidth}
+      \begin{columns}[T]
+        \begin{column}{0.1\textwidth}
+          Variable modes: 
+        \end{column}
+        \begin{column}{0.6\textwidth}
+         \begin{minipage}{\textwidth}
+            \begin{itemize}
+                \item \underline{Ground} term: True
+                \item \underline{Free} variable: x
+            \end{itemize}
+          \end{minipage}
+        \end{column}
+    \end{columns}
+  \end{minipage}
+  \end{center}
+
+\vspace{0.3cm}
+  
+  \begin{center}
+    \lstinline{eval$^o$ [] fm True -> eval$^o$ g f g}
+    
+    \input{fig/prop/prop_ill}
+  \end{center}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Partial Deduction}
+
+  \input{fig/prop/prop_spec}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Partial Deduction: Trees Construction}
+
+  \input{fig/prop/prop_tree0}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Binding Time Analysis}
+
+  \begin{center}
+    \begin{minipage}{0.5\textwidth}
+      \begin{columns}[T]
+        \begin{column}{0.3\textwidth}
+          Call 
+          
+          annotations: 
+        \end{column}
+        \begin{column}{0.8\textwidth}
+         \begin{minipage}{\textwidth}
+            \begin{itemize}
+                \item \underline{Safe}: continue unfolding
+                \item \underline{Unsafe}: \textbf{possibly} stop unfolding 
+            \end{itemize}
+          \end{minipage}
+        \end{column}
+    \end{columns}
+  \end{minipage}
+  \end{center}
+
+  \vspace{0.3cm}
+
+  \begin{center}
+    \begin{minipage}[c]{0.38\textwidth}
+        \begin{lstlisting}[frame=tb]
+   eval$^o$ st fm u =
+    fresh (x y v w z)
+     (safe and$^o$ a b u &
+      unsafe eval$^o$ st x a &
+      unsafe eval$^o$ st y b &
+      fm === Conj x y) |
+      ...
+        \end{lstlisting}
+      \end{minipage}
+  \end{center}  
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Partial Deduction with Annotations}
+
+  \input{fig/prop/prop_tree}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Functional Conversion}
+
+  \input{fig/prop/prop_fun}  
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Evaluation}
+  \begin{itemize}
+      \item Functional Conversion
+      \item Online Partial Deduction and Functional Conversion
+      \item \underline{Our approach}: Offline Partial Deduction and Functional Conversion
+  \end{itemize}
+  
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Evaluation: Propositional Evaluator}
+  \begin{center}
+    \input{fig/prop/prop_res.tex}
+  \end{center}
+  
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Evalutaion: the Tower of Hanoi puzzle}
+  \begin{center}
+    \input{fig/hanoi/hanoi_time}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Evalutaion: Other Benchmarks (DPPD\footnote{Dozens of Problems for Partial Deduction benchmark: \url{https://github.com/leuschel/DPPD}})}
+  \begin{center}
+    \input{fig/eval/common}
+  \end{center}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Conclusion}
+
+  \begin{itemize}
+      \item We integrated the Functional Conversion and Offline Partial Deduction approaches
+      \item We conducted a preliminary evaluation of the approach
+      \item The effectiveness of the integration has been shown
+  \end{itemize}
+
+  
+\end{frame}
+
+% \begin{frame}[fragile]
+%     \frametitle{Prior Research}
+    
+%     \begin{itemize}
+%         \item Michael Leuschel, Stephen J. Craig, Maurice Bruynooghe, and Wim Vanhoof. 2004. Specialising Interpreters using Offline Partial Deduction
+%         \item Ekaterina Verbitskaia, Daniil Berezun, and Dmitry Boulytchev. 2021. An Empirical Study of Partial Deduction for miniKanren
+%         \item Ekaterina Verbitskaia, Igor Engel, and Daniil Berezun. 2024. A Case Study in Functional Conversion and Mode Inference in miniKanren
+
+%     \end{itemize}
+  
+% \end{frame}
+
+
+% \begin{frame}[fragile]
+%     \frametitle{Goal}
+
+%     \textbf{Goal}: Develop a more powerful specialization technique for relational programming.
+
+%     \vfill
+    
+%     \textbf{Objectives}: 
+%     \begin{itemize}
+%         \item Analyze common specialization techniques in logic and relational programming. 
+%         \item Tune the most suitable approaches to suit our goal best. 
+%         \item Implement a transformation method which combines specialization and functional conversion.
+%         \item Collect benchmark suite. Evaluate the proposed approach. 
+%     \end{itemize}
+% \end{frame}
+
+% \begin{frame}[fragile]
+%   \frametitle{Algorithm scheme}
+%   \begin{center}
+%     \input{fig/inverse/conversion.tex}
+%   \end{center}
+% \end{frame}
+
+
+% \begin{frame}[fragile]
+%   \frametitle{Evalutaion: Propositional evaluator}
+%   \begin{center}
+%     \input{fig/prop/prop_res.tex}
+%   \end{center}
+% \end{frame}
+
+
+% \begin{frame}[fragile]
+%   \frametitle{Evalutaion: Tower of Hanoi puzzle}
+%   \begin{center}
+%     \input{fig/hanoi/hanoi_time}
+%   \end{center}
+% \end{frame}
+
+% \begin{frame}[fragile]
+%   \frametitle{Evalutaion: other benchmarks (DPPD)}
+%   \begin{center}
+%     \input{fig/eval/common}
+%   \end{center}
+% \end{frame}
+
+% \begin{frame}[fragile]
+%   \frametitle{Results (6 months)}
+%   \begin{itemize}
+%       \item Surveyed and adapted the relevant techniques for my task
+%       \item Collected benchmark suite
+%       \item Conducted a preliminary evaluation
+%   \end{itemize}
+
+%   \vfill
+
+%   Future work: 
+%   \begin{itemize}
+%       \item Improve the quality of the mode analysis stage 
+%       \item Finish evaluation 
+%   \end{itemize}
+% \end{frame}
+
+
+% \begin{frame}[fragile]
+%   \frametitle{Inverse Interpreter}
+%   \begin{columns}[t]
+%     \begin{column}{0.49\textwidth}
+%       \begin{center} 
+%         \setlength{\tabcolsep}{0.1cm}
+%         \setlength{\extrarowheight}{10pt}
+%         \begin{tabular}{rcl}
+%           $\llbracket p \rrbracket (x)$ & $=$ & $y$ \\ 
+%           $\llbracket p^{-1} \rrbracket (y)$ & $=$ & $x$ \\ 
+%           $\llbracket invInt \rrbracket (p, y)$ & $=$ & $x$
+%         \end{tabular}
+%       \end{center}
+%     \end{column}
+%     \begin{column}{0.49\textwidth}
+%       \vspace{0.5cm}
+%       \input{fig/inverse/inverse_interpreter.tex}
+%     \end{column}
+%   \end{columns}
+% \end{frame}
+
+% \begin{frame}[fragile]
+%   \frametitle{miniKanren as an Inverse Interpreter}
+%   \begin{columns}[t]
+%     \begin{column}{0.49\textwidth}
+%       \input{fig/add/add.tex}
+%    \end{column}
+%     \begin{column}{0.49\textwidth}
+%       \input{fig/inverse/miniKanren_query_1.tex}
+%       \input{fig/inverse/miniKanren_as_invint.tex}
+
+%       \vspace{0.5cm}
+
+    
+%       \input{fig/inverse/miniKanren_query_2.tex}
+%       \input{fig/inverse/miniKanren_as_invint_inverse.tex}
+%     \end{column}
+%   \end{columns}
+% \end{frame}
+
+% \begin{frame}[fragile]
+%   \frametitle{Relational Interpreters for Search}
+
+% \begin{columns}
+%   \begin{column}{0.49\textwidth}
+%     \input{fig/prop/prop_fun_short.tex}
+%   \end{column}
+
+%   \begin{column}{0.49\textwidth}
+%     \input{fig/prop/prop_rel_short.tex}
+%   \end{column}
+% \end{columns}
+
+% \input{fig/inverse/relInt_for_search.tex} 
+% \end{frame}
+
+% \begin{frame}[fragile]
+%   \frametitle{Relational Interpreters for Search: the Issue}
+% \begin{center}
+%   It is slow
+% \end{center}
+
+% \vspace{0.5cm}
+
+% % \begin{center}
+% %   \begin{minipage}{0.4\textwidth}
+% %     \begin{itemize}
+% %       \item Unifications 
+% %       \item Occurs-check
+% %       \item Scheduling complexity
+% %     \end{itemize}
+% %   \end{minipage}
+% % \end{center}
+% \end{frame}
+
+% \begin{frame}[fragile]
+%   \frametitle{Functional Conversion to the Rescue}
+% \begin{center}
+%   \input{fig/inverse/funConversion.tex}
+% \end{center}
+
+% \vfill
+
+% \begin{center}
+%   \begin{minipage}{0.4\textwidth}
+%     \begin{itemize}
+%       \item Generate the same answers as \mk would
+%       \item Hopefully faster
+%     \end{itemize}
+%   \end{minipage}
+% \end{center}
+% \end{frame}
+
+% \begin{frame}[fragile]
+%   \frametitle{\mk Syntax}
+% \begin{center}
+%   \input{fig/kanrenIntro.tex}
+% \end{center}
+% \end{frame}
+
+% \begin{frame}[fragile]
+%   \frametitle{Example: Addition in the Forward Direction}
+% \begin{columns}
+%   \begin{column}[t]{0.49\textwidth}
+%     \input{fig/add/add.tex}
+%     \[ \text{add}^{\circ}\ 0\ 1\ z = \{z \mapsto 1\}\]
+%   \end{column}
+%   \begin{column}[t]{0.49\textwidth}
+%     \input{fig/add/add_x_y.tex}
+%     \[ \text{addIIO}\ 0\ 1 = 1 \] 
+%   \end{column}
+% \end{columns}
+% \end{frame}
+
+% \begin{frame}[fragile]
+%   \frametitle{Noninjective $\leftrightarrow$ Nondeterministic}
+% \input{fig/inverse/nondet_inverse.tex}
+
+% \vfill
+
+% \begin{center}
+%     \[ \text{add}^{\circ}\ x\ y\ 1 = \left[\{x \mapsto  0, y \mapsto 1\}, \{x \mapsto  1, y \mapsto  0\} \right] \] 
+% \end{center}
+% \end{frame}
+
+% \begin{frame}[fragile]
+%   \frametitle{Stream}
+
+%   \begin{center}
+%     \begin{minipage}{0.4\textwidth}
+%       \begin{itemize}
+%           \item Represents nondeterminism
+%           \item List-like
+%           \item Interleaving search
+%       \end{itemize}
+%     \end{minipage}
+%   \end{center}
+
+% \vfill
+
+%   \begin{center}
+%       \[ \left[1, 2, 3\right] >>= f = f(1) < \mid > f(2) < \mid > f(3)\] 
+%       \[ \left[1, 2, 3\right] < \mid > \left[a, b, c\right] = \left[1, a, 2, b, 3, c\right] \] 
+%   \end{center}
+
+%   \vfill
+
+%   \begin{center}
+%     \begin{minipage}{0.5\textwidth}
+%       \begin{itemize}
+%           \item \mk: \lstinline{Stream} of substitutions
+%           \item Functional conversion: \lstinline{Stream} of values
+%       \end{itemize}
+%     \end{minipage}
+%   \end{center}
+% \end{frame}
+
+
+% \begin{frame}[fragile]
+%   \frametitle{Addition in the Backward Direction: Nondeterminism}
+% \begin{columns}
+%   \begin{column}[t]{0.49\textwidth}
+%     \input{fig/add/add.tex}
+%   \end{column}
+%   \begin{column}[t]{0.49\textwidth}
+%     \input{fig/add/add_z.tex}
+%   \end{column}
+% \end{columns}
+
+% \vfill
+% $\text{add}^{\circ}\ x\ y\ 1 = \left[\{x \mapsto  0, y \mapsto  1\}, \{x \mapsto  1, y \mapsto  0\} \right]$
+
+% \vfill
+
+% \lstinline{addOOI 1 = [(0,1), (1,0)]}
+
+% \end{frame}
+
+
+
+% % \begin{frame}[fragile]
+% %     \frametitle{Program inversion}
+% % \goodBadge{10}
+% % \badBadge{$\Omega(n!)$}
+% % \end{frame}
+% % \begin{frame}[fragile]
+% %     \frametitle{Program inversion}
+% %     \begin{center}
+% %         Many complicated programgs are inverse of simple ones
+% %     \end{center}
+% %     \vfill
+% %     \begin{center}
+% %         Type inference or habitation is inverse of type checking
+% %     \end{center}
+% %     \vfill
+% %     \begin{center}
+% %         Program inversion: Given a program $f$, produce inverse porgram  $f^{-1}$
+% %     \end{center}
+% %     \vfill
+% %     \begin{center}
+% %         Given $\text{typecheck}(\text{program}, \text{types}) = true$, produce $\text{typecheck}^{-1}(\text{program}, true) = \text{types}$.
+% %     \end{center}
+% % \end{frame}
+% % \begin{frame}[fragile]
+% %     \frametitle{Relational inversion}
+% %     \begin{center}
+% %         A program is a relation between its inputs and outputs
+% %     \end{center}
+% %     \vfill
+% %     \begin{center}
+% %         miniKanren can evaluate relations in both directions
+% %     \end{center}
+% %     \vfill
+% %     \begin{center}
+% %         Write a simple verifier, convert to miniKanren, get a solver
+% %     \end{center}
+% %     \vfill
+% %     \begin{center}
+% %         Problem: miniKanren may be slow. So convert it back!
+% %     \end{center}
+% % \end{frame}
+
+% % \begin{frame}[fragile]
+% %   \frametitle{Relational Programming}
+
+% %     \begin{center}
+% %         Subset of logic programming, focus on pure relations
+% %     \end{center}
+% %     \vfill
+% %     \begin{center}
+% %         Extra-logical features (cuts, side-effects, search order manipulation) discouraged
+% %     \end{center}
+% %     \vfill
+% %     \begin{center}
+% %         Interleaving search guarantees that all answers are found
+% %     \end{center}
+% % \end{frame}
+
+% % \begin{frame}[fragile]
+% %   \frametitle{miniKanren}
+% %     \begin{center}
+% %         miniKanren is a simple relational language designed to be implemented as shallow embedding.
+% %     \end{center}
+% %     \input{fig/kanrenIntro}
+% % \end{frame}
+
+
+% % \begin{frame}[fragile]
+% %   \frametitle{Functional Conversion}
+% % \begin{center}
+% %   Given a relation and a principal direction, construct a functional program that generates the same answers as \mk would
+% % \end{center}
+
+% % \vfill
+
+% % \begin{center}
+% %   Preserve the completeness of the search
+% % \end{center}
+
+% % \vfill
+
+% % \begin{center}
+% % Both inputs and outputs are expected to be ground
+% % \end{center}
+
+% % \vfill
+
+% % \begin{center}
+% %     Speed improvement: up to $3$ orders of magnitude on benchmark of mulltiplication
+% % \end{center}
+
+% % \end{frame}
+
+% \begin{frame}[fragile]
+%   \frametitle{Free Variables in Answers: Generators}
+% \begin{columns}
+%   \begin{column}[t]{0.49\textwidth}
+%     \input{fig/add/add.tex}
+
+%     \vspace{0.5cm}
+%     $\text{add}^{\circ}\ 1\ y\ z = \{z \mapsto S\ y\}$
+
+%     \vspace{0.5cm}
+
+%     \lstinline{genNat = [0, 1, 2,$\ldots$]}
+
+%     \vspace{0.5cm}
+
+%     \lstinline{addIOO 1 = [(0,1), (1,2), (2,3),$\ldots$]} 
+%   \end{column}
+%   \begin{column}[t]{0.49\textwidth}
+%     \input{fig/add/add_x.tex}
+%   \end{column}
+% \end{columns}
+% \end{frame}
+
+
+
+
+% \lstset{basicstyle=\small}
+
+% % \begin{frame}[fragile]
+% %   \frametitle{Predicates}
+% % \begin{columns}
+% %   \begin{column}[t]{0.48\textwidth}
+% %     \input{fig/add/add.tex}
+% %   \end{column}
+% %   \begin{column}[t]{0.5\textwidth}
+% %     \input{fig/add/add_x_y_z.tex}
+% %   \end{column}
+% % \end{columns}
+% % \end{frame}
+
+% \begin{frame}[fragile]
+%   \frametitle{Conversion Scheme}
+%   \begin{center}
+%     \input{fig/inverse/conversion.tex}
+
+%     % \begin{minipage}{0.4\textwidth}
+%     %   \begin{enumerate}
+%     %       \item Normalization
+%     %       \item Mode analysis
+%     %       \item Functional conversion
+%     %   \end{enumerate}
+%     % \end{minipage}
+%   \end{center}
+% \end{frame}
+
+
+% \begin{frame}[fragile]
+%   \frametitle{Normalization: Flat Term}
+% \begin{center}
+
+% Eliminate nested constructors and repeated variables
+
+% \end{center}
+
+%   \[  \FlatTerm = V \cup \{\Cons \, x_0 \ldots \, x_{k} \mid x_{j}\in V, x_j - distinct \} \]
+
+% \vfill
+
+% \begin{center}
+% \begin{tabular}{rcl}
+%  $C\left( x, y \right) \equiv C\left( C\left( v, u \right), w \right)$ & $\iff$ &  $x \equiv C\left(v, u \right) \land y \equiv w$ \\
+%  $add^{\circ}(x, x, z)$ & $\iff$ & $add^{\circ}\left( x, y, z \right) \land x \equiv y$
+% \end{tabular}
+% \end{center}
+
+% \end{frame}
+
+% \begin{frame}[fragile]
+%   \frametitle{Normalization: Goal}
+% \begin{center}
+%   Eliminate disjunctions within conjunctions
+% \end{center}
+
+% \vfill
+
+% \begin{center}
+% \setlength{\tabcolsep}{12pt}
+% \begin{tabular}{rclll}
+% $\KanN$ & $::=$ & $c_1 \vee \ldots \vee c_{n}$ & $c_{i}\in \Conj$ & \subdued{normal form} \\
+% $\Conj$ & $::=$ & $g_1 \wedge \ldots \wedge g_n$ & $ g_{i}\in \Base$ & \subdued{normal conjunction} \\
+% $\Base$ & $::=$ & $V \equiv \FlatTerm$ & & \subdued{flat unification} \\
+%         & $\mid$ & $R \, x_1 \ldots \, x_{k} $ & $ x_{j}\in V, x_j - distinct$ & \subdued{flat call} \\
+% \end{tabular}
+% \end{center}
+% \end{frame}
+
+
+% \begin{frame}[fragile]
+%   \frametitle{Modes --- Data Flow}
+% \begin{center}
+
+% \begin{tabular}{rl}
+%     \emph{Ground} term & \lstinline|S (S O)| \\
+%   \emph{Free} variable & \lstinline|x|
+% \end{tabular}
+
+% \vfill
+
+% Once a variable is \emph{ground}, it stays \emph{ground}
+% \end{center}
+
+% \vfill
+
+% \begin{center}
+% \[ \text{Mode} : \text{Inst} \mapsto \text{Inst} \] 
+% \vfill
+
+% \begin{tabular}{rl}
+%   Mode \lstinline|I|: & \lstinline|ground| $\rightarrow$ \lstinline|ground| \\
+%   Mode \lstinline|O|: & \lstinline|free| $\rightarrow$ \lstinline|ground|
+% \end{tabular}
+% \end{center}
+
+% \end{frame}
+
+% \begin{frame}[fragile]
+%   \frametitle{Modded Unification Types}
+
+% \begin{center}
+% \begin{tabular}{rl}
+%   assignment & $x^{\outmode} \equiv \Term^{\inmode} $ \\
+%   guard      & $x^{\inmode}  \equiv \Term^{\inmode} $ \\
+%   match      & $x^{\inmode}  \equiv \Term           $ \\
+%   generator  & $x^{\outmode} \equiv \Term           $
+% \end{tabular}
+% \end{center}
+
+% \end{frame}
+
+
+
+% \begin{frame}[fragile]
+%   \frametitle{Order in Conjunctions}
+% \input{fig/mult/order.tex}
+% \end{frame}
+
+
+% % \begin{frame}[fragile]
+% %   \frametitle{Order in Conjunctions: Slow Version}
+% % \begin{columns}
+% %   \begin{column}[t]{0.4\textwidth}
+% %     \input{fig/mult/mult.tex}
+% %   \end{column}
+% %   \begin{column}[t]{0.55\textwidth}
+% %     \input{fig/mult/mult_slow.tex}
+% %   \end{column}
+% % \end{columns}
+
+% % \begin{center}
+% %   Premature grounding of \lstinline{z$_1$} leads to the \emph{generate-and-test} behavior
+
+% %   $\Omega(x!)$ complexity.
+% % \end{center}
+
+% % \end{frame}
+
+
+% % \begin{frame}[fragile]
+% %   \frametitle{Order in Conjunctions: Faster Version}
+
+% % \begin{columns}
+% %   \begin{column}[t]{0.4\textwidth}
+% %     \input{fig/mult/mult.tex}
+% %   \end{column}
+% %   \begin{column}[t]{0.55\textwidth}
+% %     \input{fig/mult/mult_fast.tex}
+% %   \end{column}
+% % \end{columns}
+% % \begin{center}
+% %     $O(xy)$ complexity, $10$x faster than relational version
+% % \end{center}
+% % \end{frame}
+
+% \begin{frame}[fragile]
+%   \frametitle{Mode Inference: Ordering Heuristic}
+% \begin{center}
+% Priority:
+% \end{center}
+
+% \vfill
+
+% \begin{center}
+%   \begin{minipage}{0.4\textwidth}
+%     \begin{enumerate}
+%       \item Guard
+%       \item Assignment
+%       \item Match
+%       \item Recursion, same direction
+%       \item Call, some args ground
+%       \item Unification-generator
+%       \item Call, all args free
+%     \end{enumerate}
+%   \end{minipage}
+% \end{center}
+
+
+% \end{frame}
+
+% \begin{frame}[fragile]
+%   \frametitle{Ordering Heuristic: Example}
+% \input{fig/mult/order_no_badge.tex}
+% \end{frame}
+
+% \begin{frame}[fragile]
+%   \frametitle{Functional Conversion: Intermediate Language}
+% \begin{center}
+
+% \begin{tabular}{lcl @{\hspace{3\tabcolsep}} l }
+%     $\Fun$ & $=$ & $\Fun <|> \dots <|> \Fun$ & \subdued{interleaving}\\
+%                & $\mid$ & $\LIST{\left(\overline{V} \leftarrow \Fun\right)} $ & \subdued{monadic bind of streams}\\
+%                & $\mid$ & $\Rtrn \LIST{\Term}$ & \subdued{return a tuple of terms}\\
+%                & $\mid$ & $V == \Term$ & \subdued{equality check}\\
+%                & $\mid$ &  $case \ V \ of \ \Term \rightarrow \Fun$& \subdued{match a variable against a pattern}\\
+%                & $\mid$ & $R \ \overline{V} \ \overline{Gen_{G}}$ & \subdued{function call}\\
+%                & $\mid$ & $\Gen_{G}$ & \subdued{generator}
+% \end{tabular}
+% \end{center}
+% \end{frame}
+
+% \begin{frame}[fragile]
+%   \frametitle{Functional Conversion into Intermediate Language}
+% \begin{center}
+% \begin{tabular}{rcl}
+%   Disjunction   & $\rightarrow$ & $\Fun \Sum \ldots \Sum \Fun$ \\ && \\
+%   Conjunction   & $\rightarrow$ & $ \LIST{\left(\overline{V} \leftarrow \Fun\right)}$ \\ && \\
+%   Relation call & $\rightarrow$ & $ R\ \overline{V}\ \overline{Gen_{G}}$ \\ && \\
+%   Unification   & $\rightarrow$ & $\Rtrn \LIST{\Term}$ \\
+%                 & $|$           & $case\ V\ of\ \Term \to \Fun$ \\
+%                 & $|$           & $V \equiv \Term$ \\
+%                 & $|$           & $\Gen_{G}$
+% \end{tabular}
+% \end{center}
+% \end{frame}
+
+
+% \begin{frame}[fragile]
+%   \frametitle{Functional Conversion: Generators}
+% % \begin{center}
+% %   In the untyped miniKanren it is only possible to generate \emph{all terms}
+% % \end{center}
+
+% % \vfill
+
+% % \begin{center}
+% %   Instead pass generators to functions as additional arguments
+
+
+% %   It is up to the user what generator to pass
+% % \end{center}
+
+% % \input{fig/add/add_x_gen.tex}
+% \input{fig/inverse/gen_add.tex}
+% \[ add^{\circ}\ 1\ y\ z = \left[\{z \to S\ y\} \right] \] 
+% \end{frame}
+
+% \begin{frame}[fragile]
+%   \frametitle{Functional Conversion: Generators}
+% % \begin{center}
+% % We pass a generator for every variable in \emph{rhs} of a unification-generator
+% % \end{center}
+
+% % \begin{center}
+% % Generators used in calls should be passed to the parent function
+% % \end{center}
+
+% % \begin{center}
+% % In a typed version, it should be possible to automatically derive generators from types
+% % \end{center}
+
+% % \input{fig/mult/mult_y_gen.tex}
+% \input{fig/inverse/gen_mult.tex}
+% \end{frame}
+
+% % \begin{frame}[fragile]
+% %   \frametitle{Functional Conversion into the Target Languages}
+% % \begin{columns}
+% %   \begin{column}[t]{0.45\textwidth}
+
+% % \begin{center}
+% %   \haskell
+% % \end{center}
+
+% % \begin{center}
+% %   TemplateHaskell to generate code
+% % \end{center}
+
+% % \begin{center}
+% %   Stream monad
+% % \end{center}
+
+% % \begin{center}
+% %   do-notation
+% % \end{center}
+
+% % \begin{center}
+
+% % \end{center}
+
+% %   \end{column}
+% %   \begin{column}[t]{0.45\textwidth}
+% % \begin{center}
+% %   \ocaml
+% % \end{center}
+% % \begin{center}
+% %   Hand-crafted (not so) pretty-printer
+% % \end{center}
+
+% % \begin{center}
+% %   Stream monad
+% % \end{center}
+
+% % \begin{center}
+% %   let*
+% % \end{center}
+
+% % \begin{center}
+% %   Taking extra care to ensure laziness
+% % \end{center}
+
+% %   \end{column}
+% % \end{columns}
+% % \end{frame}
+
+% \begin{frame}[fragile]
+%   \frametitle{Relational Sort}
+% \begin{columns}
+%   \begin{column}[t]{0.49\textwidth}
+%     \input{fig/sort/sort_sort.tex}
+
+%     \vfill
+
+%     \begin{center}
+%       \begin{minipage}{0.4\textwidth}
+%         \begin{itemize}
+%           \item[\happyCheck] sorting
+%           \item[\timeout] permutations
+%         \end{itemize}
+%       \end{minipage}
+%     \end{center}
+
+%   \end{column}
+%   \begin{column}[t]{0.49\textwidth}
+%     \input{fig/sort/sort_perm.tex}
+
+%     \vfill
+
+%     \begin{center}
+%       \begin{minipage}{0.4\textwidth}
+%         \begin{itemize}
+%           \item[\timeout] sorting
+%           \item[\happyCheck] permutations
+%         \end{itemize}
+%       \end{minipage}
+%     \end{center}
+
+
+%   \end{column}
+% \end{columns}
+% \end{frame}
+
+% \begin{frame}[fragile]
+%   \frametitle{Relational Sort: Sorting}
+%     \input{fig/sort/sort_sort_table.tex}
+% \end{frame}
+
+
+% \begin{frame}[fragile]
+%   \frametitle{Relational Sort: Generating Permutations}
+%     \input{fig/sort/sort_perm_table.tex}
+% \end{frame}
+
+% \begin{frame}[fragile]
+%     \frametitle{Possible speedups}
+
+%     \begin{center}
+%         \begin{minipage}{0.4\textwidth}
+%             \begin{itemize}
+%                 \item Determinism
+%                 \item Partial deduction
+%             \end{itemize}
+%         \end{minipage}
+%     \end{center}
+% \end{frame}
+
+% \begin{frame}[fragile]
+%   \frametitle{\lstinline[basicstyle=\Large]{Maybe} for Semi-Determinism}
+% \begin{center}
+%   \begin{minipage}{0.43\textwidth}
+%     \input{fig/inverse/maybe_stream.tex}
+%     % \input{fig/mult/mult_y_z.tex}
+%   \end{minipage}
+% \end{center}
+% \end{frame}
+
+
+% \begin{frame}[noframenumbering]
+%   \frametitle{\lstinline[basicstyle=\Large]{Maybe} for Semi-Determinism}
+%   \begin{center}
+%   \begin{minipage}{0.43\textwidth}
+%     \input{fig/inverse/maybe.tex}
+%     % \input{fig/mult/mult_y_z_maybe.tex}
+%   \end{minipage}
+% \end{center}
+% \end{frame}
+
+% \begin{frame}[fragile]
+%   \frametitle{Need for Partial Deduction}
+
+% \begin{center}
+% \begin{minipage}{0.3\textwidth}
+%   \lstinline{run q (eval$^o$ q true)}
+
+%   \vspace{0.5cm}
+
+%   \lstinline{run q (eval_true$^o$ q)}
+% \end{minipage}
+
+
+% \end{center}
+
+
+% \end{frame}
+
+% \begin{frame}[fragile]
+%   \frametitle{Conclusion}
+% Conclusion
+%   \begin{itemize}
+%     \item We presented a functional conversion scheme
+%     \item The conversion speeds up implementations considerably
+%     \item We implemented the conversion scheme in Haskell
+%   \end{itemize}
+
+% \vfill
+
+% We are currently working on
+%   \begin{itemize}
+%     \item Determinism check
+%     \item Integration with partial deduction
+%     \item Integration into the framework of using relational interpreters for solving
+%   \end{itemize}
+% \end{frame}
+
+
+
+
+
+% \appendix
+
+% \begin{frame}[fragile]
+%     \frametitle{Functional Conversion: Example}
+%     \begin{columns}
+%         \begin{column}[t]{0.45\textwidth}
+%             \input{fig/add/add.tex}
+%         \end{column}
+%         \begin{column}[t]{0.55\textwidth}
+%             \input{fig/add/add_converted.tex}
+%         \end{column}
+%     \end{columns}
+% \end{frame}
+
+\backupbegin
+
+\backupend
+
+\end{document}

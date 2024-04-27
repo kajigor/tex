@@ -1,0 +1,12 @@
+\begin{figure}[!t]
+  \centering
+  \begin{minipage}{0.8\columnwidth}
+    \begin{lstlisting}[frame=tb]
+ addIIO $::$ Nat -> Nat -> Nat
+ addIIO x y =
+   case x of
+     O -> y
+     S x$_1$ -> S (addIIO x$_1$ y)
+    \end{lstlisting}
+  \end{minipage}
+\end{figure}

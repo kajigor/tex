@@ -1,0 +1,81 @@
+\tikzset{
+    block/.style={
+      rectangle, draw, minimum width = 2.5cm, minimum height=1.5cm, align=center
+        },
+}
+
+\tikzset{
+    block1/.style={
+      rectangle, draw, minimum width = 2.5cm, minimum height=1.5cm, align=center,color=violet
+        },
+}
+
+\newcommand{\fTo}[2]{
+  \draw[-Stealth,thick,color=teal] (#1) -- (#2);
+}
+
+
+\tikzset{onslide/.code args={<#1>#2}{% from https://tex.stackexchange.com/a/6155/263192
+  \only<#1>{\pgfkeysalso{#2}}
+}}
+
+\begin{center}
+  \begin{tikzpicture}[
+    every node/.style = {
+        inner sep=0pt
+      , shape=rectangle
+      }
+  ]
+
+      \coordinate (shift) at (2.8,-1.5);  
+
+      \node<2,3>[block] (mode) at ($(relInt)+(shift)$) {mode \\ analysis};
+      \node<1>[block1] (mode) at ($(relInt)+(shift)$) {mode \\ analysis};
+      
+      \node<1>[block1] (annotation) at ($(mode)+(shift)$) {binding time \\ analysis};
+      \node<2,3>[block] (annotation) at ($(mode)+(shift)$) {binding time \\ analysis};
+
+
+      \node<2>[block1] (deduction) at ($(annotation)+(shift)$) {partial \\ deduction};
+      \node<1,3>[block] (deduction) at ($(annotation)+(shift)$) {partial \\ deduction};
+      \node<1,2>[block] (haskell) at ($(deduction)+(shift)$) {functional \\ conversion to \\ \haskell};
+      \node<3>[block1] (haskell) at ($(deduction)+(shift)$) {functional \\ conversion to \\ \haskell};
+      
+      \node[] (p_o) at ($(mode.west)+(-0.6,0.2)$) {p$^o$};
+      \node[] (p_m) at ($(mode.west)!(annotation.north)!(mode.east)$) {p$^m$};
+      \node[] (p_a) at ($(annotation.west)!(deduction.north)!(annotation.east)$) {p$^a$};
+      \node[] (p_d) at ($(deduction.west)!(haskell.north)!(deduction.east)$) {p$^d$};
+      \node[] (p_h) at ($(haskell.east) + (0.6, 0)$) {p$^h$};
+
+      \node[] (dir) at ($(mode.west)+(-1.1,-0.3)$) {direction};
+      \node[align=center] (vars) at ($(deduction.west)+(-1.3,0)$) {values of \\ ground vars};
+
+      \fTo{p_o}{$(mode.west) + (0, 0.2)$};
+
+      \fTo{$(mode.east)$}{p_m};
+      \fTo{p_m}{annotation.north};
+
+      \fTo{$(annotation.east)$}{p_a};
+      \fTo{p_a}{deduction.north};
+
+      \fTo{$(deduction.east)$}{p_d};
+      \fTo{p_d}{haskell.north};
+
+      \fTo{dir}{$(mode.west) + (0.0,-0.3)$};
+      \fTo{vars}{$(deduction.west)$};
+      
+      \fTo{$(haskell.east)$}{p_h};
+
+      
+      \pause 
+      % \node[block] (mode) at ($(relInt)+(shift)$) {mode \\ analysis};
+      % \node[block] (annotation) at ($(mode)+(shift)$) {binding time \\ analysis};
+
+      \pause 
+      % \node[block] (deduction) at ($(annotation)+(shift)$) {partial \\ deduction};
+      
+
+  \end{tikzpicture}
+  \end{center}
+  
+  
