@@ -1,0 +1,59 @@
+\section{Introduction}
+
+Verifying a solution to a problem is much easier than finding one --- this common wisdom is known to anyone who has ever had the opportunity to both teach and learn~\cite{lozov2019relational}. 
+Consider the Tower of Hanoi, a well-known mathematical puzzle. 
+In it, you have three rods and a sequence of disks of various diameters stacked on one rod so that no disk lies on top of a smaller one, forming a pyramid.
+The task is then to move all disks on a different rod in such a way that: 
+\begin{itemize}
+    \item Only one disk can be moved at a time.
+    \item A move consists of taking a topmost disk from one stack and placing it on top of an empty rod or a different stack.
+    \item No bigger disk can be placed on top of a smaller disk. 
+\end{itemize}
+
+It is trivial to verify that a sequence of moves is legal, namely, that it does not break the pyramid invariant. 
+Searching for such a sequence is more convoluted, and writing a solver for this problem necessitates understanding of recursion and mathematical induction. 
+The same parallels can be drawn between other related tasks: interpretation of a program  is less involved than program synthesis; type checking is much simpler than type inhabitation problem.  
+And in these cases, the first problem can be viewed as a case of verification, while the other is search. 
+Luckily, there is a not-so-obvious duality between the two tasks.
+The process of finding a solution can be seen as an inversion of verification.
+
+There are many ways one can invert a program~\cite{SemanticsModifiers1,RevURA,aman2020foundations}. 
+One of them achieves the goal by using logic programming. 
+In this paradigm, each program is a specification based on formal logic. 
+The central point of the approach is that one specification can solve multiple problems by running appropriate queries, which is also known by running a program in different \emph{directions} or modes. 
+
+For example, a program \texttt{append xs ys zs} relates two lists \texttt{xs} and \texttt{ys} with their concatenation \texttt{zs}. 
+We can supply the program with two concrete lists and run the program in the forward direction to find the result of concatenation: \texttt{run q (append [1,2] [3] q)}, which results in a list \texttt{q = [1,2,3]}. 
+Moreover, we can run the program backwards by giving it only the value of the last argument: \texttt{run p, q (append p q [1,2])}.
+In this direction, the program searches for every pair of lists that can be concatenated to  evaluates to three possible answers: \texttt{\{<p = [], q = [1, 2]>; <p = [1], q = [2]>; <p = [1,2], q = []>\}}. 
+
+Now, consider a verifier written in a logic programming language for the Tower of Hanoi puzzle \texttt{verify moves isLegal}. 
+Given a specific sequence of moves, it will compute \texttt{isLegal = True} or \texttt{isLegal = False} based on whether the sequence is admissible. 
+However, if we execute the same verifier backwards, say \texttt{run q (verify q True)}, then it will find all possible legal sequences of moves, thus serving as a solver. 
+One neat feature is that one can generate a logic verifier from its functional implementation by relational conversion~\cite{lozov2018typed}, or unnesting. 
+Thus, one can implement a simple, often trivial, program that checks that a candidate is indeed a solution and then get a solver almost for free. 
+
+This verifier-to-solver approach is widely known in the pure logic (also called relational) programming community gathered around the \textsc{Kanren} language family~\cite{TheReasonedSchemer,byrd2017unified}. 
+These are light-weight, easily extendible, embedded languages aimed to bring the power of logic programming into general purpose languages. 
+They also implement the complete search strategy that is capable of finding every answer to a query, given enough time~\cite{kiselyov2005backtracking}.
+The last feature is what makes the programming style in \textsc{Kanren} pure and distinguishes it from the one in \textsc{Prolog} and other well-known logic languages. 
+No cuts or non-relational constructions are needed to make sure a relational program finds all answers, and for that reason, every program can be safely in any direction. 
+
+The caveat of the framework is its often poor performance when done in the naive way. 
+Firstly, execution time  of a relational program highly depends on its direction. 
+The verifiers created by unnesting inherently work fast only in the forward direction, not when they are run as solvers. 
+Secondly, there are associated costs of relational programming itself: from expensive unifications to the scheduling complexity~\cite{rozplokhas2022scheduling}. 
+Lastly, when a program is run as a solver, we often know some of its arguments. 
+For example, the solver for the Tower of Hanoi will always be executed with the argument \texttt{isLegal = True}. 
+
+A family of techniques called \emph{partial evaluation} are capable of mitigating some of the listed sources of inefficiency~\cite{de1999conjunctive,verbitskaia2021empirical}. 
+In this research, we have adapted several well-known partial evaluation algorithms for logic programming to work with \textsc{miniKanren} --- a minimal core relational language. 
+We have also developed a novel partial evaluation method called Conservative Partial Deduction.
+
+The goal of the research is to figure out what combination of partial evaluation techniques is capable of making the verifier-to-solver approach a reality. 
+
+
+
+
+
+

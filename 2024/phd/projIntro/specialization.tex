@@ -1,0 +1,42 @@
+\section{Specialization Efforts for \texttt{miniKanren}}
+
+Specialization, or partial evaluation, is an optimization technique that precomputes parts of program execution based on information known about a program before execution. 
+For example, consider a function \texttt{exp n x = if n == 0 then 1 else x * (exp (n - 1) x)} and imagine that we know from some context that it is always being called with the argument \texttt{n} equal to  \texttt{4}. 
+In this case, we can partially evaluate the function to \texttt{exp\_4 x = x * x * x * x * 1} that is more efficient than the original function called with \texttt{n = 4}. 
+Note, that a smart enough specializer can also be able to generate a function of form \texttt{exp\_4 x = let sqr = x * x in sqr * sqr} that makes even less multiplications. 
+
+This pattern can be expressed in a way that if there is a function with some of its arguments statically known \texttt{f x$_{static}$ y$_{dynamic}$}, it can be transformed into a more efficient function \texttt{f\_x$_{static}$} with its parts dependent on the static arguments precomputed.
+The resulting program must be equivalent to the original one, meaning that given the same dynamic arguments, it will return the same results: \texttt{f x$_{static}$ y$_{dynamic}$ == f\_x$_{static}$ y$_{dynamic}$}.
+
+In the field of logic programming, specialization is generally known as partial deduction. 
+Besides the values of static arguments, a partial deducer can also consider the information about a direction of a program or the interaction between logic variables in a conjunction of calls. 
+In addition to specialization, a relation with a given direction can be converted into a function in which expensive logic operations are replaced with streamlined functional counterparts. 
+In this project, we combine the two methods for the verifier-to-solver approach.
+
+\subsection{Conservative Partial Deduction}
+
+
+Conjunctive Partial Deduction was first developed by Michael Leuschel for \texttt{Prolog} in the ECCE system~\cite{de1999conjunctive}. 
+It makes use of the interaction between conjuncts for specialization, getting rid of some repeating traversals of data structures as a result. 
+We implemented this algorithm as a proof-of-concept for \texttt{miniKanren}, and found out that some of the specialization results were subpar.
+In some cases, the specialized programs had worse performance than the original ones. 
+
+Then, we formulated a different specialization method, which we called Conservative Partial Deduction. 
+The difference with CPD lies in the way conjunctions are treated. 
+They are split more often and thus generate smaller programs. 
+The method was able to achieve a 1.5-2 times performance increase on a propositional evaluator program and almost a 40 times performance increase on a type checker. 
+
+\subsection{Functional Conversion}
+
+Even after the partial deduction has finished, there are some sources of inefficiency that can be addressed. 
+The base of relational programming is unification, which is an expensive operation, especially if it runs occurs-check. 
+When a direction of a relation is known, mode analysis~\cite{somogyi1987system,smaus2000mode} can be run to determine data flow from the statically known variables. 
+As a result, most unifications can be converted into assignments, pattern matching or equality checks. 
+Besides that, we can reorder the calls within a conjunction to restrict the search space early. 
+
+In some cases, when the direction is deterministic, the relation can be transformed into a pure function with no overhead of the relational language. 
+However, if the direction results in multiple possible answers, we still need to express non-determinism. 
+This is possible in a functional programming language by using the \texttt{Stream} monad that is at the base of the relational programming. 
+We implemented a functional conversion method that gave the propositional evaluation program a 2.5-fold increase in performance.
+For some programs dealing with arithmetic, it improved performance by up to two orders of magnitude.
+
