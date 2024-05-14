@@ -23,9 +23,9 @@ In this paradigm, each program is a specification based on formal logic.
 The central point of the approach is that one specification can solve multiple problems by running appropriate queries, which is also known by running a program in different \emph{directions} or modes. 
 
 For example, a program \texttt{append xs ys zs} relates two lists \texttt{xs} and \texttt{ys} with their concatenation \texttt{zs}. 
-We can supply the program with two concrete lists and run the program in the forward direction to find the result of concatenation: \texttt{run q (append [1,2] [3] q)}, which results in a list \texttt{q = [1,2,3]}. 
+We can supply the program with two concrete lists and run the program in the forward direction to find the result of concatenation: \texttt{run q (append [1,2] [3] q)}, which is a list \texttt{q = [1,2,3]}. 
 Moreover, we can run the program backwards by giving it only the value of the last argument: \texttt{run p, q (append p q [1,2])}.
-In this direction, the program searches for every pair of lists that can be concatenated to  evaluates to three possible answers: \texttt{\{<p = [], q = [1, 2]>; <p = [1], q = [2]>; <p = [1,2], q = []>\}}. 
+In this direction, the program searches for every pair of lists that can be concatenated to \texttt{[1,2]}, and it evaluates to three possible answers: \texttt{\{<p = [], q = [1, 2]>; <p = [1], q = [2]>; <p = [1,2], q = []>\}}. 
 
 Now, consider a verifier written in a logic programming language for the Tower of Hanoi puzzle \texttt{verify moves isLegal}. 
 Given a specific sequence of moves, it will compute \texttt{isLegal = True} or \texttt{isLegal = False} based on whether the sequence is admissible. 
@@ -37,7 +37,7 @@ This verifier-to-solver approach is widely known in the pure logic (also called 
 These are light-weight, easily extendible, embedded languages aimed to bring the power of logic programming into general purpose languages. 
 They also implement the complete search strategy that is capable of finding every answer to a query, given enough time~\cite{kiselyov2005backtracking}.
 The last feature is what makes the programming style in \textsc{Kanren} pure and distinguishes it from the one in \textsc{Prolog} and other well-known logic languages. 
-No cuts or non-relational constructions are needed to make sure a relational program finds all answers, and for that reason, every program can be safely in any direction. 
+No cuts or non-relational constructions are needed to make sure a relational program finds all answers, and for that reason, every program can be safely run in any direction. 
 
 The caveat of the framework is its often poor performance when done in the naive way. 
 Firstly, execution time  of a relational program highly depends on its direction. 
@@ -46,11 +46,25 @@ Secondly, there are associated costs of relational programming itself: from expe
 Lastly, when a program is run as a solver, we often know some of its arguments. 
 For example, the solver for the Tower of Hanoi will always be executed with the argument \texttt{isLegal = True}. 
 
-A family of techniques called \emph{partial evaluation} are capable of mitigating some of the listed sources of inefficiency~\cite{de1999conjunctive,verbitskaia2021empirical}. 
+A family of optimization techniques called \emph{specialization}, or \emph{partial evaluation}, are capable of mitigating some of the listed sources of inefficiency~\cite{de1999conjunctive,verbitskaia2021empirical}. 
+Specialization precomputes parts of program execution based on information known about a program before execution. 
+For example, consider a function \texttt{exp n x = if n == 0 then 1 else x * (exp (n - 1) x)} and imagine that we know from some context that it is always being called with the argument \texttt{n} equal to  \texttt{4}. 
+In this case, we can partially evaluate the function to \texttt{exp\_4 x = x * x * x * x * 1} that is more efficient than the original function called with \texttt{n = 4}. 
+Note, that a smart enough specializer can also be able to generate a function of form \texttt{exp\_4 x = let sqr = x * x in sqr * sqr} that makes even less multiplications. 
+
+This pattern can be expressed in a way that if there is a function with some of its arguments statically known \texttt{f x$_{static}$ y$_{dynamic}$}, it can be transformed into a more efficient function \texttt{f\_x$_{static}$} with its parts dependent on the static arguments precomputed.
+The resulting program must be equivalent to the original one, meaning that given the same dynamic arguments, it will return the same results: \texttt{f x$_{static}$ y$_{dynamic}$ == f\_x$_{static}$ y$_{dynamic}$}.
+
+In the field of logic programming, specialization is generally known as partial deduction. 
+Besides the values of static arguments, a partial deducer can also consider the information about a direction of a program or the interaction between logic variables in a conjunction of calls. 
+In addition to specialization, a relation with a given direction can be converted into a function in which expensive logic operations are replaced with streamlined functional counterparts. 
+
+
 In this research, we have adapted several well-known partial evaluation algorithms for logic programming to work with \textsc{miniKanren} --- a minimal core relational language. 
 We have also developed a novel partial evaluation method called Conservative Partial Deduction.
+Then we combined it with the functional conversion in an effort to get even greater performance increase. 
 
-The goal of the research is to figure out what combination of partial evaluation techniques is capable of making the verifier-to-solver approach a reality. 
+The goal of the research is to determine what combination of partial evaluation techniques is capable of making the verifier-to-solver approach a reality. 
 
 
 
