@@ -1,0 +1,47 @@
+\begin{center}
+\begin{tikzpicture}[
+  every node/.style = {
+    shape=rectangle,
+    rounded corners=0.05cm,
+    draw,
+    align=center,
+    minimum size=5mm},
+  node distance=1.3em,
+  anchor=center
+]
+
+\node[inner sep=10pt,draw=none] (function) at (0,0) {
+\begin{minipage}{0.82\textwidth}
+\begin{lstlisting}[language=ocanren]
+ let rec is_path path =                 (* function *)
+   match path with 
+   | [], [_] -> true 
+   | u :: v :: t -> 
+       if edge u v 
+       then is_path (v :: t)
+       else false 
+\end{lstlisting}
+\end{minipage}}; 
+
+\node[inner sep=10pt,draw=none] (relation) at (0,-3.5) {
+\begin{minipage}{0.82\textwidth}
+\begin{lstlisting}[language=ocanren]
+ let rec path$^o$ v u p =     (* relational interpreter*)
+   (v === u /\ p === [v]) \/
+   (fresh (w p$_1$)
+     (edge$^o$ v w /\
+      path$^o$ w$_1$ u p$_1$ /\
+      p === v : p$_1$) )
+\end{lstlisting}
+\end{minipage}}; 
+
+  \node (unnesting) at ($(relation.north)!0.5!(function.south)$) [draw=none, xshift=-0.1cm] {relational conversion};
+  \draw [teal,thick,->] ($(function.south)+(-2,0.5)$) to [out=-90,in=90] ($(relation.north)+(-2,-0.5)$);
+
+  \node (verifier) at ($(relation.center)$) [draw=none, xshift=2cm, yshift=0.5cm,anchor=west] {verifier};
+  \draw [teal,thick,->] ($(relation.center)+(-0.5,0)$) to [out=0,in=180] ($(verifier.west)+(0,0)$);
+
+  \node (solver) at ($(relation.center)$) [draw=none, xshift=2cm, yshift=-0.5cm,anchor=west] {solver};
+  \draw [teal,thick,->] ($(relation.center)+(-0.5,0)$) to [out=0,in=180] ($(solver.west)+(0,0)$);
+  \end{tikzpicture}
+\end{center}

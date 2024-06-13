@@ -1,0 +1,45 @@
+\begin{center}
+\begin{tikzpicture}[
+  every node/.style = {
+    shape=rectangle,
+    rounded corners=0.05cm,
+    draw,
+    align=center,
+    minimum size=5mm},
+  node distance=1.3em,
+  anchor=center
+]
+  \node[inner sep=10pt,draw=none] (code) at (0,-1) {\begin{lstlisting}[language=ocanren,basicstyle=\ttfamily,backgroundcolor=\color{white}]
+let rec path$^o$ v u p = 
+  (v === u /\ p === []) \/
+  (fresh (w p$_1$)
+    (edge$^o$ v w /\
+     path$^o$ w$_1$ u p$_1$ /\
+     p === v : p$_1$) )
+    \end{lstlisting}};
+    \node (rel) [draw=none, right=of code, yshift=1.5cm] {relation};
+    \draw [teal,<-] ($(code.north)+(-0.2,-0.45)$) to [out=60,in=180] node[below, draw=none, teal] {} ($(rel.west)+(0,-0.1)$);
+    
+    \pause
+    \node (call) [draw=none, left=of code, yshift=-1.5cm] {relation call};
+    \draw [teal,<-] ($(code.south)+(-1.3,1.5)$) to [out=-180,in=45] node[below, draw=none, teal] {} ($(call.east)+(0,0)$);
+    \draw [teal,<-] ($(code.south)+(-1.3,1.1)$) to [out=-180,in=45] node[below, draw=none, teal] {} ($(call.east)+(0,0)$);
+    
+    \pause
+    \node (uni) [draw=none, left=of code, yshift=1.5cm] {term unification};
+    \draw [teal,<-] ($(code.west)+(1.4,0.75)$) to [out=150,in=-45] node[below, draw=none, teal] {} ($(uni.east)+(0,-0.1)$);
+    
+    \pause
+    \node (conj) [draw=none, right=of code, yshift=-1.5cm] {conjunction};
+    \draw [teal,<-] ($(code.east)+(-0.7,-0.75)$) to [out=2,in=120] node[below, draw=none, teal] {} ($(conj.west)+(0,0)$);
+    \draw [teal,<-] ($(code.east)+(-1.4,-0.25)$) to [out=0,in=120] node[below, draw=none, teal] {} ($(conj.west)+(0,0)$);
+    
+    \pause
+    \node (disj) [draw=none, right=of code, yshift=0cm] {disjunction};
+    \draw [teal,<-] ($(code.east)+(-0.4,0.7)$) to [out=0,in=180] node[below, draw=none, teal] {} ($(disj.west)+(0,0)$);
+    
+    \pause
+    \node (fresh) [draw=none, left=of code, yshift=0cm] {variable introduction};
+    \draw [teal,<-] ($(code.west)+(0.7,0.15)$) to [out=180,in=0] node[below, draw=none, teal] {} ($(fresh.east)+(0,0)$);
+\end{tikzpicture}
+\end{center}

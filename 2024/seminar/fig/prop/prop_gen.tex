@@ -1,0 +1,17 @@
+
+\begin{figure}[!t]
+  \centering
+  \begin{minipage}{0.7\textwidth}
+    \begin{lstlisting}[frame=tb] 
+  synth st res = do 
+    (u, v) <- [(u, v) | 
+      u <- [False, True], 
+      v <- [False, True], 
+      u && v == res]
+    x <- synth st u 
+    y <- synth st v 
+    return (Conj x y) 
+    ...
+    \end{lstlisting}
+  \end{minipage}
+\end{figure}

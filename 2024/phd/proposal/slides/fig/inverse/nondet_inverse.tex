@@ -1,0 +1,61 @@
+\tikzset{
+    domainnode/.style={
+        shape=ellipse,
+        draw, 
+        minimum width=1.5cm, 
+        minimum height=3cm
+        },
+}
+
+\newcommand{\point}[3]{
+  \node[] (point_#1_#3) at ($(#1.center)+(0,#2)$) {#3};
+}
+
+\newcommand{\fTo}[2]{
+  \draw[-Stealth,thick,color=teal] (#1) -- (#2);
+}
+
+\begin{center}
+  \begin{tikzpicture}[
+    every node/.style = {
+        inner sep=0pt
+      , shape=rectangle
+      }
+  ]
+
+      % \draw[help lines] (-7.5,-3.5) grid (7.5,3.5);
+      \node[domainnode] (from) at (-5,0) {};
+      \point{from}{1}{1};
+      \point{from}{0}{2};
+      \point{from}{-1}{3};
+
+      \node[domainnode] (to) at (-2,0) {};
+      \point{to}{1}{a};
+      \point{to}{0}{b};
+      \point{to}{-1}{c};
+
+      \fTo{point_from_1}{point_to_b};
+      \fTo{point_from_2}{point_to_c};
+      \fTo{point_from_3}{point_to_c};
+
+      \node[] (p) at ($(from.east)!0.5!(to.west) + (0,1)$) {$p$};
+
+      \node[domainnode] (from1) at (2,0) {};
+      \point{from1}{1}{1};
+      \point{from1}{0}{2};
+      \point{from1}{-1}{3};
+
+      \node[domainnode] (to1) at (5,0) {};
+      \point{to1}{1}{a};
+      \point{to1}{0}{b};
+      \point{to1}{-1}{c};
+
+      \fTo{point_to1_b}{point_from1_1};
+      \fTo{point_to1_c}{point_from1_2};
+      \fTo{point_to1_c}{point_from1_3};
+
+      \node[] (p1) at ($(from1.east)!0.5!(to1.west) + (0,1)$) {$p^{-1}$};
+
+  \end{tikzpicture}
+  \end{center}
+  

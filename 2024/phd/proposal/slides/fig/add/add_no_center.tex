@@ -1,0 +1,10 @@
+\begin{minipage}[t]{0.35\columnwidth}
+  \begin{lstlisting}[frame=tb]
+ let rec add$^o$ x y z = conde [
+   (x === O /\ y === z);
+   (fresh (x$_1$ z$_1$)
+     (x === S x$_1$ /\
+      add$^o$ x$_1$ y z$_1$ /\
+      z === S z$_1$) ) ]
+  \end{lstlisting}
+\end{minipage}

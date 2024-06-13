@@ -1,0 +1,57 @@
+\tikzset{
+    block/.style={
+      rectangle, draw, minimum width = 2.5cm, minimum height=1.5cm, align=center
+        },
+}
+
+\newcommand{\fTo}[2]{
+  \draw[-Stealth,thick,color=teal] (#1) -- (#2);
+}
+
+\begin{center}
+  \begin{tikzpicture}[
+    every node/.style = {
+        inner sep=0pt
+      , shape=rectangle
+      }
+  ]
+
+      \coordinate (shift) at (2.8,-1.5);  
+
+      \node[block] (relInt) at ($(shift)$) {relational \\ conversion};
+      \node[block] (spec) at ($(relInt)+(shift)$) {specialization};
+      \node[block] (funCon) at ($(spec)+(shift)$) {functional \\ conversion};
+
+      \node[] (args) at ($(spec.west)!(relInt.south)!(spec.east)$) {args};
+      \node[] (dir) at ($(funCon.west)!(spec.south)!(funCon.east)$) {direction};
+
+      \node[] (p_m) at ($(relInt.west)!(spec.north)!(relInt.east)$) {p$^o$};
+      \node[] (p_i) at ($(spec.west)!(funCon.north)!(spec.east)$) {p$^s$};
+
+      \node[] (p) at ($(relInt.west)+(-0.6,0)$) {$p$};
+    
+      \node[anchor=west] (haskell) at ($(funCon.north east)+(1,0)$) {Haskell};
+      \node[anchor=west] (ocaml) at ($(funCon.east)+(1,0)$) {OCaml};
+      \node[anchor=west] (dots) at ($(funCon.south east)+(1,0)$) { $\ \dots$};
+
+      \fTo{$(relInt.east)$}{p_m};
+      \fTo{p_m}{spec.north};
+
+      \fTo{$(spec.east)$}{p_i};
+      \fTo{p_i}{funCon.north};
+
+      \fTo{p}{$(relInt.west)$};
+
+      \fTo{args}{$(spec.west)$};
+
+      \fTo{dir}{$(funCon.west)$};
+
+
+      \fTo{funCon.east}{$(haskell.west)$};
+      \fTo{funCon.east}{$(ocaml.west)$};
+      \fTo{funCon.east}{$(dots.west)$};
+
+  \end{tikzpicture}
+  \end{center}
+  
+  

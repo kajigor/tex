@@ -1,0 +1,32 @@
+\begin{center}
+  \begin{tikzpicture}[
+    every node/.style = {
+      shape=rectangle,
+      rounded corners=0.05cm,
+      draw,
+      align=center,
+      minimum size=5mm},
+    node distance=1.3em,
+    anchor=center
+  ]
+    \node[inner sep=10pt,draw=none] (code) at (0,0) {
+      \begin{minipage}{0.59\columnwidth}
+      \begin{lstlisting}[frame=tb]
+ addIOO $::$ Nat -> Stream Nat -> Stream (Nat, Nat)
+ addIOO x gen$_y$ =
+   case x of
+     O -> do
+       y <- gen$_y$
+       return (y, y)
+     S x$_1$ -> do
+       (y, z$_1$) <- addIOO x$_1$ gen$_y$
+       return (y, S z$_1$)
+       \end{lstlisting}
+      \end{minipage}
+    };
+    \draw [teal,-Stealth] ($(code.center)+(-1.6,0.2)$) to [out=40,in=-30] node[below, draw=none, teal] {} ($(code.north)+(-2,-1.1)$);
+    \draw [teal,-Stealth] ($(code.center)+(-1.6,0.2)$) to [out=40,in=130] node[below, draw=none, teal] {} ($(code.south)+(0.5,1.4)$);
+      
+  \end{tikzpicture}
+  \end{center}
+  

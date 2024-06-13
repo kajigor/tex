@@ -1,0 +1,12 @@
+\begin{figure}[!t]
+  \centering
+  \begin{minipage}{0.36\columnwidth}
+    \begin{lstlisting}[frame=tb]
+ let rec add$^o$ x$^{\inmode}$ y$^{\inmode}$ z$^{\outmode}$ = conde [
+   (x$^{\inmode}$  === O /\ y$^{\inmode}$ ===  z$^{\outmode}$);
+   (x$^{\inmode}$ ===  S x$_1^{\whatmode}$ /\
+    add$^o$ x$_1^{\whatmode}$ y$^{\inmode}$ z$_1^{\whatmode}$ /\
+    z$^{\outmode}$ ===  S z$_1^{\whatmode}$)]
+    \end{lstlisting}
+  \end{minipage}
+\end{figure}

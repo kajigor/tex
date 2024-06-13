@@ -1,0 +1,1126 @@
+\documentclass[xcolor={dvipsnames}, aspectratio=169]{beamer}
+\usepackage{beamerthemesplit}
+\usepackage{wrapfig}
+\usetheme{SPbGU}
+\usepackage{pdfpages}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{cmap}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{indentfirst}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,arrows.meta,automata,positioning,quotes,backgrounds,decorations.text,decorations.pathmorphing}
+\usepackage{multirow}
+\usepackage[noend]{algpseudocode}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{fancyvrb}
+\usepackage[linguistics]{forest}
+\usepackage{listings}
+\usepackage{multicol}
+\usepackage{comment}
+\usepackage{xspace}
+\usepackage{adjustbox}
+\usepackage{makecell}
+\usepackage{ stmaryrd }
+\usepackage{ulem}
+\usepackage{wasysym}
+\usepackage{amssymb}
+\usepackage{pifont}
+\usepackage{animate}
+\definecolor{ForestGreen}{RGB}{34,139,34}
+
+\input{packages}
+
+
+\newcommand{\cmark}{\textcolor{green}{\ding{51}}}
+\newcommand{\xmark}{\textcolor{red}{\ding{55}}}
+
+\newcommand{\todelete}[1]{{\color{red}{#1}}}
+
+\newcommand{\subdued}[1]{{\color{gray}{#1}}}
+
+\newcommand{\backupbegin}{
+   \newcounter{finalframe}
+   \setcounter{finalframe}{\value{framenumber}}
+}
+\newcommand{\backupend}{
+   \setcounter{framenumber}{\value{finalframe}}
+}
+
+\newcommand{\happyCheck}{\color{green}{\checkmark}}
+\newcommand{\timeout}{\color{red}{\clock}}
+
+\newcommand{\makenote}[1]{\hfill \footnotesize{#1}}
+\newcommand{\strikeoutnote}[1]{\makenote{\strikethrough{#1}}}
+\newcommand{\strikethrough}[1]{\sout{#1}}
+
+\newcommand{\lststrikethrough}[1]{\ttfamily\sout{#1}}
+
+\newcolumntype{A}{>{\hb@xt@\z@\bgroup\hss}r<{\egroup}}
+\newcolumntype{B}{>{\hb@xt@\z@\bgroup}l<{\hss\egroup}}
+
+\setbeamertemplate{itemize item}[circle]
+\setbeamertemplate{enumerate items}[circle]
+
+\lstdefinelanguage{ocanren1}{
+  basicstyle = {\ttfamily \color{black}},
+  keywords=[1]{return, do, where, case, run, conde, fresh, let, match, with, when, class,
+  object, method, of, rec, repeat, until, while, \begin{comment}not,\end{comment} do, done, as, val, inherit,
+  new, module, sig, deriving, datatype, struct, if, then, else, open, private, virtual, include, success, failure,
+  true, false, mplus},
+  keywords=[2]{safe},
+  keywords=[3]{unsafe},
+  sensitive=true,
+  commentstyle=\small\itshape\ttfamily,
+  keywordstyle=[1]\color{blue},
+  keywordstyle=[2]\color{ForestGreen},
+  keywordstyle=[3]\color{violet},
+  identifierstyle=\ttfamily,
+  basewidth={0.5em,0.5em},
+  columns=flexible,
+  mathescape=true,
+  escapechar=~,
+  fontadjust=true,
+  literate={fun}{{$\lambda$}}1 {function}{function}8 {->}{{$\to$}}3 {<-}{{$\leftarrow$}}3 {===}{{$\equiv$}}1 {=/=}{{$\not\equiv$}}1 {|>}{{$\triangleright$}}3 {\\/}{{$\vee$}}2 {/\\}{{$\wedge$}}2 {^}{{$\uparrow$}}1,
+  morecomment=[s]{(*}{*)},
+  moredelim=**[is][\color{red}]{@!}{@}
+}
+
+\lstdefinelanguage{ocanren}{
+  basicstyle = {\ttfamily \color{black} \footnotesize},
+  keywords=[1]{return, do, where, case, run, conde, fresh, let, match, with, when, class,
+  object, method, of, rec, repeat, until, while, \begin{comment}not,\end{comment} do, done, as, val, inherit,
+  new, module, sig, deriving, datatype, struct, if, then, else, open, private, virtual, include, success, failure,
+  true, false, mplus, data, instance},
+  backgroundcolor = {\color{Orchid!10}},
+  keywords=[2]{safe},
+  keywords=[3]{unsafe},
+  sensitive=true,
+  commentstyle=\small\itshape\ttfamily,
+  keywordstyle=[1]\color{blue},
+  keywordstyle=[2]\color{ForestGreen},
+  keywordstyle=[3]\color{violet},
+  identifierstyle=\ttfamily,
+  basewidth={0.5em,0.5em},
+  columns=flexible,
+  mathescape=true,
+  escapechar=~,
+  fontadjust=true,
+  literate={fun}{{$\lambda$}}1 {function}{function}8 {->}{{$\to$}}3 {<-}{{$\leftarrow$}}3 {===}{{$\equiv$}}1 {=/=}{{$\not\equiv$}}1 {\\/}{{$\vee$}}2 {/\\}{{$\wedge$}}2 {^}{{$\uparrow$}}1,
+  morecomment=[s]{(*}{*)},
+  moredelim=**[is][\color{red}]{@!}{@}
+}
+
+% \lstset{
+%   language=ocanren
+% }
+
+
+\lstdefinelanguage{imperative}{
+  basicstyle = {\ttfamily \color{black}},
+  backgroundcolor = {\color{white}},
+  keywordstyle = {\color{blue}},
+  keywordstyle = [2]{\color{ForestGreen}},
+  keywords = {while, do, if, then, return, procedure, for, fun, else}, 
+  morekeywords = [2]{true, false, none},
+}
+
+\lstdefinelanguage{racket}{
+  basicstyle = {\ttfamily \color{black} \footnotesize},
+  backgroundcolor = {\color{Emerald!10}},
+  keywordstyle = {\color{blue}},
+  keywordstyle = [2]{\color{ForestGreen}},
+  keywords = {while, do, if, then, return, procedure}, 
+  morekeywords = [2]{true, false, none},
+}
+
+\lstdefinelanguage{logic}{
+  basicstyle = {\ttfamily \color{black} \footnotesize},
+  backgroundcolor = {\color{SkyBlue!10}},
+  keywordstyle = {\color{blue}},
+  keywordstyle = [2]{\color{ForestGreen}},
+  keywords = {while, do, if, then, return, procedure}, 
+  morekeywords = [2]{start, end},
+}
+
+\lstdefinelanguage{query}{
+  basicstyle = {\ttfamily \color{black}},
+  backgroundcolor = {\color{Periwinkle!10}},
+  keywordstyle = {\color{blue}},
+  keywordstyle = [2]{\color{ForestGreen}},
+  keywords = {true, false}, 
+  otherkeywords={<-,->},
+  morekeywords = [2]{<-, ->, nondeterminism, predicate,ignore},
+}
+
+
+\lstdefinestyle{mystyle}
+{
+    language = C++,
+    basicstyle = {\ttfamily \color{black}},
+    backgroundcolor = {\color{white}},
+    stringstyle = {\color{blue}},
+    keywordstyle = {\color{green}},
+    keywordstyle = [2]{\color{lime}},
+    keywordstyle = [3]{\color{yellow}},
+    keywordstyle = [4]{\color{teal}},
+    otherkeywords = {;,<<,>>,++},
+    morekeywords = [2]{true, false},
+    morekeywords = [3]{<<, >>},
+    morekeywords = [4]{++},
+}
+
+\tikzstyle{processTree} = [
+  ->,
+  sibling distance=15em,
+  scale=0.6,
+  every node/.style = {
+    shape=rectangle,
+    rounded corners=0.05cm,
+    draw,
+    align=center,
+    minimum size=5mm,
+    scale=0.6,},
+  %level 1/.style={sibling distance=100em}
+  ]
+
+
+\tikzstyle{program} = [
+  draw=black,
+  thick,
+  rectangle,
+  rounded corners=1pt,
+  inner sep=5pt,
+  inner ysep=5pt
+  ]
+
+\tikzstyle{goal} = [
+  draw=black,
+  rectangle,
+  rounded corners=1pt,
+  inner ysep=0pt,
+  ]
+
+\tikzstyle{input} = [
+  draw=none,
+  rectangle,
+  rounded corners=1pt,
+  inner sep=2pt,
+  inner ysep=2pt,
+  fill=green!10,
+  minimum height=5mm
+  ]
+
+
+\tikzstyle{transparent} = [
+  draw=none,
+  inner ysep=3pt
+  ]
+
+
+
+\DeclareMathOperator{\Term}{\mathcal{T}}
+\DeclareMathOperator{\FlatTerm}{\mathcal{FT}}
+\DeclareMathOperator{\Var}{\mathbf{Var}}
+\DeclareMathOperator{\Cons}{\mathcal{C}}
+\DeclareMathOperator{\Kan}{\mathcal{G}}
+\DeclareMathOperator{\Fresh}{\mathbf{Fresh}}
+\DeclareMathOperator{\Delay}{\mathbf{Delay}}
+\DeclareMathOperator{\Cll}{\mathbf{Call}}
+\DeclareMathOperator{\Def}{\mathcal{D}}
+\DeclareMathOperator{\Base}{\mathbf{Base}}
+\DeclareMathOperator{\Conj}{\mathbf{Conj}}
+\DeclareMathOperator{\free}{\mathbf{free}}
+\DeclareMathOperator{\ground}{\mathbf{ground}}
+\DeclareMathOperator{\In}{\mathbf{In}}
+\DeclareMathOperator{\Out}{\mathbf{Out}}
+\DeclareMathOperator{\Fun}{\mathcal{F}}
+\DeclareMathOperator{\Rtrn}{\mathbf{return}}
+\DeclareMathOperator{\Bind}{\mathbf{Bind}}
+\DeclareMathOperator{\Match}{\mathbf{Match}}
+\DeclareMathOperator{\Sum}{\mathbf{<|>}}
+\DeclareMathOperator{\Guard}{\mathbf{Guard}}
+\DeclareMathOperator{\Gen}{\mathbf{Gen}}
+\DeclareMathOperator{\Stream}{\mathit{Stream}}
+\DeclareMathOperator{\vars}{vars}
+\DeclareMathOperator{\inmode}{\mathtt{I}}
+\DeclareMathOperator{\outmode}{\mathtt{O}}
+\DeclareMathOperator{\whatmode}{\mathtt{?}}
+% \DeclareMathOperator{\inmode}{g \rightarrow g}
+% \DeclareMathOperator{\outmode}{f \rightarrow g}
+% \DeclareMathOperator{\mode1}{mode}
+% \DeclareMathOperator{\Mode1}{\mathcal{M}}
+\newcommand{\KanN}{\mathcal{K}^{N}}
+\newcommand{\tran}[1]{\left\llbracket #1 \right\rrbracket}
+\newcommand{\LIST}[1]{ #1^*}
+\renewcommand{\emptyset}{\varnothing}
+\newcommand{\mk}{\textsc{miniKanren}\xspace}
+\newcommand{\ocaml}{\textsc{OCaml}\xspace}
+\newcommand{\haskell}{\textsc{Haskell}\xspace}
+\renewcommand{\and}{$\&$\xspace}
+\newcommand{\rel}[2]{\texttt{#1}$^o$ #2}
+\newcommand{\subst}[1]{$\langle$#1$\rangle$}
+\newcommand{\sem}[1]{\llbracket #1 \rrbracket}
+
+\lstset{moredelim=[is][\bfseries]{[*}{*]}}
+
+\beamertemplatenavigationsymbolsempty
+
+\title[Relational Programming through Specialization]{Enabling Relational Programming through Specialization}
+\subtitle{}
+\institute[Jetbrains Research]{
+JetBrains Research, Programming Lanuages and Program Analysis Lab \\
+Constructor University, Bremen
+}
+
+\author[Ekaterina Verbitskaia]{Ekaterina Verbitskaia}
+
+\date{June 5, 2024}
+
+\definecolor{orange}{RGB}{179,36,31}
+
+\begin{document}
+{
+\begin{frame}[fragile]
+   \begin{center}
+      \includegraphics[height=1.5cm]{pictures/jetbrainsResearch.pdf}
+    \end{center}
+  \titlepage
+\end{frame}
+}
+
+\begin{frame}[fragile]
+  \frametitle{Find Reachable Vertices}
+  \begin{columns}    
+    \begin{column}{0.35\textwidth}
+      \centering
+      \includegraphics[width=0.8\textwidth]{pic/reachable.jpg}
+    \end{column} \pause
+    \begin{column}{0.75\textwidth} 
+      \begin{lstlisting}[language=imperative]
+    procedure DFS(G, v) = 
+      S.push(v)
+      while !S.empty do
+        v = S.pop()
+        if (!seen[v]) then
+          seen.add(v)
+          for (_, w) in G.edges(v) do 
+            S.push(w)
+          \end{lstlisting}
+        \end{column}
+        \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Find Reachable Vertices}
+  \begin{columns}    
+    \begin{column}{0.35\textwidth}
+      \centering
+      \includegraphics[width=0.8\textwidth]{pic/reachableAns.jpg}
+    \end{column}
+    \begin{column}{0.75\textwidth} 
+      \begin{lstlisting}[language=imperative]
+    procedure DFS(G, v) = 
+      S.push(v)
+      while !S.empty do
+        v = S.pop()
+        if (!seen[v]) then
+          seen.add(v)
+          for (_, w) in G.edges(v) do 
+            S.push(w)
+      \end{lstlisting}
+    \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Find a Path}
+  \begin{columns}    
+    \begin{column}{0.35\textwidth}
+      \centering
+      \includegraphics[width=0.8\textwidth]{pic/path.jpg}
+    \end{column} \pause
+    \begin{column}{0.75\textwidth} 
+      \begin{lstlisting}[language=imperative]
+    procedure DFS(G, v, u) = 
+      S.push(v, [])
+      while !S.empty do
+        if (v == u) then return path
+        (v, path) = S.pop()
+        if (!seen[v]) then
+          seen.add(v)
+          for (_, w) in G.edges(v) do 
+            S.push(w, path.add(w))
+        return none
+      \end{lstlisting}
+    \end{column}
+    \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Find a Path}
+  \begin{columns}    
+    \begin{column}{0.35\textwidth}
+      \centering
+      \includegraphics[width=0.8\textwidth]{pic/pathAns.jpg}
+    \end{column}
+    \begin{column}{0.75\textwidth} 
+      \begin{lstlisting}[language=imperative]
+    procedure DFS(G, v, u) = 
+      S.push(v)
+      path.push(v)
+      while !S.empty do
+        if (v == u) then return path
+        v = S.pop()
+        if (!seen[v]) then
+          seen.add(v)
+          for (_, w) in G.edges(v) do 
+            S.push(w)
+        path.pop()
+        return none
+      \end{lstlisting}
+    \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Find All Paths}
+  \begin{columns}    
+    \begin{column}{0.35\textwidth}
+      \centering
+      \includegraphics[width=0.8\textwidth]{pic/allPaths.jpg}
+    \end{column}
+    \begin{column}{0.75\textwidth} 
+      \begin{lstlisting}[language=imperative]
+
+      \end{lstlisting}
+    \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{What is a Path?}
+  \begin{columns}    
+    \begin{column}{0.35\textwidth}
+      \centering
+      \includegraphics[width=0.8\textwidth]{pic/pathIs.jpg}
+    \end{column}
+    \begin{column}{0.75\textwidth} 
+\[
+\begin{array}{rcl}
+  path(v, u) &=& [v], if \, v = u \\ 
+             &|& \exists w: edge(v, w) \wedge path(w, u)
+\end{array}
+\]
+
+\pause 
+
+\begin{center}
+  \begin{minipage}{0.82\textwidth}
+    \begin{lstlisting}[language=logic,escapechar=@]
+path(V, V, [V]). 
+path(V, U, [V|P]) :- edge(V, W), path(W, U, P).
+     @\color{ForestGreen}{|}@  @\color{ForestGreen}{|}@    @\color{ForestGreen}{|}@
+ start  end  @\color{ForestGreen}{path}@                      % Prolog
+    \end{lstlisting}
+  \end{minipage}  
+\end{center}
+    \end{column}
+    \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Logic Programming: Querying Paths}
+  \begin{columns}    
+    \begin{column}{0.35\textwidth}
+      \centering
+      \includegraphics[width=0.8\textwidth]{pic/graph.jpg}
+    \end{column}
+    \begin{column}{0.75\textwidth} 
+
+\begin{center}
+  \begin{minipage}{0.82\textwidth}
+    \begin{lstlisting}[language=logic]
+edge(a, b).
+edge(a, c).
+...
+edge(i, g).
+
+path(V, V, [V]). 
+path(V, U, [V|P]) :- edge(V, W), path(W, U, P).
+    \end{lstlisting}
+
+    \begin{lstlisting}[language=query,basicstyle=\footnotesize]
+? path(a, f, _).             ? path(a, h, _).
+true     <- predicate ->     false 
+                              
+? path(a, f, P).              
+
+P = [a, b, d, e, f]      
+P = [a, c, d, e, f]      <- nondeterminism
+false 
+    \end{lstlisting}
+  \end{minipage}
+\end{center}
+
+      \end{column}
+    \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Logic Programming: Querying Reachable Vertices}
+  \begin{columns}    
+    \begin{column}{0.35\textwidth}
+      \centering
+      \includegraphics[width=0.8\textwidth]{pic/graph.jpg}
+    \end{column}
+    \begin{column}{0.75\textwidth}       
+\begin{center}
+  \begin{minipage}{0.82\textwidth}
+    \begin{lstlisting}[language=logic]
+edge(a, b).
+edge(a, c).
+...
+edge(i, g).
+
+path(V, V, [V]). 
+path(V, U, [V|P]) :- edge(V, W), path(W, U, P).
+    \end{lstlisting}
+
+    \begin{lstlisting}[language=query,basicstyle=\footnotesize,escapechar=@]
+? path(a, X, _).
+             @\color{ForestGreen}{|}@ 
+X = a        ignore
+X = b 
+X = d 
+X = e
+X = f 
+false 
+    \end{lstlisting}
+  \end{minipage}
+\end{center}
+
+      \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Relational Programming in \mk}
+
+  \begin{columns}    
+    \begin{column}{0.35\textwidth}
+      \centering
+      \includegraphics[width=0.8\textwidth]{pic/edsl.jpg}
+    \end{column}
+    \begin{column}{0.75\textwidth}       
+\begin{center}
+  \begin{minipage}{0.82\textwidth}
+    \begin{lstlisting}[language=racket]
+(define (patho v u p)                 ; Racket
+  (fresh (w p1)
+    (conde
+      [(== v u) (== p `(,v))]
+      [(edge v w)
+       (patho w u p1)
+       (== p (cons v p1))])))
+
+(run* (q) (patho 'a 'e q))
+    \end{lstlisting}
+
+    \begin{lstlisting}[language=ocanren]
+ let rec path$^o$ v u p =                      (* OCaml *)
+   (v === u /\ p === [v]) \/
+   (fresh (w p$_1$)
+     (edge$^o$ v w /\
+       path$^o$ w$_1$ u p$_1$ /\
+       p === v : p$_1$) )
+         \end{lstlisting}
+  \end{minipage}
+\end{center}
+
+      \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{}
+
+\begin{center}
+  \Large \mk
+\end{center}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{The Anatomy of \mk}
+
+\input{fig/pathIntro.tex}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{The Semantics of \mk: Unification}
+
+\begin{columns}
+  \begin{column}{0.45\textwidth}
+    \[ f(x, A, g(z), y) \equiv f(h(A, y), A, g(B), y)\] 
+  
+    \vspace{-0.4cm}
+  
+    \[ \{x \mapsto h(A, y), z \mapsto B \} \]
+  
+    \vspace{0.8cm}
+  
+    \[ f(x, x) \equiv f(h(A, y), g(B))\] 
+
+    \vspace{-0.4cm}
+
+    \[ \emptyset \]
+  
+  \end{column}
+  
+  \begin{column}{0.45\textwidth}
+
+    \begin{lstlisting}[language=ocanren]
+ (===) :: Term -> Term -> Subst -> Subst 
+    \end{lstlisting}
+  \end{column}
+\end{columns}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{The Semantics of \mk: Stream}
+    \begin{lstlisting}[language=ocanren]
+data Stream a = Empty | Mature a (Stream a) 
+
+instance Alternative Stream where
+  empty = Empty
+
+  (Mature h tl) <|> y = Mature h (y <|> tl)
+  Empty         <|> y = y
+
+instance Monad Stream where
+  Empty >>= _ = mzero
+  Mature x xs >>= g = mplus (g x) (xs >>= g)
+
+(/\) = (>>=)
+(\/) = (<|>)
+    \end{lstlisting} 
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{}
+
+\begin{center}
+  \Large Solvers from Verifiers
+\end{center}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Verifiers}
+  \begin{columns}    
+    \begin{column}{0.35\textwidth}
+      \centering
+      \includegraphics[width=0.8\textwidth]{pic/verifier.jpg}
+    \end{column}
+    \begin{column}{0.75\textwidth} 
+      \begin{center}
+        \begin{minipage}{0.82\textwidth}
+      \begin{lstlisting}[language=ocanren]
+  let rec is_path path =
+    match path with 
+    | [], [_] -> true 
+    | u :: v :: t -> 
+        if edge u v 
+        then is_path (v :: t)
+        else false 
+      \end{lstlisting}
+    \end{minipage}
+  \end{center}      
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Solvers}
+  \begin{columns}    
+    \begin{column}{0.35\textwidth}
+      \centering
+      \includegraphics[width=0.8\textwidth]{pic/solver.jpg}
+    \end{column}
+    \begin{column}{0.75\textwidth} 
+      \begin{center}
+        \begin{minipage}{0.82\textwidth}
+      \begin{lstlisting}[language=ocanren]
+  let rec dfs ... = 
+    push stack ... 
+    while ...
+      ... pop stack 
+      if seen ...
+        ... dfs ...  
+      ... return ... 
+      \end{lstlisting}
+    \end{minipage}
+  \end{center}      
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Solvers from Verifiers}
+  \begin{columns}    
+    \begin{column}{0.35\textwidth}
+      \centering
+      \includegraphics[width=0.8\textwidth]{pic/kanren.jpg}
+    \end{column}
+    \begin{column}{0.75\textwidth} 
+\input{fig/solversFrom.tex}
+    \end{column}
+  \end{columns} 
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Solvers from Verifiers: Examples}
+  \begin{columns}    
+    \begin{column}{0.35\textwidth}
+      \centering
+      \includegraphics[width=0.8\textwidth]{pic/kanren.jpg}
+    \end{column}
+    \begin{column}{0.75\textwidth} 
+\input{fig/solversFromExamples.tex}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{The Issue}
+  \begin{columns}    
+    \begin{column}{0.35\textwidth}
+      \centering
+      \includegraphics[width=0.8\textwidth]{pic/slow.jpg}
+    \end{column} \pause
+    \begin{column}{0.75\textwidth} 
+    \begin{itemize}
+      \item Unifications are expensive
+      \item The order of conjunctions is finicky
+      \item But! We know something that can help
+    \end{itemize}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{}
+
+\begin{center}
+  \Large Specialization
+\end{center}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Specialization}
+
+  \begin{columns}    
+    \begin{column}{0.35\textwidth}
+      \centering
+      \includegraphics[width=0.8\textwidth]{pic/power.jpg}
+    \end{column}
+    \begin{column}{0.75\textwidth} 
+      \begin{lstlisting}[language=ocanren]
+ let rec power base exp = 
+   if exp == 0 
+   then 1 
+   else base * power base (exp - 1)
+          \end{lstlisting}
+
+          \begin{lstlisting}[language=ocanren]
+ let rec power_5 base =                    (* power base 5 *)
+   base * base * base * base * base 
+           \end{lstlisting}
+        \end{column}
+        \end{columns}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Specialization}
+
+  \begin{columns}    
+    \begin{column}{0.35\textwidth}
+      \centering
+      \includegraphics[width=0.8\textwidth]{pic/power.jpg}
+    \end{column}
+    \begin{column}{0.75\textwidth} 
+\[
+  program: I_{static} \times I_{dynamic} \to O 
+\]
+
+\[
+  program_{I_{static}}: I_{dynamic} \to O 
+\]
+
+\vspace{0.5cm}
+
+\begin{center}
+  Same outputs for the same inputs
+\end{center}
+        \end{column}
+        \end{columns}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Specialization for \mk}
+\input{fig/spec.tex}
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+  \frametitle{Specialization for \mk: Bird's Eye View}
+\input{fig/birdseye.tex}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Specialization for \mk: ConsPD}
+  \begin{center}
+    \begin{minipage}{0.8\textwidth}
+      \input{fig/propConsPD.tex}    
+    \end{minipage}
+  \end{center}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Evaluator of Logic Formulas: Order of Calls}
+  \begin{tikzpicture}[remember picture, overlay]
+
+    \node (a) [
+      program,
+      anchor=north,
+      yshift=-1.8cm
+    ]
+    at (current page.north)
+    {
+      \adjustbox{scale=0.8}
+      {
+        \begin{minipage}[c]{\textwidth}
+          \input{fig/prop/propDef.tex}
+        \end{minipage}
+      }
+    };
+
+    \node (b) [
+      transparent,
+      anchor=south]
+      at (a.north)
+    {\footnotesize
+        boolean connective last
+    };
+
+    \node[draw=none, fill=green!50, opacity=0.2, shape=rectangle, minimum width=1.3cm,minimum height=0.45cm, anchor=west] at ($(a.south)+(-0.85,1.3)$) {};
+    \node[draw=none, fill=green!50, opacity=0.2, shape=rectangle, minimum width=1.7cm,minimum height=0.9cm, anchor=west] at ($(a.south)+(1.75,0.7)$) {};
+
+
+    \node (c) [
+      program,
+      anchor=south,
+      yshift=0.8cm
+    ]
+    at (current page.south)
+    {
+      \adjustbox{scale=0.8}
+      {
+        \begin{minipage}[c]{\textwidth}
+          \input{fig/prop/propDef1.tex}
+        \end{minipage}
+      }
+    };
+
+    \node[draw=none, fill=green!50, opacity=0.2, shape=rectangle, minimum width=1.3cm,minimum height=0.45cm, anchor=west] at ($(c.south)+(-3.05,1.35)$) {};
+    \node[draw=none, fill=green!50, opacity=0.2, shape=rectangle, minimum width=1.7cm,minimum height=0.85cm, anchor=west] at ($(c.south)+(-2.6,0.7)$) {};
+
+
+    \node (d) [
+      transparent,
+      anchor=south]
+      at (c.north)
+    {\footnotesize
+      boolean connective first
+    };
+    \onslide<1->
+  \end{tikzpicture}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Evaluator of Logic Formulas: Evaluation}
+\begin{table}[!h]
+  \resizebox{0.65\textwidth}{!}{
+    \begin{minipage}{\textwidth}
+      \centering
+      \begin{tabular}{c||c||c}
+                        & Implementation & Placement \\ \hline\hline
+      \emph{FirstPlain} & table-based    & before \\ \hline
+      \emph{LastPlain}  & table-based    & after  \\ \hline
+      \emph{FirstNando} & via nand$^o$   & before \\ \hline
+      \emph{LastNando}  & via nand$^o$   & after  \\
+      \end{tabular}
+      \caption{Different implementations of eval$^o$}
+    \end{minipage}
+  }
+\label{tbl:eval}
+\end{table}
+
+\begin{center}
+  \includegraphics[width=0.45\textwidth]{fig/prop/prop.pdf}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{}
+
+\begin{center}
+  \Large Functional Conversion
+\end{center}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Functional Conversion}
+
+\input{fig/conversionScheme.tex}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Example: Addition in the Forward Direction}
+\begin{columns}
+  \begin{column}[t]{0.49\textwidth}
+    \input{fig/add/add.tex}
+    \[ \text{add}^{\circ}\ 0\ 1\ z = \{z \mapsto 1\}\]
+  \end{column}
+  \begin{column}[t]{0.49\textwidth}
+    \input{fig/add/add_x_y.tex}
+    \[ \text{addIIO}\ 0\ 1 = 1 \] 
+  \end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Addition in the Backward Direction: Nondeterminism}
+\begin{columns}
+  \begin{column}[t]{0.49\textwidth}
+    \input{fig/add/add.tex}
+  \end{column}
+  \begin{column}[t]{0.49\textwidth}
+    \input{fig/add/add_z.tex}
+  \end{column}
+\end{columns}
+
+\vfill
+$\text{add}^{\circ}\ x\ y\ 1 = \left[\{x \mapsto  0, y \mapsto  1\}, \{x \mapsto  1, y \mapsto  0\} \right]$
+
+\vfill
+
+\lstinline{addOOI 1 = [(0,1), (1,0)]}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Free Variables in Answers: Generators}
+\begin{columns}
+  \begin{column}[t]{0.49\textwidth}
+    \input{fig/add/add.tex}
+
+    \vspace{0.5cm}
+    $\text{add}^{\circ}\ 1\ y\ z = \{z \mapsto S\ y\}$
+
+    \vspace{0.5cm}
+
+    \lstinline{genNat = [0, 1, 2, ...]}
+
+    \vspace{0.5cm}
+
+    \lstinline{addIOO 1 = [(0,1), (1,2), (2,3), ...]} 
+  \end{column}
+  \begin{column}[t]{0.49\textwidth}
+    \input{fig/add/add_x.tex}
+  \end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Modes: Data Flow}
+\begin{center}
+
+\begin{tabular}{rl}
+    \emph{Ground} term & \lstinline|S (S O)| \\
+  \emph{Free} variable & \lstinline|x|
+\end{tabular}
+
+\vfill
+
+Once a variable is \emph{ground}, it stays \emph{ground}
+\end{center}
+
+\vfill
+
+\begin{center}
+\[ \text{Mode} : \text{Inst} \mapsto \text{Inst} \] 
+\vfill
+
+\begin{tabular}{rl}
+  Mode \lstinline|I|: & \lstinline|ground| $\rightarrow$ \lstinline|ground| \\
+  Mode \lstinline|O|: & \lstinline|free| $\rightarrow$ \lstinline|ground|
+\end{tabular}
+\end{center}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Modded Unification Types}
+
+\begin{center}
+\begin{tabular}{rl}
+  assignment & $x^{\outmode} \equiv \Term^{\inmode} $ \\
+  guard      & $x^{\inmode}  \equiv \Term^{\inmode} $ \\
+  match      & $x^{\inmode}  \equiv \Term           $ \\
+  generator  & $x^{\outmode} \equiv \Term           $
+\end{tabular}
+\end{center}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Order in Conjunctions}
+\input{fig/badBadge.tex}
+\input{fig/goodBadge.tex}
+\input{fig/mult/order.tex}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Mode Inference: Ordering Heuristic}
+
+\begin{center}
+  \begin{minipage}{0.4\textwidth}
+    \begin{enumerate}
+      \item Guard
+      \item Assignment
+      \item Match
+      \item Recursion, same direction
+      \item Call, some args ground
+      \item Unification-generator
+      \item Call, all args free
+    \end{enumerate}
+  \end{minipage}
+\end{center}
+
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Ordering Heuristic: Example}
+\input{fig/mult/order_no_badge.tex}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Relational Sort}
+\begin{columns}
+  \begin{column}[t]{0.49\textwidth}
+    \input{fig/sort/sort_sort.tex}
+
+    \vfill
+
+    \begin{center}
+      \begin{minipage}{0.4\textwidth}
+        \begin{itemize}
+          \item[\happyCheck] sorting
+          \item[\timeout] permutations
+        \end{itemize}
+      \end{minipage}
+    \end{center}
+
+  \end{column}
+  \begin{column}[t]{0.49\textwidth}
+    \input{fig/sort/sort_perm.tex} 
+
+    \vfill
+
+    \begin{center}
+      \begin{minipage}{0.4\textwidth}
+        \begin{itemize}
+          \item[\timeout] sorting
+          \item[\happyCheck] permutations
+        \end{itemize}
+      \end{minipage}
+    \end{center}
+
+
+  \end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Relational Sort: Sorting}
+    \input{fig/sort/sort_sort_table.tex}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Relational Sort: Generating Permutations}
+    \input{fig/sort/sort_perm_table.tex}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{\lstinline[basicstyle=\Large]{Maybe} for Semi-Determinism}
+\begin{center}
+  \begin{minipage}{0.5\textwidth}
+    \input{fig/inverse/maybe_stream.tex}
+    % \input{fig/mult/mult_y_z.tex}
+  \end{minipage}
+\end{center}
+\end{frame}
+
+\begin{frame}[noframenumbering]
+  \frametitle{\lstinline[basicstyle=\Large]{Maybe} for Semi-Determinism}
+  \begin{center}
+  \begin{minipage}{0.5\textwidth}
+    \input{fig/inverse/maybe.tex}
+    % \input{fig/mult/mult_y_z_maybe.tex}
+  \end{minipage}
+\end{center}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Conclusion}
+
+\begin{itemize}
+  \item We created a specialization method for \mk
+  \item We implemented a functional conversion scheme
+  \item They both speed up implementations considerably
+\end{itemize}
+\end{frame}
+
+\end{document}

@@ -1,0 +1,70 @@
+\section{Related Work}
+
+\subsection{Logic Programming Languages}
+
+Over the years, multiple logic programming languages have been developed, with \prolog~\cite{battani1973interpreteur} being the most widespread. 
+It was the first successful attempt to enable declarative programming by means of writing programs in a subset of formal logic.
+At its core, \prolog uses Horn clauses, a semidecidable subset of first-order predicate logic. 
+Each program formulates a set of facts and predicates that connect these facts. 
+The evaluation of a program is done by an Selective Linear Definite clause resolution~\cite{robinson1965machine} (SLD resolution) of a query, often following depth-first approach.  
+
+For years, logic programming was highly limited by hardware capabilities, leading to necessary compromises. 
+One of them was an early removal of occurs-check from the unification algorithm~\cite{cohen1988view}. 
+This means that running a query "\texttt{? f(X, a(X)).}", given a program "\texttt{f(X, X).}", produces a nonsensical result "\texttt{X $\mapsto$ a(X)}". 
+It is up to the user to ensure that a variable never occurs in a term it is unified with. 
+Fortunatelly, a special sound unification predicate such as \texttt{unify\_with\_occurs\_check} can be used to prevent such results. 
+
+Another compromise is linked to the implementation details and has more significant consequences. 
+Logic languages are inherently nondeterministic, and evaluation on a deterministic computer requires decisions about how to explore the search space. 
+\prolog was first designed for automatic theorem proving, an area in which a single solution to a query is generally sufficient. 
+Thus, most \prolog implementations feature depth-first search, which often results in either non-termination or the generation of infinitely many similar answers to a query when an infinite branch of the search tree is explored. 
+Additionally, non-relational constructs such as a cut and \texttt{copy-term} have been adopted for efficiency reason. 
+Unfortunately, these two aspects often limit a relation to a single mode and directly contradict the main idea of declarative programming: a program can no longer be written with disregard of the peculiarities of the language. 
+
+Recently, there has been a resurgence of the logic programming paradigm with the emergence of new languages, including \merc\footnote{The website of the \merc programming language \url{https://mercurylang.org/}}, \curry\footnote{The website of the \curry programming language \url{https://curry.pages.ps.informatik.uni-kiel.de/curry-lang.org/}}, \mk\footnote{The website of the \mk programming language \url{http://minikanren.org/}}, and others.
+Additionally, a prominent video games developer Epic Games invested into designing a new functional-logic programming language~\cite{versecalculus}.
+This new generation of logic languages combines the paradigms of logic and more mainstream fuctional programming. 
+\merc and \curry are stand-alone logic-functional programming languages with dedicated compilers that makes it difficult to interoperate with bigger systems typically written in a general-purpose language. 
+
+In contrast, \mk is implemented as a lightweight embedded domain-specific language, enabling the power of logic programming in any general purpose language. 
+\mk features interleaving search~\cite{kiselyov2005backtracking} that guarantees that every solution to a query will be found, given enough time. 
+Moreover, its extendible architecture allows for easy experimentation and addition of new features. 
+The main design philosophy of \mk is to adhere to the pure logic programming as much as possible, so any program can be called in any direction. 
+Taking all these considerations into account, we chose \mk as the main language for this research. 
+
+\subsection{Specialization}
+
+The first specialization method, called supercompilation, was introduced by Turchin in 1986~\cite{turchin1986concept}.
+It was designed for the Refal programming language~\cite{turchin1989refal}, which was significantly different from the mainstream languages of the time.
+Since then, supercompilation has been adapted for various languages, expanding its utility across various programming paradigms~\cite{klyuchnikov2009supercompiler,mitchell2010rethinking}.
+Numerous modifications have also emerged, featuring alternative termination strategies, generalization, and splitting techniques~\cite{leuschel2002homeomorphic,sorensen1995algorithm,turchin1988algorithm}. 
+
+Several optimizations rely on the information about program arguments known statically. 
+These optimizations precompute the parts of the program that depend on the known arguments and produce a more efficient residual program. 
+Such transformations are generally known as mixed computations, specialization, or partial evaluation. 
+It was first introduced by Ershov~\cite{ERSHOV198241} and was mostly aimed at imperative languages. 
+A lot of effort has been extended to partial evaluation~\cite{jones1993partial,intro2partialEvaluation} since its first appearance, including the development of self-applicable partial evaluators. 
+
+In logic programming, a general framework called rules + strategies, or fold/unfold transformations, was introduced by Pettorossi and Proietti~\cite{pettorossi1996rules,pettorossi1994transformation}. 
+It serves as a foundational theory for many semantics-preserving transformations, including tupling, specialization, compiling control, and partial deduction. 
+Unfortunately, this approach relies on user guidance for control decisions, its termination is not always guaranteed, and because of it its automation is complicated. 
+
+Specialization in logic programming is commonly referred to as partial deduction. 
+It was introduced by Komorowski~\cite{komorowski1982partial} and formalized by Lloyd and Shepherdson~\cite{lloyd1991partial}. 
+Comparing to fold/unfold transformations, partial deduction is less powerful, because it considers every atom on its own and does not track dependencies between variables. 
+However, it is significantly easier to control and can be automated. 
+
+The main drawback of partial deduction is addressed by Leuschel with conjunctive partial deduction~\cite{de1999conjunctive} in the ECCE system. 
+This method makes use of the interaction between conjuncts for specialization, removing some repeating traversals of data structures as a result. 
+We implemented this algorithm as a proof-of-concept for \texttt{miniKanren}, and found out that some of the specialization results were subpar.
+In some cases, the specialized programs performed worse than the original ones. 
+
+Partial evaluators are categorized into offline and online methods, depending on whether control decisions are made before or during the specialization stage. 
+LOGEN is the implementation of the offline approach for logic programming, developed by Leuschel~\cite{leuschel2004offline}. 
+It includes an automatic binding-time analysis to derive annotations used to guide the specialization process. 
+Offline specialization usually takes less time than online, and is capable to generate shorter and more efficient programs. 
+
+The fact that majority of \prolog implementations do not impose a type system may be seen as a disadvantage when it comes to optimizations. 
+\merc developed a strong static type and mode system that can be used in compilation~\cite{overton2002constraint,overton2003precise}. 
+Mode analysis embodies data-flow analysis that makes it possible to compile the same definition into several functions specialized for the given direction. 
+

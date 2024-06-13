@@ -1,0 +1,18 @@
+\lstset{language=ocanren1,basicstyle=\ttfamily \footnotesize}
+
+\begin{center}
+  \begin{tikzpicture}[
+    every node/.style = {
+        inner sep=0pt
+      , shape=rectangle
+      % , draw
+      }
+  ]
+      % \draw[help lines] (-7.75,-3.5) grid (7.75,3.5);
+      \node[inner sep=10pt, anchor=north] (func) at (-7.75,3.5) {\input{fig/mult/mult_bare.tex}};
+
+      \node[inner sep=10pt, anchor=south] (fast) at (-7.75,-3.5) {\input{fig/mult/mult_fast_bare.tex}};
+
+  \end{tikzpicture}
+  \end{center}
+  

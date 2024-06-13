@@ -1,0 +1,19 @@
+\begin{figure}[h]
+  \centering
+  \begin{minipage}{\columnwidth}
+    \begin{lstlisting}[frame=tb]
+ multIIO$_1$ $::$ Nat -> Nat -> Stream Nat
+ multIIO$_1$ (S x$_1$) y    = do
+   (r$_1$, r) <- addIOO y
+   multIII x$_1$ y r$_1$
+   return r
+ ...
+ multIII $::$ Nat -> Nat -> Nat -> Stream ()
+ multIII (S x$_1$) y z = do
+   z$_1$ <- multIIO$_1$ x$_1$ y
+   addIII y z$_1$ z
+ multIII _ _ _ = Empty
+ ...
+    \end{lstlisting}
+  \end{minipage}
+\end{figure}

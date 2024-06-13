@@ -1,0 +1,13 @@
+\begin{figure}[!t]
+  \centering
+  \begin{minipage}{0.75\textwidth}
+    \begin{lstlisting}[frame=tb]
+ eval$^o$ st fm u = fresh (x y v w)
+     (fm === Conj x y /\
+      eval$^o$ st x v /\ 
+      eval$^o$ st y w /\ 
+      and$^o$ v w u);
+     ...
+    \end{lstlisting}
+  \end{minipage}
+\end{figure}

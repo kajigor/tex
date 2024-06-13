@@ -1,0 +1,9 @@
+\begin{minipage}{0.42\columnwidth}
+\begin{lstlisting}[frame=tb]
+multIIO $::$ Nat -> Nat -> Stream Nat
+multIIO (S x$_1$) y = do
+  r$_1$ <- multIIO x$_1$ y
+  addIIO y r$_1$
+...
+\end{lstlisting}
+\end{minipage}
