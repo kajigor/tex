@@ -1,0 +1,641 @@
+%nodoi
+@inproceedings{lozov2019relational,
+  title     = {Relational Interpreters for Search Problems},
+  author    = {Lozov, Petr and Verbitskaia, Ekaterina and Boulytchev, Dmitry},
+  booktitle = {miniKanren and Relational Programming Workshop},
+  pages     = {43},
+  year      = {2019},
+  url       = {http://minikanren.org/workshop/2019/minikanren19-final3.pdf}
+}
+
+@inproceedings{komorowski1992introduction,
+  title        = {An introduction to partial deduction},
+  author       = {Komorowski, Jan},
+  booktitle    = {Meta-Programming in Logic: Third International Workshop, META-92 Uppsala, Sweden, June 10--12, 1992 Proceedings 3},
+  pages        = {49--69},
+  year         = {1992},
+  organization = {Springer}
+}
+
+@inproceedings{lozov2018typed,
+  author    = {Lozov, Petr
+               and Vyatkin, Andrei
+               and Boulytchev, Dmitry},
+  editor    = {Wang, Meng
+               and Owens, Scott},
+  title     = {Typed Relational Conversion},
+  booktitle = {Trends in Functional Programming},
+  year      = {2018},
+  publisher = {Springer International Publishing},
+  address   = {Cham},
+  pages     = {39--58},
+  abstract  = {We address the problem of transforming typed functional programs into relational form. In this form, a program can be run in various ``directions'' with some arguments left free, making it possible to acquire different behaviors from a single specification. We specify the syntax, typing rules and semantics for the source language as well as its relational extension, describe the conversion and prove its correctness both in terms of typing and dynamic semantics. We also discuss the limitations of our approach, present the implementation of the conversion for the subset of OCaml and evaluate it on a number of realistic examples.},
+  isbn      = {978-3-319-89719-6},
+  doi       = {10.1007/978-3-319-89719-6_3}
+}
+
+
+@inproceedings{verbitskaia2024case,
+  author    = {Verbitskaia, Ekaterina and Engel, Igor and Berezun, Daniil},
+  title     = {A Case Study in Functional Conversion and Mode Inference in miniKanren},
+  year      = {2024},
+  isbn      = {9798400704871},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/3635800.3636966},
+  doi       = {10.1145/3635800.3636966},
+  abstract  = {Many programs which solve complicated problems can be seen as inversions of other, much simpler, programs. One particular example is transforming verifiers into solvers, which can be achieved with low effort by implementing the verifier in a relational language and then executing it in the backward direction. Unfortunately, as it is common with inverse computations, interpretation overhead may lead to subpar performance compared to direct program inversion. In this paper we discuss functional conversion aimed at improving relational miniKanren specifications with respect to a known fixed direction. Our preliminary evaluation demonstrates a significant performance increase for some programs which exemplify the approach.},
+  booktitle = {Proceedings of the 2024 ACM SIGPLAN International Workshop on Partial Evaluation and Program Manipulation},
+  pages     = {107–118},
+  numpages  = {12},
+  keywords  = {relational programming, program inversion, inverse computations, functional programming, conversion},
+  location  = {, London, UK, },
+  series    = {PEPM 2024}
+}
+
+
+
+inproceedings{verbitskaia2022direction,
+  title={On a Direction-Driven Functional Conversion},
+  author={Verbitskaia, Ekaterina and Berezun, Daniil and Boulytchev, Dmitry},
+  booktitle={miniKanren and Relational Programming Workshop},
+  year={2022}, 
+  url={https://drive.google.com/file/d/1CJYd-fa40GhQlnrq4tTepMxgHHc7zpgQ/view}
+}
+
+@inproceedings{rozplokhas2020certified,
+  title        = {Certified Semantics for Relational Programming},
+  author       = {Rozplokhas, Dmitry and Vyatkin, Andrey and Boulytchev, Dmitry},
+  booktitle    = {Asian Symposium on Programming Languages and Systems},
+  pages        = {167--185},
+  year         = {2020},
+  organization = {Springer},
+  editor       = {Oliveira, Bruno C. d. S.},
+  publisher    = {Springer International Publishing},
+  address      = {Cham},
+  isbn         = {978-3-030-64437-6},
+  doi          = {10.1007/978-3-030-64437-6_9}
+}
+
+
+@inproceedings{kosarev2020relational,
+  title        = {Relational Synthesis for Pattern Matching},
+  author       = {Kosarev, Dmitry and Lozov, Petr and Boulytchev, Dmitry},
+  booktitle    = {Asian Symposium on Programming Languages and Systems},
+  pages        = {293--310},
+  year         = {2020},
+  organization = {Springer},
+  editor       = {Oliveira, Bruno C. d. S.},
+  publisher    = {Springer International Publishing},
+  address      = {Cham},
+  isbn         = {978-3-030-64437-6},
+  doi          = {10.1007/978-3-030-64437-6_15}
+}
+
+
+@inproceedings{kiselyov2005backtracking,
+  author    = {Kiselyov, Oleg and Shan, Chung-chieh and Friedman, Daniel P. and Sabry, Amr},
+  title     = {Backtracking, Interleaving, and Terminating Monad Transformers: (Functional Pearl)},
+  year      = {2005},
+  isbn      = {1595930647},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/1086365.1086390},
+  abstract  = {We design and implement a library for adding backtracking computations to any Haskell monad. Inspired by logic programming, our library provides, in addition to the operations required by the MonadPlus interface, constructs for fair disjunctions, fair conjunctions, conditionals, pruning, and an expressive top-level interface. Implementing these additional constructs is easy in models of backtracking based on streams, but not known to be possible in continuation-based models. We show that all these additional constructs can be generically and monadically realized using a single primitive msplit. We present two implementations of the library: one using success and failure continuations; and the other using control operators for manipulating delimited continuations.},
+  booktitle = {Proceedings of the Tenth ACM SIGPLAN International Conference on Functional Programming},
+  pages     = {192–-203},
+  numpages  = {12},
+  keywords  = {control delimiters, Prolog, streams, continuations, Haskell, logic programming},
+  location  = {Tallinn, Estonia},
+  series    = {ICFP '05}
+}
+
+
+@book{TheReasonedSchemer,
+  author    = {Friedman, Daniel P. and Byrd, William E. and Kiselyov, Oleg},
+  title     = {The Reasoned Schemer},
+  year      = {2005},
+  isbn      = {0262562146},
+  publisher = {The MIT Press},
+  doi       = {10.7551/mitpress/5801.001.0001}
+}
+
+@inproceedings{SemanticsModifiers1,
+  author    = {Abramov, Sergei
+               and Gl{\"u}ck, Robert},
+  editor    = {Kapoor, Sanjiv
+               and Prasad, Sanjiva},
+  title     = {Combining Semantics with Non-standard Interpreter Hierarchies},
+  booktitle = {FST TCS 2000: Foundations of Software Technology and Theoretical Computer Science},
+  year      = {2000},
+  publisher = {Springer Berlin Heidelberg},
+  address   = {Berlin, Heidelberg},
+  pages     = {201--213},
+  abstract  = {This paper reports on results concerning the combination of non-standard semantics via interpreters. We define what a semantics combination means and identify under which conditions a combination can be realized by computer programs (robustness, safely combinable). We develop the underlying mathematical theory and examine the meaning of several non-standard interpreter towers. Our results suggest a technique for the implementation of a certain class of programming language dialects by composing a hierarchy of non-standard interpreters.},
+  isbn      = {978-3-540-44450-3},
+  doi       = {10.1007/3-540-44450-5_16}
+}
+
+@inbook{RevURA,
+  author    = {Abramov, Sergei
+               and Gl{\"u}ck, Robert},
+  editor    = {Mogensen, Torben {\AE}.
+               and Schmidt, David A.
+               and Sudborough, I. Hal},
+  title     = {Principles of Inverse Computation and the Universal Resolving Algorithm},
+  booktitle = {The Essence of Computation: Complexity, Analysis, Transformation},
+  year      = {2002},
+  publisher = {Springer Berlin Heidelberg},
+  address   = {Berlin, Heidelberg},
+  pages     = {269--295},
+  abstract  = {We survey fundamental concepts in inverse programming and present the Universal Resolving Algorithm (URA), an algorithm for inverse computation in a first-order, functional programming language. We discuss the principles behind the algorithm, including a three-step approach based on the notion of a perfect process tree, and demonstrate our implementation with several examples. We explain the idea of a semantics modifier for inverse computation which allows us to perform inverse computation in other programming languages via interpreters.},
+  isbn      = {978-3-540-36377-4},
+  doi       = {10.1007/3-540-36377-7_13},
+  url       = {https://doi.org/10.1007/3-540-36377-7_13}
+}
+
+@inproceedings{Untagged,
+  author    = {Byrd, William E. and
+               Holk, Eric and
+               Friedman, Daniel P.},
+  title     = {MiniKanren, Live and Untagged: Quine Generation
+               via Relational Interpreters (Programming Pearl)},
+  year      = {2012},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  pages     = {8–-29},
+  location  = {Copenhagen, Denmark},
+  booktitle = {Proceedings of the Annual Workshop on Scheme and
+               Functional Programming},
+  series    = {Scheme '12},
+  doi       = {10.1145/2661103.2661105}
+}
+
+@article{somogyi1996execution,
+  title     = {The Execution Algorithm of Mercury, an Efficient Purely Declarative Logic Programming Language},
+  author    = {Somogyi, Zoltan and Henderson, Fergus and Conway, Thomas},
+  journal   = {The Journal of Logic Programming},
+  volume    = {29},
+  number    = {1-3},
+  pages     = {17--64},
+  year      = {1996},
+  publisher = {Elsevier},
+  doi       = {10.1016/S0743-1066(96)00068-4}
+}
+
+@inproceedings{overton2002constraint,
+  title     = {Constraint-Based Mode Analysis of Mercury},
+  author    = {Overton, David and Somogyi, Zoltan and Stuckey, Peter J},
+  booktitle = {Proceedings of the 4th ACM SIGPLAN international conference on Principles and practice of declarative programming},
+  pages     = {109--120},
+  year      = {2002},
+  doi       = {10.1145/571157.571169}
+}
+
+
+@inproceedings{verbitskaia2021empirical,
+  author    = {Verbitskaia, Ekaterina and Berezun, Daniil and Boulytchev, Dmitry},
+  year      = {2021},
+  title     = {An Empirical Study of Partial Deduction for miniKanren},
+  editor    = {Lisitsa, Alexei and Nemytykh, Andrei P.},
+  booktitle = {{\rm Proceedings of the 9th International Workshop on}
+               Verification and Program Transformation,
+               {\rm Luxembourg, Luxembourg, 27th and 28th of March 2021}},
+  series    = {Electronic Proceedings in Theoretical Computer Science},
+  volume    = {341},
+  publisher = {Open Publishing Association},
+  pages     = {73-94},
+  doi       = {10.4204/EPTCS.341.5}
+}
+article{verbitskaia2021empirical,
+  title={An Empirical Study of Partial Deduction for miniKanren},
+  author={Verbitskaia, Ekaterina and Berezun, Daniil and Boulytchev, Dmitry},
+  journal={arXiv preprint arXiv:2109.02814},
+  year={2021}
+}
+
+
+@article{kosarev2022declarative,
+  title     = {On a Declarative Guideline-Directed UI Layout Synthesis},
+  author    = {Kosarev, Dmitrii and Lozov, Peter and Fokin, Denis and Boulytchev, Dmitry},
+  year      = {2022},
+  booktitle = {miniKanren and Relational Programming Workshop},
+  url       = {https://drive.google.com/file/d/1rPun1dtOkN0HNf46K_4cp-reZeQCJcSa/view}
+}
+
+@inproceedings{lozov2023relational,
+  author    = {Lozov, Peter
+               and Kosarev, Dmitry
+               and Ivanov, Dmitry
+               and Boulytchev, Dmitry},
+  title     = {Relational Solver for Java Generics Type System},
+  booktitle = {Logic-Based Program Synthesis and Transformation},
+  year      = {2023},
+  publisher = {Springer International Publishing},
+  doi       = {10.1007/978-3-031-45784-5_8}
+}
+
+@article{mairson2004linear,
+  title     = {FUNCTIONAL PEARL Linear lambda calculus and PTIME-completeness},
+  volume    = {14},
+  doi       = {10.1017/S0956796804005131},
+  number    = {6},
+  journal   = {Journal of Functional Programming},
+  publisher = {Cambridge University Press},
+  author    = {MAIRSON, HARRY G.},
+  year      = {2004},
+  pages     = {623–633}
+}
+
+@inproceedings{urzyczyn1997inhabitation,
+  author    = {Urzyczyn, Pawel},
+  editor    = {de Groote, Philippe
+               and Roger Hindley, J.},
+  title     = {Inhabitation in Typed Lambda-Calculi (a Syntactic Approach)},
+  booktitle = {Typed Lambda Calculi and Applications},
+  year      = {1997},
+  publisher = {Springer Berlin Heidelberg},
+  address   = {Berlin, Heidelberg},
+  pages     = {373--389},
+  abstract  = {A type is inhabited (non-empty) in a typed calculus iff there is a closed term of this type. The inhabitation (emptiness) problem is to determine if a given type is inhabited. This paper provides direct, purely syntactic proofs of the following results: the inhabitation problem is PSPACE-complete for simply typed lambda-calculus and undecidable for the polymorphic second-order and higher-order lambda calculi (systems F and F$\omega$).},
+  isbn      = {978-3-540-68438-1},
+  doi       = {10.1007/3-540-62688-3_47}
+}
+
+@article{aman2020foundations,
+  title     = {Foundations of Reversible Computation},
+  author    = {Aman, Bogdan and Ciobanu, Gabriel and Gl{\"u}ck, Robert and Kaarsgaard, Robin and Kari, Jarkko and Kutrib, Martin and Lanese, Ivan and Mezzina, Claudio Antares and Mikulski, {\L}ukasz and Nagarajan, Rajagopal and others},
+  journal   = {Reversible Computation: Extending Horizons of Computing: Selected Results of the COST Action IC1405 12},
+  pages     = {1--40},
+  year      = {2020},
+  publisher = {Springer International Publishing},
+  doi       = {10.1007/978-3-030-47361-7_1}
+}
+
+@article{debray1988automatic,
+  title     = {Automatic Mode Inference for Logic Programs},
+  author    = {Debray, Saumya K and Warren, David S},
+  journal   = {The Journal of Logic Programming},
+  volume    = {5},
+  number    = {3},
+  pages     = {207--229},
+  year      = {1988},
+  publisher = {Elsevier},
+  doi       = {10.1016/0743-1066(88)90010-6}
+}
+
+@inproceedings{somogyi1987system,
+  title        = {A System of Precise Models for Logic Programs},
+  author       = {Somogyi, Zoltan},
+  booktitle    = {ICLP},
+  pages        = {769--787},
+  year         = {1987},
+  organization = {Citeseer}
+}
+
+
+@article{byrd2017unified,
+  title     = {A Unified Approach to Solving Seven Programming Problems (Functional Pearl)},
+  author    = {Byrd, William E and Ballantyne, Michael and Rosenblatt, Gregory and Might, Matthew},
+  journal   = {Proceedings of the ACM on Programming Languages},
+  volume    = {1},
+  number    = {ICFP},
+  pages     = {1--26},
+  year      = {2017},
+  publisher = {ACM New York, NY, USA},
+  doi       = {10.1145/3110252}
+}
+
+@article{janssens1992deriving,
+  title     = {Deriving Descriptions of Possible Values of Program Variables by Means of Abstract Interpretation},
+  author    = {Janssens, Gerda and Bruynooghe, Maurice},
+  journal   = {The Journal of Logic Programming},
+  volume    = {13},
+  number    = {2-3},
+  pages     = {205--258},
+  year      = {1992},
+  publisher = {Elsevier},
+  doi       = {10.1016/0743-1066(92)90032-X}
+}
+
+@article{van1992high,
+  title     = {High-Performance Logic Programming with the Aquarius Prolog Compiler},
+  author    = {Van Roy, Peter and Despain, Alvin M.},
+  journal   = {Computer},
+  volume    = {25},
+  number    = {1},
+  pages     = {54--68},
+  year      = {1992},
+  publisher = {IEEE},
+  doi       = {10.1109/2.108055}
+}
+
+@article{warren1977implementing,
+  title   = {Implementing Prolog - Compiling Predicate Logic Programs},
+  author  = {Warren, David HD},
+  journal = {Research Reports 39 and 40, Dpt. of Artificial Intelligence, Univ. of Edinburgh},
+  year    = {1977}
+}
+
+@techreport{thom1986nu,
+  title       = {NU-Prolog},
+  author      = {Thom, James A and Zobel, Justin},
+  year        = {1986},
+  institution = {Citeseer}
+}
+
+@inproceedings{ridoux1999typed,
+  title        = {Typed Static Analysis: Application to Groundness Analysis of Prolog and $\lambda$ Prolog},
+  author       = {Ridoux, Olivier and Boizumault, Patrice and Mal{\'e}sieux, Fr{\'e}d{\'e}ric},
+  booktitle    = {International Symposium on Functional and Logic Programming},
+  pages        = {267--283},
+  year         = {1999},
+  organization = {Springer},
+  doi          = {10.1007/10705424_18}
+}
+
+@inproceedings{smaus2000mode,
+  title        = {Mode Analysis Domains for Typed Logic Programs},
+  author       = {Smaus, Jan-Georg and Hill, Patricia M and King, Andy},
+  booktitle    = {Logic-Based Program Synthesis and Transformation: 9th International Workshop, LOPSTR’99, Venice, Italy, September 22-24, 1999 Selected Papers 9},
+  pages        = {82--101},
+  year         = {2000},
+  organization = {Springer},
+  doi          = {10.1007/10720327_6}
+}
+
+
+
+@article{lukacsy2008semantic,
+  title     = {Semantic Technologies Based on Logic Programming},
+  author    = {Luk{\'a}csy, Gergely},
+  year      = {2008},
+  publisher = {Budapesti M{\H{u}}szaki {\'e}s Gazdas{\'a}gtudom{\'a}nyi Egyetem}
+}
+
+@inproceedings{bulwahn2011smart,
+  title        = {Smart Test Data Generators via Logic Programming},
+  author       = {Bulwahn, Lukas},
+  booktitle    = {Technical Communications of the 27th International Conference on Logic Programming (ICLP'11)},
+  year         = {2011},
+  organization = {Schloss Dagstuhl-Leibniz-Zentrum fuer Informatik},
+  doi          = {10.4230/LIPIcs.ICLP.2011.139}
+}
+
+@inproceedings{antoy2006overlapping,
+  title        = {Overlapping Rules and Logic Variables in Functional Logic Programs},
+  author       = {Antoy, Sergio and Hanus, Michael},
+  booktitle    = {International Conference on Logic Programming},
+  pages        = {87--101},
+  year         = {2006},
+  organization = {Springer},
+  doi          = {10.1007/11799573_9}
+}
+
+@inproceedings{rozplokhas2022scheduling,
+  title        = {Scheduling Complexity of Interleaving Search},
+  author       = {Rozplokhas, Dmitry and Boulytchev, Dmitry},
+  booktitle    = {International Symposium on Functional and Logic Programming},
+  pages        = {152--170},
+  year         = {2022},
+  organization = {Springer}
+}
+
+@article{de1999conjunctive,
+  title     = {Conjunctive partial deduction: Foundations, control, algorithms, and experiments},
+  author    = {De Schreye, Danny and Gl{\"u}ck, Robert and J{\o}rgensen, Jesper and Leuschel, Michael and Martens, Bern and S{\o}rensen, Morten Heine},
+  journal   = {The Journal of Logic Programming},
+  volume    = {41},
+  number    = {2-3},
+  pages     = {231--277},
+  year      = {1999},
+  publisher = {Elsevier}
+}
+
+@article{robinson1965machine,
+  title     = {A machine-oriented logic based on the resolution principle},
+  author    = {Robinson, John Alan},
+  journal   = {Journal of the ACM (JACM)},
+  volume    = {12},
+  number    = {1},
+  pages     = {23--41},
+  year      = {1965},
+  publisher = {ACM New York, NY, USA}
+}
+
+@article{cohen1988view,
+  title     = {A view of the origins and development of Prolog},
+  author    = {Cohen, Jacques},
+  journal   = {Communications of the ACM},
+  volume    = {31},
+  number    = {1},
+  pages     = {26--36},
+  year      = {1988},
+  publisher = {ACM New York, NY, USA}
+}
+
+@article{battani1973interpreteur,
+  title   = {Interpreteur du langage de programmation Prolog},
+  author  = {Battani, G and Meloni, H},
+  journal = {Grouped'Intelligence Artifieielle, Marseille-Luminy},
+  year    = {1973}
+}
+
+@article{versecalculus,
+  author     = {Augustsson, Lennart and Breitner, Joachim and Claessen, Koen and Jhala, Ranjit and Peyton Jones, Simon and Shivers, Olin and Steele Jr., Guy L. and Sweeney, Tim},
+  title      = {The Verse Calculus: A Core Calculus for Deterministic Functional Logic Programming},
+  year       = {2023},
+  issue_date = {August 2023},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {7},
+  number     = {ICFP},
+  url        = {https://doi.org/10.1145/3607845},
+  doi        = {10.1145/3607845},
+  abstract   = {Functional logic languages have a rich literature, but it is tricky  
+                to give them a satisfying semantics. In this paper we describe the  
+                Verse calculus, VC, a new core calculus for deterministic functional  
+                logic programming. Our main contribution is to equip VC with a  
+                small-step rewrite semantics, so that we can reason  
+                about a VC program in the same way as one does with lambda  
+                calculus; that is, by applying successive rewrites to it.  
+                We also show that the rewrite system is confluent for well-behaved terms.},
+  journal    = {Proc. ACM Program. Lang.},
+  month      = {aug},
+  articleno  = {203},
+  numpages   = {31},
+  keywords   = {Verse calculus, Verse language, choice operator, confluence, declarative programming, evaluation strategy, even/odd problem, functional programming, lambda calculus, lenient evaluation, logic programming, logical variables, normal forms, rewrite rules, skew confluence, substitution, unification}
+}
+
+@article{turchin1986concept,
+  title     = {The concept of a supercompiler},
+  author    = {Turchin, Valentin F},
+  journal   = {ACM Transactions on Programming Languages and Systems (TOPLAS)},
+  volume    = {8},
+  number    = {3},
+  pages     = {292--325},
+  year      = {1986},
+  publisher = {ACM New York, NY, USA}
+}
+
+@book{turchin1989refal,
+  title     = {REFAL-5: programming guide \& reference manual},
+  author    = {Turchin, Valentin F},
+  year      = {1989},
+  publisher = {New England Publ.}
+}
+
+@article{leuschel2002homeomorphic,
+  title     = {Homeomorphic embedding for online termination of symbolic methods},
+  author    = {Leuschel, Michael},
+  journal   = {The essence of computation: complexity, analysis, transformation},
+  pages     = {379--403},
+  year      = {2002},
+  publisher = {Springer}
+}
+
+@inproceedings{sorensen1995algorithm,
+  title     = {An Algorithm of Generalization in Positive Supercompilation.},
+  author    = {S{\o}rensen, Morten Heine and Gl{\"u}ck, Robert},
+  booktitle = {ILPS},
+  volume    = {95},
+  pages     = {465--479},
+  year      = {1995}
+}
+
+@article{turchin1988algorithm,
+  title   = {The algorithm of generalization in the supercompiler},
+  author  = {Turchin, Valentin F},
+  journal = {Partial Evaluation and Mixed Computation},
+  volume  = {531},
+  pages   = {549},
+  year    = {1988}
+}
+
+@article{klyuchnikov2009supercompiler,
+  title   = {Supercompiler HOSC 1.0: under the hood},
+  author  = {Klyuchnikov, Ilya G},
+  journal = {Keldysh Institute Preprints},
+  number  = {63},
+  pages   = {1--28},
+  year    = {2009}
+}
+
+@article{mitchell2010rethinking,
+  title     = {Rethinking supercompilation},
+  author    = {Mitchell, Neil},
+  journal   = {ACM Sigplan Notices},
+  volume    = {45},
+  number    = {9},
+  pages     = {309--320},
+  year      = {2010},
+  publisher = {ACM New York, NY, USA}
+}
+
+@article{pettorossi1996rules,
+  title     = {Rules and strategies for transforming functional and logic programs},
+  author    = {Pettorossi, Alberto and Proietti, Maurizio},
+  journal   = {ACM Computing Surveys (CSUR)},
+  volume    = {28},
+  number    = {2},
+  pages     = {360--414},
+  year      = {1996},
+  publisher = {ACM New York, NY, USA}
+}
+
+@article{pettorossi1994transformation,
+  title     = {Transformation of logic programs: Foundations and techniques},
+  author    = {Pettorossi, Alberto and Proietti, Maurizio},
+  journal   = {The Journal of Logic Programming},
+  volume    = {19},
+  pages     = {261--320},
+  year      = {1994},
+  publisher = {Elsevier}
+}
+
+@inproceedings{komorowski1982partial,
+  title     = {Partial evaluation as a means for inferencing data structures in an applicative language: A theory and implementation in the case of Prolog},
+  author    = {Komorowski, H Jan},
+  booktitle = {Proceedings of the 9th ACM SIGPLAN-SIGACT symposium on Principles of programming languages},
+  pages     = {255--267},
+  year      = {1982}
+}
+
+@article{lloyd1991partial,
+  title     = {Partial evaluation in logic programming},
+  author    = {Lloyd, John W. and Shepherdson, John C},
+  journal   = {The Journal of Logic Programming},
+  volume    = {11},
+  number    = {3-4},
+  pages     = {217--242},
+  year      = {1991},
+  publisher = {Elsevier}
+}
+
+@article{intro2partialEvaluation,
+  author     = {Jones, Neil D.},
+  title      = {An introduction to partial evaluation},
+  year       = {1996},
+  issue_date = {Sept. 1996},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {28},
+  number     = {3},
+  issn       = {0360-0300},
+  url        = {https://doi.org/10.1145/243439.243447},
+  doi        = {10.1145/243439.243447},
+  abstract   = {Partial evaluation provides a unifying paradigm for a broad spectrum of work in program optimization compiling interpretation and the generation of automatic program generators [Bj\o{}rner et al. 1987; Ershov 1992; and Jones et al. 1993]. It is a program optimization technique, perhaps better called program specialization, closely related to but different from J\o{}rring and Scherlis' staging transformations [1986]. It emphasizes, in comparison with Burstall and Darlington [1977] and J\o{}rring and Scherlis [1986] and other program transformation work, full automation and the generation of program generators as well as transforming single programs. Much partial evaluation work to date has concerned automatic compiler generation from an interpretive definition of programming language, but it also has important applications to scientific computing, logic programming, metaprogramming, and expert systems; some pointers are given later.},
+  journal    = {ACM Comput. Surv.},
+  month      = {sep},
+  pages      = {480–503},
+  numpages   = {24},
+  keywords   = {compiler generators, compilers, interpreters, partial evaluation, program specialization}
+}
+
+@book{jones1993partial,
+  title     = {Partial evaluation and automatic program generation},
+  author    = {Jones, Neil D and Gomard, Carsten K and Sestoft, Peter},
+  year      = {1993},
+  publisher = {Peter Sestoft}
+}
+
+@article{leuschel2004offline,
+  title     = {Offline specialisation in Prolog using a hand-written compiler generator},
+  author    = {Leuschel, Michael and J{\o}rgensen, Jesper and Vanhoof, Wim and Bruynooghe, Maurice},
+  journal   = {Theory and Practice of Logic Programming},
+  volume    = {4},
+  number    = {1-2},
+  pages     = {139--191},
+  year      = {2004},
+  publisher = {Cambridge University Press}
+}
+
+inproceedings{overton2002constraint,
+  title     = {Constraint-based mode analysis of Mercury},
+  author    = {Overton, David and Somogyi, Zoltan and Stuckey, Peter J},
+  booktitle = {Proceedings of the 4th ACM SIGPLAN international conference on Principles and practice of declarative programming},
+  pages     = {109--120},
+  year      = {2002}
+}
+
+@book{overton2003precise,
+  title     = {Precise and expressive mode systems for typed logic programming languages},
+  author    = {Overton, David},
+  year      = {2003},
+  publisher = {Citeseer}
+}
+
+
+@article{ERSHOV198241,
+  title    = {Mixed computation: potential applications and problems for study},
+  journal  = {Theoretical Computer Science},
+  volume   = {18},
+  number   = {1},
+  pages    = {41-67},
+  year     = {1982},
+  issn     = {0304-3975},
+  doi      = {https://doi.org/10.1016/0304-3975(82)90111-6},
+  url      = {https://www.sciencedirect.com/science/article/pii/0304397582901116},
+  author   = {A.P. Ershov},
+  abstract = {Mixed computation is processing of an incomplete information. Its product are a partially processed information and a so-called residual program destined to complete in sequel the processing of the remaining information. Many kinds of practical work with programs are nothing more but obtaining a residual program. We demonstrate, as an example, the application of mixed computation to compilation. Under computational approach mixed computation generalizes the operational semantics of a language by inclusion of steps which generate residual program instructions. Under transformational approach the residual program is obtained as a result of a series of so-called basic transformations of the program text. We argue that the transformational approach is more fundamental, for it allows to describe mixed computation in all its variety and moreover, to relate mixed computation to other kinds of program manipulation: execution, optimization, macroprocessing, synthesis. Such an integrated approach leads us to a transformational machine concept.}
+}
