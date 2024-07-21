@@ -1,0 +1,10 @@
+\begin{lstlisting}[language=Haskell]
+data Formula
+  = Lit Bool 
+  | Var Int 
+  | Neg Formula 
+  | Conj Formula Formula 
+  | Disj Formula Formula
+\end{lstlisting}
+\caption{The data type representation for a propositional formula}
+\label{fig:chap1:propFormula}

@@ -1,14 +1,183 @@
-\documentclass[float=true, crop=false]{standalone}
-\usepackage[subpreambles=false]{standalone}
-\usepackage{import}
-\usepackage{blindtext}
+Many programming problems can be broadly categorized as either verification tasks or solution-finding tasks. 
+The former involves checking whether a given solution meats certain criteria, which is often straightforward to implement and inexpensive to run. 
+On the other hand, the latter requires discovering a solution that satisfies the problem's constraints, which can be significantly more complex and resource-intensive. 
+To illustrate the idea, let us consider the verifier-based definition of the NP complexity class~\cite{Garey:1990}. 
 
+\begin{definition}[NP complexity class]
+  We say that a language $\LLang$ is in the complexity class NP (Nondeterministic Polynomial time) if there is a predicate $V_\LLang$ such that 
+  \[ 
+    \forall \omega: \omega \in \LLang \Leftrightarrow \exists p_{\omega} : V_{\LLang}(\omega, p_{\omega}), 
+  \]
+  where $p_{\omega}$ is of size polynomial on $\omega$, and we can recognize $V_{\LLang}$ in polynomial time. 
+\end{definition}
 
+In this definition, $p_\omega$ serves as a proof of the fact that $\omega \in \LLang$. 
+For example, if $\LLang$ is the set of all Hamiltonian graphs $\omega$, then $V_{\LLang}$ is a predicate that, checks whether a path $p_{\omega}$ is Hamiltonian in the graph $\omega$. 
+Implementing $V_{\LLang}$ demands little effort: one only needs to make sure that the path forms a sequence of vertices with no repetitions. 
+However, the implementation of the predicate does not reveal anything regarding the \emph{search procedure} which will compute $p_{\omega}$ by $\omega$. 
+Notably, a related problem is studied in the area of \emph{relational interpreters}. 
 
-\begin{document}
+\begin{definition}[Relational interpreter]
+  A \emph{relational interpreter} for a language $\LLang$ is a relation $eval^{o}_{\LLang}$ that connects a program $p^{\LLang}$ written in the language $\LLang$, its input $i$, and its output $o$, which corresponds to the semantics $\LSem{\cdot}$ of the program $p^{\LLang}$ applied to the input: 
 
-\section{Generating Solvers from Verifiers}
+  \[
+  eval^{o}_{\LLang}(p^{\LLang}, i, o), \text{such that } o = \LSem{p^{\LLang}}(i)
+  \]
+\end{definition}
+
+Using this terminology, we can view a verification predicate $V_{\LLang}$ as a relational interpreter that connects a program $\omega$ and its input $p_{\omega}$ with either $true$ or $false$. 
+
+\[
+V_{\LLang}(\omega, p_{\omega}) = b \Leftrightarrow eval^o_{\LLang}(\omega, p_{\omega}, b)
+\]
+
+This analogy sheds light on how the multimodal nature of relational programming can be employed to turn a verifier into a solver. 
+The interpreter can run in the verification mode if we query for the output and pass ground values for $\omega$ and $p_{\omega}$.  
+\[ 
+  run \ q \ eval^o_{\LLang}(\omega, p_{\omega}, q)
+\]
+
+Conversely, by passing only $\omega$ and the output $b$, a witness $p_{\omega}$ can be computed. 
+In~this way, the relational interpreter functions as a solver implementing a search procedure. 
+\[ 
+  run \ q \ eval^o_{\LLang}(\omega, q, b)
+\]
+
+In general, there is no limitation on the output being of type Boolean: it may take any form that suits the problem the best. 
+For example, we can observe the duality between program interpretation and program synthesis by running a relational interpreter in the appropriate directions. 
+Similar parallels can be drawn when considering related problems such as type checking, type inference, and type inhabitation, as well as many other problems.
+
 \section{Relational Conversion}
-\section{Issues}
 
-\end{document}
+Writing a relational interpreter can be done from scratch by carefully considering the semantics of the language being evaluated. 
+However, in the majority of cases its structure follows the one of an interpreter implemented in a functional language. 
+Developers often choose this approach because programming in the functional paradigm feels more intuitive to them than designing programs in the relational paradigm.
+It is also facilitated by the existence of relational conversion --- an automatic procedure capable of producing a relational program from its functional counterpart. 
+Let us illustrate the conversion on a small example.
+
+\begin{wrapfigure}{r}{0.43\textwidth}
+  \input{chap1/fig/propFormula.tex}
+\end{wrapfigure}
+
+Consider evaluating a propositional formula, which is constructed from Boolean literals, integer-named variables, and other formulas using Boolean connectives, namely conjunction, disjunction, and negation: see figure~\ref{fig:chap1:propFormula}. 
+There might be other ways to construct a formula, such as implication and exclusive or, but their treatment does not differ significantly; thus we do not address them. 
+We use integers as variable names to make it easier to represent variable substitutions as lists of Boolean constants. 
+The value of variable \code{n} is the \code{n}-th element of the substitution list. 
+The example formula $\neg v_0 \wedge (v_1 \vee False)$ is encoded as \code{Conj (Neg (Var 0)) (Disj (Var 1) (Lit False))}. 
+
+To determine the value of a formula, the functional interpreter presented in listing~\ref{fig:chap1:propEval} deconstructs the formula by pattern matching and calculates the result according to its structure. 
+Evaluating a Boolean literal is straightforward.
+When a formula is a variable, we look up its value in the substitution using the function \code{elem}. 
+Note that \code{elem} is partial as we assume every variable in the formula has some value in the substitution. 
+The three other cases necessitate recursive calls to the interpreter and combining their results according to the type of the formula. 
+Evaluating the example formula with the substitution list \code{[False, True]} results in \code{True}.
+
+\input{chap1/fig/propEval.tex}
+
+The simplest way to transform a function into a relational programming language is described in~\cite{byrd2009relational}. 
+It is done is several steps. 
+First, every nested function call is unnested and its result is bound to a variable. 
+Second, an extra parameter \code{res} is added to the relational counterpart of the function being translated to associate its result with. 
+Third, a pattern matching is transformed into a disjunction. 
+Each disjunct unifies the scrutinee with the pattern in conjunction with the result of translating the body of the branch. 
+Finally, each function call is replaced with the corresponding relation call, the result is unified with the extra argument \code{res}, and the calls and unifications are combined into conjunctions. 
+
+This conversion applied to the functional interpreter of the proposition language results in the code presented in figure~\ref{fig:chap1:propRel}. 
+Note that Boolean operators, namely \code{\&\&}, \code{||}, and \code{not}, are converted into their relational counterparts \code{ando}, \code{oro}, and \code{noto}.
+We assume that these operators have some implementation accessible to the converter, which means that they are written by the user, their built-in implementations can be inspected, or their relational counterparts are hard-coded. 
+In this particular example, we suppose that the Boolean operators have table-based implementations instead of more efficient short-circuit implementations for no particular reason except for better readability. 
+
+Another feature to note is that the order of calls in the conjunctions is determined by the structure of the expression in the body of the source function. 
+This is why each disjunct starts with the unification generated from the pattern matching, and the calls to \code{evalo} are done before calling relations for boolean connectives \code{ando}, \code{oro}, and \code{noto}. 
+This corresponds to the semantics of the functional language and allows computing the same answers when the constructed relation is run in the forward direction. 
+Lastly, the order of disjuncts is also determined by the original program, following the sequence of pattern match clauses. 
+
+\input{chap1/fig/propRel.tex}
+
+Querying \code{evalo} in different directions allows finding answers for various problems. 
+For example, we can evaluate a formula in a given substitution, which associates \code{q} with the only possible answer \code{True}.
+
+\begin{lstlisting}[basicstyle=\small]
+Q: run q (evalo [False, True] 
+                (Conj (Neg (Var 0)) (Disj (Var 1) (Lit False))) 
+                q)
+A: q = True 
+\end{lstlisting}
+
+
+In general, a query can have multiple free variables. 
+For instance, we can leave both the substitution and the last argument to be free variables. 
+In the following case, multiple possible answers exist, including \code{s $\mapsto$ [False, True], q $\mapsto$ True}: 
+
+\begin{lstlisting}[basicstyle=\small]
+Q: run q, s (evalo s
+                   (Conj (Neg (Var 0)) 
+                         (Disj (Var 1) (Lit False))) 
+                   q)
+A: s = [True, True]; q = False
+A: s = [True, False]; q = False
+A: s = [False, True]; q = True
+A: s = [False, False]; q = False
+\end{lstlisting}
+
+Finally, querying a relation with the last argument \code{res} known makes the relational interpreter function as a solver. 
+Consider the following query which produces an infinite number of formulas, that evaluate to \code{True} in the substitution \code{[False, True]}, including \code{(Conj (Neg (Var 0)) (Disj (Var 1) (Lit False)))}. 
+
+\begin{lstlisting}[basicstyle=\small]
+Q: run q (evalo [False, True]
+                q
+                True)
+A: q = Var 1
+A: q = Not (Var 0)
+...
+A: q = (Conj (Neg (Var 0)) (Disj (Var 1) (Lit False)))
+... 
+\end{lstlisting}
+
+The conversion based on unnesting demonstrates the fundamental principles of creating a relation from a function, but it is quite limited. 
+In reality, functional programming often involves using higher-order functions which the described method does not handle. 
+A more complicated typed relational conversion described in~\cite{lozov2018typed,lozov2022automated} and implemented as a separate tool\footnote{The tool for automatic relational conversion \texttt{noCanren}: \url{https://github.com/PLTools/noCanren/}} supports this important feature by changing the target language to allow higher-order functions as arguments of relations. 
+To learn more about how this conversion works, the reader is directed to the original papers. 
+
+\section{Reasons of Poor Performance of Relational Interpreters}
+
+Relational conversion is designed in such a way that it preserves the semantics of the original function when the relation is run in the forward direction. 
+It means that this direction is always deterministic, and the execution time experiences not more than a linear slowdown~\cite{lozov2022automated}.
+However, running a relation in any other direction can demonstrate unpredictable performance. 
+We cannot compare it with the performance of the original program, since it can only work as a function. 
+However, we can sometimes see that the relation can be modified to be more efficient. 
+Let us consider some sources of inefficiency on the example introduced in the previous subsection. 
+
+Imagine running the relation to generate formulas that evaluate to \code{True} in some given substitution: \code{run q (evalo [...] q True)}. 
+Since \mk evaluates conjunctions from left to right by default, the unification of the second argument \code{fm} is done first. 
+This unification does not provide any useful data leaving variables under constructors free leading to subsequent calls to the \code{evalo} and \code{elemo} relations with only the substitutions known. 
+Having finished evaluating, these calls bind variables which are then passed to the Boolean connectives \code{ando}, \code{oro}, and \code{noto}. 
+Because all their arguments are now known, the latter relations serve as predicates, filtering out those sub-formulas whose evaluation do not make the result \code{True}. 
+This is recognized as ``generate and test'' behavior and often leads to poor performance. 
+
+Fortunately, reordering the conjuncts in such a way that the Boolean relations are executed first, gets rid of the undesired behavior. 
+For instance, running \code{ando v w True} limits the possible values of \code{v} and \code{w} to \code{True}. 
+With this extra information, the subsequent calls to \code{evalo} only generate the formulas that actually contribute to the answer the user is interested in. 
+By doing this, the execution time is reduced \todo{this many} times \todo{citation}. 
+
+\todo{Consider adding the example with $f_1 x \&\& f_2 x$ from the relational interpreters for search paper}. 
+
+As evidenced by these examples, there might not be a single optimal order of conjuncts that works well in each direction. 
+Finding such an order is \todo{likely (citation needed)} an undecidable problem. 
+There are however several approaches that aim at finding if not the best, then a better order which suits the given direction. 
+The approach we are taking in this dissertation includes mode analysis and specialization. 
+
+There are other sources of overhead that are deeply rooted in the nature of relational programming in \mk. 
+One of them is \emph{scheduling complexity}~\cite{rozplokhas2022scheduling}. 
+Its effect has been observed when comparing two possible implementations of the \code{appendo} relation that only differ in the order of two conjuncts but demonstrate asymptotically different performance. 
+One of them exhibits performance linear with the size of the first list, while the other's performance is polynomial. 
+The instinctive feeling that the cause of this discrepancy lays in a different number of unifications performed does not hold up. 
+In fact, both relations make the same number of unifications, and there is another explanation of what is happening. 
+\todo{Add a figure from Rozphlohos' paper}. 
+
+Put simply, \mk maintains a lazy data structure that is used in the decomposition of goals into basic unifications, performing them in an order determined by the interleaving search, and threading them together to compute the final answers. 
+This structure stays constant size in one of the relation, but grows linearly in the other. 
+The paper~\cite{rozplokhas2022scheduling} provides a way to estimate the scheduling complexity, but it necessitates using a human oracle which hinders the adoption of this metrics in specialization and other automatic optimization efforts. 
+
+
+

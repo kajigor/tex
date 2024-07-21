@@ -1,0 +1,39 @@
+\begin{figure}[h!]
+  \begin{lstlisting}[language=Haskell, basicstyle=\small]
+-- evalo :: [Bool] -> Formula -> Bool -> Goal
+evalo subst fm u =
+  fresh x, y, v, w, z in
+    (fm == Lit u) |
+    (fm == Var z & elemo z subst u) |
+    (fm == Neg x & evalo subst x v & noto v u) |
+    (fm == Conj x y & evalo subst x v & evalo subst y w & ando v w u) | 
+    (fm == Disj x y & evalo subst x v & evalo subst y w & oro v w u);
+
+-- elemo :: [a] -> Int -> a -> Goal 
+elemo subst n res = 
+  fresh h, t, n1 in 
+    (s == (h :: t) & n == Zero & res == h) | 
+    (s == (h :: t) & n == Succ n1 & elemo t n1 res); 
+    
+-- ando :: Bool -> Bool -> Bool -> Goal 
+ando x y b =
+  (x == Trueo & y == Trueo & b == Trueo) |
+  (x == Falso & y == Trueo & b == Falso) |
+  (x == Trueo & y == Falso & b == Falso) |
+  (x == Falso & y == Falso & b == Falso);
+
+-- oro :: Bool -> Bool -> Bool -> Goal 
+oro x y b =
+  (x == Trueo & y == Trueo & b == Trueo) |
+  (x == Falso & y == Trueo & b == Trueo) |
+  (x == Trueo & y == Falso & b == Trueo) |
+  (x == Falso & y == Falso & b == Falso);
+
+-- noto :: Bool -> Bool -> Goal 
+noto x b =
+  (x == Trueo & b == Falso) |
+  (x == Falso & b == Trueo);
+  \end{lstlisting}
+  \caption{The relational interpreter for a propositional formula}
+  \label{fig:chap1:propRel}
+\end{figure}

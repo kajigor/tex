@@ -1,0 +1,16 @@
+\begin{figure}[h!]
+  \begin{lstlisting}[language=Haskell, basicstyle=\small]
+eval :: [Bool] -> Formula -> Bool 
+eval subst (Lit b) = b 
+eval subst (Var v) = elem subst v 
+eval subst (Neg z) = not $ eval subst z 
+eval subst (Conj x y) = eval subst x && eval subst y 
+eval subst (Disj x y) = eval subst x || eval subst y 
+
+elem :: [a] -> Int -> a
+elem (h : t) 0 = h
+elem (_ : t) n = elem t (n - 1)
+  \end{lstlisting}
+  \caption{The interpreter for a propositional formula in a functional language}
+  \label{fig:chap1:propEval}
+\end{figure}

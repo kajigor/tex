@@ -1,0 +1,107 @@
+\lstdefinelanguage{ocanren1}{
+  basicstyle = {\ttfamily \color{black}},
+  keywords=[1]{return, do, where, case, run, conde, fresh, let, match, with, when, class,
+  object, method, of, rec, repeat, until, while, \begin{comment}not,\end{comment} do, done, as, val, inherit,
+  new, module, sig, deriving, datatype, struct, if, then, else, open, private, virtual, include, success, failure,
+  true, false, mplus},
+  keywords=[2]{safe},
+  keywords=[3]{unsafe},
+  sensitive=true,
+  commentstyle=\small\itshape\ttfamily,
+  keywordstyle=[1]\color{blue},
+  keywordstyle=[2]\color{ForestGreen},
+  keywordstyle=[3]\color{violet},
+  identifierstyle=\ttfamily,
+  basewidth={0.5em,0.5em},
+  columns=flexible,
+  mathescape=true,
+  escapechar=~,
+  fontadjust=true,
+  literate={fun}{{$\lambda$}}1 {function}{function}8 {->}{{$\to$}}3 {<-}{{$\leftarrow$}}3 {===}{{$\equiv$}}1 {=/=}{{$\not\equiv$}}1 {|>}{{$\triangleright$}}3 {\\/}{{$\vee$}}2 {/\\}{{$\wedge$}}2 {^}{{$\uparrow$}}1,
+  morecomment=[s]{(*}{*)},
+  moredelim=**[is][\color{red}]{@!}{@}
+}
+
+\lstdefinelanguage{ocanren}{
+  basicstyle = {\ttfamily \color{black} \footnotesize},
+  keywords=[1]{return, do, where, case, run, conde, fresh, let, match, with, when, class,
+  object, method, of, rec, repeat, until, while, \begin{comment}not,\end{comment} do, done, as, val, inherit,
+  new, module, sig, deriving, datatype, struct, if, then, else, open, private, virtual, include, success, failure,
+  true, false, mplus, data, instance},
+  backgroundcolor = {\color{Orchid!10}},
+  keywords=[2]{safe},
+  keywords=[3]{unsafe},
+  sensitive=true,
+  commentstyle=\small\itshape\ttfamily,
+  keywordstyle=[1]\color{blue},
+  keywordstyle=[2]\color{ForestGreen},
+  keywordstyle=[3]\color{violet},
+  identifierstyle=\ttfamily,
+  basewidth={0.5em,0.5em},
+  columns=flexible,
+  mathescape=true,
+  escapechar=~,
+  fontadjust=true,
+  literate={fun}{{$\lambda$}}1 {function}{function}8 {->}{{$\to$}}3 {<-}{{$\leftarrow$}}3 {===}{{$\equiv$}}1 {=/=}{{$\not\equiv$}}1 {\\/}{{$\vee$}}2 {/\\}{{$\wedge$}}2 {^}{{$\uparrow$}}1,
+  morecomment=[s]{(*}{*)},
+  moredelim=**[is][\color{red}]{@!}{@}
+}
+
+% \lstset{
+%   language=ocanren
+% }
+
+
+\lstdefinelanguage{imperative}{
+  basicstyle = {\ttfamily \color{black}},
+  backgroundcolor = {\color{white}},
+  keywordstyle = {\color{blue}},
+  keywordstyle = [2]{\color{ForestGreen}},
+  keywords = {while, do, if, then, return, procedure, for, fun, else}, 
+  morekeywords = [2]{true, false, none},
+}
+
+\lstdefinelanguage{racket}{
+  basicstyle = {\ttfamily \color{black} \footnotesize},
+  backgroundcolor = {\color{Emerald!10}},
+  keywordstyle = {\color{blue}},
+  keywordstyle = [2]{\color{ForestGreen}},
+  keywords = {while, do, if, then, return, procedure}, 
+  morekeywords = [2]{true, false, none},
+}
+
+\lstdefinelanguage{logic}{
+  basicstyle = {\ttfamily \color{black} \footnotesize},
+  backgroundcolor = {\color{SkyBlue!10}},
+  keywordstyle = {\color{blue}},
+  keywordstyle = [2]{\color{ForestGreen}},
+  keywords = {while, do, if, then, return, procedure}, 
+  morekeywords = [2]{start, end},
+}
+
+\lstdefinelanguage{query}{
+  basicstyle = {\ttfamily \color{black}},
+  backgroundcolor = {\color{Periwinkle!10}},
+  keywordstyle = {\color{blue}},
+  keywordstyle = [2]{\color{ForestGreen}},
+  keywords = {true, false}, 
+  otherkeywords={<-,->},
+  morekeywords = [2]{<-, ->, nondeterminism, predicate,ignore},
+}
+
+
+\lstdefinestyle{mystyle}
+{
+    language = C++,
+    basicstyle = {\ttfamily \color{black}},
+    backgroundcolor = {\color{white}},
+    stringstyle = {\color{blue}},
+    keywordstyle = {\color{green}},
+    keywordstyle = [2]{\color{lime}},
+    keywordstyle = [3]{\color{yellow}},
+    keywordstyle = [4]{\color{teal}},
+    otherkeywords = {;,<<,>>,++},
+    morekeywords = [2]{true, false},
+    morekeywords = [3]{<<, >>},
+    morekeywords = [4]{++},
+}

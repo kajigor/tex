@@ -1,4 +1,4 @@
-\documentclass{book}
+\documentclass[11pt,a4paper]{book}
 \usepackage[subpreambles=false]{standalone}
 \usepackage{import}
 \usepackage{minitoc}
@@ -34,7 +34,7 @@
 % packages first used in Chapter:1
 % set color for links, urls and cites
 \usepackage[table]{xcolor}
-\usepackage[breaklinks,colorlinks=true,linkcolor=.,urlcolor=.,citecolor=teal]{hyperref}
+\usepackage[breaklinks,colorlinks=false,linkcolor=.,urlcolor=.,citecolor=teal]{hyperref}
 
 %% Additional packages for specific utility %%
 % % for subfigures
@@ -66,9 +66,10 @@
 
 % Setting the depth for section numbering
 \setcounter{secnumdepth}{3}
-
+  
 \input{defs}
 \input{packages}
+\input{lstlistingstyles}
 
 \begin{document}
 
@@ -76,9 +77,9 @@
 \mdfdefinestyle{theoremstyle}{%
 linecolor=black!50,
 linewidth=1pt,%
-shadow=true,
-shadowsize=2pt,
-shadowcolor=black!20,
+% shadow=true,
+% shadowsize=2pt,
+% shadowcolor=black!20,
 innertopmargin=\topskip,
 }
 \mdtheorem[style=theoremstyle]{example}{Example}[chapter]
@@ -97,6 +98,14 @@ innertopmargin=\topskip,
 \chapter*{Statutory Declaration}
 \import{frontmatter}{statutoryDeclaration}
 
+\newgeometry{
+  a4paper,
+  left=3.7cm,
+  right=2.5cm,
+  top=3.7cm, 
+  bottom=3.7cm,
+}
+
 \chapter*{Abstract}
 \import{frontmatter}{abstract}
 
@@ -113,32 +122,32 @@ innertopmargin=\topskip,
 %%%%%%%%%%%%%%%%%%%% Main matter
 
 \chapter{Introduction}\label{chap:intro}
-\minitoc
+% \minitoc % contents of the chapter: doubt we need it
 \import{introduction}{intro}
 
 \chapter{Background}\label{chap:background}
-\minitoc
+% \minitoc
 \import{background}{background}
 
 \chapter{Relational Interpreters for Search}\label{chap:1}
-\minitoc
-\import{chap1}{chap1}
+% \minitoc
+\input{chap1/chap1.tex}
 
 \chapter{Specialization}\label{chap:2}
-\minitoc
-\import{chap2}{chap2}
+% \minitoc 
+\import{chap2}{chap2}  
 
 \chapter{Functional Conversion}\label{chap:3}
-\minitoc
+% \minitoc
 \import{chap3}{chap3}
 
 \chapter{Evaluation}\label{chap:4}
-\minitoc
+% \minitoc
 \import{chap4}{chap4}
 
 
 \chapter{Conclusion}\label{chap:conclusion}
-\minitoc
+% \minitoc
 \import{conclusion}{conclusion}
 
 %%%%%%%%%%%%%%%%%%%%
@@ -166,7 +175,7 @@ innertopmargin=\topskip,
 
 
 %%%%%%%%%%%%%%%%%%%%  Main bib used when main.tex is compiled.
-\bibliographystyle{ACM-Reference-Format} 
+\bibliographystyle{plain} 
 \bibliography{main}
 
 \end{document}
