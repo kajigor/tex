@@ -1,0 +1,13 @@
+\begin{figure}[h!]
+  \begin{lstlisting}[language=prolog, basicstyle=\small]
+edge(a, b). 
+edge(b, c). 
+edge(c, a). 
+edge(d, a). 
+
+path(X, X). 
+path(X, Y) :- edge(X, T), path(T, Y). 
+  \end{lstlisting}
+  \caption{Path searching in \prolog}
+  \label{fig:background:graph}
+\end{figure}

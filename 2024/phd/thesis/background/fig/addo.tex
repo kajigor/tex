@@ -1,0 +1,11 @@
+\begin{figure}[h!]
+  \begin{lstlisting}[language=Haskell, basicstyle=\small]
+-- addo :: [Nat] -> [Nat] -> [Nat] -> Goal 
+addo x y z = 
+  (x == Zero & y == z) | 
+  (fresh x1, z1 in 
+    (x == Succ x1 & z == Succ z1 & addo x1 y z1));
+  \end{lstlisting}
+  \caption{The addition relation}
+  \label{fig:background:addo}
+\end{figure}

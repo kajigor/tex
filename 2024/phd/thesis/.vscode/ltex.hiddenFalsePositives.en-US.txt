@@ -1,1 +1,3 @@
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qlikely (citation needed)\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qmeans that if\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qmeans that there is an edge from vertex a to vertex b.\\E$"}

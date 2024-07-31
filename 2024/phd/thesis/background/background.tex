@@ -5,33 +5,39 @@
 
 \begin{document}
 
+The field of programming languages has seen significant evolution over the years with various paradigms emerging designed to address different kinds of computational problems and methodologies. 
+In this chapter, we provide an overview of the logic programming paradigm and discuss \mk, the primary logic language used in this thesis. 
+In addition to this, we overview the field of specialization which helps us overcome some of the performance challenges that are encountered in logic programming. 
+
+
 \section{Logic Programming Languages}
 
 Over the years, multiple logic programming languages have been developed, with \prolog~\cite{battani1973interpreteur} being the most widespread. 
 It was the first successful attempt to enable declarative programming by means of writing programs in a subset of formal logic.
 At its core, \prolog uses Horn clauses, a semidecidable subset of first-order predicate logic. 
 Each program formulates a set of facts and predicates that connect these facts. 
-The evaluation of a program is done by an Selective Linear Definite clause resolution~\cite{robinson1965machine} (SLD resolution) of a query, often following depth-first approach.  
+The evaluation of a program is done by a Selective Linear Definite clause resolution~\cite{robinson1965machine} (SLD resolution) of a query, often following the depth-first approach.  
 
 For years, logic programming was highly limited by hardware capabilities, leading to necessary compromises. 
 One of them was an early removal of occurs-check from the unification algorithm~\cite{cohen1988view}. 
 This means that running a query "\texttt{? f(X, a(X)).}", given a program "\texttt{f(X, X).}", produces a nonsensical result "\texttt{X $\mapsto$ a(X)}". 
 It is up to the user to ensure that a variable never occurs in a term it is unified with. 
-Fortunatelly, a special sound unification predicate such as \texttt{unify\_with\_occurs\_check} can be used to prevent such results. 
+Fortunately, a special sound unification predicate such as \texttt{unify\_with\_occurs\_check} can be used to prevent such results. 
 
 Another compromise is linked to the implementation details and has more significant consequences. 
 Logic languages are inherently nondeterministic, and evaluation on a deterministic computer requires decisions about how to explore the search space. 
 \prolog was first designed for automatic theorem proving, an area in which a single solution to a query is generally sufficient. 
 Thus, most \prolog implementations feature depth-first search, which often results in either non-termination or the generation of infinitely many similar answers to a query when an infinite branch of the search tree is explored. 
-Additionally, non-relational constructs such as a cut and \texttt{copy-term} have been adopted for efficiency reason. 
-Unfortunately, these two aspects often limit a relation to a single mode and directly contradict the main idea of declarative programming: a program can no longer be written with disregard of the peculiarities of the language. 
+Additionally, non-relational constructs such as a cut and \texttt{copy-term} have been adopted for efficiency reasons. 
+Unfortunately, these two aspects often limit a relation to a single mode and directly contradict the main idea of declarative programming making it impossible to write a program without considering the peculiarities of the language. 
 
-Recently, there has been a resurgence of the logic programming paradigm with the emergence of new languages, including \merc\footnote{The website of the \merc programming language \url{https://mercurylang.org/}}, \curry\footnote{The website of the \curry programming language \url{https://curry.pages.ps.informatik.uni-kiel.de/curry-lang.org/}}, \mk\footnote{The website of the \mk programming language \url{http://minikanren.org/}}, and others.
-Additionally, a prominent video games developer Epic Games invested into designing a new functional-logic programming language~\cite{versecalculus}.
-This new generation of logic languages combines the paradigms of logic and more mainstream fuctional programming. 
-\merc and \curry are stand-alone logic-functional programming languages with dedicated compilers that makes it difficult to interoperate with bigger systems typically written in a general-purpose language. 
 
-In contrast, \mk is implemented as a lightweight embedded domain-specific language, enabling the power of logic programming in any general purpose language. 
+About twenty years after \prolog had been created, there was a resurgence of the logic programming paradigm with the emergence of new languages, including \merc\footnote{The website of the \merc programming language \url{https://mercurylang.org/}}, \curry\footnote{The website of the \curry programming language \url{https://curry.pages.ps.informatik.uni-kiel.de/curry-lang.org/}}, and others.
+\merc and \curry are stand-alone functional logic programming languages designed to combine the power of logic programming with the more mainstream functional programming. 
+These languages have dedicated compilers which make it difficult to interoperate with bigger systems typically written in a general-purpose language. 
+Additionally, a prominent video games developer Epic Games invested into designing a new functional logic programming language~\cite{versecalculus} which is still under development at the time of writing this thesis.
+
+In contrast, \mk\footnote{The website of the \mk programming language \url{http://minikanren.org/}} is implemented as a lightweight embedded domain-specific language, enabling the power of logic programming in any general purpose language. 
 \mk features interleaving search~\cite{kiselyov2005backtracking} that guarantees that every solution to a query will be found, given enough time. 
 Moreover, its extendible architecture allows for easy experimentation and addition of new features. 
 The main design philosophy of \mk is to adhere to the pure logic programming as much as possible, so any program can be called in any direction. 
@@ -74,5 +80,50 @@ The fact that majority of \prolog implementations do not impose a type system ma
 Mode analysis embodies data-flow analysis that makes it possible to compile the same definition into several functions specialized for the given direction. 
 
 \section{Relational Programming and \mk}
+ 
+\mk is not a single language, but a family of domain specific languages for logic programming. 
+The core language is very small and can be embedded in any host language, be it functional, imperative, object-oriented or logic-based\footnote{See the list of \mk implementations at \url{http://minikanren.org/}}. 
+Furthermore, being designed for easy modification, \mk features multiple extensions, including Constraint Logic Programming, nominal logic programming, and tabling. 
+In this thesis, we focus on the core \mk language shared between all languages in the family that can be implemented in as few as forty lines of code~\cite{hemann2013mukanren}. 
+Let us now describe the syntax and semantics of the language and illustrate it with some examples. 
+
+\subsection{Syntax}
+
+The basic block of the language is a goal which is analogous to a predicate and can be considered as a function that takes a state as an input and either fails or succeeds, producing a sequence of new (extended) states. 
+Although the state may vary depending on which extensions a particular implementation features, in its simplest form it is just a substitution of logic variables encountered in a program. 
+This substitution represents the answer to the user query and is used as the primary data structure describing the intermediate result of the computation. 
+
+A goal $\mathcal{G}$ can be constructed using one of four constructors: term unification ($==$), conjunction ($\&$), disjunction ($|$), or fresh variable introduction ($fresh$): see figure~\ref{fig:background:mksyntax}. 
+Term unification is the backbone of any logic language, and it succeeds if and only if its two arguments unify~\cite{baader2001unification}. 
+A term $\mathcal{T}$ can either be a variable $\mathcal{V}$, or created from a list of other terms with a constructor $\mathcal{C}$. 
+Succeeding, unification can modify a substitution by adding new associations for the variables used in the terms being unified. 
+When unification fails, no substitution is produced, and the computation halts. 
+
+\begin{wrapfigure}{r}{0.43\textwidth}
+  \input{fig/mksyntax.tex}
+\end{wrapfigure}
+
+The constructor $fresh$ introduces new, or fresh, logic variables into scope. 
+The last argument of the constructor is a goal, in which these variables are considered bound. 
+Furthermore, introducing a variable with the same name as another in the wider scope shadows the previous variable. 
+
+The last two constructors, $\&$ and $|$, represent the conjunction and disjunction of goals respectively.
+With them, we express Boolean logic over the predicates. 
+Notice, that unlike in other \mk implementations, at least two goals should be joined with these constructors, and we do not impose a limit on the number of the goals in a single constructor.
+Moreover, we treat these operators as right-associative when evaluating a \mk program, which means that the following equation holds: $g_1 \ \& \ g_2 \ \& \ g_3 \ \& \ g_4 = g_1 \ \& \ (g_2 \ \& \ (g_3 \ \& \ g_4))$.
+This interpretation aligns with the operational semantics of the language and simplifies its implementation.
+
+Finally, to define a new relation $\mathcal{D}$, one specifies its name $\mathcal{R}^o_k$, variable arguments $\mathcal{V}_0, \dots, \mathcal{V}_k$, and body $\mathcal{G}$, which must be a goal. 
+According to the convention accepted in \mk community, we add the superscript $^o$ to the name of a relation. 
+Unlike in \prolog, we do not allow using the same variable twice in the argument list nor do we permit pattern matching there. 
+Instead, explicit unifications are should be used in the body of the relation. 
+
+\subsection{Example}
+
+Having introduced the syntax of the language, let us consider the example program shown in figure~\ref{fig:background:addo}. 
+The relation \code{addo} relates three natural numbers \code{x}, \code{y}, and \code{z} in such a way that the property \code{x + y = z} holds. 
+We use Peano numbers in the implementation, with the constructor \code{Zero} representing the number $0$, and \code{Succ x} corresponding to $x+1$. 
+
+\input{fig/addo.tex}
 
 \end{document}
