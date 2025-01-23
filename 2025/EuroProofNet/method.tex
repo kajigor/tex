@@ -1,0 +1,53 @@
+% \section{Method}
+
+% Describe a general scenario
+
+In addition to function signature and body, verified code contains a specification of its behavior. 
+It includes preconditions that describe assumptions correct before evaluation of the function begins and guarantees ensured after execution called postconditions.
+Sometimes these are enough to establish correctness, bun in the majority of non-trivial cases, additional statements should be proven, such as loop invariants or lemmas.
+
+% Explain modes 1 and 4 in detail. 
+
+This provides a spectrum of components which can be exposed to a model in code synthesis tasks ranging from a textual description of the problem at hands to everything but loop invariants. 
+In this extended abstract, we only focus on a scenario where the user describes the problem in a natural language and supplies a function signature and pre- and postconditions, as we view this as the best way to precisely express the user intent. 
+An example of a query is ``Checks if given string is a palindrome'' along with the following code. 
+
+\begin{lstlisting}[language=Python]
+def is_palindrome(text : List[int]) -> bool:
+  Requires(Acc(list_pred(text))) # precondition
+  Ensures(Acc(list_pred(text)))  # postconditions 
+  Ensures(Result() == Forall(int, lambda i:
+      (i >= 0 and i < len(text)) 
+      implies (text[i] == text[len(text) - i - 1]))))
+\end{lstlisting}
+
+The model then generates the function body as well as any necessary additional conditions needed to finish the proof. 
+If the produced code verifies, it gets accepted and passed to the user. 
+Otherwise, the verifier feedback is sent to the model for further revision of the suggestion; this process is repeated up to \todo{5} times. 
+
+% Describe the benchmark, add links. 
+
+In order to evaluate the abilities of the model, we created a benchmark based on \todo{HumanEval}.
+We manually implemented a subset of the problems in Nagini\footnote{HumanEval data set in Nagini: \url{https://github.com/JetBrains-Research/HumanEval-Nagini/}} and contributed in a collaborative effort to create it for Viper\todo{ (add footnote)}. 
+Not every problem in the original dataset suits well for verification. 
+For some of them, specification duplicates the implementation \todo{(numbers)}, while unsupported language features are needed for others \todo{(numbers)}. 
+In total, our benchmarks contain 106 problems for Nagini and \todo{this many} for Verus. 
+
+% Showcase the numbers. 
+
+We run the described experiment on \todo{Claude} and got the results presented in \todo{table}. 
+With about 
+
+\begin{table}[]
+  \begin{tabular}{l|l|l}
+  System & Number of programs & Verified  \\ \hline
+  Nagini & 106                & 67 (63\%) \\
+  Verus  &                    &          
+  \end{tabular}
+  \end{table}
+
+We conclude that using large language models can enable verification in mainstream programming languages. 
+
+
+% Make conclusion. 
+

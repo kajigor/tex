@@ -1,0 +1,35 @@
+% \section{Introduction}
+
+% Despite being able to produce reliable and robust systems, formal verification has remained a niche discipline.
+
+Software is notoriously difficult to get right. 
+Off-by-one errors, null dereferencing, and infinite loops are among the most common avoidable mistakes developers tend to make. 
+Formal methods aim to prevent these and more complicated kinds of errors by providing a programmer with means to reason about a program and prove its correctness.  
+Such tools are especially valued in critical domains such as healthcare and finance, where software failures can have severe consequences. 
+However, adopting formal verification requires significant additional effort and expertise, which limits their use beyond high-stakes applications.
+
+% % In the modern era when code is generated left and right, ensuring it's safe is vitally important. 
+
+% Since the advent of large language models, a multitude of code generation approaches have been developed. 
+% With people slowly beginning to trust these systems, significantly less time is spent critically evaluating the produced code. 
+% As a result, errors are more likely to find their way into the code bases, leading to unintended consequences.
+% Thus, it is of paramount importance to ensure the correctness of the generated code. 
+
+% Mainstream programming languages have frameworks for formal verification but they are still challenging for the users. 
+
+% The majority of software verification systems are standalone, such as Coq, Isabelle/HOL, and Dafny. 
+
+SMT-powered software verification systems such as Dafny and F* partially automate proof search but remain standalone tools. 
+This implies that to introduce verification into an existing project, one needs to make a tough decision of adopting a new language, which often comes with worse developer tools and a higher entrance barrier for the engineers. 
+One way to overcome this drawback is to provide an intermediate verification language such as Viper\footnote{Viper system: \url{https://www.pm.inf.ethz.ch/research/viper.html}}, with frontends in mainstream languages.
+The last hurdle to clear is to make it easy for developers to specify properties of their programs, as well as to prove that they hold. 
+
+% Contributions: 
+% * Nagini, Verus and Dafny: benchmark 
+% * Several scenarios, prompts and additional preprocessing 
+% * Results of measurements 
+
+In this research, we explore whether large language models are capable of generating verified code in mainstream languages in several scenarios, including from a text description of a problem with no additional artefacts. 
+We focus on Nagini and Verus -- the extensions of the popular programming languages Python and Rust. 
+% We also compiled a benchmark of high-quality implementations of a subset of the HumanEval dataset for Nagini. 
+% Our investigation concludes that \todo{Claude} demonstrates the ability to generate verified code rather well. 

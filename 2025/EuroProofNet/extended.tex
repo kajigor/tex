@@ -1,0 +1,47 @@
+Software is notoriously difficult to get right. 
+Off-by-one errors, null dereferencing, and infinite loops are among the most common avoidable mistakes developers tend to make. 
+Formal methods aim to prevent these and more complicated errors by providing a programmer with means to reason about a program and prove its correctness.  
+Such tools are especially valued in critical domains such as healthcare and finance, where software failures can have severe consequences. 
+However, adopting formal verification requires significant additional effort and expertise, which limits their use beyond high-stakes applications.
+
+SMT-powered software verification systems such as Dafny and F* partially automate proof search but remain standalone tools. 
+This implies that to introduce verification into an existing project, one needs to make a tough decision of adopting a new language, which often comes with worse developer tools and a higher entrance barrier for the engineers. 
+One way to overcome this drawback is to use an intermediate verification language such as Viper\footnote{Viper system: \url{https://www.pm.inf.ethz.ch/research/viper.html}}, with frontends in mainstream languages.
+The last hurdle to clear is to make it easy for developers to specify properties of their programs, as well as to prove that they hold. 
+
+\todo{Prior research!!!}
+In this project, we explore whether large language models are capable of generating verified code in mainstream languages from a text description and a partial specification. 
+We focus on Nagini\footnote{Nagini, an automatic verifier for Python programs: \url{https://github.com/marcoeilers/nagini}} and Verus\footnote{Verus, a tool for verifying code correctness in Rust: \url{https://github.com/verus-lang/verus}} -- the extensions of the popular programming languages Python and Rust. 
+
+
+In addition to a function signature and a body, verified code contains a specification of its behavior. 
+It includes preconditions that describe assumptions held before the evaluation of the function begins and guarantees ensured after execution, called postconditions.
+Sometimes these are enough to establish correctness, bun in the majority of non-trivial cases, additional statements should be proven, such as loop invariants or lemmas.
+
+This provides a spectrum of data which can be exposed to a model in code synthesis tasks ranging from a textual description of the problem at hands to everything but loop invariants. 
+In this extended abstract, we only focus on a scenario where the user describes the problem in a natural language and supplies a function signature with pre- and postconditions, as we view it as the most precise way to express the user intent. 
+An example of a query is ``Checks if given string is a palindrome'' along with the following code. 
+
+\begin{lstlisting}[language=Python,basicstyle=\footnotesize]
+def is_palindrome(text : List[int]) -> bool:
+  Requires(Acc(list_pred(text))) # precondition
+  Ensures(Acc(list_pred(text)))  # postconditions 
+  Ensures(Result() == Forall(int, lambda i:
+    (i >= 0 and i < len(text)) 
+    implies (text[i] == text[len(text) - i - 1])))
+\end{lstlisting}
+
+The model is them prompted to generate the function body as well as any necessary additional conditions necessary to finish the proof.
+We use few-shot The complete prompt can be found in the Appendix\todo{(ref)}.
+If the produced code verifies, it is accepted and passed to the user. 
+Otherwise, the verifier feedback is sent to the model for further revision of the suggestion; this process is repeated up to \todo{5} times. 
+
+In order to evaluate the abilities of the model, we created a benchmark based on HumanEval\cite{chen2021evaluating}.
+We manually implemented a subset of the problems in Nagini\footnote{HumanEval dataset in Nagini: \url{https://github.com/JetBrains-Research/HumanEval-Nagini/}} and contributed in a collaborative effort to create it for Verus\footnote{HumanEval dataset in Verus: \url{https://github.com/secure-foundations/human-eval-verus}}. 
+Not every problem in the original dataset suits well for verification. 
+For some of them, specification duplicates the implementation \todo{(numbers)}, while unsupported language features are needed for others \todo{(numbers)}. 
+In total, our benchmarks contain 106 problems for Nagini and \todo{this many} for Verus. 
+
+We ran the described experiment on Claude-3.5-Sonnet, which successfully produced verified code for 67 problems (63\%) in Nagini and \todo{this many} in Verus. 
+We conclude that using large language models can enable verification in mainstream programming languages. 
+
