@@ -1,0 +1,27 @@
+\begin{columns}
+  \centering
+
+  \begin{column}{0.35\textwidth}
+    \begin{lstlisting}[frame=tb]
+   eval$^o$ st fm u = 
+     fresh (x y v w z) 
+       ([*fm === Conj x y*] /\
+        eval$^o$ st x v /\
+        eval$^o$ st y w /\ 
+        [*and$^o$ v w u*]) \/
+        ... 
+    \end{lstlisting}
+  \end{column}
+  
+  \begin{column}{0.35\textwidth}
+    \begin{lstlisting}[frame=tb]
+   eval$^o$ st fm u = 
+     fresh (x y v w z) 
+       ([*and$^o$ v w u*] /\
+        eval$^o$ st x v /\
+        eval$^o$ st y w /\ 
+        [*fm === Conj x y*]) \/
+        ... 
+    \end{lstlisting}
+  \end{column}
+\end{columns}

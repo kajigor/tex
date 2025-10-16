@@ -1,0 +1,10 @@
+\begin{lstlisting}[language=imperative]
+procedure DFS(G, v) = 
+  S.push(v)
+  while !S.empty do
+    v = S.pop()
+    if (!seen[v]) then
+      seen.add(v)
+      for (_, w) in G.edges(v) do 
+        S.push(w)
+\end{lstlisting}

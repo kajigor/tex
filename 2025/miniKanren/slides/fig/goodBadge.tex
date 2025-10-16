@@ -1,0 +1,17 @@
+\definecolor{fastGreen}{RGB}{41,231,204}
+\definecolor{darkFastGreen}{RGB}{10,46,54}
+
+\newcommand{\goodBadge}[1]
+{
+  \begin{tikzpicture}
+    \node[circle,
+          scale=0.8,
+          text width=1cm,
+          fill=fastGreen,
+          draw=darkFastGreen,
+          line width=0.4mm,
+          inner sep=1pt,
+          align=center]
+        {\textbf{#1}};
+  \end{tikzpicture}
+}

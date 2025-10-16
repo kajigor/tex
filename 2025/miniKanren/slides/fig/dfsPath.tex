@@ -1,0 +1,13 @@
+\begin{lstlisting}[language=imperative]
+procedure DFS(G, v, u) = 
+  path = [v] 
+  S.push(v, path)
+  while !S.empty do
+    (v, path) = S.pop()
+    if (v == u) then return path
+    if (!seen[v]) then
+      seen.add(v)
+      for (_, w) in G.edges(v) do 
+        S.push((w, path.add(w)))
+    return none
+\end{lstlisting}

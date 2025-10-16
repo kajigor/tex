@@ -1,0 +1,126 @@
+\tikzset{
+    block/.style={
+      rectangle, minimum width = 2cm, minimum height=1cm, align=center
+      %, rounded corners=0.5cm
+      %,draw
+    },
+    block1/.style={
+      rectangle, minimum width = 1cm, minimum height=1cm, align=center
+    },
+}
+
+\newcommand{\fTO}[2]{
+  \draw[-Stealth,thick,color=teal] (#1) -- (#2);
+}
+
+\newcommand{\fTORed}[2]{
+  \draw[-Stealth,thick,color=violet] (#1) -- (#2);
+}
+
+\newcommand{\fTOGreen}[2]{
+  \draw[-Stealth,thick,color=ForestGreen] (#1) -- (#2);
+}
+
+  % decoration = {
+  %   snake,
+  %   pre length=2pt,
+  %   post length=4pt,
+  %   amplitude=0.5pt,
+  %   segment length=4pt,
+  % },
+  
+\begin{center}
+  \begin{tikzpicture}[
+    every node/.style = {
+        inner sep=10pt
+      , shape=rectangle
+      }
+  ]
+
+      \coordinate (shift) at (1.7,0);  
+      \coordinate (shift1) at (3.4,0);
+      \coordinate (shift2) at (2,0);
+      \coordinate (shift3) at (1,0);
+      \coordinate (shift4) at (1,0);
+      \coordinate (down) at (0,1.8);
+      
+
+      \node[block] (main) at ($(0,1)$) {$?\ eval^o([], v_0, True)$};
+
+
+      % $(main)  - (shift1) - (down) - (shift)+(0,0.25)$ 
+      % $(main)  - (down) - (shift)$
+      % $(main)  - (down) + (shift)$
+      % $(main) + (shift1) + (shift) - (down)+(0,0.25)$
+
+      \node[block] (conj) at ($(main)  - (shift1) - (down) - (shift)-(0,0.5)$) { $and^o(v_3, v_5, True)$ \and \\ $eval^o([], v_1, v_3)$ \and \\ $eval^o([], v_2, v_4)$ \\ \subst{$v_0 \rightarrow Conj(v_1, v_2) $}};
+
+      \fTO{main.south}{$(conj.north)$};
+
+      
+      \node[block] (lit) at ($(main)  - (down) - (shift) +(0,0.2)$) {\subst{\underline{$v_0 \rightarrow Lit(True)$}}};
+      
+      \fTO{main.south}{$(lit.north)$};
+
+      
+      \node[block] (elem) at ($(main)  - (down) + (shift)$) {$elem^o(v_1, [], True)$ \\ \subst{$v_0 \rightarrow Var(v_1) $}};
+
+
+      \fTO{main.south}{$(elem.north)$};
+
+      
+      \node[block] (other) at ($(main) + (shift1) + (shift) - (down)+(0,0.25)$) {$...$};
+
+      \fTO{main.south}{$(other.north)$};
+      
+      
+      \node[block] (fail) at ($(main)  - (down) + (shift)-(0,2.1)$) {$Fail$};
+
+      \fTO{elem.south}{$(fail.north)$};
+
+      
+      \node[block] (conj1) at ($(main)  - (shift1) - (down) - (down) - (0,1.0) - (shift)-(0,0.5)$) {$eval^o([], v_1, True)$ \and \\ $eval^o([], v_2, True)$ \\ \subst{$v_0 \rightarrow Conj(v_1, v_2) $}};
+
+      \fTO{conj.south}{$(conj1.north)$};
+
+      \node[block1] (unsafe) at ($(main) - (down) - (down) - (0,1.0) - (shift)-(0,0.5)$) {\textcolor{violet}{Unsafe}};
+
+      \fTORed{unsafe.west}{$(conj1.east)$};
+
+      
+      \node[block1] (unsafe) at ($(main) - (down) - (shift) - (0,0.5)$) {\textcolor{ForestGreen}{Safe}};
+
+      \fTOGreen{unsafe.west}{$(conj.east)$};
+
+
+      \node[block1] (stop) at ($(main)- (shift1) - (down) - (down) - (down) - (shift) - (0,0.8)$) {\textcolor{red}{Stop!}};
+       
+  \end{tikzpicture}
+\end{center}
+  
+
+%   \begin{tikzpicture}[
+%   processTree,
+%   sibling distance=10em,
+%   level distance=8em]
+%   \node {
+%     \underline{\rel{eval}{$fm \ s \ true$}}}
+%     child { node {
+%       \rel{lookup}{$x \ s \ true$} \\
+%       \subst{$fm \to var \ v$}}}
+%     child { node {
+%       \rel{eval}{$x \ s \ a$} \and \\
+%       \rel{not}{$a \ true$} \\
+%       \subst{$fm \to neg \ x$}}}
+%     child { node {
+%       \rel{eval}{$x \ s \ a$} \and \\
+%       \rel{eval}{$y \ s \ b$} \and \\
+%       \rel{or}{a \ b \ true} \\
+%       \subst{$fm \to disj \ x \ y$}}}
+%     child { node {
+%       \rel{eval}{$x \ s \ a$} \and \\
+%       \rel{eval}{$y \ s \ b$} \and \\
+%       \rel{and}{a \ b \ true} \\
+%       \subst{$fm \to conj \ x \ y$}}}
+%   ;
+% \end{tikzpicture}

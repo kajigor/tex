@@ -1,0 +1,211 @@
+\section{Typed Shallow Embedding}
+\label{contrib:tagless}
+
+The functional conversion implemented in~\cite{engel2023translation} operates on an untyped version of \mk even though the target languages are \haskell and \ocaml. 
+These languages feature expressive static type systems, and it would be a shame to forgo their benefits. 
+Besides explicit passing of generators this approach also erases all information about the type of specific variables, and combine all constructors in one type called \lstinline{Term}. 
+Figure \ref{fig:generatedterm} shows an example of such type, which integrates natural numbers, lists, and binary trees.
+This makes values such as \lstinline{S (Cons (Leaf) (S Nil))} possible, even though they have no meaningful interpretation.  
+
+\begin{figure}[h]
+    \centering
+    \includelines{code/BalanceoOI.hs}{2}{8} 
+    \caption{Generated \emph{Term} type}
+    \label{fig:generatedterm}
+\end{figure}
+
+To overcome these issues, we need a typed \mk embedding capable of linking each logical value to its ground counterpart. 
+Existing candidates fall short.
+\haskell embedding typedKanren~\cite{kudasov2024typedkanren} supplies the required logical‑type machinery but only for execution, not for inspecting or analysing relations. 
+Simultaneously, \ocanren offers a typed \ocaml embedding yet targets a language less convenient for our conversion pipeline. 
+We therefore develop a new, tagless‑final~\cite{carette2009finally} embedding in Haskell that lets programmers write type‑safe and composable relations, provides the correspondence between logic and ground types, and remains open to future extensions. 
+
+The embedding consists of two interfaces expressed as \haskell typeclasses:  
+
+\begin{itemize}
+    \item \lstinline{LogicType} that builds correspondence between the logical and the underlying type.
+    \item \lstinline{Kanren} that describes a way to interpret a \mk relation. 
+\end{itemize}    
+
+These typeclasses are then instantiated to provide concrete logic types and interpreters of relations. 
+
+\subsection{LogicType}
+\label{tagless:logic}
+
+\mk interpreters do not operate on concrete \haskell types; instead they expect logical types whose structures mirror the original but contain placeholders for variables, also called \emph{holes}.
+The \lstinline{LogicType} typeclass with associated type \lstinline{WithLogic} enforce the shape of a logical type and establish a correspondence between ground and logical types. 
+To support multiple interpreters, logic types require variables to represent holes and have to be polymorphic over them, while a variable itself should be polymorphic over the type of its content.
+As such, we get the following definition of \lstinline{LogicType} and \lstinline{WithLogic}. 
+\includelines{code/Logic.hs}{12}{13}
+
+We also introduce two helper types: \lstinline{Logic}, which represents a logical hole at top-level, and \lstinline{Var}---a variable that contains a logical type.
+
+\includelines{code/Logic.hs}{9}{10}
+
+To illustrate the interface, we will examine it step by step and implement it for a simple case of Peano numbers.
+Given the usual implementation of a natural number \lstinline{Nat}, we can define the logic type in the following way. 
+\includelines{code/LogicNat.hs}{0}{3}
+
+To map the underlying type to its logical counterpart, \lstinline{LogicType} features functions \lstinline{project} and \lstinline{reify}.
+
+\includelines{code/Logic.hs}{14}{15}
+
+The function \lstinline{project} maps the value of an underlying type to a fully-ground logical value of a logical type, while \lstinline{reify} converts a logical value to its underlying value and returns \lstinline{Nothing} if the input is not fully-ground.
+These functions should obey the following laws:
+
+\includelines{code/Logic.hs}{28}{29}
+
+A simple instance for the Peano natural numbers might look like this:
+\includelines{code/LogicNat.hs}{15}{20}
+
+To be able to inspect logical values, we provide the following representations of term-style construction. 
+It mirrors the typical structure of \mk values: a constructor with a fixed number of arguments of a logical type. 
+
+\includelines{code/Logic.hs}{1}{8}
+
+\lstinline{Field} is a type-erasing GADT, which ensures arguments may have different types. 
+\lstinline{Constructor} represents a particular constructor of a term, with an explicit name and a way to create a value.
+
+\lstinline{LogicType} introduces the function \lstinline{quote} which obeys the following law. 
+\includelines{code/Logic.hs}{24}{25}
+
+Implementing \lstinline{quote} can be done with helper functions \lstinline{quote0}, \lstinline{quote1}, and others. 
+For type-preserving translator, it is important for the names passed to the constructors in \lstinline{quote} to correspond to the constructor names of the underlying type, however it is not in general a requirement of the system.
+\includelines{code/LogicNat.hs}{5}{6}
+
+Finally, it should be possible to unify logical types; thus \lstinline{LogicType} contains the function \lstinline{unifyVal}. 
+\includelines{code/Logic.hs}{16}{18}
+
+In addition to values to be unified, this function also accepts a \emph{unification provider}.
+Unification provider is supplied by the interpreter (see \ref{tagless:interpreters}) and conveys the meaning of the unification in  interpreter's domain.
+
+% This function is in fact redundant in the typeclass --- it can be implemented entirely using \emph{quote}, and in fact such an implementation is provided. It is, however, included, as it is performance-critical to many typical miniKanren interpreters, and utilizing \emph{quote} for it would be a significant performance hit.
+
+This function can be implemented for Peano numbers in the following way. 
+\includelines{code/LogicNat.hs}{8}{10}
+
+% Last two functions of the typeclass also could also be reimplemented using \emph{quote}, and included for performance: \emph{derefVal} and \emph{generate}.
+
+The next function of \lstinline{LogicType} are \lstinline{derefVal} that is similar to \lstinline{reify}, but works on values that can contain variables.
+To achieve this, it requires an environment that provides values for such variables through the first argument. 
+
+\includelines{code/Logic.hs}{19}{21} 
+
+Its implementation for natural numbers is as follows. 
+\includelines{code/LogicNat.hs}{12}{13}
+
+The goal of the last function, \lstinline{generate}, is to systematically enumerate all possible underlying values. 
+It replaces the user-provided generators required in the untyped version \ref{contrib:translator}.
+
+\includelines{code/Logic.hs}{22}{22}
+
+For natural numbers, the generator is rather simple:
+
+\includelines{code/LogicNat.hs}{22}{22}
+
+Functions \lstinline{unifyVal}, \lstinline{derefVal}, and \lstinline{generate} are redundant in the typeclass and can be implemented only by using \lstinline{quote}.
+Such an implementation is provided, however its performance may be insufficient for particular interpreters. 
+Because of that, the functions are included in the interface and can have custom implementations. 
+
+
+\subsection{Kanren}
+\label{tagless:kanren}
+
+The tagless-final approach represent a domain-specific language by an interface of polymorphic combinators. 
+Their behavior is determined by interpreters---instances of the typeclass---rather than a fixed syntax tree resulting in extensible, type-safe embeddings. 
+
+In our implementation such interface is called \lstinline{Kanren}.
+A type that has a \lstinline{Kanren} instance denotes \emph{relations that return a value}.
+Therefore, \lstinline{Kanren rel} means that \lstinline{rel Int} is a relation that produces a value of type \lstinline{Int}. 
+
+Conjunctions are often expressed with a monadic bind, but bind enforces a fixed evaluation order---preventing the reordering of conjuncts that our functional conversion needs.
+Instead, we require the \lstinline{Applicative} constraint which imposes no order. 
+With this constraint it is impossible to use the value of an earlier conjunct in the following code; thus, for pure \mk relations, the type of the return value is fixed to unit \lstinline{()}. 
+The purpose of this parameter is described in \ref{tagless:eval}.
+
+Disjunction, by contrast, naturally fits the \lstinline{Alternative} interface: \lstinline{empty} represents failure, and \lstinline{<|>} models branching without ordering constraints. 
+Thus, we simply require \lstinline{Alternative}, which matches the semantics of \mk choice exactly.
+
+Finally, each \lstinline{Kanren} instance has to specify a \lstinline{KVar} type --- a variable associated with this relation. 
+It does not need to contain a value, but it has to be functorial over the type it is designated to contain.
+Thus, we have the following definition with basic \mk operations:
+
+\includelines{code/Kanren.hs}{6}{9}
+
+In our embedding we need two ways to introduce variables. 
+The first one, which corresponds to $\Fresh_{v}$, introduces an empty variable. 
+The other denotes an argument of a relation that will, upon introduction, be bound to arguments passed to the call. 
+It is equivalent to inserting a unification after $\Fresh_{v}$, but is immediately visible whenever transformations of the relation are done.
+
+\includelines{code/Kanren.hs}{1}{3}
+
+The function \lstinline{fresh} therefore receives a description of the variable to create and a continuation that builds the rest of the relation using that variable, and returns the fully assembled relation: 
+
+\includelines{code/Kanren.hs}{10}{10}
+
+A handful of helpers and the \lstinline{ApplicativeDo} \haskell extension allows writing relations concisely: 
+\includecode{code/AddoTF.hs}
+
+\subsection{KanrenEval}
+\label{tagless:eval}
+
+Although the \lstinline{Kanren} typeclass makes it possible to define and interpret relations, it offers no mechanism to extract the result of relation execution. 
+This may seem counterintuitive, but some interpreters, such as the normalizing interpreter, do not operate with the output, instead transforming the relation itself. 
+
+Nevertheless, it is an important property for evaluators which is why we extend \lstinline{Kanren} with the \lstinline{KanrenEval} typeclass. 
+\lstinline{KanrenEval} allows dereferencing variables which makes their value accessible as relation's return value.
+An interpreter can then define how to extract the resulting value (see \ref{tagless:interpreters}).
+
+\includelines{code/Kanren.hs}{12}{13}
+
+Combined with \lstinline{derefVal} function from \lstinline{LogicType} (\ref{tagless:logic}), the complete evaluation function is straightforward: 
+
+\includelines{code/Kanren.hs}{15}{17}
+
+\subsection{Automatic Derivation of LogicType Instances}
+\label{tagless:types}
+
+\lstinline{LogicType} instances are highly constrained because of the requirement that the logic type mirrors \mk terms and remains interoperable with the underlying type. 
+Only algebraic data types (and GADTs) qualify, therefore exactly one valid implementation of \lstinline{LogicType} is admitted per underlying type---a fact we exploit for automatic derivation. 
+
+\lstinline{TemplateHaskell} is capable of generating this unique instance for a given algebraic data type. 
+For performance reasons (see Section \ref{task:evaluation}) the implementations of functions in this typeclass must be annotated \lstinline{INLINABLE}. 
+This way, the compiler statically resolves which function is to be called for any particular type.
+
+\subsection{Examples of Interpreters}
+\label{tagless:interpreters}
+
+Any instance of \lstinline{Kanren} is called an interpreter, whether it evaluates a relation, transforms it, or does something completely different. 
+In this subsection we will consider two examples of such interpreters. 
+
+For instance, consider the standard \mk interpreter over a stream of substitutions. 
+The result of its execution, or representation, is \lstinline{SubstKanren}. 
+We add instances of \lstinline{Kanren} and \lstinline{KanrenEval} for the representation and provide the evaluation function \lstinline{runSubstKanren}. 
+\includecode{code/SubstKanren.hs}
+
+Note that the substitution is a partial function that relies on \lstinline{unsafeCoerce}, yet it is safe, as long as \lstinline{SVar} constructor is not used by the programmer. 
+Two measures enforce this safety: a marker-parameter \lstinline{s} (inspired by the implementation of \lstinline{ST}), and the type tracking as part of a variable type. 
+They ensure that the substitution always produces a value, and \lstinline{unsafeCoerce} is applied only between identical types.
+
+Now let us consider a normalizing interpreter which does not evaluate a relation, instead transforming it. 
+It might be encoded in the following way: 
+\includecode{code/NormKanren.hs}
+
+We omit the instances of \lstinline{Applicative} and \lstinline{Alternative} which contain the normalization logic, because they are not important to the overall structure. 
+
+\subsection{Extensibility Example}
+
+The major advantage of the tagless-final encoding is that additional structure can be introduced and composed directly in user code without any changes to the framework itself.
+Consider normalization from the previous subsection that can transform any relation without changing its observable type.
+\includelines{code/NormDemonstration.hs}{1}{9}
+
+
+However, here normalization is totally transparent. 
+Even though the structure of the relation is more constrained, it is not exposed and cannot be used in further transformations, because the only interface available is \lstinline{Kanren}.
+We can combat this issue by defining a new typeclass, \lstinline{NormalizedKanren}, to expose the normalized shape and make it interoperable with the \lstinline{Kanren} typeclass.
+
+\includecode{code/NormKanrenTypeclass.hs}
+
+With this setup, any relation can be processed by a normalizing interpreter before being passed on to a conversion which will take full advantage of the normalized structure. 
+Conversely, with an instance of \lstinline{NormalizedKanrenT}, any normalized relation can be restored to the \lstinline{Kanren} typeclass with the \lstinline{normalize} function, erasing the structure.
+As a result, we demonstrated extensibility by providing two interoperable relation representations with no need to modify \lstinline{Kanren}, or any other core feature. 

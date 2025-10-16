@@ -1,0 +1,29 @@
+\begin{center}
+  \begin{tikzpicture}[
+    every node/.style = {
+      shape=rectangle,
+      rounded corners=0.05cm,
+      draw,
+      align=center,
+      minimum size=5mm},
+    node distance=1.3em,
+    anchor=center
+  ]
+    \node[inner sep=10pt,draw=none] (code) at (0,0) {
+      \begin{minipage}{0.59\columnwidth}
+      \begin{lstlisting}[frame=tb]
+ multOIO $::$ Nat -> Stream Nat -> Stream Nat
+ multOIO y gen_add$_y$ =
+   return (O, O) <$\mid$>
+   do
+     (z$_1$, z) <- addIOO y gen_add$_y$
+     x <- muloOII y z$_1$
+     return (S x, z)
+       \end{lstlisting}
+      \end{minipage}
+    };
+    \draw [teal,-Stealth] ($(code.center)+(0.3,-0.1)$) to [out=130,in=-25] node[below, draw=none, teal] {} ($(code.north)+(-1.1,-1.1)$);
+      
+  \end{tikzpicture}
+  \end{center}
+  

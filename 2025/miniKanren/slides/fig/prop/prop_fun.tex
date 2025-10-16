@@ -1,0 +1,30 @@
+\begin{columns}[T]
+  \centering
+  
+  \begin{column}{0.35\textwidth}
+    \begin{lstlisting} 
+  eval_true$^o$ fm = 
+    fresh (x y) 
+      (eval_true$^o$ x /\
+       eval_true$^o$ y /\ 
+       fm === Conj x y) \/
+      ... 
+    \end{lstlisting}
+  \end{column}
+
+  \begin{column}{0.1\textwidth}
+    \begin{center}
+      $\Rightarrow$
+    \end{center}
+  \end{column}
+
+  \begin{column}{0.35\textwidth}
+    \begin{lstlisting}
+  eval_true = do 
+    x <- eval_true
+    y <- eval_true 
+    return (Conj x y) 
+    ... 
+    \end{lstlisting}
+  \end{column}
+\end{columns}

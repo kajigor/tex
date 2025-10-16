@@ -1,0 +1,45 @@
+\begin{center}
+\begin{tikzpicture}[
+  every node/.style = {
+    shape=rectangle,
+    rounded corners=0.05cm,
+    draw,
+    align=center,
+    minimum size=5mm},
+  node distance=1.3em,
+  anchor=center
+]
+  \node[inner sep=10pt,draw=none] (code) at (0,-1) {\begin{lstlisting}[language=ocanren,basicstyle=\ttfamily,backgroundcolor=\color{white}]
+eval$^o$ st fm u = 
+  fresh (x y v w z) 
+    (fm === Conj x y /\
+     eval$^o$ st x v /\
+     eval$^o$ st y w /\
+     and$^o$ v w u) \/
+     ... 
+    \end{lstlisting}};
+    \node (rel) [draw=none, above=of code, xshift=3cm, yshift=-1cm] {relation};
+    \draw [teal,<-] ($(code.north)+(-0.2,-0.45)$) to [out=30,in=180] node[below, draw=none, teal] {} ($(rel.west)+(0,0)$);
+    
+    \pause
+    \node (call) [draw=none, below=of code, xshift=-2cm] {relation call};
+    \draw [teal,<-] ($(code.south)+(-1.2,1.1)$) to [out=-180,in=90] node[below, draw=none, teal] {} ($(call.north)+(0,0)$);
+    
+    \pause
+    \node (uni) [draw=none, left=of code, yshift=-0.5cm] {term unification};
+    \draw [teal,<-] ($(code.west)+(1.9,0.25)$) to [out=210,in=50] node[below, draw=none, teal] {} ($(uni.north)+(0,0)$);
+    
+    \pause
+    \node (conj) [draw=none, right=of code, yshift=-0.3cm] {conjunction};
+    \draw [teal,<-] ($(code.east)+(-0.7,-0.55)$) to [out=0,in=-180] node[below, draw=none, teal] {} ($(conj.west)+(0,0)$);
+    \draw [teal,<-] ($(code.east)+(-0.7,-0.05)$) to [out=0,in=-190] node[below, draw=none, teal] {} ($(conj.west)+(0,0)$);
+    
+    \pause
+    \node (disj) [draw=none, right=of code, yshift=-2cm] {disjunction};
+    \draw [teal,<-] ($(code.east)+(-0.9,-1.05)$) to [out=-30,in=125] node[below, draw=none, teal] {} ($(disj.north)+(0,0)$);
+    
+    \pause
+    \node (fresh) [draw=none, left=of code, yshift=1.5cm] {variable introduction};
+    \draw [teal,<-] ($(code.west)+(0.7,1.0)$) to [out=150,in=-30] node[below, draw=none, teal] {} ($(fresh.east)+(0,-0.1)$);
+\end{tikzpicture}
+\end{center}

@@ -1,0 +1,54 @@
+\begin{center}
+  \begin{tikzpicture}[
+    every node/.style = {
+        inner sep=0pt
+      , shape=rectangle
+      % , draw
+      }
+  ]
+      % \draw[help lines] (-7.75,-3.5) grid (7.75,3.5);
+      % \node[inner sep=10pt, anchor=north west] (func) at (-7.75,3.5) {\input{fig/mult/mult_bare.tex}};
+
+      % \node[inner sep=10pt, anchor=north east] (slow) at (7.75,3.5) {\input{fig/mult/mult_slow_bare.tex}};
+
+      \node[inner sep=10pt] (main) at (0,0)
+      {\input{fig/prop/prop_modded}};
+      % \node [draw=none, above=of main.south, xshift=2.3cm] {$\Omega(x!)$};
+
+      \node[ellipse, scale=0.9,
+          fill=fastGreen,
+          line width=0.4mm,
+          inner sep=1pt,
+          align=center, above=of main.south, xshift=7.0cm, yshift=1.84cm]
+        {\lstinline{u = True}};
+
+        
+      \node[ellipse, scale=0.9,
+          fill=fastGreen,
+          line width=0.4mm,
+          inner sep=1pt,
+          align=center, above=of main.south, xshift=7.0cm, yshift=1.26cm]
+        {\lstinline{v = True}};
+        
+      \node[ellipse, scale=0.9,
+          fill=fastGreen,
+          line width=0.4mm,
+          inner sep=1pt,
+          align=center, above=of main.south, xshift=7.0cm, yshift=0.68cm]
+        {\lstinline{w = True}};
+
+        
+      \node[ellipse, scale=0.9,
+          fill=badRed!75,
+          line width=0.4mm,
+          inner sep=1pt,
+          align=center, above=of main.south, xshift=-1.0cm, yshift=0.26cm]
+        {\lstinline{u = True}};
+
+      % \node[inner sep=10pt, anchor=south west] (fast) at (-7.75,-3.5) {\input{fig/mult/mult_fast_bare.tex}};
+
+      % \node [draw=none, anchor=south west] at ($(main.south)+(0.5,0.8)$) {\goodBadge{$O(xy)$}};
+      % \node [draw=none, above=of main.south, xshift=2.3cm] {\goodBadge{10x \linebreak faster}};
+  \end{tikzpicture}
+  \end{center}
+  

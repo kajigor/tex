@@ -1,0 +1,56 @@
+\begin{center}
+\begin{tikzpicture}[
+  every node/.style = {
+    shape=rectangle,
+    rounded corners=0.05cm,
+    draw,
+    align=center,
+    minimum size=5mm},
+  node distance=1.3em,
+  anchor=center
+]
+
+\node[draw=none] (evalo) at (0,0) {
+\begin{minipage}{0.82\textwidth}
+\begin{lstlisting}[language=ocanren]
+ let rec eval$^o$ st fm u = 
+   fresh (x y v w z) 
+     (fm === Conj x y /\
+      eval$^o$ st x v /\
+      eval$^o$ st y w /\
+      and$^o$ v w u) \/
+      ... 
+\end{lstlisting}
+\end{minipage}}; 
+
+\node[draw=none] (typeo) at (0,-3.5) {
+\begin{minipage}{0.82\textwidth}
+\begin{lstlisting}[language=ocanren]
+ let rec type$^o$ e t = 
+   (fresh (x y)
+     (e === Int x /\ t = TInt) \/
+     (e === Plus x y /\
+      type$^o$ x Int /\
+      type$^o$ y Int /\ 
+      t === Int)) \/
+      ...  
+\end{lstlisting}
+\end{minipage}}; 
+
+  \node (evaluation) at ($(evalo.center)$) [draw=none, xshift=1.4cm, yshift=0.5cm,anchor=west] {evaluation};
+  \draw [teal,thick,->] ($(evalo.center)+(0,0)$) to [out=0,in=180] ($(evaluation.west)+(0,0)$);
+
+  \node (generation) at ($(evalo.center)$) [draw=none, xshift=1.4cm, yshift=-0.5cm,anchor=west] {program generation};
+  \draw [teal,thick,->] ($(evalo.center)+(0,0)$) to [out=0,in=180] ($(generation.west)+(0,0)$);
+
+
+  \node (typeCheck) at ($(typeo.center)$) [draw=none, xshift=1.4cm, yshift=1cm,anchor=west] {type checking};
+  \draw [teal,thick,->] ($(typeo.center)+(0,0)$) to [out=0,in=180] ($(typeCheck.west)+(0,0)$);
+
+  \node (typeInf) at ($(typeo.center)$) [draw=none, xshift=1.4cm, yshift=0cm,anchor=west] {type inference};
+  \draw [teal,thick,->] ($(typeo.center)+(0,0)$) to [out=0,in=180] ($(typeInf.west)+(0,0)$);
+
+  \node (typeInh) at ($(typeo.center)$) [draw=none, xshift=1.4cm, yshift=-1cm,anchor=west] {type inhabitance};
+  \draw [teal,thick,->] ($(typeo.center)+(0,0)$) to [out=0,in=180] ($(typeInh.west)+(0,0)$);
+  \end{tikzpicture}
+\end{center}

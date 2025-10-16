@@ -1,0 +1,10 @@
+\begin{figure}[!t]
+    \begin{lstlisting}[language=ocanren]
+ let rec path$^o$ v u p = 
+   (v === u /\ p === [v]) \/
+   (fresh (w p$_1$)
+     (edge$^o$ v w /\
+      path$^o$ w$_1$ u p$_1$ /\
+      p === v : p$_1$) )
+    \end{lstlisting}
+\end{figure}

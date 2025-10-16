@@ -1,0 +1,3 @@
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QNote that modded unifications can become an equality test (line 8), a pattern matching (line 13), an assignment (line 15), or\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qinterpreters do not operate on concrete types which functions\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QNote that modded unifications can become an equality test (line 8), a pattern matching (line 13), an assignment (line 15), or use term generation (line 9).\\E$"}

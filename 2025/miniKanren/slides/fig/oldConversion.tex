@@ -1,0 +1,59 @@
+\tikzset{
+    block/.style={
+      rectangle, draw, minimum width = 2.5cm, minimum height=1.5cm, align=center
+        },
+}
+
+\newcommand{\fTo}[2]{
+  \draw[-Stealth,thick,color=teal] (#1) -- (#2);
+}
+
+\begin{center}
+  \begin{tikzpicture}[
+    every node/.style = {
+        inner sep=0pt
+      , shape=rectangle
+      }
+  ]
+
+      \coordinate (shift) at (2.8,-1.5);  
+
+
+      \node[block] (parser) at ($(shift)$) {parser};
+      \node[block] (norm) at ($(parser)+(shift)$) {normalization};
+      \node[block] (mode) at ($(norm)+(shift)$) {mode \\ analysis};
+      \node[block] (print) at ($(mode)+(shift)$) {pretty \\ printing};
+
+      \node[] (args) at ($(mode.west)!(norm.south)!(mode.east)$) {direction};
+
+      \node[] (ast) at ($(parser.west)!(norm.north)!(parser.east)$) {AST};
+      \node[] (p_n) at ($(norm.west)!(mode.north)!(norm.east)$) {p$^n$};
+      \node[] (p_m) at ($(mode.west)!(print.north)!(mode.east)$) {p$^m$};
+
+      \node[] (p) at ($(parser.west)+(-1,0)$) {string};
+    
+      \node[anchor=west] (haskell) at ($(print.north east)+(1,0)$) {Haskell};
+      \node[anchor=west] (ocaml) at ($(print.east)+(1,0)$) {OCaml};
+      \node[anchor=west] (dots) at ($(print.south east)+(1,0)$) { $\ \dots$};
+
+      \fTo{$(parser.east)$}{ast};
+      \fTo{ast}{norm.north};
+
+      \fTo{$(norm.east)$}{p_n};
+      \fTo{p_n}{mode.north};
+
+      \fTo{$(mode.east)$}{p_m};
+      \fTo{p_m}{print.north};
+
+      \fTo{p}{$(parser.west)$};
+
+      \fTo{args}{$(mode.west)$};
+
+      \fTo{print.east}{$(haskell.west)$};
+      \fTo{print.east}{$(ocaml.west)$};
+      \fTo{print.east}{$(dots.west)$};
+
+  \end{tikzpicture}
+  \end{center}
+  
+  

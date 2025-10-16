@@ -1,0 +1,30 @@
+
+
+\section{Type-Preserving Functional Conversion}
+\label{contrib:translator}
+
+In this section, we present the updated functional-conversion pipeline that takes advantage of the typed \mk embedding. 
+Rather than rebuilding the converter from scratch, we implemented an interpreter that lifts a shallowly embedded, typed relation into the deep, untyped representation used in the earlier work~\cite{engel2023translation}. 
+This choice lets us reuse the existing mechanisms of normalization, mode and determinism analyses, while still preserving limited type safety. 
+
+Even though the internal representation remains untyped, the fact that the translated relation originates from a typed embedded means that its underlying \haskell types as well as generators are available. 
+This eliminates some inelegant aspects of the conversion process, namely synthesizing a monolithic \emph{Term} type of all constructors, and threading explicit generators. 
+Because of our assumption that the \emph{quote} function (see \ref{tagless:logic}) uses the actual constructor names of the underlying type, the converter can invoke them directly and call the type's \emph{generate} whenever enumeration is required.
+
+As an illustration, consider the relation $R_{\text{balance}}(x, y)$ that holds when the binary tree $y$ is the balanced version of $x$. 
+
+\includecode{code/Balanceo.hs}
+
+We translate this relation in mode  $R_{\text{balance}}\left( x^{\Out}, y^{\Out} \right)$, thus enumerating all trees alongside their balanced versions. 
+The earlier functional conversion produces the following result. 
+In addition to producing the monolithic \emph{Term} type, it demonstrates the generator threading: \emph{balancedoO\_x2} is not used in \emph{balanceoOO}, instead it is passed to \emph{balancedoO}.
+Finally, it misses an optimization opportunity in line 14, where the \emph{Stream} monad is used instead of the semi-deterministic \emph{Maybe}. 
+
+\includecode{code/BalanceoOI.hs}
+
+By contrast, the type-preserving translation avoids creating the \emph{Term} type and relies on the underlying types' constructors and the functions \emph{generate}.
+An automatic determinism analysis allows us to use the \emph{Maybe} monad whenever we can detect semi-deterministic computations. 
+These computations are executed faster in \emph{Maybe} and then lifted back to the \emph{Stream} monad by \emph{liftMaybe}. 
+
+\includecode{code/BalanceoTI.hs}
+

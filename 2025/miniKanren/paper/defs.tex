@@ -1,0 +1,128 @@
+\newcommand{\todo}[1]{{\color{red}{#1}}}
+
+\newcommand{\mk}{\textsc{miniKanren}\xspace}
+\newcommand{\micro}{\textsc{microKanren}\xspace}
+\newcommand{\merc}{\textsc{Mercury}\xspace}
+\newcommand{\curry}{\textsc{curry}\xspace}
+\newcommand{\haskell}{\textsc{Haskell}\xspace}
+\newcommand{\ocaml}{\textsc{OCaml}\xspace}
+\newcommand{\ocanren}{\textsc{OCanren}\xspace}
+\newcommand{\prolog}{\textsc{Prolog}\xspace}
+\newcommand{\inm}{\emph{in}\xspace}
+\newcommand{\outm}{\emph{out}\xspace}
+
+\newcommand{\LLang}{\mathcal{L}}
+\newcommand{\semantics}[2]{\llbracket #1 \rrbracket_{#2}}
+\newcommand{\LSem}[1]{\semantics{#1}{\LLang}}
+
+\newcommand{\code}[1]{\texttt{#1}}
+
+\definecolor{lstKeyword}{HTML}{000080}
+\definecolor{lstBG}{HTML}{FFFFFF}
+\definecolor{lstString}{HTML}{008000}
+\definecolor{lstNumber}{HTML}{0000FF}
+\definecolor{lstComment}{HTML}{808080}
+\definecolor{lstLineNumber}{HTML}{999999}
+\lstdefinestyle{customhask}{ 
+    belowcaptionskip=1\baselineskip, 
+    breaklines=true, 
+    frame=L, 
+    xleftmargin=\parindent, 
+    language=haskell, 
+    backgroundcolor=\color{lstBG},
+    commentstyle=\itshape\color{lstComment},
+    keywordstyle=\bfseries\color{lstKeyword},
+    numberstyle=\tiny\color{lstLineNumber},
+    stringstyle=\color{lstString},
+    basicstyle=\scriptsize\ttfamily,
+    breakatwhitespace=false,        
+    breaklines=false,               
+    captionpos=b,                    
+    keepspaces=true,              
+    numbers=left,        
+    numbersep=10pt,          
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false, 
+    tabsize=4,
+    columns=flexible
+} 
+\lstdefinestyle{normalhask}{ 
+    belowcaptionskip=1\baselineskip, 
+    breaklines=true, 
+    frame=L, 
+    xleftmargin=\parindent, 
+    language=haskell, 
+    backgroundcolor=\color{lstBG},
+    commentstyle=\itshape\color{lstComment},
+    keywordstyle=\bfseries\color{lstKeyword},
+    numberstyle=\tiny\color{lstLineNumber},
+    stringstyle=\color{lstString},
+    basicstyle=\normalsize\ttfamily,
+    breakatwhitespace=false,        
+    breaklines=false,               
+    captionpos=b,                    
+    keepspaces=true,              
+    numbers=left,        
+    numbersep=10pt,          
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false, 
+    tabsize=4,
+    columns=flexible
+} 
+\lstset{escapechar=@,style=normalhask} 
+\usepackage{xparse} 
+\usepackage{xspace}
+\newcommand{\includecodecap}[2][hask]{\lstinputlisting[caption=#2, escapechar=, style=custom#1]{#2}} 
+\newcommand{\includecode}[2][hask]{\lstinputlisting[escapechar=@, style=custom#1]{#2}} 
+\newcommand{\includelines}[4][hask]{\lstinputlisting[escapechar=, style=custom#1, firstline=#3, lastline=#4]{#2}}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=blue,
+    pdfpagemode=FullScreen,
+    }
+
+\DeclareMathOperator{\Term}{\mathcal{T}}
+\DeclareMathOperator{\FlatTerm}{\mathcal{FT}}
+\DeclareMathOperator{\Var}{\mathbf{Var}}
+\DeclareMathOperator{\Cons}{\mathcal{C}}
+\DeclareMathOperator{\Kan}{\mathcal{G}}
+\DeclareMathOperator{\Fresh}{\mathbf{Fresh}}
+\DeclareMathOperator{\Delay}{\mathbf{Delay}}
+\DeclareMathOperator{\Call}{\mathbf{Call}}
+\DeclareMathOperator{\Def}{\mathcal{D}}
+\DeclareMathOperator{\Base}{\mathbf{Base}}
+\DeclareMathOperator{\Conj}{\mathbf{Conj}}
+\DeclareMathOperator{\free}{\mathbf{free}}
+\DeclareMathOperator{\ground}{\mathbf{ground}}
+\DeclareMathOperator{\In}{\mathbf{In}}
+\DeclareMathOperator{\Out}{\mathbf{Out}}
+\DeclareMathOperator{\mnondet}{\mathbf{nondet}}
+\DeclareMathOperator{\mdet}{\mathbf{det}}
+\DeclareMathOperator{\NotDet}{\mathbf{NotDet}}
+\DeclareMathOperator{\BecameDet}{\mathbf{BecameDet}}
+\DeclareMathOperator{\WasDet}{\mathbf{WasDet}}
+\DeclareMathOperator{\Fun}{\mathcal{F}}
+\DeclareMathOperator{\Return}{\mathbf{Return}}
+\DeclareMathOperator{\Bind}{\mathbf{Bind}}
+\DeclareMathOperator{\Match}{\mathbf{Match}}
+\DeclareMathOperator{\Sum}{\mathbf{Sum}}
+\DeclareMathOperator{\Guard}{\mathbf{Guard}}
+\DeclareMathOperator{\Gen}{\mathbf{Gen}}
+\DeclareMathOperator{\Stream}{\mathit{Stream}}
+\DeclareMathOperator{\vars}{vars}
+\DeclareMathOperator{\mode}{mode}
+\DeclareMathOperator{\Mode}{\mathcal{M}}
+\newcommand{\KanN}{\mathcal{K}^{N}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\TODO}[1][]{
+  \vspace{0.2em}
+  {\bf\color{red} TODO:} #1
+  \vspace{0.2em}
+}
+\newcommand{\tran}[1]{\left\llbracket #1 \right\rrbracket}
+\newcommand{\lst}[1]{\left[ #1 \right]}
+\renewcommand{\emptyset}{\varnothing}

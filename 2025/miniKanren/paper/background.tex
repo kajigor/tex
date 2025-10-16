@@ -1,0 +1,136 @@
+\section{Background}
+
+In this section we introduce the background necessary to understand the contributions of this paper. 
+
+\subsection{\mk}
+
+The \mk family of programming languages is created to be simple to understand, implement, and extend with new features.\footnote{Website of the \mk programming languages family: \url{http://minikanren.org/}} 
+One distinguishing characteristic of \mk is its complete search enabled by design. 
+Any existing solution to a query will be found eventually~\cite{rozplokhas2020certified} which makes \mk uniquely suitable for declarative setting and reverse execution. 
+
+Most \mk dialects are implemented as a set of combinators for basic operations such as a unification or conjunction and disjunction. 
+However, program transformation is complicated for shallow embeddings in languages featuring referential transparency. 
+Primarily due to this fact the proof-of-concept functional conversion was implemented for a deeply embedded \mk and manipulated abstract syntax trees explicitly. 
+The syntax in Fig.~\ref{fig:minikanren} describes the core language used in this paper, also known as \micro~\cite{friedman2013mukanren}. 
+We also assume inverse $\eta$-delay to accompany every relation invocation and not used elsewhere.  
+
+\begin{figure}[h]
+\begin{tabular}{llll}
+    $\mathcal{C}$ & $=$ & $\{\Cons_{i}^{k_{i}}\} $ & constructors with arities \\
+    $\mathcal{R}$ & $=$ & $\{R_{i}^{k_{i}}\} $ & relational symbols with arities \\
+    $\Term_{V}$ & $=$ & $V \cup \{\Cons_{i}\left( t_1, \ldots, t_{k_{i}} \right) \mid t_{j}\in \Term_{V}\} $ & terms on set of variables $V$ \\
+ $\Kan_{V}$ & $=$ & $\Term_{V} \equiv \Term_{V}$ & unification \\
+ & $\mid$ & $\Kan_{V} \land \Kan_{V}$ & conjunction  \\
+ & $\mid$ & $\Kan_{V} \lor \Kan_{V}$ & disjunction  \\
+ & $\mid$ & $R_{i}^{k_{i}}\left( t_1, \ldots, t_{k} \right), t_{j}\in \Term_{V}$ & relational symbol invocation\\
+ & $\mid$ & $\Fresh_{x} \Kan_{V}$ & fresh variable introduction  \\
+ $\Def_{V}$ & $=$ & $R_{i}\left( x_1, \ldots, x_{k_{i}} \right) \equiv \Kan_{V}, x_{j}\in V$ & relational symbol definition \\
+  $\mathcal{P}$ & $=$ & $\Def_{V}^*$ & miniKanren program
+\end{tabular}
+\caption{miniKanren syntax}
+\label{fig:minikanren}
+\end{figure}
+
+The addition relation written in this syntax takes the following shape, where $R_{add}$ is the only relational symbol, $\Cons_{0}$ and $\Cons_{S}$ are constructors, and $x, x', y, z, z'$ are variables:
+
+\begin{equation*}
+    \begin{split}
+        R_{\text{add}}\left( x, y, z \right) \equiv 
+        &\left(  x \equiv \Cons_0  \land y \equiv z \right) \\
+        \lor &\left( \Fresh_{x'}\Fresh_{z'} \left(x \equiv \Cons_{S}\left( x' \right)  \land R_{add}\left(x', y, z'\right) \land z \equiv \Cons_{S}\left( z' \right) \right)\right)
+    \end{split}
+\end{equation*}
+
+\subsection{Normal Form}
+\label{background:normal}
+
+Many program transformations become simpler when done over a normalized representation, such as the superhomogenous normal form used in the Mercury programming language~\cite{mercuryexec}. 
+It is in essence a disjunctive normal form with unique variables, and with extra care taken not to allow exponential explosion in the number of clauses. 
+To avoid it, we create  a new relation whenever a disjunction takes place within a conjunction. 
+The process of normalization is described in detail in \cite{engel2023translation}, here we only present the normal form syntax, see Figure \ref{fig:normalizedminikanren}.
+Notice that there are also no $\Fresh$ declarations in this form, and each element of $V$ is assumed to refer to the same variable within the invocation. 
+
+\begin{figure}[h]
+\begin{tabular}{llll}
+$\FlatTerm_{V}$ & $=$ & $V \cup \{\Cons_{i}\left( x_1, \ldots, x_{k_{i}} \right) \mid x_{j}\in V, a \neq b \implies x_{a} \neq x_{b}\}$ & linear flat terms\\
+$\Base_{V}$ & $=$ & $V \equiv \FlatTerm_{V}$ & linear flat unification\\
+            & $\mid$ & $R_{i}\left( x_1, \ldots, x_{k_{i}} \right), x_{j}\in V, a \neq b \implies x_{b} \neq x_{b}$ & linear flat call\\
+$\Conj_{V}$ & $=$ & $\bigwedge\left( g_1, \ldots, g_n \right), g_{i}\in \Base_{V}$ & normal conjunction \\
+$\KanN_{V}$ & $=$ & $\bigvee\left( c_1, \ldots, c_{n} \right), c_{i}\in \Conj_{V}$ & normal form
+\end{tabular}
+\caption{Normalized miniKanren syntax}
+\label{fig:normalizedminikanren}
+\end{figure}
+
+
+\subsection{Modes}
+
+A relational program can be executed in multiple directions, also called \emph{modes}. 
+Mode systems assign each variable in a relation a mode annotation that denotes how the variable is used in it. 
+A logic/functional programming language \merc features an advanced mode system that informs its compiler on possible optimizations. 
+The functional conversion of \mk relies on the simplest mode system with only two possible annotations: $\In$ and $\Out$. 
+$\In$ denotes a variable whose value is fully known when the operation is executed. 
+$\Out$ is reserved for a variable with unknown value which is going to be bound after the operation is executed. 
+
+When all variables of a relation are annotated with modes, we say that the relation has a mode. 
+We use the term \emph{direction} to describe a relation call whose arguments are annotated. 
+For example, consider the following directions of the addition relation:
+
+\begin{equation*}
+    \begin{split}
+        R_{\text{add}}\left( x^{\In}, y^{\In}, z^{\Out} \right) \equiv 
+        &\left(  x^{\In} \equiv \Cons_0  \land y^{\In} \equiv z^{\Out} \right) \\
+\lor \left( \Fresh_{x'}\Fresh_{z'} \left(x^{\In} \equiv \Cons_{S}\left( x'^{\Out} \right)\right.\right.  \land& \left.\left. R_{add}\left(x'^{\In}, y^{\In}, z'^{\Out}\right) \land z^{\Out} \equiv \Cons_{S}\left( z'^{\In} \right) \right)\right)
+    \end{split}
+\end{equation*}
+\begin{equation*}
+    \begin{split}
+        R_{\text{add}}\left( x^{\Out}, y^{\Out}, z^{\In} \right) \equiv 
+        &\left(  x^{\Out} \equiv \Cons_0  \land y^{\Out} \equiv z^{\In} \right) \\
+\lor \left( \Fresh_{x'}\Fresh_{z'} \left(x^{\Out} \equiv \Cons_{S}\left( x'^{\In} \right)\right.\right.  \land& \left.\left. R_{add}\left(x'^{\Out}, y^{\Out}, z'^{\In}\right) \land z^{\In} \equiv \Cons_{S}\left( z'^{\Out} \right) \right)\right)
+    \end{split}
+\end{equation*}
+\begin{equation*}
+    \begin{split}
+        R_{\text{add}}\left( x^{\In}, y^{\Out}, z^{\Out} \right) \equiv 
+        &\left(  x^{\In} \equiv \Cons_0  \land y^{\Out} \equiv z^{\Out} \right) \\
+\lor \left( \Fresh_{x'}\Fresh_{z'} \left(x^{\In} \equiv \Cons_{S}\left( x'^{\Out} \right)\right.\right.  \land& \left.\left. R_{add}\left(x'^{\In}, y^{\Out}, z'^{\Out}\right) \land z^{\Out} \equiv \Cons_{S}\left( z'^{\In} \right) \right)\right)
+    \end{split}
+\end{equation*}
+
+In a well-moded relation, data flows from $\In$ to $\Out$, and once a variable's value is known, it is never forgotten.
+This means that a variable with the $\In$ mode can never become $\Out$, while $\Out$ becomes $\In$ after the current operation is executed.
+This intuition translates well to functional code, where each variable is expected to be bound by some value before use.
+The functional conversion employs a mode analysis capable of inferring mode annotations given a direction.
+The mode analysis algorithm does not fall in the scope of this paper; thus, the reader is referred to~\cite{engel2023translation} for a detailed description of the approach.
+Its details are not essential for understanding the contributions presented here.
+
+\subsection{Functional Conversion}
+
+In this section we briefly summarize the functional conversion described in~\cite{engel2023translation} which the reader can refer to for deeper comprehension. 
+The functional conversion mirrors the relational conversion~\cite{lozov2018typed} aimed at generating relations from functions thus coming full circle in the verifier-to-solver approach.
+
+Given a \mk relation with a concrete direction, the goal of a functional conversion is to construct a function which yields the same answers as the relation would. 
+Because the search in \mk is complete, disjunctions and conjunctions can be reordered, which will hopefully result in faster execution. 
+Mode analysis guides this reordering as well as classifies unifications into equality checks, assignments, pattern matches and generations. 
+Consider the following functional counterpart of $R_{\text{add}}\left( x^{\In}, y^{\Out}, z^{\Out} \right)$ which computes such pairs $(y, z)$ that $x + y = z$, where $x$ is known. 
+
+\includelines{code/addoIOO.hs}{0}{18}
+
+The function \lstinline{addoIOO} produces infinitely many pairs of Peano numbers; thus the output of the function should be a stream of \lstinline{(Term, Term)}. 
+The \lstinline{Stream} is not always the most efficient data structure to represent the output, especially when the computation is deterministic. 
+Because of this, the converter generates functions parameterized by an arbitrary \lstinline{Monad m} that can be specified at the call site. 
+
+Let us now illustrate the conversion process by this example. 
+Once mode analysis is finished, disjunctions are translated into \lstinline{msum} of several monadic computations (line 6). 
+Each such computation is produced from a conjunction of either calls or unifications. 
+Note that moded unifications can become an equality test (line 8), a pattern matching (line 13), an assignment (line 15), or use term generation (line 9). 
+Generation is required whenever both sides of a unification are annotated $\Out$, producing a stream of all possible values. 
+
+A drawback of the previous implementation is the need to supply generators as explicit function arguments. 
+Moreover, when several variables are generated, a separate generator must be provided for each one—even if they share the same type and could be produced in exactly the same way. 
+This requirement makes the resulting code inelegant, as well as prone to user errors when they later have to supply the generators manually.
+
+
+
+

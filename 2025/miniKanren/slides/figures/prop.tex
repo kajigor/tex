@@ -1,0 +1,53 @@
+\begin{figure}[h]
+  \centering
+  \begin{subfigure}[b]{0.45\textwidth}
+    \begin{lstlisting}[frame=tb]
+let rec eval$^o$ st$^{g \to g}$ fm$^{f \to g}$ u$^{g \to g}$ =
+  ( fm$^{f \to g}$  ===    Lit u$^{g \to g}$) \/
+  ( elem$^o$ z$^{f \to g}$ st$^{g \to g}$ u$^{g \to g}$ /\
+    fm$^{f \to g}$ ===    Var z$^{g \to g}$ ) \/
+  ( not$^o$ v$^{f \to g}$ u$^{g \to g}$ /\
+    eval$^o$ st$^{g \to g}$ x$^{f \to g}$ v$^{g \to g}$ /\
+    fm$^{f \to g}$ ===    Neg x$^{g \to g}$ ) \/
+  ( or$^o$ v$^{f \to g}$ w$^{f \to g}$ u$^{g \to g}$ /\
+    eval$^o$ st$^{g \to g}$ x$^{f \to g}$ v$^{g \to g}$ /\
+    eval$^o$ st$^{g \to g}$ y$^{f \to g}$ w$^{g \to g}$ /\
+    fm$^{f \to g}$ ===    Disj x$^{g \to g}$ y$^{g \to g}$) \/
+  ( and$^o$ v$^{f \to g}$ w$^{f \to g}$ u$^{g \to g}$ /\
+    eval$^o$ st$^{g \to g}$ x$^{f \to g}$ v$^{g \to g}$ /\
+    eval$^o$ st$^{g \to g}$ y$^{f \to g}$ w$^{g \to g}$ /\
+    fm$^{f \to g}$ ===    Conj x$^{g \to g}$ y$^{g \to g}$) \/
+    \end{lstlisting}
+   \caption{Mode inference result}
+    \label{fig:prop_modded}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.45\textwidth}
+    \begin{lstlisting}[frame=tb]
+evaloIOI x0 x2 = msum
+  [ do { let {x1 = Lit x2}
+       ; return x1 }
+  , do { x7 <- elemoOII x0 x2
+       ; let {x1 = Var x7}
+       ; return x1 }
+  , do { x5 <- notoOI x2
+       ; x3 <- evaloIOI x0 x5
+       ; let {x1 = Neg x3}
+       ; return x1 }
+  , do { (x5, x6) <- oroOOI x2
+       ; x3 <- evaloIOI x0 x5
+       ; x4 <- evaloIOI x0 x6
+       ; let {x1 = Disj x3 x4}
+       ; return x1 }
+  , do { (x5, x6) <- andoOOI x2
+       ; x3 <- evaloIOI x0 x5
+       ; x4 <- evaloIOI x0 x6
+       ; let {x1 = Conj x3 x4}
+       ; return x1 } ]
+    \end{lstlisting}
+    \caption{Functional conversion}
+    \label{fig:prop_hsk}
+  \end{subfigure}
+  \caption{Evaluator of propositional formulas}
+  \label{fig:prop}
+\end{figure}

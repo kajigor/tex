@@ -1,0 +1,23 @@
+\section{Introduction}
+
+The innate ability of a relational program to run in multiple modes reduces the complicated task of \emph{finding} a solution to the much simpler task of \emph{checking} that a candidate satisfies the specification~\cite{lozov2019relational}. 
+For example, a program which verifies whether a given sequence of vertices forms a path in a graph can enumerate paths. 
+Likewise, a relation that checks whether some variable assignment satisfies a propositional formula can be run in reverse to search for satisfying assignments. 
+A notable instance of this verifier-to-solver approach enables program synthesis: by running a relational interpreter backwards, we can generate programs whose evaluation yields a given value. 
+
+One downside to this approach is its high overhead resulting in low performance. 
+A relational interpreter should be carefully crafted to synthesize non-trivial programs within reasonable time constraints. 
+Moreover, the implementation of \mk itself has to be heavily optimized which undermines its reputation for being easy to embed in any general-purpose language. 
+
+The \mk community has devoted a lot of effort over the years to make program synthesis a reality.  
+Among such efforts is the functional conversion~\cite{engel2023translation} whose purpose is to translate a relation with a given direction into a functional program. 
+As a result, much of the overhead of relational programming is neutralized, especially if paired with advanced program transformation techniques such as specialization~\cite{verbitskaia2021deduction}. 
+
+While the implementation of the functional conversion described in~\cite{engel2023translation} improves execution time, it exhibits several limitations. 
+Firstly, because it relies on an untyped deep embedding of \mk in \haskell, it fails to take advantage of the \haskell type system, which leads to a loss of static guarantees as well as forces the user to painstakingly thread generator parameters. 
+Secondly, the absence of automatic determinism analysis leaves some optimization opportunities untapped. 
+Finally, the deep embedded representation hinders composition and extension---qualities that are among \mk's greater strengths. 
+
+In this paper, we describe a typed, tagless-final~\cite{carette2009finally} embedding of \mk in \haskell. 
+Along with automatic determinism analysis, it refines the earlier functional conversion, enhancing both performance and developer experience.
+In addition to this, the embedding opens the door to composable and extensible \mk implementations in statically typed functional languages.
